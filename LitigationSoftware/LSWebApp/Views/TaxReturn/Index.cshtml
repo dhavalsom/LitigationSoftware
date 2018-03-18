@@ -1,0 +1,42 @@
+﻿@model  LS.Models.Company
+@{
+    ViewBag.Title = "My Dashboard";
+}
+
+<h2>Register a new company</h2>
+
+@using (Html.BeginForm("CreateCompany", "TaxReturn"))
+{
+
+    @Html.AntiForgeryToken()
+    <table>
+        <tr>
+            <td>
+                Company Name:
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.CompanyName, new { style = "width: 300px;" })
+            </td>
+        </tr>
+        <tr style="height:20px;"></tr>
+        <tr>
+            <td>
+                Password:
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.PANNumber, new { style = "width: 300px;" })
+            </td>
+        </tr>
+        <tr style="height:20px;"></tr>
+        <tr style="height:20px;"></tr>
+        <tr>
+            <td colspan="2">
+                <button type="submit">Create Company</button>
+            </td>
+        </tr>
+
+    </table>
+
+}
+
+

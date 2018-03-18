@@ -1,0 +1,39 @@
+﻿@model  LS.Models.UserLogin
+
+<h2>Login here</h2>
+@using (Html.BeginForm("Signin", "Login"))
+{
+
+    @Html.AntiForgeryToken()
+    <table>
+        <tr>
+            <td>
+                User Name:
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.Username, new { style = "width: 300px;" })
+            </td>
+        </tr>
+        <tr style="height:20px;"></tr>
+        <tr>
+            <td>
+                Password:
+            </td>
+            <td>
+                @Html.PasswordFor(m => m.Password, new { style = "width: 300px;" })
+            </td>
+        </tr>
+        <tr style="height:20px;"></tr>
+        <tr style="height:20px;"></tr>
+        <tr>
+            <td colspan="2">
+                <button type="submit">Signin</button>
+            </td>
+        </tr>
+
+    </table>
+ 
+}
+
+
+
