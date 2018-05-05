@@ -1,0 +1,46 @@
+﻿@model  LSWebApp.Models.CompanyList
+@{
+    ViewBag.Title = "GetCompanyList";
+}
+<style>
+    table, th, td {
+        border: 1px solid black;
+        align-content: center;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+</style>
+<h2>List of Companies registered</h2>
+
+@{
+    if (Model.Companies != null)
+    {
+        @Html.HiddenFor(m => m.UserId, Model.UserId)
+        <table style="">
+            <thead>
+            <th>Company Name</th>
+            <th>PAN Number</th>
+            <th></th>
+            </thead>
+
+            @foreach (var company in Model.Companies)
+            {
+                <tr>
+                    <td>
+                        @Html.HiddenFor(m => company.Id, company.Id)
+                        @company.CompanyName
+                    </td>
+                    <td>@company.PANNumber</td>
+                    <td>
+                        @Html.ActionLink("Create IT Return Details", "GetITReturnDetails", "TaxReturn", new { userId = Model.UserId, companyId = company.Id }, null)
+                    </td>
+                    @*<td>
+                        @Html.ActionLink("Update Profile", "UpdateProfile", "SignUp", new { userId = Model.UserId, profileId = profile.Id }, null)
+                    </td>*@
+                </tr>
+            }
+        </table>
+    }
+}
+
+

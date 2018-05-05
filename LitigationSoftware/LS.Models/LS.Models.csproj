@@ -43,6 +43,9 @@
     <Compile Include="BaseEntity.cs" />
     <Compile Include="Company.cs" />
     <Compile Include="ErrorLog.cs" />
+    <Compile Include="FYAY.cs" />
+    <Compile Include="ITReturnDetails.cs" />
+    <Compile Include="ITSection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Role.cs" />
     <Compile Include="UserLogin.cs" />

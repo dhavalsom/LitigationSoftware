@@ -1,0 +1,20 @@
+﻿@model LS.Models.SignInResponse
+@{
+    ViewBag.Title = "LoginFailure";
+}
+
+<h2>Login Failure</h2>
+@if (Model.IsPasswordVerified && !Model.IsUserActive)
+{
+    <b><font color="red">User Account locked. Please contact system administrator. </font></b>
+}
+else if (Model.IsPasswordVerified && Model.IsUserActive && Model.UserRoles == null && Model.UserRoles.Count == 0)
+{
+    <b><font color="red">User doesn't have requested role.</font></b>
+}
+else
+{
+    <b><font color="red">Either user name or password is wrong.</font></b>
+}
+
+

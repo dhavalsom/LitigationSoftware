@@ -1,17 +1,17 @@
 USE LitigationApp
 GO
 
-/****** Object:  Table [dbo].[CompanyMaster]    Script Date: 3/18/2018 7:52:41 PM ******/
+/****** Object:  Table [dbo].[FYAYMaster]    Script Date: 5/5/2018 7:52:41 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE TABLE [dbo].[CompanyMaster](
+CREATE TABLE [dbo].[FYAYMaster](
 	[Id] [bigint] IDENTITY(1,1) NOT NULL,
-	[CompanyName] nvarchar(200) NOT NULL,
-	[PANNumber] nvarchar(200) NOT NULL,
+	[FinancialYear] nvarchar(200) NOT NULL,
+	[AssessmentYear] nvarchar(200) NOT NULL,
 	[IsDefault] [bit] NULL,
 	[Active] [bit] NOT NULL,
 	[AddedBy] [bigint] NULL,
@@ -20,7 +20,7 @@ CREATE TABLE [dbo].[CompanyMaster](
 	[ModifiedDate] [datetime] NULL,
 	[DeletedBy] [bigint] NULL,
 	[DeletedDate] [datetime] NULL,
- CONSTRAINT [PK_CompanyMaster] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_FYAYMaster] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]

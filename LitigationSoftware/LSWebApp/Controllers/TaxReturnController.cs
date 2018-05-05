@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Ninject;
 using LS.Models;
-//using LSWebApp.Models;
+using LSWebApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -44,7 +44,85 @@ namespace LSWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateCompany(Company comp)
         {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                var json = JsonConvert.SerializeObject(comp);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                HttpResponseMessage Res = await client.PostAsync("api/MasterAPI/PostCreateCompany", content);
+                var model = new CompanyList();
+                if (Res.IsSuccessStatusCode)
+                {
+                    var objCompResponse = JsonConvert.DeserializeObject<bool>(Res.Content.ReadAsStringAsync().Result);
+                    if (objCompResponse)
+                    {
+                        content = null;
+                        Res = null;
 
+                        Res = await client.GetAsync("api/MasterAPI/GetCompanyList");
+
+                        if (Res.IsSuccessStatusCode)
+                        {
+                            model.Companies = JsonConvert.DeserializeObject<List<Company>>(Res.Content.ReadAsStringAsync().Result);
+
+                           // RedirectToAction("CompanyList", "TaxReturn");
+                            return View("GetCompanyList", model);
+                        }
+
+                        //if (objSignInResponse.TwoFactorAuthDone)
+                        //{
+                        //return View(objSignInResponse);
+                        //}
+                        //else
+                        //{
+                        //    //var model = new GetAccessCodeModel
+                        //    //{
+                        //    //    ObjSignInResponse = objSignInResponse,
+                        //    //    IPAddress = user.IPAddress,
+                        //    //    UserName = user.Username,
+                        //    //    Method = "Email"
+                        //    //};
+                        //    //return View("GetAccessCode", model);
+                        //    return View("Index");
+                        //}
+                        return View("CompanyRegistrationFailure", objCompResponse);
+                    }
+                    else
+                        return View("CompanyRegistrationFailure", objCompResponse);
+                }
+                else
+                    return View("CompanyRegistrationFailure");
+
+            }
+        }
+
+
+        [HttpGet]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult>GetITReturnDetails(int userId,int companyId)
+        {
+            ITReturnDetails itrdetails = new ITReturnDetails();
+            itrdetails.CompanyID = companyId;
+            itrdetails.AddedBy = userId;
+
+            return View(itrdetails);
+        }
+
+        [HttpGet]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> GetCompanyList()
+        {
+            //using (var client = new HttpClient())
+            //{
+            //    client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+            //    client.DefaultRequestHeaders.Clear();
+            //    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            //    HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetCompanyList");
+
+                return View();
+           // }
         }
     }
 }

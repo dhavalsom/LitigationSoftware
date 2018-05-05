@@ -1,0 +1,35 @@
+﻿@model  LSWebApp.Models.ITReturnDetailsModel
+
+<h2>Original Return/Revised Return</h2>
+
+@using (Html.BeginForm("InsertorUpdateITReturnDetails", "TaxReturn"))
+{
+    @Html.AntiForgeryToken()
+
+    <table>
+        <tr>
+            <td>Company Name:-</td>
+            <td>Financial Year</td>
+            <td>Assessment Year</td>
+        </tr>
+        <tr>
+            <td>
+                @Html.LabelFor(m => m.ITReturnDetailsObject.CompanyName)
+                @Html.HiddenFor(m => m.ITReturnDetailsObject.CompanyID)
+            </td>
+            <td>@Html.DropDownListFor(m=>m.ITReturnDetailsObject.FYAYID, new SelectList(Model.FYAYList, "ID", "FinancialYear"))</td>
+            <td>@Html.LabelFor(m=>m.ITReturnDetailsObject.AssessmentYear)</td>
+        </tr>
+     </table>
+     <table>
+        <tr>
+
+        </tr>
+         <tr>
+            <td><button type="submit">Search</button></td>
+        </tr>
+    </table>
+    <br />
+
+}
+

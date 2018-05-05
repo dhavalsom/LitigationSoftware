@@ -1,7 +1,11 @@
-USE LitigationApp
+USE [LitigationApp]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_CREATE_COMPANY]    Script Date: 3/19/2018 12:35:19 AM ******/
+/****** Object:  StoredProcedure [dbo].[SP_CREATE_COMPANY]    Script Date: 4/8/2018 5:34:57 PM ******/
+DROP PROCEDURE [dbo].[SP_CREATE_COMPANY]
+GO
+
+/****** Object:  StoredProcedure [dbo].[SP_CREATE_COMPANY]    Script Date: 4/8/2018 5:34:57 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -11,7 +15,9 @@ GO
 
 
 
-CREATE PROCEDURE [dbo].SP_CREATE_COMPANY
+
+
+CREATE PROCEDURE [dbo].[SP_CREATE_COMPANY]
 (
 	@COMPANY_DETAIL_XML AS XML,
 	@USER_ID BIGINT = 1 --SET THE DEFAULT VALUE TO 1 IF NOT PASSED
@@ -26,9 +32,8 @@ DECLARE @Id AS BIGINT
 DECLARE @CompanyName AS NVARCHAR(MAX), @PANNumber AS NVARCHAR(MAX),@LoggedInUserID as BIGINT  
 
 SELECT 
-	   @CompanyName = CompanyDetailList.Columns.value('FirstName[1]', 'nvarchar(max)')
-	   , @PANNumber = CompanyDetailList.Columns.value('LastName[1]', 'nvarchar(max)')
-	   , @LoggedInUserID = CompanyDetailList.Columns.value('EmailAddress[1]', 'nvarchar(max)')
+	   @CompanyName = CompanyDetailList.Columns.value('CompanyName[1]', 'nvarchar(max)')
+	   , @PANNumber = CompanyDetailList.Columns.value('PANNumber[1]', 'nvarchar(max)')
 FROM   @COMPANY_DETAIL_XML.nodes('Company') AS CompanyDetailList(Columns)
 
 /*BLOCK TO READ THE VARIABLES ENDS HERE*/
@@ -41,12 +46,14 @@ BEGIN
 			INSERT INTO [dbo].[CompanyMaster]
 			   ([CompanyName]
 			   ,[PANNumber]
+			   ,[Active]
 			   ,[AddedBy]
 			   ,[AddedDate])
 			VALUES
 			   (@CompanyName
 			   ,@PANNumber
-			   ,@LoggedInUserID
+			   ,1
+			   ,@USER_ID
 			   ,GETUTCDATE()
 				)
 			/*INSERT USER DETAIL BLOCK ENDS HERE*/
@@ -55,6 +62,8 @@ BEGIN
 
 END
 END
+
+
 GO
 
 

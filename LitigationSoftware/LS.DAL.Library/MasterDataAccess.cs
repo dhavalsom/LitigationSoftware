@@ -17,7 +17,7 @@ namespace LS.DAL.Library
             {
                 Log.Info("Started call to GetCompanies");
                 
-                Command.CommandText = "SP_GET_COMPANIES";
+                Command.CommandText = "SP_GET_COMPANY";
                 Command.CommandType = CommandType.StoredProcedure;
                 Connection.Open();
 
@@ -29,7 +29,8 @@ namespace LS.DAL.Library
                     {
                         result.Add(new Company
                         {
-                            CompanyName = reader["Company"] != DBNull.Value ? reader["Company"].ToString() : null,
+                            CompanyName = reader["CompanyName"] != DBNull.Value ? reader["CompanyName"].ToString() : null,
+                            PANNumber = reader["PANNumber"] != DBNull.Value ? reader["PANNumber"].ToString() : null,
                             Id = Convert.ToInt32(reader["ID"].ToString())
                         });
                     }
@@ -57,13 +58,12 @@ namespace LS.DAL.Library
                 Command.CommandText = "SP_CREATE_COMPANY";
                 Command.CommandType = CommandType.StoredProcedure;
                 Command.Parameters.Clear();
-                Connection.Open();
 
                 SqlDataAdapter da = new SqlDataAdapter(Command);
-                da.SelectCommand.Parameters.Add(new SqlParameter("@USER_DETAIL_XML", SqlDbType.NVarChar, 10000));
+                da.SelectCommand.Parameters.Add(new SqlParameter("@COMPANY_DETAIL_XML", SqlDbType.NVarChar, 10000));
                 da.SelectCommand.Parameters["@COMPANY_DETAIL_XML"].Value = GetXMLFromObject(comp);
                 da.SelectCommand.Parameters.Add(new SqlParameter("@USER_ID", SqlDbType.BigInt, 100));
-                da.SelectCommand.Parameters["@USER_ID"].Value = !string.IsNullOrEmpty(comp.LoggedInUserID) ? Convert.ToInt32(signupdetails.LoggedInUserID) : 1;
+                da.SelectCommand.Parameters["@USER_ID"].Value = !string.IsNullOrEmpty(comp.LoggedInUserID) ? Convert.ToInt32(comp.LoggedInUserID) : 1;
                 Connection.Open();
 
                 int? result = (int?)Command.ExecuteScalar();
