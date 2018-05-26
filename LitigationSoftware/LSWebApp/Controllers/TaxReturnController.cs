@@ -100,29 +100,64 @@ namespace LSWebApp.Controllers
 
 
         [HttpGet]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult>GetITReturnDetails(int userId,int companyId)
+        //[ValidateAntiForgeryToken]
+        public async Task<ActionResult>GetITReturnDetails(int userId,int companyId,string companyname)
         {
-            ITReturnDetails itrdetails = new ITReturnDetails();
-            itrdetails.CompanyID = companyId;
-            itrdetails.AddedBy = userId;
+            ITReturnDetailsModel itrdetails = new ITReturnDetailsModel();
+            //ITReturnDetails itrdetails = new ITReturnDetails();
+            itrdetails.ITReturnDetailsObject.CompanyID = companyId;
+            itrdetails.ITReturnDetailsObject.CompanyName = companyname;
+            itrdetails.ITReturnDetailsObject.AddedBy = userId;
+            itrdetails.ITReturnDetailsObject.IncomefromBusinessProf = false;
+            itrdetails.ITReturnDetailsObject.RevisedReturnFile = false;
+            //var model = new FYAY();
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetFYAYList");
+
+                if (Res.IsSuccessStatusCode)
+                {
+                    itrdetails.FYAYList = JsonConvert.DeserializeObject<List<FYAY>>(Res.Content.ReadAsStringAsync().Result);
+                    // RedirectToAction("CompanyList", "TaxReturn");
+                }
+
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                Res = await client.GetAsync("api/MasterAPI/GetITSectionList");
+
+                if (Res.IsSuccessStatusCode)
+                {
+                    itrdetails.ITSectionList = JsonConvert.DeserializeObject<List<ITSection>>(Res.Content.ReadAsStringAsync().Result);
+                    // RedirectToAction("CompanyList", "TaxReturn");
+                }
+            }
+            
 
             return View(itrdetails);
         }
 
         [HttpGet]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<ActionResult> GetCompanyList()
         {
-            //using (var client = new HttpClient())
-            //{
-            //    client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
-            //    client.DefaultRequestHeaders.Clear();
-            //    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            //    HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetCompanyList");
+            var model = new CompanyList();
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetCompanyList");
 
-                return View();
-           // }
+                if (Res.IsSuccessStatusCode)
+                {
+                    model.Companies = JsonConvert.DeserializeObject<List<Company>>(Res.Content.ReadAsStringAsync().Result);
+                    // RedirectToAction("CompanyList", "TaxReturn");
+                }
+            }
+            return View("GetCompanyList", model);
         }
     }
 }

@@ -85,6 +85,84 @@ namespace LS.DAL.Library
                 Connection.Close();
             }
         }
+
+        public List<FYAY> GetFYAY()
+        {
+            try
+            {
+                Log.Info("Started call to GetFYAY");
+
+                Command.CommandText = "SP_GET_FYAY";
+                Command.CommandType = CommandType.StoredProcedure;
+                Connection.Open();
+
+                SqlDataReader reader = Command.ExecuteReader();
+                List<FYAY> result = new List<FYAY>();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result.Add(new FYAY
+                        {
+                            FinancialYear = reader["FinancialYear"] != DBNull.Value ? reader["FinancialYear"].ToString() : null,
+                            AssessmentYear = reader["AssessmentYear"] != DBNull.Value ? reader["AssessmentYear"].ToString() : null,
+                            IsDefault = Convert.ToBoolean(reader["IsDefault"].ToString()),
+                            Active = Convert.ToBoolean(reader["IsDefault"].ToString()),
+                            Id = Convert.ToInt32(reader["ID"].ToString())
+                        });
+                    }
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            finally
+            {
+                Connection.Close();
+            }
+        }
+
+        public List<ITSection> GetITSection()
+        {
+            try
+            {
+                Log.Info("Started call to GetITSection");
+
+                Command.CommandText = "SP_GET_ITSection";
+                Command.CommandType = CommandType.StoredProcedure;
+                Connection.Open();
+
+                SqlDataReader reader = Command.ExecuteReader();
+                List<ITSection> result = new List<ITSection>();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result.Add(new ITSection
+                        {
+                            Description = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : null,
+                            IsDefault = Convert.ToBoolean(reader["IsDefault"].ToString()),
+                            Active = Convert.ToBoolean(reader["IsDefault"].ToString()),
+                            Id = Convert.ToInt32(reader["ID"].ToString())
+                        });
+                    }
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            finally
+            {
+                Connection.Close();
+            }
+        }
+
         #endregion
     }
 }

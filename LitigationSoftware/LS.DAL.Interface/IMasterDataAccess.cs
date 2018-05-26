@@ -7,5 +7,7 @@ namespace LS.DAL.Interface
     {
         List<Company> GetCompanies();
         bool CreateCompany(Company comp);
+        List<FYAY> GetFYAY();
+        List<ITSection> GetITSection();
     }
 }

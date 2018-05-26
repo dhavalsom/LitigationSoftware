@@ -32,7 +32,7 @@
                     </td>
                     <td>@company.PANNumber</td>
                     <td>
-                        @Html.ActionLink("Create IT Return Details", "GetITReturnDetails", "TaxReturn", new { userId = Model.UserId, companyId = company.Id }, null)
+                        @Html.ActionLink("Create IT Return Details", "GetITReturnDetails", "TaxReturn", new { userId = Model.UserId, companyId = company.Id,companyname = company.CompanyName }, null)
                     </td>
                     @*<td>
                         @Html.ActionLink("Update Profile", "UpdateProfile", "SignUp", new { userId = Model.UserId, profileId = profile.Id }, null)

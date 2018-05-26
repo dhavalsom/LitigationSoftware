@@ -53,6 +53,39 @@ namespace LS.BL.Library
                 //Log
             }
         }
+
+        public List<FYAY> GetFYAY()
+        {
+            try
+            {
+                return this._masterDA.GetFYAY();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                //Log
+            }
+        }
+
+        public List<ITSection> GetITSection()
+        {
+            try
+            {
+                return this._masterDA.GetITSection();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                //Log
+            }
+        }
+
         #endregion
 
         #region IDisposable

@@ -39,7 +39,8 @@
              <td></td>
              <td>Date of filing the return:-</td>
              <td>
-                 @Html.TextBoxFor(m => m.ITReturnDetailsObject.ITReturnFillingDate, String.Format("{0:d}", Model.ITReturnDetailsObject.ITReturnFillingDate.ToString()), new { @class = "datefield", type = "date" })
+                 @*@Html.TextBoxFor(m => m.ITReturnDetailsObject.ITReturnFillingDate, String.Format("{0:d}", Model.ITReturnDetailsObject.ITReturnFillingDate.ToString()), new { @class = "datefield", type = "date" })*@
+                 @Html.TextBoxFor(m => m.ITReturnDetailsObject.ITReturnFillingDate, Model.ITReturnDetailsObject.ITReturnFillingDate)
              </td>
          </tr>
          <tr>
@@ -47,7 +48,8 @@
              <td>a</td>
              <td>Due date of filing the return:-</td>
              <td>
-                 @Html.TextBoxFor(m => m.ITReturnDetailsObject.ITReturnDueDate, new { @class = "datefield", type = "date" })
+                 @*@Html.TextBoxFor(m => m.ITReturnDetailsObject.ITReturnDueDate, new { @class = "datefield", type = "date" })*@
+                 @Html.TextBoxFor(m => m.ITReturnDetailsObject.ITReturnDueDate, Model.ITReturnDetailsObject.ITReturnDueDate)
              </td>
          </tr>
          <tr>

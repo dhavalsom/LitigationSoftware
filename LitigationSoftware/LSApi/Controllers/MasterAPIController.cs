@@ -43,5 +43,24 @@ namespace LSApi.Controllers
             var CompResult = CompObj.GetCompanies();
             return CompResult;
         }
+
+        [HttpGet]
+        [Route("GetFYAYList")]
+        public List<FYAY> GetFYAYList()
+        {
+            var CompObj = _Kernel.Get<IMaster>();
+            var CompResult = CompObj.GetFYAY();
+            return CompResult;
+        }
+
+        [HttpGet]
+        [Route("GetITSectionList")]
+        public List<ITSection> GetITSectionList()
+        {
+            var CompObj = _Kernel.Get<IMaster>();
+            var CompResult = CompObj.GetITSection();
+            return CompResult;
+        }
+
     }
 }

@@ -8,5 +8,7 @@ namespace LS.BL.Interface
     {
         List<Company> GetCompanies();
         bool CreateCompany(Company comp);
+        List<FYAY> GetFYAY();
+        List<ITSection> GetITSection();
     }
 }
