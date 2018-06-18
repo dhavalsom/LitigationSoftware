@@ -19,5 +19,36 @@ namespace LS.Models
         public DateTime? DeletedDate { get; set; }
         #endregion
 
+        #region Serialization
+        public bool ShouldSerializeAddedBy()
+        {
+            return AddedBy.HasValue;
+        }
+
+        public bool ShouldSerializeAddedDate()
+        {
+            return AddedDate.HasValue;
+        }
+
+        public bool ShouldSerializeModifiedBy()
+        {
+            return ModifiedBy.HasValue;
+        }
+
+        public bool ShouldSerializeModifiedDate()
+        {
+            return ModifiedDate.HasValue;
+        }
+
+        public bool ShouldSerializeDeletedBy()
+        {
+            return DeletedBy.HasValue;
+        }
+
+        public bool ShouldSerializeDeletedDate()
+        {
+            return DeletedDate.HasValue;
+        }
+        #endregion
     }
 }

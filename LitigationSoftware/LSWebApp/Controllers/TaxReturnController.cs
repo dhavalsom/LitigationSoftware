@@ -159,5 +159,35 @@ namespace LSWebApp.Controllers
             }
             return View("GetCompanyList", model);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> InsertorUpdateITReturnDetails(ITReturnDetailsModel itReturn)
+        {
+            using (var client = new HttpClient())
+            {
+                var json = JsonConvert.SerializeObject(itReturn.ITReturnDetailsObject);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.PostAsync("api/TaxReturnAPI/InsertorUpdateITReturnDetails", content);
+                ITReturnDetailsResponse result = new ITReturnDetailsResponse();
+                if (Res.IsSuccessStatusCode)
+                {
+                    result.IsSuccess = true;
+                    result.Message = Res.Content.ReadAsStringAsync().Result;
+                }
+                else
+                {
+                    result.IsSuccess = false;
+                    result.Message = Res.Content.ReadAsStringAsync().Result;
+
+                }
+                return View("ITReturnResponse", result);
+            }
+        }
+
+
     }
 }

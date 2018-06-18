@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IITReturnDetailsDataAccess.cs" />
     <Compile Include="IMasterDataAccess.cs" />
     <Compile Include="ISignInDataAccess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

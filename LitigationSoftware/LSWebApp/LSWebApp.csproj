@@ -263,6 +263,7 @@
     <Content Include="Views\TaxReturn\GetCompanyList.cshtml" />
     <Content Include="Views\Login\LoginFailure.cshtml" />
     <Content Include="Views\TaxReturn\GetITReturnDetails.cshtml" />
+    <Content Include="Views\TaxReturn\ITReturnResponse.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

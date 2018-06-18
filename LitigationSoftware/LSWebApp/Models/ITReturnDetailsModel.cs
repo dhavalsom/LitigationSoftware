@@ -13,4 +13,17 @@ namespace LSWebApp.Models
             ITReturnDetailsObject = new ITReturnDetails();
         }
     }
+
+    //public class ITReturnDetailsResponse
+    //{
+    //    public string Message { get; set; }
+    //    public bool IsSuccess { get; set; }
+    //    public ITReturnDetails ITReturnDetailsObject { get; set; }
+    //    public ITReturnDetailsResponse()
+    //    {
+    //        ITReturnDetailsObject = new ITReturnDetails();
+    //    }
+    //}
+
+  
 }

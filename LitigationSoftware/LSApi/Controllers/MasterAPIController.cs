@@ -25,7 +25,7 @@ namespace LSApi.Controllers
 
         #endregion
 
-        // POST: api/LoginAPI
+        // POST: api/PostCreateCompany
         [HttpPost]
         [Route("PostCreateCompany")]
         public bool PostCreateCompany([FromBody]Company comp)
