@@ -86,6 +86,21 @@ namespace LS.BL.Library
             }
         }
 
+        public ITSectionResponse InsertUpdateITSection(ITSection objITSection)
+        {
+            try
+            {
+                return this._masterDA.InsertUpdateITSection(objITSection);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                //Log
+            }
+        }
         #endregion
 
         #region IDisposable

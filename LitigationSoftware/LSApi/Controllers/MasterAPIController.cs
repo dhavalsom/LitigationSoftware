@@ -62,5 +62,14 @@ namespace LSApi.Controllers
             return CompResult;
         }
 
+        // POST: api/MasterAPI/InsertUpdateITSection
+        [HttpPost]
+        [Route("InsertUpdateITSection")]
+        public ITSectionResponse InsertUpdateITSection([FromBody]ITSection objITSection)
+        {
+            var objMaster = _Kernel.Get<IMaster>();
+            var objITSectionResponse = objMaster.InsertUpdateITSection(objITSection);
+            return objITSectionResponse;
+        }
     }
 }

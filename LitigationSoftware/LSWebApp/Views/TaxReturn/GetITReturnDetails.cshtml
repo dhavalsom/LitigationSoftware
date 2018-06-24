@@ -33,7 +33,11 @@
              <td>2</td>
              <td></td>
              <td>The information is being updated for:-</td>
-             <td>@Html.DropDownListFor(m => m.ITReturnDetailsObject.ITSectionID, new SelectList(Model.ITSectionList, "ID", "Description"))</td>
+             <td>
+                @Html.Partial("_LitigationDD", Model.ITSectionListSource)
+                @*@Html.DropDownListFor(m => m.ITReturnDetailsObject.ITSectionID, 
+                new SelectList(Model.ITSectionList, "ID", "Description"))*@
+             </td>
          </tr>
          <tr>
              <td>3</td>

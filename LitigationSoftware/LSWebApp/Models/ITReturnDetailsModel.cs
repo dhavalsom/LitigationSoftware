@@ -8,6 +8,7 @@ namespace LSWebApp.Models
         public ITReturnDetails ITReturnDetailsObject { get; set; }
         public List<FYAY> FYAYList { get; set; }
         public List<ITSection> ITSectionList { get; set; }
+        public LitigationDDModel ITSectionListSource { get; set; }
         public ITReturnDetailsModel()
         {
             ITReturnDetailsObject = new ITReturnDetails();
