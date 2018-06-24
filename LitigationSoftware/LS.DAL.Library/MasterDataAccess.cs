@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json;
-using LS.DAL.Interface;
+﻿using LS.DAL.Interface;
 using LS.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -47,8 +47,7 @@ namespace LS.DAL.Library
                 Connection.Close();
             }
         }
-
-
+        
         public bool CreateCompany(Company comp)
         {
             try
@@ -163,6 +162,54 @@ namespace LS.DAL.Library
             }
         }
 
+        public ITSectionResponse InsertUpdateITSection(ITSection objITSection)
+        {
+            try
+            {
+                Log.Info("Started call to InsertUpdateITSection");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(objITSection));
+                Command.CommandText = "SP_IT_SECTION_MANAGER";
+                Command.CommandType = CommandType.StoredProcedure;
+                Command.Parameters.Clear();
+
+                Command.Parameters.AddWithValue("@IT_SECTION_XML", GetXMLFromObject(objITSection));
+                
+                if (objITSection.AddedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", objITSection.AddedBy.Value);
+                }
+                if (objITSection.ModifiedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", objITSection.ModifiedBy.Value);
+                }
+                Connection.Open();
+                SqlDataReader reader = Command.ExecuteReader();
+
+                ITSectionResponse result = new ITSectionResponse();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result = new ITSectionResponse
+                        {
+                            Message = reader["ReturnMessage"] != DBNull.Value ? reader["ReturnMessage"].ToString() : null,
+                            IsSuccess = Convert.ToBoolean(reader["Result"].ToString())
+                        };
+                    }
+                }
+                Log.Info("End call to InsertUpdateITSection");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                Connection.Close();
+            }
+        }
         #endregion
     }
 }

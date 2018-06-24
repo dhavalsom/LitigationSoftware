@@ -1,23 +1,21 @@
-﻿using Newtonsoft.Json;
-using Ninject;
-using LS.Models;
+﻿using LS.Models;
 using LSWebApp.Models;
+using Newtonsoft.Json;
+using Ninject;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using System.Net;
-using System.Net.Sockets;
 
 namespace LSWebApp.Controllers
 {
     public class TaxReturnController : Controller
     {
-
         #region Declarations
 
         private readonly IKernel _Kernel;
@@ -34,6 +32,7 @@ namespace LSWebApp.Controllers
 
         #endregion
 
+        #region Methods
         // GET: TaxReturn
         public ActionResult Index()
         {
@@ -97,14 +96,11 @@ namespace LSWebApp.Controllers
 
             }
         }
-
-
+        
         [HttpGet]
-        //[ValidateAntiForgeryToken]
         public async Task<ActionResult>GetITReturnDetails(int userId,int companyId,string companyname)
         {
             ITReturnDetailsModel itrdetails = new ITReturnDetailsModel();
-            //ITReturnDetails itrdetails = new ITReturnDetails();
             itrdetails.ITReturnDetailsObject.CompanyID = companyId;
             itrdetails.ITReturnDetailsObject.CompanyName = companyname;
             itrdetails.ITReturnDetailsObject.AddedBy = userId;
@@ -131,7 +127,13 @@ namespace LSWebApp.Controllers
                 if (Res.IsSuccessStatusCode)
                 {
                     itrdetails.ITSectionList = JsonConvert.DeserializeObject<List<ITSection>>(Res.Content.ReadAsStringAsync().Result);
-                    // RedirectToAction("CompanyList", "TaxReturn");
+                    itrdetails.ITSectionListSource = new LitigationDDModel(
+                       itrdetails.ITSectionList.Select(x => 
+                        new SelectListItem() { Value = x.Id.ToString(), Text = x.Description }).ToList()
+                       , "ITReturnDetailsObject.ITSectionID"
+                       , "manageITSection"
+                       , "getITSections"
+                    );
                 }
             }
             
@@ -140,7 +142,6 @@ namespace LSWebApp.Controllers
         }
 
         [HttpGet]
-        //[ValidateAntiForgeryToken]
         public async Task<ActionResult> GetCompanyList()
         {
             var model = new CompanyList();
@@ -158,6 +159,25 @@ namespace LSWebApp.Controllers
                 }
             }
             return View("GetCompanyList", model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetITSectionList()
+        {
+            var model = new List<ITSection>();
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetITSectionList");
+
+                if (Res.IsSuccessStatusCode)
+                {
+                    model = JsonConvert.DeserializeObject<List<ITSection>>(Res.Content.ReadAsStringAsync().Result);
+                }
+            }
+            return Json(model, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -188,6 +208,25 @@ namespace LSWebApp.Controllers
             }
         }
 
-
+        [HttpPost]
+        public async Task<ActionResult> InsertUpdateITSection(ITSection objITSection)
+        {
+            using (var client = new HttpClient())
+            {
+                var json = JsonConvert.SerializeObject(objITSection);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.PostAsync("api/MasterAPI/InsertUpdateITSection", content);
+                ITSectionResponse result = new ITSectionResponse()
+                {
+                    IsSuccess = Res.IsSuccessStatusCode,
+                    Message = Res.Content.ReadAsStringAsync().Result
+                };
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+        }
+        #endregion
     }
 }

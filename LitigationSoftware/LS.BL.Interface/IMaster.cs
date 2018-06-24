@@ -10,5 +10,6 @@ namespace LS.BL.Interface
         bool CreateCompany(Company comp);
         List<FYAY> GetFYAY();
         List<ITSection> GetITSection();
+        ITSectionResponse InsertUpdateITSection(ITSection objITSection);
     }
 }
