@@ -44,8 +44,23 @@
              <td></td>
              <td>Date of filing the return:-</td>
              <td>
-                 @*@Html.TextBoxFor(m => m.ITReturnDetailsObject.ITReturnFillingDate, String.Format("{0:d}", Model.ITReturnDetailsObject.ITReturnFillingDate.ToString()), new { @class = "datefield", type = "date" })*@
-                 @Html.TextBoxFor(m => m.ITReturnDetailsObject.ITReturnFillingDate, Model.ITReturnDetailsObject.ITReturnFillingDate)
+                 <div class="input-group date form_datetime HLV_clacInput"
+                      data-date="" data-date-format="dd M yyyy" data-link-field="ITReturnDetailsObject_ITReturnFillingDate" 
+                      data-link-format="dd/M/yyyy">
+                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.ITReturnFillingDate
+                                     , new
+                                    {
+                                        @class = "form-control",
+                                        @size = "16",
+                                        @readonly = "readonly",
+                                        @value = ""
+                                    })
+                     <span class="input-group-addon">
+                         <i class="fa fa-calendar" aria-hidden="true">
+                         </i>
+                     </span>
+                 </div>
+
              </td>
          </tr>
          <tr>
@@ -53,8 +68,22 @@
              <td>a</td>
              <td>Due date of filing the return:-</td>
              <td>
-                 @*@Html.TextBoxFor(m => m.ITReturnDetailsObject.ITReturnDueDate, new { @class = "datefield", type = "date" })*@
-                 @Html.TextBoxFor(m => m.ITReturnDetailsObject.ITReturnDueDate, Model.ITReturnDetailsObject.ITReturnDueDate)
+                 <div class="input-group date form_datetime HLV_clacInput"
+                      data-date="" data-date-format="dd M yyyy" data-link-field="ITReturnDetailsObject_ITReturnDueDate"
+                      data-link-format="dd/M/yyyy">
+                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.ITReturnDueDate
+                                     , new
+                                     {
+                                         @class = "form-control",
+                                         @size = "16",
+                                         @readonly = "readonly",
+                                         @value = ""
+                                     })
+                     <span class="input-group-addon">
+                         <i class="fa fa-calendar" aria-hidden="true">
+                         </i>
+                     </span>
+                 </div>
              </td>
          </tr>
          <tr>
@@ -241,3 +270,19 @@
 
 }
 
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.form_datetime').datetimepicker({
+                weekStart: 1,
+                todayBtn: 1,
+                autoclose: 1,
+                todayHighlight: 1,
+                startView: 2,
+                minView: 2,
+                forceParse: 0
+            });
+        });
+    </script>
+}
