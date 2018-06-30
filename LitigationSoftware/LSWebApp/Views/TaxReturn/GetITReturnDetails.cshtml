@@ -14,12 +14,15 @@
         </tr>
         <tr>
             <td colspan="2">
-                @*@Html.LabelFor(m => m.ITReturnDetailsObject.CompanyName)*@
                 @Model.ITReturnDetailsObject.CompanyName
                 @Html.HiddenFor(m => m.ITReturnDetailsObject.CompanyID)
             </td>
-            <td>@Html.DropDownListFor(m=>m.ITReturnDetailsObject.FYAYID, new SelectList(Model.FYAYList, "ID", "FinancialYear"))</td>
-            <td>@Html.LabelFor(m=>m.ITReturnDetailsObject.AssessmentYear)</td>
+            <td>
+                @Html.DropDownListFor(m=>m.ITReturnDetailsObject.FYAYID, new SelectList(Model.FYAYList, "ID", "FinancialYear"))
+            </td>
+            <td>
+                @Html.LabelFor(m=>m.ITReturnDetailsObject.AssessmentYear)
+            </td>
         </tr>
      </table>
      <br />
@@ -35,8 +38,6 @@
              <td>The information is being updated for:-</td>
              <td>
                 @Html.Partial("_LitigationDD", Model.ITSectionListSource)
-                @*@Html.DropDownListFor(m => m.ITReturnDetailsObject.ITSectionID, 
-                new SelectList(Model.ITSectionList, "ID", "Description"))*@
              </td>
          </tr>
          <tr>
@@ -90,7 +91,9 @@
              <td>4</td>
              <td></td>
              <td>Income from House property:-</td>
-             <td>@Html.TextBoxFor(m => m.ITReturnDetailsObject.HousePropIncome, Model.ITReturnDetailsObject.HousePropIncome)</td>
+             <td>
+                @Html.TextBoxFor(m => m.ITReturnDetailsObject.HousePropIncome, Model.ITReturnDetailsObject.HousePropIncome)
+             </td>
          </tr>
          <tr>
              <td>5</td>
@@ -206,7 +209,7 @@
              <td></td>
              <td>Self-Assessment Tax paid by the company:-</td>
              <td>
-                 @Html.TextBoxFor(m => m.ITReturnDetailsObject.SelfassessmentTax, Model.ITReturnDetailsObject.SelfassessmentTax)
+                 @Html.TextBoxFor(m => m.ITReturnDetailsObject.SelfAssessmentTax, Model.ITReturnDetailsObject.SelfAssessmentTax)
              </td>
          </tr>
          <tr>

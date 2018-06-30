@@ -11,5 +11,7 @@ namespace LS.BL.Interface
         List<FYAY> GetFYAY();
         List<ITSection> GetITSection();
         ITSectionResponse InsertUpdateITSection(ITSection objITSection);
+        List<ITHeadMaster> GetITHeadMaster();
+        List<ITSubHeadMaster> GetITSubHeadMaster(int? itHeadId);
     }
 }

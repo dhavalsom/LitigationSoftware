@@ -210,6 +210,66 @@ namespace LS.DAL.Library
                 Connection.Close();
             }
         }
+
+        public List<ITHeadMaster> GetITHeadMaster()
+        {
+            try
+            {
+                Log.Info("Started call to GetITHeadMaster");
+                Command.CommandText = "SP_GET_IT_HEAD_MASTER";
+                Command.CommandType = CommandType.StoredProcedure;
+                Connection.Open();
+
+                SqlDataReader reader = Command.ExecuteReader();
+                List<ITHeadMaster> result = new List<ITHeadMaster>();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result.Add(new ITHeadMaster
+                        {
+                            ExcelSrNo = reader["ExcelSrNo"] != DBNull.Value ? reader["ExcelSrNo"].ToString() : null,
+                            Description = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : null,
+                            PropertyName = reader["PropertyName"] != DBNull.Value ? reader["PropertyName"].ToString() : null,
+                            Active = Convert.ToBoolean(reader["IsDefault"].ToString()),
+                            Id = Convert.ToInt32(reader["Id"].ToString())
+                        });
+                    }
+                }
+                Log.Info("End call to GetITHeadMaster:" + JsonConvert.SerializeObject(result));
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            finally
+            {
+                Connection.Close();
+            }
+        }
+
+        public List<ITSubHeadMaster> GetITSubHeadMaster(int? itHeadId)
+        {
+            try
+            {
+                Log.Info("Started call to GetITSubHeadMaster");
+                List<ITSubHeadMaster> result = new List<ITSubHeadMaster>();
+                
+                Log.Info("End call to GetITSubHeadMaster:" + JsonConvert.SerializeObject(result));
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            finally
+            {
+                Connection.Close();
+            }
+        }
         #endregion
     }
 }
