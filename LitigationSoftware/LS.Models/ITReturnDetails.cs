@@ -33,7 +33,7 @@ namespace LS.Models
         public int? AdvanceTax4installment { get; set; }
         public int? TDS { get; set; }
         public int? TCSPaidbyCompany { get; set; }
-        public bool? SelfassessmentTax { get; set; }
+        public bool? SelfAssessmentTax { get; set; }
         public int? MATCredit { get; set; }
         public int? InterestUS234A { get; set; }
         public int? InterestUS234B { get; set; }
@@ -129,9 +129,9 @@ namespace LS.Models
             return TCSPaidbyCompany.HasValue;
         }
 
-        public bool ShouldSerializeSelfassessmentTax()
+        public bool ShouldSerializeSelfAssessmentTax()
         {
-            return SelfassessmentTax.HasValue;
+            return SelfAssessmentTax.HasValue;
         }
 
         public bool ShouldSerializeMATCredit()

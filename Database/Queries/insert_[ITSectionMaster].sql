@@ -1,14 +1,23 @@
-insert into [dbo].[ITSectionMaster]
-(Description,IsDefault,Active,AddedBy,AddedDate)
-values
-('139(1)',1,1,1,GETUTCDATE())
-
-insert into [dbo].[ITSectionMaster]
-(Description,IsDefault,Active,AddedBy,AddedDate)
-values
-('139(4)',0,1,1,GETUTCDATE())
-
-insert into [dbo].[ITSectionMaster]
-(Description,IsDefault,Active,AddedBy,AddedDate)
-values
-('Not Applicable',0,1,1,GETUTCDATE())
+INSERT INTO [dbo].[ITHeadMaster] ([ExcelSrNo],[Description],[PropertyName],[Active],[AddedBy],[AddedDate]) VALUES ('4','Does the Company have any income from house property?','HousePropIncome',1,1,GETDATE())
+INSERT INTO [dbo].[ITHeadMaster] ([ExcelSrNo],[Description],[PropertyName],[Active],[AddedBy],[AddedDate]) VALUES ('5','Does the Company have any income from capital gains? Not STT Paid','IncomefromCapGainsNonSTT',1,1,GETDATE())
+INSERT INTO [dbo].[ITHeadMaster] ([ExcelSrNo],[Description],[PropertyName],[Active],[AddedBy],[AddedDate]) VALUES ('','Does the Company have any income from capital gains? STT Paid','IncomefromCapGainsSTT',1,1,GETDATE())
+INSERT INTO [dbo].[ITHeadMaster] ([ExcelSrNo],[Description],[PropertyName],[Active],[AddedBy],[AddedDate]) VALUES ('6','Does the Company have any income from Business & Profession?','IncomefromBusinessProf',1,1,GETDATE())
+INSERT INTO [dbo].[ITHeadMaster] ([ExcelSrNo],[Description],[PropertyName],[Active],[AddedBy],[AddedDate]) VALUES ('6a','Unabsorbed Depreciation','UnabsorbedDepreciation',1,1,GETDATE())
+INSERT INTO [dbo].[ITHeadMaster] ([ExcelSrNo],[Description],[PropertyName],[Active],[AddedBy],[AddedDate]) VALUES ('6b','Brought forward losses','Broughtforwardlosses',1,1,GETDATE())
+INSERT INTO [dbo].[ITHeadMaster] ([ExcelSrNo],[Description],[PropertyName],[Active],[AddedBy],[AddedDate]) VALUES ('7','Does the Company have any income from other sources?','IncomeFromOtherSources',1,1,GETDATE())
+INSERT INTO [dbo].[ITHeadMaster] ([ExcelSrNo],[Description],[PropertyName],[Active],[AddedBy],[AddedDate]) VALUES ('9','Are there any deductions under Chapter VI A?','DeductChapterVIA',1,1,GETDATE())
+INSERT INTO [dbo].[ITHeadMaster] ([ExcelSrNo],[Description],[PropertyName],[Active],[AddedBy],[AddedDate]) VALUES ('11','What is the Book Profit of the company u/s 115JB','ProfitUS115JB',1,1,GETDATE())
+INSERT INTO [dbo].[ITHeadMaster] ([ExcelSrNo],[Description],[PropertyName],[Active],[AddedBy],[AddedDate]) VALUES ('22','Advance Tax (1st Installment) been paid by the Company?','AdvanceTax1installment',1,1,GETDATE())
+INSERT INTO [dbo].[ITHeadMaster] ([ExcelSrNo],[Description],[PropertyName],[Active],[AddedBy],[AddedDate]) VALUES ('23','Advance Tax (2nd Installment) been paid by the Company?','AdvanceTax2installment',1,1,GETDATE())
+INSERT INTO [dbo].[ITHeadMaster] ([ExcelSrNo],[Description],[PropertyName],[Active],[AddedBy],[AddedDate]) VALUES ('24','Advance Tax (3rd Installment) been paid by the Company?','AdvanceTax3installment',1,1,GETDATE())
+INSERT INTO [dbo].[ITHeadMaster] ([ExcelSrNo],[Description],[PropertyName],[Active],[AddedBy],[AddedDate]) VALUES ('25','Advance Tax (4th Installment) been paid by the Company?','AdvanceTax4installment',1,1,GETDATE())
+INSERT INTO [dbo].[ITHeadMaster] ([ExcelSrNo],[Description],[PropertyName],[Active],[AddedBy],[AddedDate]) VALUES ('27','Details of Tax Deducted at Source by the company','TDS',1,1,GETDATE())
+INSERT INTO [dbo].[ITHeadMaster] ([ExcelSrNo],[Description],[PropertyName],[Active],[AddedBy],[AddedDate]) VALUES ('28','Has TCS been paid by the company?','TCSPaidbyCompany',1,1,GETDATE())
+INSERT INTO [dbo].[ITHeadMaster] ([ExcelSrNo],[Description],[PropertyName],[Active],[AddedBy],[AddedDate]) VALUES ('36','Is there any Self-Assessment Tax paid by the company?','SelfassessmentTax',1,1,GETDATE())
+INSERT INTO [dbo].[ITHeadMaster] ([ExcelSrNo],[Description],[PropertyName],[Active],[AddedBy],[AddedDate]) VALUES ('','Has the company utlised MAT Credit available during the year?','MATCredit',1,1,GETDATE())
+INSERT INTO [dbo].[ITHeadMaster] ([ExcelSrNo],[Description],[PropertyName],[Active],[AddedBy],[AddedDate]) VALUES ('','Interest U/S 234A of the Income Tax Act 1961','InterestUS234A',1,1,GETDATE())
+INSERT INTO [dbo].[ITHeadMaster] ([ExcelSrNo],[Description],[PropertyName],[Active],[AddedBy],[AddedDate]) VALUES ('','Interest u/s 234B of the Income Tax Act 1961','InterestUS234B',1,1,GETDATE())
+INSERT INTO [dbo].[ITHeadMaster] ([ExcelSrNo],[Description],[PropertyName],[Active],[AddedBy],[AddedDate]) VALUES ('','Interest u/s 234C of the Income Tax Act 1961 ','InterestUS234C',1,1,GETDATE())
+INSERT INTO [dbo].[ITHeadMaster] ([ExcelSrNo],[Description],[PropertyName],[Active],[AddedBy],[AddedDate]) VALUES ('38','Is there any Interest receivable applicable u/s 244A of the Income Tax Act 1961?','InterestUS244A',1,1,GETDATE())
+INSERT INTO [dbo].[ITHeadMaster] ([ExcelSrNo],[Description],[PropertyName],[Active],[AddedBy],[AddedDate]) VALUES ('39','Has any refund already been received?','RefundReceived',1,1,GETDATE())
+INSERT INTO [dbo].[ITHeadMaster] ([ExcelSrNo],[Description],[PropertyName],[Active],[AddedBy],[AddedDate]) VALUES ('41','Has a revised return been filed by the company?','RevisedReturnFile',1,1,GETDATE())

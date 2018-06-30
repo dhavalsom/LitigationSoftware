@@ -22,7 +22,7 @@ CREATE TABLE [dbo].[ITReturnDetailsExtension](
 	[Id] [bigint] IDENTITY(1,1) NOT NULL,
 	[ITReturnDetailsId] [bigint] NOT NULL,
 	[ITSubHeadId] [bigint] NOT NULL,
-	[ITSubHeadValue] [decimal](18, 2) NOT NULL,
+	[ITSubHeadValue] [decimal](18, 2) NULL,
 	[Active] [bit] NOT NULL,
 	[AddedBy] [bigint] NULL,
 	[AddedDate] [datetime] NULL,

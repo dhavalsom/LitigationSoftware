@@ -101,6 +101,38 @@ namespace LS.BL.Library
                 //Log
             }
         }
+
+        public List<ITHeadMaster> GetITHeadMaster()
+        {
+            try
+            {
+                return this._masterDA.GetITHeadMaster();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                //Log
+            }
+        }
+
+        public List<ITSubHeadMaster> GetITSubHeadMaster(int? itHeadId)
+        {
+            try
+            {
+                return this._masterDA.GetITSubHeadMaster(itHeadId);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                //Log
+            }
+        }
         #endregion
 
         #region IDisposable
