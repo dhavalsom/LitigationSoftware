@@ -10,4 +10,11 @@
         public string ITHeadName { get; set; }
         #endregion
     }
+
+    public class ITSubHeadMasterResponse
+    {
+        public int Id { get; set; }
+        public bool IsSuccess { get; set; }
+        public string Message { get; set; }
+    }
 }

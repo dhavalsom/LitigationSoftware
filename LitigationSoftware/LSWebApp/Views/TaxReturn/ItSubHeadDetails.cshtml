@@ -1,0 +1,60 @@
+﻿@model LSWebApp.Models.ITReturnDetailsExtensionModel
+
+<tr class="custom-sub-head">
+    <td></td>
+    <td></td>
+    <td>
+        @Html.TextBoxFor(m => m.ITHeadId, Model.ITHeadId.ToString()
+        , new { @style = "display:none;", @class = "hdIIHeadIdSubHead" })
+        @Html.TextBox("txtSubHeadDesc_" + Model.ITHeadId.ToString(), "", new { @style = "display:none;", @class = "txtSubHead" })
+        @Html.CheckBox("chkSubHeadDesc_" + Model.ITHeadId.ToString(), new { @style = "display:none;", @class = "chkSubHead" })
+        <img src="~/images/plus.png"
+             class="imgSubHead"
+             style="width:20px;height:20px;" />
+        <img src="~/images/save.png"
+             class="imgSubHeadSave"
+             style="width:20px;height:20px;display:none;" />
+    </td>
+</tr>
+<tr class="trDisallownace@(Model.ITHeadId.ToString())">
+    <td></td>
+    <td>a</td>
+    <td>
+        Are there any disallowances made in the Assessment Order?
+    </td>
+</tr>
+@if (Model.DisAllowancesExtensionList != null && Model.DisAllowancesExtensionList.Count() != 0)
+{   
+    foreach (var extensionItem in Model.DisAllowancesExtensionList)
+    {
+        <tr>
+            <td></td>
+            <td></td>
+            <td>@extensionItem.SubHeadMasterObject.Description:-</td>
+            <td>
+                @Html.TextBox("txtITSubHead_" + extensionItem.ITSubHeadId.ToString(), extensionItem.ITSubHeadValue)
+            </td>
+        </tr>
+    }
+}
+
+<tr class="trAllowance@(Model.ITHeadId.ToString())">
+    <td></td>
+    <td>b</td>
+    <td>Are there any allowances made in the Assessment Order?</td>
+</tr>
+
+@if (Model.AllowancesExtensionList != null && Model.AllowancesExtensionList.Count() != 0)
+{        
+    foreach (var extensionItem in Model.AllowancesExtensionList)
+    {
+        <tr>
+            <td></td>
+            <td></td>
+            <td>@extensionItem.SubHeadMasterObject.Description:-</td>
+            <td>
+                @Html.TextBox("txtITSubHead_" + extensionItem.ITSubHeadId.ToString(), extensionItem.ITSubHeadValue)
+            </td>
+        </tr>
+    }
+}
