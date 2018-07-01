@@ -71,5 +71,23 @@ namespace LSApi.Controllers
             var objITSectionResponse = objMaster.InsertUpdateITSection(objITSection);
             return objITSectionResponse;
         }
+
+        [HttpGet]
+        [Route("GetITHeadMaster")]
+        // GET: api/MasterAPI/GetITHeadMaster
+        public List<ITHeadMaster> GetITHeadMaster()
+        {
+            var CompObj = _Kernel.Get<IMaster>();
+            return CompObj.GetITHeadMaster();
+        }
+
+        [HttpGet]
+        [Route("GetITSubHeadMaster")]
+        // GET: api/MasterAPI/GetITSubHeadMaster
+        public List<ITSubHeadMaster> GetITSubHeadMaster(int? itHeadId)
+        {
+            var CompObj = _Kernel.Get<IMaster>();
+            return CompObj.GetITSubHeadMaster(itHeadId);
+        }
     }
 }

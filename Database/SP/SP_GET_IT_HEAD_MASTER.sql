@@ -28,6 +28,7 @@ BEGIN
       ,[ExcelSrNo]
       ,[Description]
       ,[PropertyName]
+	  ,[CanAddSubHead]
       ,[Active]
 	FROM [ITHeadMaster]
 	WHERE (@ACTIVE IS NULL OR [Active] = @ACTIVE)

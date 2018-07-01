@@ -90,27 +90,54 @@
          <tr>
              <td>4</td>
              <td></td>
-             <td>Income from House property:-</td>
+             <td>@Model.ITHeadMasterList["HousePropIncome"].Description:-</td>
              <td>
                 @Html.TextBoxFor(m => m.ITReturnDetailsObject.HousePropIncome, Model.ITReturnDetailsObject.HousePropIncome)
              </td>
          </tr>
+         @foreach (var extensionItem in Model.ExtensionList.Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["HousePropIncome"].Id))
+         {
+            <tr>
+                <td>
+                    Sub item
+                </td>
+                <td></td>
+                <td>@extensionItem.SubHeadMasterObject.Description:-</td>
+                <td>
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.HousePropIncome, Model.ITReturnDetailsObject.HousePropIncome)
+                </td>
+            </tr>
+         }
          <tr>
              <td>5</td>
              <td></td>
-             <td>Income from capital gains(Not STT Paid):-</td>
+             <td>@Model.ITHeadMasterList["IncomefromCapGainsNonSTT"].Description:-</td>
              <td>@Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomefromCapGainsNonSTT, Model.ITReturnDetailsObject.IncomefromCapGainsNonSTT)</td>
          </tr>
+
+         @foreach (var extensionItem in Model.ExtensionList.Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomefromCapGainsNonSTT"].Id))
+         {
+             <tr>
+                 <td>
+                     Sub item
+                 </td>
+                 <td></td>
+                 <td>@extensionItem.SubHeadMasterObject.Description:-</td>
+                 <td>
+                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.HousePropIncome, Model.ITReturnDetailsObject.IncomefromCapGainsNonSTT)
+                 </td>
+             </tr>
+         }
          <tr>
              <td></td>
              <td></td>
-             <td>Income from capital gains(STT Paid):-</td>
+             <td>@Model.ITHeadMasterList["IncomefromCapGainsSTT"].Description:-</td>
              <td>@Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomefromCapGainsSTT, Model.ITReturnDetailsObject.IncomefromCapGainsSTT)</td>
          </tr>
          <tr>
              <td>6</td>
              <td></td>
-             <td>Income from Business & Profession:-</td>
+             <td>@Model.ITHeadMasterList["IncomefromBusinessProf"].Description:-</td>
              <td>
                  @Html.RadioButtonFor(m => m.ITReturnDetailsObject.IncomefromBusinessProf, !Model.ITReturnDetailsObject.IncomefromBusinessProf) Yes
                  @Html.RadioButtonFor(m => m.ITReturnDetailsObject.IncomefromBusinessProf, Model.ITReturnDetailsObject.IncomefromBusinessProf) No
@@ -119,7 +146,7 @@
          <tr>
              <td></td>
              <td>a</td>
-             <td>Unabsorbed Depreciation:-</td>
+             <td>@Model.ITHeadMasterList["UnabsorbedDepreciation"].Description:-</td>
              <td>
                  @Html.TextBoxFor(m => m.ITReturnDetailsObject.UnabsorbedDepreciation, Model.ITReturnDetailsObject.UnabsorbedDepreciation)
              </td>
@@ -127,7 +154,7 @@
          <tr>
              <td></td>
              <td>b</td>
-             <td>Brought forward losses:-</td>
+             <td>@Model.ITHeadMasterList["Broughtforwardlosses"].Description:-</td>
              <td>
                  @Html.TextBoxFor(m => m.ITReturnDetailsObject.Broughtforwardlosses, Model.ITReturnDetailsObject.Broughtforwardlosses)
              </td>
@@ -135,7 +162,7 @@
          <tr>
              <td>7</td>
              <td></td>
-             <td>Income from other sources:-</td>
+             <td>@Model.ITHeadMasterList["IncomeFromOtherSources"].Description:-</td>
              <td>
                  @Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomeFromOtherSources, Model.ITReturnDetailsObject.IncomeFromOtherSources)
              </td>
@@ -143,7 +170,7 @@
          <tr>
              <td>9</td>
              <td></td>
-             <td>Deductions under Chapter VI A:-</td>
+             <td>@Model.ITHeadMasterList["DeductChapterVIA"].Description:-</td>
              <td>
                  @Html.TextBoxFor(m => m.ITReturnDetailsObject.DeductChapterVIA, Model.ITReturnDetailsObject.DeductChapterVIA)
              </td>
@@ -151,7 +178,7 @@
          <tr>
              <td>11</td>
              <td></td>
-             <td>Book profit of the company u/s 115JB:-</td>
+             <td>@Model.ITHeadMasterList["ProfitUS115JB"].Description:-</td>
              <td>
                  @Html.TextBoxFor(m => m.ITReturnDetailsObject.ProfitUS115JB, Model.ITReturnDetailsObject.ProfitUS115JB)
              </td>
@@ -159,7 +186,7 @@
          <tr>
              <td>22</td>
              <td></td>
-             <td>Advance Tax(1st Installment) been paid by the company:-</td>
+             <td>@Model.ITHeadMasterList["AdvanceTax1installment"].Description:-</td>
              <td>
                  @Html.TextBoxFor(m => m.ITReturnDetailsObject.AdvanceTax1installment, Model.ITReturnDetailsObject.AdvanceTax1installment)
              </td>
@@ -167,7 +194,7 @@
          <tr>
              <td>23</td>
              <td></td>
-             <td>Advance Tax(2nd Installment) been paid by the company:-</td>
+             <td>@Model.ITHeadMasterList["AdvanceTax2installment"].Description:-</td>
              <td>
                  @Html.TextBoxFor(m => m.ITReturnDetailsObject.AdvanceTax2installment, Model.ITReturnDetailsObject.AdvanceTax2installment)
              </td>
@@ -175,7 +202,7 @@
          <tr>
              <td>24</td>
              <td></td>
-             <td>Advance Tax(3rd Installment) been paid by the company:-</td>
+             <td>@Model.ITHeadMasterList["AdvanceTax3installment"].Description:-</td>
              <td>
                  @Html.TextBoxFor(m => m.ITReturnDetailsObject.AdvanceTax3installment, Model.ITReturnDetailsObject.AdvanceTax3installment)
              </td>
@@ -183,7 +210,7 @@
          <tr>
              <td>25</td>
              <td></td>
-             <td>Advance Tax(4th Installment) been paid by the company:-</td>
+             <td>@Model.ITHeadMasterList["AdvanceTax4installment"].Description:-</td>
              <td>
                  @Html.TextBoxFor(m => m.ITReturnDetailsObject.AdvanceTax4installment, Model.ITReturnDetailsObject.AdvanceTax4installment)
              </td>
@@ -191,7 +218,7 @@
          <tr>
              <td>27</td>
              <td></td>
-             <td>Tax Deducted at source:-</td>
+             <td>@Model.ITHeadMasterList["TDS"].Description:-</td>
              <td>
                  @Html.TextBoxFor(m => m.ITReturnDetailsObject.TDS, Model.ITReturnDetailsObject.TDS)
              </td>
@@ -199,7 +226,7 @@
          <tr>
              <td>28</td>
              <td></td>
-             <td>TCS paid by the company:-</td>
+             <td>@Model.ITHeadMasterList["TCSPaidbyCompany"].Description:-</td>
              <td>
                 @Html.TextBoxFor(m => m.ITReturnDetailsObject.TCSPaidbyCompany, Model.ITReturnDetailsObject.TCSPaidbyCompany)
              </td>
@@ -207,35 +234,35 @@
          <tr>
              <td>36</td>
              <td></td>
-             <td>Self-Assessment Tax paid by the company:-</td>
+             <td>@Model.ITHeadMasterList["SelfAssessmentTax"].Description:-</td>
              <td>
                  @Html.TextBoxFor(m => m.ITReturnDetailsObject.SelfAssessmentTax, Model.ITReturnDetailsObject.SelfAssessmentTax)
              </td>
          </tr>
          <tr>
              <td colspan="2"></td>
-             <td>Has the company utilised MAT credit available during the year?</td>
+             <td>@Model.ITHeadMasterList["MATCredit"].Description:-</td>
              <td>
                  @Html.TextBoxFor(m => m.ITReturnDetailsObject.MATCredit, Model.ITReturnDetailsObject.MATCredit)
              </td>
          </tr>
          <tr>
              <td colspan="2"></td>
-             <td>Interest U/S 234A of the Income Tax Act 1961:-</td>
+             <td>@Model.ITHeadMasterList["InterestUS234A"].Description:-</td>
              <td>
                  @Html.TextBoxFor(m => m.ITReturnDetailsObject.InterestUS234A, Model.ITReturnDetailsObject.InterestUS234A)
              </td>
          </tr>
          <tr>
              <td colspan="2"></td>
-             <td>Interest U/S 234B of the Income Tax Act 1961:-</td>
+             <td>@Model.ITHeadMasterList["InterestUS234B"].Description:-</td>
              <td>
                  @Html.TextBoxFor(m => m.ITReturnDetailsObject.InterestUS234B, Model.ITReturnDetailsObject.InterestUS234B)
              </td>
          </tr>
          <tr>
              <td colspan="2"></td>
-             <td>Interest U/S 234C of the Income Tax Act 1961:-</td>
+             <td>@Model.ITHeadMasterList["InterestUS234C"].Description:-</td>
              <td>
                  @Html.TextBoxFor(m => m.ITReturnDetailsObject.InterestUS234C, Model.ITReturnDetailsObject.InterestUS234C)
              </td>
@@ -243,7 +270,7 @@
          <tr>
              <td>38</td>
              <td></td>
-             <td>Interest receivable applicable u/s 244A of the Income Tax Act 1961:-</td>
+             <td>@Model.ITHeadMasterList["InterestUS244A"].Description:-</td>
              <td>
                  @Html.TextBoxFor(m => m.ITReturnDetailsObject.InterestUS244A, Model.ITReturnDetailsObject.InterestUS244A)
              </td>
@@ -251,7 +278,7 @@
          <tr>
              <td>39</td>
              <td></td>
-             <td>Refund already been received:-</td>
+             <td>@Model.ITHeadMasterList["RefundReceived"].Description:-</td>
              <td>
                  @Html.TextBoxFor(m => m.ITReturnDetailsObject.RefundReceived, Model.ITReturnDetailsObject.RefundReceived)
              </td>
@@ -259,7 +286,7 @@
          <tr>
              <td>41</td>
              <td></td>
-             <td>Has a revised return been filed by the company?</td>
+             <td>@Model.ITHeadMasterList["RevisedReturnFile"].Description:-</td>
              <td>
                  @Html.RadioButtonFor(m => m.ITReturnDetailsObject.RevisedReturnFile, !Model.ITReturnDetailsObject.RevisedReturnFile) Yes
                  @Html.RadioButtonFor(m => m.ITReturnDetailsObject.RevisedReturnFile, Model.ITReturnDetailsObject.RevisedReturnFile) No

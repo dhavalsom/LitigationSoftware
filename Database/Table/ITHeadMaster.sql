@@ -17,6 +17,7 @@ CREATE TABLE [dbo].[ITHeadMaster](
 	[ExcelSrNo] [nvarchar](10) NULL,
 	[Description] [nvarchar](1000) NOT NULL,
 	[PropertyName] [nvarchar](1000) NOT NULL,
+	[CanAddSubHead] [bit] NOT NULL,
 	[Active] [bit] NOT NULL,
 	[AddedBy] [bigint] NULL,
 	[AddedDate] [datetime] NULL,
