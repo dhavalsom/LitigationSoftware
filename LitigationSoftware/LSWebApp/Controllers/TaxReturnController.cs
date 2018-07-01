@@ -186,8 +186,25 @@ namespace LSWebApp.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> InsertorUpdateITReturnDetails(ITReturnDetailsModel itReturn)
+        public async Task<ActionResult> InsertorUpdateITReturnDetails(ITReturnDetailsModel itReturn, FormCollection form)
         {
+            foreach (var control in form.Keys)
+            {
+                if (control.ToString().StartsWith("txtITSubHead_"))
+                {
+                    decimal value;
+                    if (decimal.TryParse(form[control.ToString()].ToString(), out value)) {
+                        if (value != 0) {
+                            itReturn.ExtensionList.Add(new ITReturnDetailsExtension
+                            {
+                                Id = itReturn.ITReturnDetailsObject.Id,
+                                ITSubHeadValue = value,
+                                ITSubHeadId =int.Parse(control.ToString().Replace("txtITSubHead_", ""))
+                            });
+                        }
+                    }
+                }
+            }
             using (var client = new HttpClient())
             {
                 ITReturnComplexModel itrcomplexmodel = new ITReturnComplexModel();
@@ -231,6 +248,29 @@ namespace LSWebApp.Controllers
                     IsSuccess = Res.IsSuccessStatusCode,
                     Message = Res.Content.ReadAsStringAsync().Result
                 };
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> InsertUpdateITSubHeadMaster(ITSubHeadMaster objITSubHeadMaster)
+        {
+            using (var client = new HttpClient())
+            {
+                var json = JsonConvert.SerializeObject(objITSubHeadMaster);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.PostAsync("api/MasterAPI/InsertUpdateITSubHeadMaster", content);
+                ITSubHeadMasterResponse result = JsonConvert.DeserializeObject<ITSubHeadMasterResponse>(Res.Content.ReadAsStringAsync().Result);
+
+                //ITSubHeadMasterResponse result = new ITSubHeadMasterResponse()
+                //{
+                //    IsSuccess = Res.IsSuccessStatusCode,
+                //    Message = Res.Content.ReadAsStringAsync().Result,
+                //    Id = Res.Content.ReadAsStringAsync().Id
+                //};
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
         }

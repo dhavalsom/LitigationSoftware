@@ -41,7 +41,7 @@ $(".imgLitigationDDSave").click(function (e) {
                 type: 'GET',
                 url: '/' + refreshActionName + '/',
                 success: function (refreshedData) {
-                    refreshOprons(ddControl, refreshedData, txtControl.val());
+                    refreshOptions(ddControl, refreshedData, txtControl.val());
                     showHideControls(saveButton);
                 },
                 contentType: "application/json",
@@ -53,7 +53,7 @@ $(".imgLitigationDDSave").click(function (e) {
     });
 });
 
-function refreshOprons(ddControl, list, defaultVal) {
+function refreshOptions(ddControl, list, defaultVal) {
     ddControl.empty(); 
     $.each(list, function (val, obj) {
         ddControl.append(
@@ -61,6 +61,7 @@ function refreshOprons(ddControl, list, defaultVal) {
         );
     });
 }
+
 function showHideControls(control) {
     control.css("display", "none");
     var isAddMode = control.hasClass("imgLitigationDD"); //in add mode and switch to the save mode now

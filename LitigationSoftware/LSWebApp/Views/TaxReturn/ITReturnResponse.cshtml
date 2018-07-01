@@ -36,7 +36,6 @@
             <td></td>
             <td>Date of filing the return:-</td>
             <td>
-                @*@Html.TextBoxFor(m => m.ITReturnDetailsObject.ITReturnFillingDate, String.Format("{0:d}", Model.ITReturnDetailsObject.ITReturnFillingDate.ToString()), new { @class = "datefield", type = "date" })*@
                 @Model.ITReturnDetailsObject.ITReturnFillingDate
             </td>
         </tr>
@@ -168,7 +167,7 @@
             <td></td>
             <td>Self-Assessment Tax paid by the company:-</td>
             <td>
-                @Model.ITReturnDetailsObject.SelfassessmentTax
+                @Model.ITReturnDetailsObject.SelfAssessmentTax
             </td>
         </tr>
         <tr>

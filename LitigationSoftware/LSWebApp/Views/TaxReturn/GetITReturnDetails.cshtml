@@ -1,4 +1,6 @@
-﻿@model  LSWebApp.Models.ITReturnDetailsModel
+﻿@using LSWebApp.Models;
+@using LS.Models;
+@model  LSWebApp.Models.ITReturnDetailsModel
 
 <h2>Original Return/Revised Return</h2>
 
@@ -26,7 +28,7 @@
         </tr>
      </table>
      <br />
-     <table>
+     <table class="tblITRetDetails">
          <tr>
              <th colspan="2">SNo.</th>
              <th>Questions</th>
@@ -87,6 +89,8 @@
                  </div>
              </td>
          </tr>
+
+         
          <tr>
              <td>4</td>
              <td></td>
@@ -95,45 +99,27 @@
                 @Html.TextBoxFor(m => m.ITReturnDetailsObject.HousePropIncome, Model.ITReturnDetailsObject.HousePropIncome)
              </td>
          </tr>
-         @foreach (var extensionItem in Model.ExtensionList.Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["HousePropIncome"].Id))
-         {
-            <tr>
-                <td>
-                    Sub item
-                </td>
-                <td></td>
-                <td>@extensionItem.SubHeadMasterObject.Description:-</td>
-                <td>
-                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.HousePropIncome, Model.ITReturnDetailsObject.HousePropIncome)
-                </td>
-            </tr>
-         }
+         @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+             .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["HousePropIncome"].Id)
+             .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["HousePropIncome"].Id))         
+
          <tr>
              <td>5</td>
              <td></td>
              <td>@Model.ITHeadMasterList["IncomefromCapGainsNonSTT"].Description:-</td>
              <td>@Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomefromCapGainsNonSTT, Model.ITReturnDetailsObject.IncomefromCapGainsNonSTT)</td>
          </tr>
-
-         @foreach (var extensionItem in Model.ExtensionList.Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomefromCapGainsNonSTT"].Id))
-         {
-             <tr>
-                 <td>
-                     Sub item
-                 </td>
-                 <td></td>
-                 <td>@extensionItem.SubHeadMasterObject.Description:-</td>
-                 <td>
-                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.HousePropIncome, Model.ITReturnDetailsObject.IncomefromCapGainsNonSTT)
-                 </td>
-             </tr>
-         }
+         @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+             .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomefromCapGainsNonSTT"].Id)
+             .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["IncomefromCapGainsNonSTT"].Id))
+         
          <tr>
              <td></td>
              <td></td>
              <td>@Model.ITHeadMasterList["IncomefromCapGainsSTT"].Description:-</td>
              <td>@Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomefromCapGainsSTT, Model.ITReturnDetailsObject.IncomefromCapGainsSTT)</td>
          </tr>
+
          <tr>
              <td>6</td>
              <td></td>
@@ -143,6 +129,10 @@
                  @Html.RadioButtonFor(m => m.ITReturnDetailsObject.IncomefromBusinessProf, Model.ITReturnDetailsObject.IncomefromBusinessProf) No
              </td>
          </tr>
+         @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+             .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomefromBusinessProf"].Id)
+             .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["IncomefromBusinessProf"].Id))
+
          <tr>
              <td></td>
              <td>a</td>
@@ -151,6 +141,7 @@
                  @Html.TextBoxFor(m => m.ITReturnDetailsObject.UnabsorbedDepreciation, Model.ITReturnDetailsObject.UnabsorbedDepreciation)
              </td>
          </tr>
+
          <tr>
              <td></td>
              <td>b</td>
@@ -159,6 +150,7 @@
                  @Html.TextBoxFor(m => m.ITReturnDetailsObject.Broughtforwardlosses, Model.ITReturnDetailsObject.Broughtforwardlosses)
              </td>
          </tr>
+
          <tr>
              <td>7</td>
              <td></td>
@@ -167,6 +159,10 @@
                  @Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomeFromOtherSources, Model.ITReturnDetailsObject.IncomeFromOtherSources)
              </td>
          </tr>
+         @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+             .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomeFromOtherSources"].Id)
+             .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["IncomeFromOtherSources"].Id))
+
          <tr>
              <td>9</td>
              <td></td>
@@ -175,6 +171,10 @@
                  @Html.TextBoxFor(m => m.ITReturnDetailsObject.DeductChapterVIA, Model.ITReturnDetailsObject.DeductChapterVIA)
              </td>
          </tr>
+         @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+             .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["DeductChapterVIA"].Id)
+             .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["DeductChapterVIA"].Id))
+
          <tr>
              <td>11</td>
              <td></td>
@@ -183,6 +183,10 @@
                  @Html.TextBoxFor(m => m.ITReturnDetailsObject.ProfitUS115JB, Model.ITReturnDetailsObject.ProfitUS115JB)
              </td>
          </tr>
+         @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+             .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["ProfitUS115JB"].Id)
+             .ToList<ITReturnDetailsExtension>() ,@Model.ITHeadMasterList["ProfitUS115JB"].Id))
+
          <tr>
              <td>22</td>
              <td></td>
