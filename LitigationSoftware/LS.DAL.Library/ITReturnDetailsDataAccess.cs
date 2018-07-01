@@ -22,7 +22,8 @@ namespace LS.DAL.Library
                 Command.CommandType = CommandType.StoredProcedure;
                 Command.Parameters.Clear();
                 
-                Command.Parameters.AddWithValue("@ITRETURNDETAILS_XML", GetXMLFromObject(itReturnDetails));
+                Command.Parameters.AddWithValue("@ITRETURNDETAILS_XML", GetXMLFromObject(itReturnDetails.ITReturnDetailsObject));
+                Command.Parameters.AddWithValue("@EXTENSIONDETAILS_XML", GetXMLFromObject(itReturnDetails.ExtensionList));
                 if (itReturnDetails.ITReturnDetailsObject.AddedBy.HasValue)
                 {
                     Command.Parameters.AddWithValue("@USER_ID", itReturnDetails.ITReturnDetailsObject.AddedBy.Value);

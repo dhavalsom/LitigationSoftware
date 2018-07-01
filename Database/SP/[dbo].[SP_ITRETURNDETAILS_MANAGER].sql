@@ -1,11 +1,11 @@
 USE [LitigationApp]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_ITRETURNDETAILS_MANAGER]    Script Date: 7/1/2018 11:06:22 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_ITRETURNDETAILS_MANAGER]    Script Date: 7/2/2018 1:24:53 AM ******/
 DROP PROCEDURE [dbo].[SP_ITRETURNDETAILS_MANAGER]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_ITRETURNDETAILS_MANAGER]    Script Date: 7/1/2018 11:06:22 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_ITRETURNDETAILS_MANAGER]    Script Date: 7/2/2018 1:24:53 AM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -16,6 +16,7 @@ GO
 CREATE PROCEDURE [dbo].[SP_ITRETURNDETAILS_MANAGER]
 (
 	@ITRETURNDETAILS_XML AS XML,
+	@EXTENSIONDETAILS_XML AS XML,
 	@USER_ID BIGINT = 1 --SET THE DEFAULT VALUE TO 1 IF NOT PASSED,
 )
 AS
@@ -68,14 +69,13 @@ SELECT	 @Id = ITReturnDetailsList.Columns.value('Id[1]', 'BIGINT')
 	   , @RefundReceived = ITReturnDetailsList.Columns.value('RefundReceived[1]', 'DECIMAL')
 	   , @RevisedReturnFile = ITReturnDetailsList.Columns.value('RevisedReturnFile[1]', 'BIT')
 	   , @Active = ITReturnDetailsList.Columns.value('Active[1]', 'BIT')
-FROM   @ITRETURNDETAILS_XML.nodes('ITReturnComplexAPIModel/ITReturnDetailsObject') AS ITReturnDetailsList(Columns)
+FROM   @ITRETURNDETAILS_XML.nodes('ITReturnDetails') AS ITReturnDetailsList(Columns)
 
-
-SELECT	 @ExtId = ITReturnDetailsList.Columns.value('Id[1]', 'BIGINT')
-	   , @ITSubHeadId = ITReturnDetailsList.Columns.value('ITSubHeadId[1]', 'DECIMAL')
-	   , @ITSubHeadValue = ITReturnDetailsList.Columns.value('ITSubHeadValue[1]', 'DECIMAL')
-	   , @Active = ITReturnDetailsList.Columns.value('Active[1]', 'BIT')
-FROM   @ITRETURNDETAILS_XML.nodes('ITReturnComplexAPIModel/ExtensionList') AS ITReturnDetailsList(Columns)
+SELECT 
+    @ExtId = x.Rec.query('./ExtID').value('.', 'bigint'),
+    @ITSubHeadId = x.Rec.query('./ITSubHeadId').value('.', 'bigint'),
+    @ITSubHeadValue = x.Rec.query('./ITSubHeadValue').value('.', 'decimal')
+FROM @EXTENSIONDETAILS_XML.nodes('/ArrayOfITReturnDetailsExtension/ITReturnDetailsExtension') as x(Rec)
 
 
 /*BLOCK TO READ THE VARIABLES ENDS HERE*/
@@ -164,15 +164,15 @@ FROM   @ITRETURNDETAILS_XML.nodes('ITReturnComplexAPIModel/ExtensionList') AS IT
 			  ,[AddedBy]
 			  ,[AddedDate]
 			)
-			VALUES
-			(
-			  @IdentityVal
-			 ,@ITSubHeadId
-			 ,@ITSubHeadValue
-			 ,@Active
-			 ,@USER_ID
-			 ,GETUTCDATE()
-			)
+			SELECT 
+				@IdentityVal,
+				x.Rec.query('./ITSubHeadId').value('.', 'bigint'),
+				x.Rec.query('./ITSubHeadValue').value('.', 'decimal'),
+				1,
+				@USER_ID,
+				GETUTCDATE()
+			FROM @EXTENSIONDETAILS_XML.nodes('/ArrayOfITReturnDetailsExtension/ITReturnDetailsExtension') as x(Rec)
+
 		END
 
 	SET @Result = 1;
@@ -186,47 +186,57 @@ FROM   @ITRETURNDETAILS_XML.nodes('ITReturnComplexAPIModel/ExtensionList') AS IT
 		UPDATE [dbo].[ITReturnDetails]
 		   SET 
 		   [CompanyID] = @CompanyID
-      ,[FYAYID] = @FYAYID
-      ,[ITSectionID] = @ITSectionID
-      ,[ITReturnFillingDate] = @ITReturnFillingDate
-      ,[ITReturnDueDate] = @ITReturnDueDate
-      ,[HousePropIncome] = @HousePropIncome
-      ,[IncomefromCapGainsNonSTT] = @IncomefromCapGainsNonSTT
-      ,[IncomefromCapGainsSTT] = @IncomefromCapGainsSTT
-      ,[IncomefromBusinessProf] = @IncomefromBusinessProf
-      ,[UnabsorbedDepreciation] = @UnabsorbedDepreciation
-      ,[Broughtforwardlosses] = @Broughtforwardlosses
-      ,[IncomeFromOtherSources] = @IncomeFromOtherSources
-      ,[DeductChapterVIA] = @DeductChapterVIA
-      ,[ProfitUS115JB] = @ProfitUS115JB
-      ,[AdvanceTax1installment] = @AdvanceTax1installment
-      ,[AdvanceTax2installment] = @AdvanceTax2installment
-      ,[AdvanceTax3installment] = @AdvanceTax3installment
-      ,[AdvanceTax4installment] = @AdvanceTax4installment
-      ,[TDS] = @TDS
-      ,[TCSPaidbyCompany] = @TCSPaidbyCompany
-      ,[SelfassessmentTax] = @SelfassessmentTax
-      ,[MATCredit] = @MATCredit
-      ,[InterestUS234A] = @InterestUS234A
-      ,[InterestUS234B] = @InterestUS234B
-      ,[InterestUS234C] = @InterestUS234C
-      ,[InterestUS244A] = @InterestUS244A
-      ,[RefundReceived] = @RefundReceived
-      ,[RevisedReturnFile] = @RevisedReturnFile
-		   ,[ModifiedBy] = @USER_ID
-			  ,[ModifiedDate] = GETUTCDATE()
+		  ,[FYAYID] = @FYAYID
+		  ,[ITSectionID] = @ITSectionID
+		  ,[ITReturnFillingDate] = @ITReturnFillingDate
+		  ,[ITReturnDueDate] = @ITReturnDueDate
+		  ,[HousePropIncome] = @HousePropIncome
+		  ,[IncomefromCapGainsNonSTT] = @IncomefromCapGainsNonSTT
+		  ,[IncomefromCapGainsSTT] = @IncomefromCapGainsSTT
+		  ,[IncomefromBusinessProf] = @IncomefromBusinessProf
+		  ,[UnabsorbedDepreciation] = @UnabsorbedDepreciation
+		  ,[Broughtforwardlosses] = @Broughtforwardlosses
+		  ,[IncomeFromOtherSources] = @IncomeFromOtherSources
+		  ,[DeductChapterVIA] = @DeductChapterVIA
+		  ,[ProfitUS115JB] = @ProfitUS115JB
+		  ,[AdvanceTax1installment] = @AdvanceTax1installment
+		  ,[AdvanceTax2installment] = @AdvanceTax2installment
+		  ,[AdvanceTax3installment] = @AdvanceTax3installment
+		  ,[AdvanceTax4installment] = @AdvanceTax4installment
+		  ,[TDS] = @TDS
+		  ,[TCSPaidbyCompany] = @TCSPaidbyCompany
+		  ,[SelfassessmentTax] = @SelfassessmentTax
+		  ,[MATCredit] = @MATCredit
+		  ,[InterestUS234A] = @InterestUS234A
+		  ,[InterestUS234B] = @InterestUS234B
+		  ,[InterestUS234C] = @InterestUS234C
+		  ,[InterestUS244A] = @InterestUS244A
+		  ,[RefundReceived] = @RefundReceived
+		  ,[RevisedReturnFile] = @RevisedReturnFile
+		  ,[ModifiedBy] = @USER_ID
+		  ,[ModifiedDate] = GETUTCDATE()
 		WHERE Id = @Id
-		SET @Result = 1;
-		SET @ReturnMessage = 'Record updated successfully.'
+		
 
 
 		IF @ITSubHeadId IS NOT NULL AND @ITSubHeadValue IS NOT NULL
 		BEGIN
+
+		declare @DocHandle int
+
+		EXEC sp_xml_preparedocument @DocHandle OUTPUT, @EXTENSIONDETAILS_XML 
+
 		UPDATE [dbo].[ITReturnDetailsExtension]
-		   SET [ITSubHeadValue] = @ITSubHeadValue
-		   WHERE Id = @Id AND ITSubHeadId = @ITSubHeadId
+		   SET [ITSubHeadValue] = XM.ITSubHeadValue
+		   from OPENXML(@DocHandle,'/ArrayOfITReturnDetailsExtension/ITReturnDetailsExtension',2)
+		   WITH (ITSubHeadId bigINT,[ITSubHeadValue] DECIMAL) AS XM
+		   INNER JOIN [dbo].[ITReturnDetailsExtension] ITRDE ON ITRDE.ITSubHeadId = XM.ITSubHeadId
 		END
 
+		EXEC sp_xml_removedocument @DocHandle
+
+		SET @Result = 1;
+		SET @ReturnMessage = 'Record updated successfully.'
 
 	END
 
@@ -235,20 +245,4 @@ SELECT @Result AS Result, @ReturnMessage AS ReturnMessage
 END
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 GO
-
-
