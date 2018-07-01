@@ -25,7 +25,7 @@ namespace LSWebApp
                       "~/Scripts/bootstrap-datepicker.min.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
+                      "~/Content/bootstrap.min.css",
                       "~/Content/site.css",
                       "~/Content/bootstrap-datepicker3.min.css"));
         }
