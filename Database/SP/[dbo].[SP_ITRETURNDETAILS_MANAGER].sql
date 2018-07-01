@@ -1,21 +1,16 @@
 USE [LitigationApp]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_ITRETURNDETAILS_MANAGER]    Script Date: 6/18/2018 11:49:17 AM ******/
+/****** Object:  StoredProcedure [dbo].[SP_ITRETURNDETAILS_MANAGER]    Script Date: 7/1/2018 11:06:22 PM ******/
 DROP PROCEDURE [dbo].[SP_ITRETURNDETAILS_MANAGER]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_ITRETURNDETAILS_MANAGER]    Script Date: 6/18/2018 11:49:17 AM ******/
+/****** Object:  StoredProcedure [dbo].[SP_ITRETURNDETAILS_MANAGER]    Script Date: 7/1/2018 11:06:22 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
-
-
-
-
-
 
 
 CREATE PROCEDURE [dbo].[SP_ITRETURNDETAILS_MANAGER]
@@ -32,14 +27,15 @@ BEGIN
 
 DECLARE @Id AS BIGINT, @CompanyID AS BIGINT, @FYAYID AS BIGINT,@ITSectionID AS BIGINT,
         @ITReturnFillingDate AS DATETIME,@Active AS BIT,@ReturnMessage as NVARCHAR(MAX), @Result as BIT,
-        @ITReturnDueDate AS DATETIME, @HousePropIncome AS BIGINT, @IncomefromCapGainsNonSTT AS BIGINT,
-        @IncomefromCapGainsSTT AS BIGINT, @IncomefromBusinessProf AS BIT, @UnabsorbedDepreciation AS BIGINT,
-        @Broughtforwardlosses AS BIGINT, @IncomeFromOtherSources AS BIGINT, @DeductChapterVIA AS BIGINT,
-        @ProfitUS115JB AS BIGINT, @AdvanceTax1installment AS BIGINT, @AdvanceTax2installment AS BIGINT,
-        @AdvanceTax3installment AS BIGINT, @AdvanceTax4installment AS BIGINT, @TDS AS BIGINT,
-        @TCSPaidbyCompany AS BIGINT, @SelfassessmentTax AS BIGINT, @MATCredit AS BIGINT,
-		@InterestUS234A AS BIGINT, @InterestUS234B AS BIGINT, @InterestUS234C AS BIGINT,
-        @InterestUS244A AS BIGINT, @RefundReceived AS BIGINT, @RevisedReturnFile AS BIT
+        @ITReturnDueDate AS DATETIME, @HousePropIncome AS DECIMAL, @IncomefromCapGainsNonSTT AS DECIMAL,
+        @IncomefromCapGainsSTT AS DECIMAL, @IncomefromBusinessProf AS BIT, @UnabsorbedDepreciation AS DECIMAL,
+        @Broughtforwardlosses AS DECIMAL, @IncomeFromOtherSources AS DECIMAL, @DeductChapterVIA AS DECIMAL,
+        @ProfitUS115JB AS DECIMAL, @AdvanceTax1installment AS DECIMAL, @AdvanceTax2installment AS DECIMAL,
+        @AdvanceTax3installment AS DECIMAL, @AdvanceTax4installment AS DECIMAL, @TDS AS DECIMAL,
+        @TCSPaidbyCompany AS DECIMAL, @SelfassessmentTax AS DECIMAL, @MATCredit AS DECIMAL,
+		@InterestUS234A AS DECIMAL, @InterestUS234B AS DECIMAL, @InterestUS234C AS DECIMAL,
+        @InterestUS244A AS DECIMAL, @RefundReceived AS DECIMAL, @RevisedReturnFile AS BIT,
+		@ExtId AS BIGINT, @ITSubHeadId AS DECIMAL, @ITSubHeadValue AS DECIMAL,@IdentityVal AS BIGINT
 
 
 SELECT	 @Id = ITReturnDetailsList.Columns.value('Id[1]', 'BIGINT')
@@ -48,31 +44,39 @@ SELECT	 @Id = ITReturnDetailsList.Columns.value('Id[1]', 'BIGINT')
 	   , @ITSectionID = ITReturnDetailsList.Columns.value('ITSectionID[1]', 'BIGINT')   
 	   , @ITReturnFillingDate = ITReturnDetailsList.Columns.value('ITReturnFillingDate[1]', 'DATETIME')
 	   , @ITReturnDueDate = ITReturnDetailsList.Columns.value('ITReturnDueDate[1]', 'DATETIME')
-	   , @HousePropIncome = ITReturnDetailsList.Columns.value('HousePropIncome[1]', 'BIGINT')
-	   , @IncomefromCapGainsNonSTT = ITReturnDetailsList.Columns.value('IncomefromCapGainsNonSTT[1]', 'BIGINT')
-	   , @IncomefromCapGainsSTT = ITReturnDetailsList.Columns.value('IncomefromCapGainsSTT[1]', 'BIGINT')
+	   , @HousePropIncome = ITReturnDetailsList.Columns.value('HousePropIncome[1]', 'DECIMAL')
+	   , @IncomefromCapGainsNonSTT = ITReturnDetailsList.Columns.value('IncomefromCapGainsNonSTT[1]', 'DECIMAL')
+	   , @IncomefromCapGainsSTT = ITReturnDetailsList.Columns.value('IncomefromCapGainsSTT[1]', 'DECIMAL')
 	   , @IncomefromBusinessProf = ITReturnDetailsList.Columns.value('IncomefromBusinessProf[1]', 'BIT')
-	   , @UnabsorbedDepreciation = ITReturnDetailsList.Columns.value('UnabsorbedDepreciation[1]', 'BIGINT')
-	   , @Broughtforwardlosses = ITReturnDetailsList.Columns.value('Broughtforwardlosses[1]', 'BIGINT')
-	   , @IncomeFromOtherSources = ITReturnDetailsList.Columns.value('IncomeFromOtherSources[1]', 'BIGINT')
-	   , @DeductChapterVIA = ITReturnDetailsList.Columns.value('DeductChapterVIA[1]', 'BIGINT')
-	   , @ProfitUS115JB = ITReturnDetailsList.Columns.value('ProfitUS115JB[1]', 'BIGINT')
-	   , @AdvanceTax1installment = ITReturnDetailsList.Columns.value('AdvanceTax1installment[1]', 'BIGINT')
-	   , @AdvanceTax2installment = ITReturnDetailsList.Columns.value('AdvanceTax2installment[1]', 'BIGINT')
-	   , @AdvanceTax3installment = ITReturnDetailsList.Columns.value('AdvanceTax3installment[1]', 'BIGINT')
-	   , @AdvanceTax4installment = ITReturnDetailsList.Columns.value('AdvanceTax4installment[1]', 'BIGINT')
-	   , @TDS = ITReturnDetailsList.Columns.value('TDS[1]', 'BIGINT')
-	   , @TCSPaidbyCompany = ITReturnDetailsList.Columns.value('TCSPaidbyCompany[1]', 'BIGINT')
-	   , @SelfassessmentTax = ITReturnDetailsList.Columns.value('SelfassessmentTax[1]', 'BIGINT')
-	   , @MATCredit = ITReturnDetailsList.Columns.value('MATCredit[1]', 'BIGINT')
-	   , @InterestUS234A = ITReturnDetailsList.Columns.value('InterestUS234A[1]', 'BIGINT')
-	   , @InterestUS234B = ITReturnDetailsList.Columns.value('InterestUS234B[1]', 'BIGINT')
-	   , @InterestUS234C = ITReturnDetailsList.Columns.value('InterestUS234C[1]', 'BIGINT')
-	   , @InterestUS244A = ITReturnDetailsList.Columns.value('InterestUS244A[1]', 'BIGINT')
-	   , @RefundReceived = ITReturnDetailsList.Columns.value('RefundReceived[1]', 'BIGINT')
+	   , @UnabsorbedDepreciation = ITReturnDetailsList.Columns.value('UnabsorbedDepreciation[1]', 'DECIMAL')
+	   , @Broughtforwardlosses = ITReturnDetailsList.Columns.value('Broughtforwardlosses[1]', 'DECIMAL')
+	   , @IncomeFromOtherSources = ITReturnDetailsList.Columns.value('IncomeFromOtherSources[1]', 'DECIMAL')
+	   , @DeductChapterVIA = ITReturnDetailsList.Columns.value('DeductChapterVIA[1]', 'DECIMAL')
+	   , @ProfitUS115JB = ITReturnDetailsList.Columns.value('ProfitUS115JB[1]', 'DECIMAL')
+	   , @AdvanceTax1installment = ITReturnDetailsList.Columns.value('AdvanceTax1installment[1]', 'DECIMAL')
+	   , @AdvanceTax2installment = ITReturnDetailsList.Columns.value('AdvanceTax2installment[1]', 'DECIMAL')
+	   , @AdvanceTax3installment = ITReturnDetailsList.Columns.value('AdvanceTax3installment[1]', 'DECIMAL')
+	   , @AdvanceTax4installment = ITReturnDetailsList.Columns.value('AdvanceTax4installment[1]', 'DECIMAL')
+	   , @TDS = ITReturnDetailsList.Columns.value('TDS[1]', 'DECIMAL')
+	   , @TCSPaidbyCompany = ITReturnDetailsList.Columns.value('TCSPaidbyCompany[1]', 'DECIMAL')
+	   , @SelfassessmentTax = ITReturnDetailsList.Columns.value('SelfassessmentTax[1]', 'DECIMAL')
+	   , @MATCredit = ITReturnDetailsList.Columns.value('MATCredit[1]', 'DECIMAL')
+	   , @InterestUS234A = ITReturnDetailsList.Columns.value('InterestUS234A[1]', 'DECIMAL')
+	   , @InterestUS234B = ITReturnDetailsList.Columns.value('InterestUS234B[1]', 'DECIMAL')
+	   , @InterestUS234C = ITReturnDetailsList.Columns.value('InterestUS234C[1]', 'DECIMAL')
+	   , @InterestUS244A = ITReturnDetailsList.Columns.value('InterestUS244A[1]', 'DECIMAL')
+	   , @RefundReceived = ITReturnDetailsList.Columns.value('RefundReceived[1]', 'DECIMAL')
 	   , @RevisedReturnFile = ITReturnDetailsList.Columns.value('RevisedReturnFile[1]', 'BIT')
 	   , @Active = ITReturnDetailsList.Columns.value('Active[1]', 'BIT')
-FROM   @ITRETURNDETAILS_XML.nodes('ITReturnDetails') AS ITReturnDetailsList(Columns)
+FROM   @ITRETURNDETAILS_XML.nodes('ITReturnComplexAPIModel/ITReturnDetailsObject') AS ITReturnDetailsList(Columns)
+
+
+SELECT	 @ExtId = ITReturnDetailsList.Columns.value('Id[1]', 'BIGINT')
+	   , @ITSubHeadId = ITReturnDetailsList.Columns.value('ITSubHeadId[1]', 'DECIMAL')
+	   , @ITSubHeadValue = ITReturnDetailsList.Columns.value('ITSubHeadValue[1]', 'DECIMAL')
+	   , @Active = ITReturnDetailsList.Columns.value('Active[1]', 'BIT')
+FROM   @ITRETURNDETAILS_XML.nodes('ITReturnComplexAPIModel/ExtensionList') AS ITReturnDetailsList(Columns)
+
 
 /*BLOCK TO READ THE VARIABLES ENDS HERE*/
 
@@ -147,6 +151,30 @@ FROM   @ITRETURNDETAILS_XML.nodes('ITReturnDetails') AS ITReturnDetailsList(Colu
 		,@USER_ID
 		,GETUTCDATE())
 
+	set @IdentityVal = @@IDENTITY
+	
+	IF @ITSubHeadId IS NOT NULL AND @ITSubHeadValue IS NOT NULL
+		BEGIN
+			INSERT INTO [dbo].[ITReturnDetailsExtension]
+			( 
+			   [ITReturnDetailsId]
+			  ,[ITSubHeadId]
+			  ,[ITSubHeadValue]
+			  ,[Active]
+			  ,[AddedBy]
+			  ,[AddedDate]
+			)
+			VALUES
+			(
+			  @IdentityVal
+			 ,@ITSubHeadId
+			 ,@ITSubHeadValue
+			 ,@Active
+			 ,@USER_ID
+			 ,GETUTCDATE()
+			)
+		END
+
 	SET @Result = 1;
 	SET @ReturnMessage = 'Record created successfully.'
 
@@ -190,11 +218,22 @@ FROM   @ITRETURNDETAILS_XML.nodes('ITReturnDetails') AS ITReturnDetailsList(Colu
 		WHERE Id = @Id
 		SET @Result = 1;
 		SET @ReturnMessage = 'Record updated successfully.'
+
+
+		IF @ITSubHeadId IS NOT NULL AND @ITSubHeadValue IS NOT NULL
+		BEGIN
+		UPDATE [dbo].[ITReturnDetailsExtension]
+		   SET [ITSubHeadValue] = @ITSubHeadValue
+		   WHERE Id = @Id AND ITSubHeadId = @ITSubHeadId
+		END
+
+
 	END
 
 
 SELECT @Result AS Result, @ReturnMessage AS ReturnMessage
 END
+
 
 
 

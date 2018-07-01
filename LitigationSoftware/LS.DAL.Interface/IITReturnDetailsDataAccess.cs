@@ -5,6 +5,6 @@ namespace LS.DAL.Interface
 {
     public interface IITReturnDetailsDataAccess
     {
-        ITReturnDetailsResponse InsertorUpdateITReturnDetails(ITReturnDetails itReturnDetails);
+        ITReturnComplexAPIModelResponse InsertorUpdateITReturnDetails(ITReturnComplexAPIModel itReturnDetails);
     }
 }

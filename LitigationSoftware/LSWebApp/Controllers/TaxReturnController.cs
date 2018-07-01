@@ -190,7 +190,10 @@ namespace LSWebApp.Controllers
         {
             using (var client = new HttpClient())
             {
-                var json = JsonConvert.SerializeObject(itReturn.ITReturnDetailsObject);
+                ITReturnComplexModel itrcomplexmodel = new ITReturnComplexModel();
+                itrcomplexmodel.ITReturnDetailsObject = itReturn.ITReturnDetailsObject;
+                itrcomplexmodel.ExtensionList = itReturn.ExtensionList;
+                var json = JsonConvert.SerializeObject(itrcomplexmodel);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
                 client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
                 client.DefaultRequestHeaders.Clear();

@@ -5,6 +5,6 @@ namespace LS.BL.Interface
 {
     public interface IITReturnDetailsBL : IDisposable
     {
-        ITReturnDetailsResponse InsertorUpdateITReturnDetails(ITReturnDetails itReturnDetails);
+        ITReturnComplexAPIModelResponse InsertorUpdateITReturnDetails(ITReturnComplexAPIModel itReturnDetails);
     }
 }
