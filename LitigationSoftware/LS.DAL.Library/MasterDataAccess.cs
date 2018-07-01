@@ -290,6 +290,56 @@ namespace LS.DAL.Library
                 Connection.Close();
             }
         }
+
+        public ITSubHeadMasterResponse InsertUpdateITSubHeadMaster(ITSubHeadMaster objITSubHeadMaster)
+        {
+            try
+            {
+                Log.Info("Started call to InsertUpdateITSubHeadMaster");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(objITSubHeadMaster));
+                Command.CommandText = "SP_IT_SUB_HEAD_MANAGER";
+                Command.CommandType = CommandType.StoredProcedure;
+                Command.Parameters.Clear();
+
+                Command.Parameters.AddWithValue("@IT_SUB_HEAD_XML", GetXMLFromObject(objITSubHeadMaster));
+
+                if (objITSubHeadMaster.AddedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", objITSubHeadMaster.AddedBy.Value);
+                }
+                if (objITSubHeadMaster.ModifiedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", objITSubHeadMaster.ModifiedBy.Value);
+                }
+                Connection.Open();
+                SqlDataReader reader = Command.ExecuteReader();
+
+                ITSubHeadMasterResponse result = new ITSubHeadMasterResponse();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result = new ITSubHeadMasterResponse
+                        {
+                            Id = Convert.ToInt32(reader["Id"].ToString()),
+                            Message = reader["ReturnMessage"] != DBNull.Value ? reader["ReturnMessage"].ToString() : null,
+                            IsSuccess = Convert.ToBoolean(reader["Result"].ToString())
+                        };
+                    }
+                }
+                Log.Info("End call to InsertUpdateITSubHeadMaster");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                Connection.Close();
+            }
+        }
         #endregion
     }
 }

@@ -133,6 +133,22 @@ namespace LS.BL.Library
                 //Log
             }
         }
+
+        public ITSubHeadMasterResponse InsertUpdateITSubHeadMaster(ITSubHeadMaster objITSubHeadMaster)
+        {
+            try
+            {
+                return this._masterDA.InsertUpdateITSubHeadMaster(objITSubHeadMaster);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                //Log
+            }
+        }
         #endregion
 
         #region IDisposable

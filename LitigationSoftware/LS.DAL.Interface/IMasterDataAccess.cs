@@ -12,5 +12,6 @@ namespace LS.DAL.Interface
         ITSectionResponse InsertUpdateITSection(ITSection objITSection);
         List<ITHeadMaster> GetITHeadMaster();
         List<ITSubHeadMaster> GetITSubHeadMaster(int? itHeadId);
+        ITSubHeadMasterResponse InsertUpdateITSubHeadMaster(ITSubHeadMaster objITSubHeadMaster);
     }
 }
