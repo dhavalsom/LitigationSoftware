@@ -100,30 +100,33 @@ namespace LSWebApp.Controllers
         [HttpGet]
         public async Task<ActionResult>GetITReturnDetails(int userId,int companyId,string companyname)
         {
-            ITReturnDetailsModel itrdetails = new ITReturnDetailsModel();
-            itrdetails.ITReturnDetailsObject.CompanyID = companyId;
-            itrdetails.ITReturnDetailsObject.CompanyName = companyname;
-            itrdetails.ITReturnDetailsObject.AddedBy = userId;
-            itrdetails.ITReturnDetailsObject.IncomefromBusinessProf = false;
-            itrdetails.ITReturnDetailsObject.RevisedReturnFile = false;
-            //var model = new FYAY();
+            ITReturnDetailsModel itrdetails = new ITReturnDetailsModel
+            {
+                ITReturnDetailsObject = new ITReturnDetails
+                {
+                    CompanyID = companyId,
+                    CompanyName = companyname,
+                    AddedBy = userId,
+                    IncomefromBusinessProf = false,
+                    RevisedReturnFile = false
+                }
+            };
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetFYAYList");
-
                 if (Res.IsSuccessStatusCode)
                 {
                     itrdetails.FYAYList = JsonConvert.DeserializeObject<List<FYAY>>(Res.Content.ReadAsStringAsync().Result);
-                    // RedirectToAction("CompanyList", "TaxReturn");
                 }
-
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                Res = await client.GetAsync("api/MasterAPI/GetITSubHeadMaster?itHeadId=");
+                var itSubHeads = JsonConvert.DeserializeObject<List<ITSubHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
+                Res = await client.GetAsync("api/MasterAPI/GetITHeadMaster");
+                var itHeads = JsonConvert.DeserializeObject<List<ITHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
+                               
                 Res = await client.GetAsync("api/MasterAPI/GetITSectionList");
-
                 if (Res.IsSuccessStatusCode)
                 {
                     itrdetails.ITSectionList = JsonConvert.DeserializeObject<List<ITSection>>(Res.Content.ReadAsStringAsync().Result);
@@ -135,6 +138,7 @@ namespace LSWebApp.Controllers
                        , "getITSections"
                     );
                 }
+                itrdetails.PopulateITHeadMasters(itHeads, itSubHeads);
             }
             
 

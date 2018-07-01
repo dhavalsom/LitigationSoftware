@@ -219,7 +219,6 @@ namespace LS.DAL.Library
                 Command.CommandText = "SP_GET_IT_HEAD_MASTER";
                 Command.CommandType = CommandType.StoredProcedure;
                 Connection.Open();
-
                 SqlDataReader reader = Command.ExecuteReader();
                 List<ITHeadMaster> result = new List<ITHeadMaster>();
                 if (reader.HasRows)
@@ -231,7 +230,8 @@ namespace LS.DAL.Library
                             ExcelSrNo = reader["ExcelSrNo"] != DBNull.Value ? reader["ExcelSrNo"].ToString() : null,
                             Description = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : null,
                             PropertyName = reader["PropertyName"] != DBNull.Value ? reader["PropertyName"].ToString() : null,
-                            Active = Convert.ToBoolean(reader["IsDefault"].ToString()),
+                            CanAddSubHead = Convert.ToBoolean(reader["CanAddSubHead"].ToString()),
+                            Active = Convert.ToBoolean(reader["Active"].ToString()),
                             Id = Convert.ToInt32(reader["Id"].ToString())
                         });
                     }
@@ -255,8 +255,28 @@ namespace LS.DAL.Library
             try
             {
                 Log.Info("Started call to GetITSubHeadMaster");
+                Command.CommandText = "SP_GET_IT_SUB_HEAD_MASTER";
+                Command.CommandType = CommandType.StoredProcedure;
+                Connection.Open();
+
+                SqlDataReader reader = Command.ExecuteReader();
                 List<ITSubHeadMaster> result = new List<ITSubHeadMaster>();
-                
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result.Add(new ITSubHeadMaster
+                        {
+                            ITHeadId = Convert.ToInt32(reader["ITHeadId"].ToString()),
+                            Description = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : null,
+                            ITHeadName = reader["ITHeadName"] != DBNull.Value ? reader["ITHeadName"].ToString() : null,
+                            IsAllowance = Convert.ToBoolean(reader["IsAllowance"].ToString()),
+                            Active = Convert.ToBoolean(reader["Active"].ToString()),
+                            Id = Convert.ToInt32(reader["Id"].ToString())
+                        });
+                    }
+                }
+
                 Log.Info("End call to GetITSubHeadMaster:" + JsonConvert.SerializeObject(result));
                 return result;
             }

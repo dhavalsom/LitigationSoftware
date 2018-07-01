@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LS.Models
 {
     public class ITReturnDetails : BaseEntity
     {
+        #region Properties
+
         public int CompanyID { get; set; }
         public string CompanyName { get; set; }
         public string PANNumber { get; set; }
@@ -41,6 +39,8 @@ namespace LS.Models
         public int? InterestUS244A { get; set; }
         public int? RefundReceived { get; set; }
         public bool? RevisedReturnFile { get; set; }
+
+        #endregion
 
         #region Serialization
         public bool ShouldSerializeITReturnFillingDate()
@@ -172,6 +172,8 @@ namespace LS.Models
 
         #endregion
 
+        #region Methods
+        #endregion
     }
 
     public class ITReturnDetailsResponse
