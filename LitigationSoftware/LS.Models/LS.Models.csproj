@@ -45,6 +45,7 @@
     <Compile Include="ErrorLog.cs" />
     <Compile Include="FYAY.cs" />
     <Compile Include="ITHeadMaster.cs" />
+    <Compile Include="ITReturnComplexAPIModel.cs" />
     <Compile Include="ITReturnDetails.cs" />
     <Compile Include="ITReturnDetailsExtension.cs" />
     <Compile Include="ITSection.cs" />
