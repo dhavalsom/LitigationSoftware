@@ -3,7 +3,7 @@
     ViewBag.Title = "My Dashboard";
 }
 
-<h2>Register a new company</h2>
+<h3>Register a new company</h3>
 
 @using (Html.BeginForm("CreateCompany", "TaxReturn"))
 {
@@ -12,26 +12,30 @@
     <table>
         <tr>
             <td>
-                Company Name:
+                <div class="form-group">
+                    Company Name:
+                </div>
             </td>
             <td>
-                @Html.TextBoxFor(m => m.CompanyName, new { style = "width: 300px;" })
+                @Html.TextBoxFor(m => m.CompanyName, new { @class="form-control", @placeholder = "Enter new company name" })
             </td>
         </tr>
         <tr style="height:20px;"></tr>
         <tr>
             <td>
-                PANNumber:
+                <div class="form-group">
+                    PANNumber:
+                </div>
             </td>
             <td>
-                @Html.TextBoxFor(m => m.PANNumber, new { style = "width: 300px;" })
+                @Html.TextBoxFor(m => m.PANNumber, new { @class = "form-control", @placeholder = "Enter PAN number" })
             </td>
         </tr>
         <tr style="height:20px;"></tr>
         <tr style="height:20px;"></tr>
         <tr>
-            <td colspan="2">
-                <button type="submit">Create Company</button>
+            <td colspan="2" align="center">
+               <button type="submit" class="btn btn-primary">Create Company</button>
             </td>
         </tr>
 
