@@ -99,5 +99,24 @@ namespace LSApi.Controllers
             var objITSubHeadMasterResponse = objMaster.InsertUpdateITSubHeadMaster(objITSubHeadMaster);
             return objITSubHeadMasterResponse;
         }
+
+        [HttpGet]
+        [Route("GetComplianceMaster")]
+        // GET: api/MasterAPI/GetComplianceMaster
+        public List<ComplianceMaster> GetComplianceMaster(int? complianceId)
+        {
+            var CompObj = _Kernel.Get<IMaster>();
+            return CompObj.GetComplianceMaster(complianceId);
+        }
+
+        // POST: api/MasterAPI/InsertUpdateComplianceMaster
+        [HttpPost]
+        [Route("InsertUpdateComplianceMaster")]
+        public ComplianceMasterResponse InsertUpdateComplianceMaster([FromBody]ComplianceMaster objComplianceMaster)
+        {
+            var objMaster = _Kernel.Get<IMaster>();
+            var objComplianceMasterResponse = objMaster.InsertUpdateComplianceMaster(objComplianceMaster);
+            return objComplianceMasterResponse;
+        }
     }
 }

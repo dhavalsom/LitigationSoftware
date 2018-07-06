@@ -5,6 +5,7 @@ using Ninject;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -96,9 +97,9 @@ namespace LSWebApp.Controllers
 
             }
         }
-        
+
         [HttpGet]
-        public async Task<ActionResult>GetITReturnDetails(int userId,int companyId,string companyname)
+        public async Task<ActionResult> GetITReturnDetails(int userId, int companyId, string companyname)
         {
             ITReturnDetailsModel itrdetails = new ITReturnDetailsModel
             {
@@ -125,13 +126,13 @@ namespace LSWebApp.Controllers
                 var itSubHeads = JsonConvert.DeserializeObject<List<ITSubHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
                 Res = await client.GetAsync("api/MasterAPI/GetITHeadMaster");
                 var itHeads = JsonConvert.DeserializeObject<List<ITHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
-                               
+
                 Res = await client.GetAsync("api/MasterAPI/GetITSectionList");
                 if (Res.IsSuccessStatusCode)
                 {
                     itrdetails.ITSectionList = JsonConvert.DeserializeObject<List<ITSection>>(Res.Content.ReadAsStringAsync().Result);
                     itrdetails.ITSectionListSource = new LitigationDDModel(
-                       itrdetails.ITSectionList.Select(x => 
+                       itrdetails.ITSectionList.Select(x =>
                         new SelectListItem() { Value = x.Id.ToString(), Text = x.Description }).ToList()
                        , "ITReturnDetailsObject.ITSectionID"
                        , "manageITSection"
@@ -140,8 +141,6 @@ namespace LSWebApp.Controllers
                 }
                 itrdetails.PopulateITHeadMasters(itHeads, itSubHeads);
             }
-            
-
             return View(itrdetails);
         }
 
@@ -260,14 +259,78 @@ namespace LSWebApp.Controllers
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpResponseMessage Res = await client.PostAsync("api/MasterAPI/InsertUpdateITSubHeadMaster", content);
-                ITSubHeadMasterResponse result = JsonConvert.DeserializeObject<ITSubHeadMasterResponse>(Res.Content.ReadAsStringAsync().Result);
+                ITSubHeadMasterResponse result = JsonConvert.DeserializeObject<ITSubHeadMasterResponse>(Res.Content.ReadAsStringAsync().Result);                
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+        }
 
-                //ITSubHeadMasterResponse result = new ITSubHeadMasterResponse()
-                //{
-                //    IsSuccess = Res.IsSuccessStatusCode,
-                //    Message = Res.Content.ReadAsStringAsync().Result,
-                //    Id = Res.Content.ReadAsStringAsync().Id
-                //};
+        [HttpGet]
+        public async Task<ActionResult> GetComplianceList()
+        {
+            ComplianceListModel model = new ComplianceListModel();
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetFYAYList");
+                model.FYAYList = JsonConvert.DeserializeObject<List<FYAY>>(Res.Content.ReadAsStringAsync().Result);
+                Res = await client.GetAsync("api/MasterAPI/GetCompanyList");
+                model.CompanyList = JsonConvert.DeserializeObject<List<Company>>(Res.Content.ReadAsStringAsync().Result);
+                Res = await client.GetAsync("api/MasterAPI/GetComplianceMaster?complianceId=");
+                model.ComplianceList = JsonConvert.DeserializeObject<List<ComplianceMaster>>(Res.Content.ReadAsStringAsync().Result);
+            }
+
+            return View("ComplianceList", model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetComplianceDocumentList(int companyId, int fyayId)
+        {
+            ComplianceDocumentListModel model = new ComplianceDocumentListModel()
+            {
+                CompanyId = companyId,
+                FYAYId = fyayId
+            };
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetComplianceMaster?complianceId=");
+                model.ComplianceList = JsonConvert.DeserializeObject<List<ComplianceMaster>>(Res.Content.ReadAsStringAsync().Result);
+                Res = await client.GetAsync("api/TaxReturnAPI/GetComplianceDocumentsList?companyId=" + companyId + "&fyayId=" + fyayId
+                     + "&complianceId=&complianceDocumentId=");
+                model.ComplianceDocumentList = JsonConvert.DeserializeObject<ComplianceDocumentsResponse>(Res.Content.ReadAsStringAsync().Result).ComplianceDocumentsList;
+            }
+
+            return PartialView("ComplianceDocumentList", model);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> InsertUpdateComplianceDocuments(ComplianceListModel objComplianceListModel)
+        {
+            string path = Server.MapPath("~/ComplianceDocumentsUpload/");
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            objComplianceListModel.ReportFile.SaveAs(path + Path.GetFileName(objComplianceListModel.ReportFile.FileName));
+            objComplianceListModel.ObjComplianceDocuments.FileName = objComplianceListModel.ReportFile.FileName;
+            objComplianceListModel.ObjComplianceDocuments.FilePath = path + objComplianceListModel.ReportFile.FileName;
+            objComplianceListModel.ObjComplianceDocuments.AddedBy = 1;
+            objComplianceListModel.ObjComplianceDocuments.ModifiedBy = 1;
+            objComplianceListModel.ObjComplianceDocuments.Active = true;
+
+            using (var client = new HttpClient())
+            {
+                var json = JsonConvert.SerializeObject(objComplianceListModel.ObjComplianceDocuments);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.PostAsync("api/TaxReturnAPI/InsertUpdateComplianceDocuments", content);
+                ComplianceDocumentsResponse result = JsonConvert.DeserializeObject<ComplianceDocumentsResponse>(Res.Content.ReadAsStringAsync().Result);
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
         }

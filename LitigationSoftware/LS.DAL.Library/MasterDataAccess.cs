@@ -340,6 +340,93 @@ namespace LS.DAL.Library
                 Connection.Close();
             }
         }
+
+        public List<ComplianceMaster> GetComplianceMaster(int? complianceId)
+        {
+            try
+            {
+                Log.Info("Started call to GetComplianceMaster");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(complianceId));
+                Command.CommandText = "SP_GET_COMPLIANCE_LIST";
+                Command.CommandType = CommandType.StoredProcedure;
+                Connection.Open();
+                SqlDataReader reader = Command.ExecuteReader();
+                List<ComplianceMaster> result = new List<ComplianceMaster>();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result.Add(new ComplianceMaster
+                        {
+                            SrNo = Convert.ToInt32(reader["SrNo"].ToString()),
+                            Description = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : null,
+                            Active = Convert.ToBoolean(reader["Active"].ToString()),
+                            Id = Convert.ToInt32(reader["Id"].ToString())
+                        });
+                    }
+                }
+                Log.Info("End call to GetComplianceMaster:" + JsonConvert.SerializeObject(result));
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            finally
+            {
+                Connection.Close();
+            }
+        }
+
+        public ComplianceMasterResponse InsertUpdateComplianceMaster(ComplianceMaster objComplianceMaster)
+        {
+            try
+            {
+                Log.Info("Started call to InsertUpdateComplianceMaster");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(objComplianceMaster));
+                Command.CommandText = "SP_COMPLIANCE_MANAGER";
+                Command.CommandType = CommandType.StoredProcedure;
+                Command.Parameters.Clear();
+
+                Command.Parameters.AddWithValue("@COMPLIANCE_XML", GetXMLFromObject(objComplianceMaster));
+
+                if (objComplianceMaster.AddedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", objComplianceMaster.AddedBy.Value);
+                }
+                if (objComplianceMaster.ModifiedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", objComplianceMaster.ModifiedBy.Value);
+                }
+                Connection.Open();
+                SqlDataReader reader = Command.ExecuteReader();
+
+                ComplianceMasterResponse result = new ComplianceMasterResponse();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result = new ComplianceMasterResponse
+                        {
+                            Message = reader["ReturnMessage"] != DBNull.Value ? reader["ReturnMessage"].ToString() : null,
+                            IsSuccess = Convert.ToBoolean(reader["Result"].ToString())
+                        };
+                    }
+                }
+                Log.Info("End call to InsertUpdateComplianceMaster");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                Connection.Close();
+            }
+        }
         #endregion
     }
 }

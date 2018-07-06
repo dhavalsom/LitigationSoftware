@@ -26,6 +26,19 @@ namespace LSWebApp
             );
 
             routes.MapRoute(
+                name: "compliancedocuments",
+                url: "compliancedocuments",
+                defaults: new { controller = "TaxReturn", action = "GetComplianceDocumentList", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
+                name: "compliances",
+                url: "compliances",
+                defaults: new { controller = "TaxReturn", action = "GetComplianceList", id = UrlParameter.Optional }
+            );
+
+
+            routes.MapRoute(
                 name: "manageITSubHead",
                 url: "manageITSubHead",
                 defaults: new { controller = "TaxReturn", action = "InsertUpdateITSubHeadMaster", id = UrlParameter.Optional }

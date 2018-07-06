@@ -1,0 +1,22 @@
+﻿@model LSWebApp.Models.ComplianceDocumentListModel
+@{
+    ViewBag.Title = "Compliances";
+}
+<style>
+    .tdBorder {
+        border: 1px solid black;
+        align-content: center;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+</style>
+<table>
+    @foreach (var compliance in Model.ComplianceList)
+    {
+        <tr>
+            <td class="tdBorder">
+                @compliance.Description
+            </td>
+        </tr>
+    }
+</table>

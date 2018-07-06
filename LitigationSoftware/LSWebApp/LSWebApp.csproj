@@ -170,6 +170,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\CompanyList.cs" />
+    <Compile Include="Models\ComplianceDocumentListModel.cs" />
+    <Compile Include="Models\ComplianceListModel.cs" />
     <Compile Include="Models\ITReturnDetailsModel.cs" />
     <Compile Include="Models\ITReturnDetailsExtensionModel.cs" />
     <Compile Include="Models\LitigationDDModel.cs" />
@@ -274,9 +276,12 @@
     <Content Include="Views\TaxReturn\ITReturnResponse.cshtml" />
     <Content Include="Views\Shared\_LitigationDD.cshtml" />
     <Content Include="Views\TaxReturn\ITSubHeadDetails.cshtml" />
+    <Content Include="Views\TaxReturn\ComplianceDocumentList.cshtml" />
+    <Content Include="Views\TaxReturn\ComplianceList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="ComplianceDocumentsUpload\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

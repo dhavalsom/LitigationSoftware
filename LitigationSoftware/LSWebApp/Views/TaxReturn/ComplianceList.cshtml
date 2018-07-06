@@ -1,0 +1,88 @@
+﻿@model LSWebApp.Models.ComplianceListModel
+@{
+    ViewBag.Title = "Manage Compliances";
+}
+<h2>Manage compliances</h2>
+<div>
+    
+    @using (Html.BeginForm("InsertUpdateComplianceDocuments", "TaxReturn"
+        , FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <table>
+            <tr>
+                <td>
+                    Select Company:
+                </td>
+                <td>
+                    @Html.DropDownListFor(m => m.ObjComplianceDocuments.CompanyId
+                    , new SelectList(Model.CompanyList, "Id", "CompanyName"), new
+                    {
+                        @name = "CompanyId",
+                        @id = "CompanyId",
+                    })
+                </td>
+                <td>
+                    Select Financial Year:
+                </td>
+                <td>
+                    @Html.DropDownListFor(m => m.ObjComplianceDocuments.FYAYId, new SelectList(Model.FYAYList, "Id", "FinancialYear"), new
+                    {
+                        @name = "FYAYId",
+                        @id = "FYAYId",
+                    })
+                </td>
+                <td>
+                    <button type="button" class="loadCompliance">Load</button>
+                </td>
+            </tr>
+
+            <tr class="trUpload">
+                <td>
+                    Select Compliance:
+                </td>
+                <td colspan="3">
+                    @Html.DropDownListFor(m => m.ObjComplianceDocuments.ComplianceId
+                    , new SelectList(Model.ComplianceList, "Id", "Description"), new
+                    {
+                        @name = "ComplianceId",
+                        @id = "ComplianceId",
+                    })
+                </td>
+                <td>
+                    @Html.TextBoxFor(model => model.ReportFile, new { type = "file" })
+                </td>
+                <td>
+                    <button type="submit">Upload File</button>
+                </td>
+            </tr>
+        </table>
+        <br/>
+        
+    }
+    <div id="docList">
+
+    </div>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".trUpload").hide();
+            $(".loadCompliance").click(function () {
+                $.ajax({
+                    url: '/compliancedocuments?companyId=' + $("#CompanyId").val()
+                    + '&fyayId=' + $("#FYAYId").val(),
+                    error: function () {
+                    },
+                    dataType: 'html',
+                    success: function (data) {
+                        $("#docList").html(data);
+                        $(".trUpload").show();
+                    },
+                    type: 'GET'
+                });
+                return false;
+            });
+        });
+    </script>
+}
