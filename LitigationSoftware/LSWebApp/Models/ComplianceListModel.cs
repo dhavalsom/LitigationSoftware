@@ -7,7 +7,10 @@ namespace LSWebApp.Models
     public class ComplianceListModel
     {
         #region Proeprties
-        
+        public int? CompanyId { get; set; }
+        public string CompanyName { get; set; }
+        public int? FYAYId { get; set; }
+        public string FinancialYear { get; set; }
         public List<FYAY> FYAYList { get; set; }
         public List<Company> CompanyList { get; set; }
         public List<ComplianceMaster> ComplianceList { get; set; }

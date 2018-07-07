@@ -79,9 +79,13 @@ namespace LS.DAL.Library
                 {
                     Command.Parameters.AddWithValue("@USER_ID", complianceDocuments.AddedBy.Value);
                 }
-                if (!complianceDocuments.AddedBy.HasValue && complianceDocuments.ModifiedBy.HasValue)
+                else if (complianceDocuments.ModifiedBy.HasValue)
                 {
                     Command.Parameters.AddWithValue("@USER_ID", complianceDocuments.ModifiedBy.Value);
+                }
+                else if (complianceDocuments.DeletedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", complianceDocuments.DeletedBy.Value);
                 }
                 Connection.Open();
                 SqlDataReader reader = Command.ExecuteReader();

@@ -1,17 +1,20 @@
 USE [LitigationApp]
 GO
 
-ALTER TABLE [dbo].[ComplianceDocuments] DROP CONSTRAINT [FK_ComplianceDocuments_ITReturnDetails_Id]
+ALTER TABLE [dbo].[ComplianceDocuments] DROP CONSTRAINT [FK_ComplianceDocuments_FYAYMaster_Id]
 GO
 
 ALTER TABLE [dbo].[ComplianceDocuments] DROP CONSTRAINT [FK_ComplianceDocuments_ComplianceMaster_Id]
 GO
 
-/****** Object:  Table [dbo].[ComplianceDocuments]    Script Date: 7/5/2018 9:55:55 PM ******/
+ALTER TABLE [dbo].[ComplianceDocuments] DROP CONSTRAINT [FK_ComplianceDocuments_CompanyMaster_Id]
+GO
+
+/****** Object:  Table [dbo].[ComplianceDocuments]    Script Date: 7/7/2018 11:33:15 AM ******/
 DROP TABLE [dbo].[ComplianceDocuments]
 GO
 
-/****** Object:  Table [dbo].[ComplianceDocuments]    Script Date: 7/5/2018 9:55:55 PM ******/
+/****** Object:  Table [dbo].[ComplianceDocuments]    Script Date: 7/7/2018 11:33:15 AM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -40,6 +43,13 @@ CREATE TABLE [dbo].[ComplianceDocuments](
 
 GO
 
+ALTER TABLE [dbo].[ComplianceDocuments]  WITH CHECK ADD  CONSTRAINT [FK_ComplianceDocuments_CompanyMaster_Id] FOREIGN KEY([CompanyId])
+REFERENCES [dbo].[CompanyMaster] ([Id])
+GO
+
+ALTER TABLE [dbo].[ComplianceDocuments] CHECK CONSTRAINT [FK_ComplianceDocuments_CompanyMaster_Id]
+GO
+
 ALTER TABLE [dbo].[ComplianceDocuments]  WITH CHECK ADD  CONSTRAINT [FK_ComplianceDocuments_ComplianceMaster_Id] FOREIGN KEY([ComplianceId])
 REFERENCES [dbo].[ComplianceMaster] ([Id])
 GO
@@ -47,17 +57,11 @@ GO
 ALTER TABLE [dbo].[ComplianceDocuments] CHECK CONSTRAINT [FK_ComplianceDocuments_ComplianceMaster_Id]
 GO
 
-ALTER TABLE [dbo].[ComplianceDocuments]  WITH CHECK ADD  CONSTRAINT [FK_ComplianceDocuments_CompanyMaster_Id] FOREIGN KEY([FYAYId])
-REFERENCES [dbo].[CompanyMaster] ([Id])
-GO
-
-ALTER TABLE [dbo].[ComplianceDocuments] CHECK CONSTRAINT [FK_ComplianceDocuments_CompanyMaster_Id]
-GO
-
-ALTER TABLE [dbo].[ComplianceDocuments]  WITH CHECK ADD  CONSTRAINT [FK_ComplianceDocuments_FYAYMaster_Id] FOREIGN KEY([CompanyId])
+ALTER TABLE [dbo].[ComplianceDocuments]  WITH CHECK ADD  CONSTRAINT [FK_ComplianceDocuments_FYAYMaster_Id] FOREIGN KEY([FYAYId])
 REFERENCES [dbo].[FYAYMaster] ([Id])
 GO
 
 ALTER TABLE [dbo].[ComplianceDocuments] CHECK CONSTRAINT [FK_ComplianceDocuments_FYAYMaster_Id]
 GO
+
 

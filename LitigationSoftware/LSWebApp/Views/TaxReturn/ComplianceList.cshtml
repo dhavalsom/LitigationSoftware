@@ -4,35 +4,29 @@
 }
 <h2>Manage compliances</h2>
 <div>
-    
-    @using (Html.BeginForm("InsertUpdateComplianceDocuments", "TaxReturn"
-        , FormMethod.Post, new { enctype = "multipart/form-data" }))
-    {
+    <form action="insertupdatecompliance" enctype="multipart/form-data" id="frmUpload" method="post">
         <table>
             <tr>
                 <td>
                     Select Company:
                 </td>
                 <td>
+                    @Html.HiddenFor(m=>m.CompanyName, Model.CompanyName)
                     @Html.DropDownListFor(m => m.ObjComplianceDocuments.CompanyId
-                    , new SelectList(Model.CompanyList, "Id", "CompanyName"), new
-                    {
-                        @name = "CompanyId",
-                        @id = "CompanyId",
-                    })
+                    , new SelectList(Model.CompanyList, "Id", "CompanyName", Model.CompanyId)
+                    , new { @name = "CompanyId", @id = "CompanyId", @class = "ddCompany" })
                 </td>
                 <td>
                     Select Financial Year:
                 </td>
                 <td>
-                    @Html.DropDownListFor(m => m.ObjComplianceDocuments.FYAYId, new SelectList(Model.FYAYList, "Id", "FinancialYear"), new
-                    {
-                        @name = "FYAYId",
-                        @id = "FYAYId",
-                    })
+                    @Html.HiddenFor(m => m.FinancialYear, Model.FinancialYear)
+                    @Html.DropDownListFor(m => m.ObjComplianceDocuments.FYAYId
+                    , new SelectList(Model.FYAYList, "Id", "FinancialYear", Model.FYAYId)
+                    , new { @name = "FYAYId", @id = "FYAYId", @class = "ddFYAY" })
                 </td>
                 <td>
-                    <button type="button" class="loadCompliance">Load</button>
+                    @*<button type="button" class="loadCompliance">Load</button>*@
                 </td>
             </tr>
 
@@ -52,13 +46,12 @@
                     @Html.TextBoxFor(model => model.ReportFile, new { type = "file" })
                 </td>
                 <td>
-                    <button type="submit">Upload File</button>
+                    <button type="submit" class="fileUpload">Upload File</button>
                 </td>
             </tr>
         </table>
-        <br/>
-        
-    }
+        <br />
+    </form>
     <div id="docList">
 
     </div>
@@ -66,23 +59,71 @@
 @section scripts
 {
     <script type="text/javascript">
-        $(document).ready(function () {
-            $(".trUpload").hide();
+        $(document).ready(function () { 
+
+            loadComplianceDocuments();
+            $("#CompanyName").val($("#CompanyId").find("option:selected").text());
+            $("#FinancialYear").val($("#FYAYId").find("option:selected").text());
+
             $(".loadCompliance").click(function () {
-                $.ajax({
-                    url: '/compliancedocuments?companyId=' + $("#CompanyId").val()
-                    + '&fyayId=' + $("#FYAYId").val(),
-                    error: function () {
-                    },
-                    dataType: 'html',
-                    success: function (data) {
-                        $("#docList").html(data);
-                        $(".trUpload").show();
-                    },
-                    type: 'GET'
-                });
+                loadComplianceDocuments();
                 return false;
             });
-        });
+
+            $(".ddFYAY").change(function () {
+                $("#FinancialYear").val($(this).find("option:selected").text());
+                loadComplianceDocuments();
+            });
+
+            $(".ddCompany").change(function () {
+                $("#CompanyName").val($(this).find("option:selected").text());
+                loadComplianceDocuments();
+            });
+
+            $(".fileUpload").click(function (e) {
+                $("#frmUpload").submit(function () {
+                    var formdata = new FormData(this);
+                    $.ajax({
+                        url: '/insertupdatecompliance',
+                        type: 'POST',
+                        data: formdata,
+                        error: function () {
+                        },
+                        success: function (data) {
+                        }                        
+                    });
+                    e.preventDefault();
+                });
+            });
+        });       
+
+        function loadComplianceDocuments() {
+            $.ajax({
+                url: '/compliancedocuments?companyId=' + $("#CompanyId").val()
+                + '&fyayId=' + $("#FYAYId").val(),
+                error: function () {
+                },
+                dataType: 'html',
+                success: function (data) {
+                    $("#docList").html(data);
+                    $(".trUpload").show();
+                },
+                type: 'GET'
+            });
+        }
+
+        function deleteDocument(complianceDocumentId) {
+            $.ajax({
+                url: '/deletecompliance?Id=' + complianceDocumentId,
+                error: function () {
+                },
+                dataType: 'json',
+                success: function (data) {
+                    loadComplianceDocuments();
+                },
+                type: 'POST'
+            });
+            return false;
+        }
     </script>
 }

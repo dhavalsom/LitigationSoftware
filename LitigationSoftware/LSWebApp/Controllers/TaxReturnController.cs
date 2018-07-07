@@ -265,9 +265,13 @@ namespace LSWebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetComplianceList()
+        public async Task<ActionResult> GetComplianceList(int? companyId, int? fyayId)
         {
-            ComplianceListModel model = new ComplianceListModel();
+            ComplianceListModel model = new ComplianceListModel()
+            {
+                CompanyId = companyId,
+                FYAYId = fyayId
+            };
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
@@ -310,14 +314,16 @@ namespace LSWebApp.Controllers
         [HttpPost]
         public async Task<ActionResult> InsertUpdateComplianceDocuments(ComplianceListModel objComplianceListModel)
         {
-            string path = Server.MapPath("~/ComplianceDocumentsUpload/");
+            string relativePath = "/" + objComplianceListModel.CompanyName + "/"
+                + objComplianceListModel.FinancialYear + "/";
+            string path = Server.MapPath("~/ComplianceDocumentsUpload" + relativePath);
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
             }
             objComplianceListModel.ReportFile.SaveAs(path + Path.GetFileName(objComplianceListModel.ReportFile.FileName));
             objComplianceListModel.ObjComplianceDocuments.FileName = objComplianceListModel.ReportFile.FileName;
-            objComplianceListModel.ObjComplianceDocuments.FilePath = path + objComplianceListModel.ReportFile.FileName;
+            objComplianceListModel.ObjComplianceDocuments.FilePath = relativePath + objComplianceListModel.ReportFile.FileName;
             objComplianceListModel.ObjComplianceDocuments.AddedBy = 1;
             objComplianceListModel.ObjComplianceDocuments.ModifiedBy = 1;
             objComplianceListModel.ObjComplianceDocuments.Active = true;
@@ -330,6 +336,36 @@ namespace LSWebApp.Controllers
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpResponseMessage Res = await client.PostAsync("api/TaxReturnAPI/InsertUpdateComplianceDocuments", content);
+                ComplianceDocumentsResponse result = JsonConvert.DeserializeObject<ComplianceDocumentsResponse>(Res.Content.ReadAsStringAsync().Result);
+
+                ComplianceListModel model = new ComplianceListModel()
+                {
+                    CompanyId = objComplianceListModel.ObjComplianceDocuments.CompanyId,
+                    FYAYId = objComplianceListModel.ObjComplianceDocuments.FYAYId
+                };
+                Res = await client.GetAsync("api/MasterAPI/GetFYAYList");
+                model.FYAYList = JsonConvert.DeserializeObject<List<FYAY>>(Res.Content.ReadAsStringAsync().Result);
+                Res = await client.GetAsync("api/MasterAPI/GetCompanyList");
+                model.CompanyList = JsonConvert.DeserializeObject<List<Company>>(Res.Content.ReadAsStringAsync().Result);
+                Res = await client.GetAsync("api/MasterAPI/GetComplianceMaster?complianceId=");
+                model.ComplianceList = JsonConvert.DeserializeObject<List<ComplianceMaster>>(Res.Content.ReadAsStringAsync().Result);
+                return View("ComplianceList", model);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> DeleteComplianceDocuments(ComplianceDocuments complianceDocuments)
+        {
+            complianceDocuments.DeletedBy = 1;
+
+            using (var client = new HttpClient())
+            {
+                var json = JsonConvert.SerializeObject(complianceDocuments);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.PostAsync("api/TaxReturnAPI/DeleteComplianceDocuments", content);
                 ComplianceDocumentsResponse result = JsonConvert.DeserializeObject<ComplianceDocumentsResponse>(Res.Content.ReadAsStringAsync().Result);
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
