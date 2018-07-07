@@ -20,9 +20,51 @@ namespace LSWebApp
            );
 
             routes.MapRoute(
+               name: "getCompliance",
+               url: "getCompliance",
+               defaults: new { controller = "TaxReturn", action = "GetComplianceMasterList", id = UrlParameter.Optional }
+           );
+
+            routes.MapRoute(
                 name: "manageITSection",
                 url: "manageITSection",
                 defaults: new { controller = "TaxReturn", action = "InsertUpdateITSection", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
+               name: "manageCompliance",
+               url: "manageCompliance",
+               defaults: new { controller = "TaxReturn", action = "InsertUpdateComplianceMaster", id = UrlParameter.Optional }
+           );
+
+            routes.MapRoute(
+                name: "compliancedocuments",
+                url: "compliancedocuments",
+                defaults: new { controller = "TaxReturn", action = "GetComplianceDocumentList", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
+                name: "checkcompliancedocuments",
+                url: "checkcompliancedocuments",
+                defaults: new { controller = "TaxReturn", action = "CheckComplianceDocument", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
+                name: "compliances",
+                url: "compliances",
+                defaults: new { controller = "TaxReturn", action = "GetComplianceList", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
+                name: "deletecompliance",
+                url: "deletecompliance",
+                defaults: new { controller = "TaxReturn", action = "DeleteComplianceDocuments", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
+                name: "insertupdatecompliance",
+                url: "insertupdatecompliance",
+                defaults: new { controller = "TaxReturn", action = "InsertUpdateComplianceDocuments", id = UrlParameter.Optional }
             );
 
             routes.MapRoute(

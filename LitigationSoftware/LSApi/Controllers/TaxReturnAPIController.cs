@@ -1,7 +1,6 @@
-﻿using Ninject;
-using LS.BL.Interface;
+﻿using LS.BL.Interface;
 using LS.Models;
-using System.Collections.Generic;
+using Ninject;
 using System.Web.Http;
 
 namespace LSApi.Controllers
@@ -25,7 +24,7 @@ namespace LSApi.Controllers
 
         #endregion
 
-
+        #region Actions
 
         // POST: api/InsertorUpdateITReturnDetails
         //[HttpPost]
@@ -45,5 +44,37 @@ namespace LSApi.Controllers
             var ItReturnResult = ItReturnObj.InsertorUpdateITReturnDetails(itreturn);
             return ItReturnResult;
         }
+
+        [HttpGet]
+        [Route("GetComplianceDocumentsList")]
+        // GET: api/TaxReturnAPI/GetComplianceDocumentsList
+        public ComplianceDocumentsResponse GetComplianceDocumentsList(int companyId, int fyayId, 
+            int? complianceId, int? complianceDocumentId)
+        {
+            var ItReturnObj = _Kernel.Get<IITReturnDetailsBL>();
+            return ItReturnObj.GetComplianceDocumentsList(companyId, fyayId, complianceId, complianceDocumentId);
+        }
+
+        // POST: api/InsertUpdateComplianceDocuments
+        [HttpPost]
+        [Route("InsertUpdateComplianceDocuments")]
+        public ComplianceDocumentsResponse InsertUpdateComplianceDocuments([FromBody]ComplianceDocuments complianceDocuments)
+        {
+            var ItReturnObj = _Kernel.Get<IITReturnDetailsBL>();
+            var complianceDocumentsResult = ItReturnObj.InsertUpdateComplianceDocuments(complianceDocuments, string.Empty);
+            return complianceDocumentsResult;
+        }
+
+        // POST: api/DeleteComplianceDocuments
+        [HttpPost]
+        [Route("DeleteComplianceDocuments")]
+        public ComplianceDocumentsResponse DeleteComplianceDocuments([FromBody]ComplianceDocuments complianceDocuments)
+        {
+            var ItReturnObj = _Kernel.Get<IITReturnDetailsBL>();
+            var complianceDocumentsResult = ItReturnObj.InsertUpdateComplianceDocuments(complianceDocuments, "Delete");
+            return complianceDocumentsResult;
+        }
+
+        #endregion
     }
 }

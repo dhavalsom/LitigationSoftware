@@ -1,0 +1,156 @@
+﻿@model LSWebApp.Models.ComplianceListModel
+@{
+    ViewBag.Title = "Manage Compliances";
+}
+<h2>Manage compliances</h2>
+<div>
+    <form action="insertupdatecompliance" enctype="multipart/form-data" id="frmUpload" method="post">
+        <table>
+            <tr>
+                <td>
+                    Select Company:
+                </td>
+                <td>
+                    @Html.HiddenFor(m=>m.CompanyName, Model.CompanyName)
+                    @Html.DropDownListFor(m => m.ObjComplianceDocuments.CompanyId
+                    , new SelectList(Model.CompanyList, "Id", "CompanyName", Model.CompanyId)
+                    , new { @name = "CompanyId", @id = "CompanyId", @class = "ddCompany" })
+                </td>
+                <td>
+                    Select Financial Year:
+                </td>
+                <td>
+                    @Html.HiddenFor(m => m.FinancialYear, Model.FinancialYear)
+                    @Html.DropDownListFor(m => m.ObjComplianceDocuments.FYAYId
+                    , new SelectList(Model.FYAYList, "Id", "FinancialYear", Model.FYAYId)
+                    , new { @name = "FYAYId", @id = "FYAYId", @class = "ddFYAY" })
+                </td>
+            </tr>
+            <tr style="height:5px;"></tr>
+            <tr>
+                <td>
+                    Select Compliance:
+                </td>
+                <td colspan="3">
+                    @Html.Partial("_LitigationDD", Model.ComplianceListSource)
+                </td>                
+            </tr>
+            <tr style="height:5px;"></tr>
+            <tr>
+                <td>
+                    Choose File:
+                </td>
+                <td colspan="2">
+                    @Html.TextBoxFor(model => model.ReportFile, new { type = "file" })
+                </td>
+                <td>
+                    <button type="submit" class="fileUpload" disabled>Upload File</button>
+                </td>
+            </tr>
+        </table>
+        <br />
+    </form>
+    <div id="docList">
+
+    </div>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () { 
+
+            loadComplianceDocuments();
+            $("#CompanyName").val($("#CompanyId").find("option:selected").text());
+            $("#FinancialYear").val($("#FYAYId").find("option:selected").text());
+
+            $(".loadCompliance").click(function () {
+                loadComplianceDocuments();
+                return false;
+            });
+
+            $(".ddFYAY").change(function () {
+                $("#FinancialYear").val($(this).find("option:selected").text());
+                loadComplianceDocuments();
+            });
+
+            $(".ddCompany").change(function () {
+                $("#CompanyName").val($(this).find("option:selected").text());
+                loadComplianceDocuments();
+            });
+
+            $("#ReportFile").change(function () {
+                if ($("#ReportFile").val()) {
+                    $(".fileUpload").removeAttr("disabled");
+                }
+                else {
+                    $(".fileUpload").attr("disabled", "disabled");
+                }
+            });
+
+            $(".fileUpload").click(function (e) {
+                e.preventDefault();
+                var fileName = $("#ReportFile").val().split('\\').pop();
+                $.ajax({
+                    url: '/checkcompliancedocuments?companyName=' + $("#CompanyName").val()
+                    + '&financialYear=' + $("#FinancialYear").val() + '&fileName=' + fileName,
+                    type: 'GET',
+                    error: function () {
+                    },
+                    dataType: 'json',
+                    success: function (fileExists) {
+                        if (fileExists) {
+                            alert('file already exist');
+                            return false;
+                        }
+                        else {
+                            $("#frmUpload").submit();
+                            //$("#frmUpload").submit(function () {
+                            //    alert('m here');
+                            //    var formdata = new FormData(this);
+                            //    $.ajax({
+                            //        url: '/insertupdatecompliance',
+                            //        type: 'POST',
+                            //        data: formdata,
+                            //        error: function () {
+                            //            alert('erro');
+                            //        },
+                            //        success: function (data) {
+                            //        }
+                            //    });                                
+                            //});
+                        }
+                    }
+                });
+                
+            });
+        });   
+
+        function loadComplianceDocuments() {
+            $.ajax({
+                url: '/compliancedocuments?companyId=' + $("#CompanyId").val()
+                + '&fyayId=' + $("#FYAYId").val(),
+                error: function () {
+                },
+                dataType: 'html',
+                success: function (data) {
+                    $("#docList").html(data);
+                },
+                type: 'GET'
+            });
+        }
+
+        function deleteDocument(complianceDocumentId, filePath) {
+            $.ajax({
+                url: '/deletecompliance?Id=' + complianceDocumentId + '&FilePath=' + filePath,
+                error: function () {
+                },
+                dataType: 'json',
+                success: function (data) {
+                    loadComplianceDocuments();
+                },
+                type: 'POST'
+            });
+            return false;
+        }
+    </script>
+}
