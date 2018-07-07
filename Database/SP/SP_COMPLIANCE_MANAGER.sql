@@ -1,11 +1,11 @@
 USE [LitigationApp]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_COMPLIANCE_MANAGER]    Script Date: 7/3/2018 11:49:39 AM ******/
+/****** Object:  StoredProcedure [dbo].[SP_COMPLIANCE_MANAGER]    Script Date: 7/7/2018 4:28:29 PM ******/
 DROP PROCEDURE [dbo].[SP_COMPLIANCE_MANAGER]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_COMPLIANCE_MANAGER]    Script Date: 7/3/2018 11:49:39 AM ******/
+/****** Object:  StoredProcedure [dbo].[SP_COMPLIANCE_MANAGER]    Script Date: 7/7/2018 4:28:29 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -35,6 +35,10 @@ SELECT	 @Id = ComplianceMasterList.Columns.value('Id[1]', 'BIGINT')
 	   , @Active = ComplianceMasterList.Columns.value('Active[1]', 'bit')
 FROM   @COMPLIANCE_XML.nodes('ComplianceMaster') AS ComplianceMasterList(Columns)
 
+IF @SrNo = 0
+BEGIN
+	SELECT @SrNo = MAX(SrNo) + 1 FROM [dbo].[ComplianceMaster]
+END
 /*BLOCK TO READ THE VARIABLES ENDS HERE*/
 IF @OPERATION IS NULL
 BEGIN

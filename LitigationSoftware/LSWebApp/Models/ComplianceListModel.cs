@@ -17,7 +17,7 @@ namespace LSWebApp.Models
         public HttpPostedFileBase ReportFile { get; set; }
         public ComplianceDocuments ObjComplianceDocuments { get; set; }
         public ComplianceDocumentListModel ObjComplianceDocumentListModel { get; set; }
-
+        public LitigationDDModel ComplianceListSource { get; set; }
         #endregion
 
         #region Constructors

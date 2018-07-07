@@ -25,28 +25,26 @@
                     , new SelectList(Model.FYAYList, "Id", "FinancialYear", Model.FYAYId)
                     , new { @name = "FYAYId", @id = "FYAYId", @class = "ddFYAY" })
                 </td>
-                <td>
-                    @*<button type="button" class="loadCompliance">Load</button>*@
-                </td>
             </tr>
-
-            <tr class="trUpload">
+            <tr style="height:5px;"></tr>
+            <tr>
                 <td>
                     Select Compliance:
                 </td>
                 <td colspan="3">
-                    @Html.DropDownListFor(m => m.ObjComplianceDocuments.ComplianceId
-                    , new SelectList(Model.ComplianceList, "Id", "Description"), new
-                    {
-                        @name = "ComplianceId",
-                        @id = "ComplianceId",
-                    })
-                </td>
+                    @Html.Partial("_LitigationDD", Model.ComplianceListSource)
+                </td>                
+            </tr>
+            <tr style="height:5px;"></tr>
+            <tr>
                 <td>
+                    Choose File:
+                </td>
+                <td colspan="2">
                     @Html.TextBoxFor(model => model.ReportFile, new { type = "file" })
                 </td>
                 <td>
-                    <button type="submit" class="fileUpload">Upload File</button>
+                    <button type="submit" class="fileUpload" disabled>Upload File</button>
                 </td>
             </tr>
         </table>
@@ -80,22 +78,52 @@
                 loadComplianceDocuments();
             });
 
-            $(".fileUpload").click(function (e) {
-                $("#frmUpload").submit(function () {
-                    var formdata = new FormData(this);
-                    $.ajax({
-                        url: '/insertupdatecompliance',
-                        type: 'POST',
-                        data: formdata,
-                        error: function () {
-                        },
-                        success: function (data) {
-                        }                        
-                    });
-                    e.preventDefault();
-                });
+            $("#ReportFile").change(function () {
+                if ($("#ReportFile").val()) {
+                    $(".fileUpload").removeAttr("disabled");
+                }
+                else {
+                    $(".fileUpload").attr("disabled", "disabled");
+                }
             });
-        });       
+
+            $(".fileUpload").click(function (e) {
+                e.preventDefault();
+                var fileName = $("#ReportFile").val().split('\\').pop();
+                $.ajax({
+                    url: '/checkcompliancedocuments?companyName=' + $("#CompanyName").val()
+                    + '&financialYear=' + $("#FinancialYear").val() + '&fileName=' + fileName,
+                    type: 'GET',
+                    error: function () {
+                    },
+                    dataType: 'json',
+                    success: function (fileExists) {
+                        if (fileExists) {
+                            alert('file already exist');
+                            return false;
+                        }
+                        else {
+                            $("#frmUpload").submit();
+                            //$("#frmUpload").submit(function () {
+                            //    alert('m here');
+                            //    var formdata = new FormData(this);
+                            //    $.ajax({
+                            //        url: '/insertupdatecompliance',
+                            //        type: 'POST',
+                            //        data: formdata,
+                            //        error: function () {
+                            //            alert('erro');
+                            //        },
+                            //        success: function (data) {
+                            //        }
+                            //    });                                
+                            //});
+                        }
+                    }
+                });
+                
+            });
+        });   
 
         function loadComplianceDocuments() {
             $.ajax({
@@ -106,15 +134,14 @@
                 dataType: 'html',
                 success: function (data) {
                     $("#docList").html(data);
-                    $(".trUpload").show();
                 },
                 type: 'GET'
             });
         }
 
-        function deleteDocument(complianceDocumentId) {
+        function deleteDocument(complianceDocumentId, filePath) {
             $.ajax({
-                url: '/deletecompliance?Id=' + complianceDocumentId,
+                url: '/deletecompliance?Id=' + complianceDocumentId + '&FilePath=' + filePath,
                 error: function () {
                 },
                 dataType: 'json',
