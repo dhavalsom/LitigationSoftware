@@ -1,39 +1,69 @@
 ﻿@model  LS.Models.UserLogin
+@{ Layout = null; }
 
-<h2>Login here</h2>
-@using (Html.BeginForm("Signin", "Login"))
-{
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Litigation Tracking Application</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    @*<h2>Login here</h2>*@
+</head>
+<body>
+    @using (Html.BeginForm("Signin", "Login"))
+    {
 
-    @Html.AntiForgeryToken()
-    <table>
-        <tr>
-            <td>
-                User Name:
-            </td>
-            <td>
-                @Html.TextBoxFor(m => m.Username, new { style = "width: 300px;" })
-            </td>
-        </tr>
-        <tr style="height:20px;"></tr>
-        <tr>
-            <td>
-                Password:
-            </td>
-            <td>
-                @Html.PasswordFor(m => m.Password, new { style = "width: 300px;" })
-            </td>
-        </tr>
-        <tr style="height:20px;"></tr>
-        <tr style="height:20px;"></tr>
-        <tr>
-            <td colspan="2">
-                <button type="submit">Signin</button>
-            </td>
-        </tr>
+        @Html.AntiForgeryToken()
+        <div style="text-align:center;position: fixed;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">
+            <table style="width:500px;margin: 10px auto;">
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            User Name:
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            @Html.TextBoxFor(m => m.Username, new { @type = "email", @class = "form-control form-control-sm", @placeholder = "Enter email" })
+                        </div>
+                    </td>
 
-    </table>
- 
-}
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                    </td>
+                </tr>
+                <tr style="height:20px;"></tr>
+                <tr>
+                    <td>
+                        <div class="form-group">
+                            Password:
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            @Html.PasswordFor(m => m.Password, new { @class = "form-control form-control-sm", @placeholder = "Password" })
+                        </div>
+                    </td>
+                </tr>
+                <tr style="height:20px;"></tr>
+                <tr style="height:20px;"></tr>
+                <tr>
+                    <td colspan="2">
+                        <button type="submit" class="btn btn-primary">Signin</button>
+                    </td>
+                </tr>
 
+            </table>
+        </div>
+    }
+</body>
+</html>
 
 

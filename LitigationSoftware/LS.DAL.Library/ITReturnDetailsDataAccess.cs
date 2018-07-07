@@ -12,7 +12,7 @@ namespace LS.DAL.Library
     {
         #region Methods
 
-        public ITReturnDetailsResponse InsertorUpdateITReturnDetails(ITReturnDetails itReturnDetails)
+        public ITReturnComplexAPIModelResponse InsertorUpdateITReturnDetails(ITReturnComplexAPIModel itReturnDetails)
         {
             try
             {
@@ -22,24 +22,25 @@ namespace LS.DAL.Library
                 Command.CommandType = CommandType.StoredProcedure;
                 Command.Parameters.Clear();
                 
-                Command.Parameters.AddWithValue("@ITRETURNDETAILS_XML", GetXMLFromObject(itReturnDetails));
-                if (itReturnDetails.AddedBy.HasValue)
+                Command.Parameters.AddWithValue("@ITRETURNDETAILS_XML", GetXMLFromObject(itReturnDetails.ITReturnDetailsObject));
+                Command.Parameters.AddWithValue("@EXTENSIONDETAILS_XML", GetXMLFromObject(itReturnDetails.ExtensionList));
+                if (itReturnDetails.ITReturnDetailsObject.AddedBy.HasValue)
                 {
-                    Command.Parameters.AddWithValue("@USER_ID", itReturnDetails.AddedBy.Value);
+                    Command.Parameters.AddWithValue("@USER_ID", itReturnDetails.ITReturnDetailsObject.AddedBy.Value);
                 }
-                if (itReturnDetails.ModifiedBy.HasValue)
+                if (itReturnDetails.ITReturnDetailsObject.ModifiedBy.HasValue)
                 {
-                    Command.Parameters.AddWithValue("@USER_ID", itReturnDetails.ModifiedBy.Value);
+                    Command.Parameters.AddWithValue("@USER_ID", itReturnDetails.ITReturnDetailsObject.ModifiedBy.Value);
                 }
                 Connection.Open();
                 SqlDataReader reader = Command.ExecuteReader();
 
-                ITReturnDetailsResponse result = new ITReturnDetailsResponse();
+                ITReturnComplexAPIModelResponse result = new ITReturnComplexAPIModelResponse();
                 if (reader.HasRows)
                 {
                     while (reader.Read())
                     {
-                        result = new ITReturnDetailsResponse
+                        result = new ITReturnComplexAPIModelResponse
                         {
                             Message = reader["ReturnMessage"] != DBNull.Value ? reader["ReturnMessage"].ToString() : null,
                             IsSuccess = Convert.ToBoolean(reader["Result"].ToString())

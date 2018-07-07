@@ -22,7 +22,7 @@ namespace LS.BL.Library
 
         #region Methods
 
-        public ITReturnDetailsResponse InsertorUpdateITReturnDetails(ITReturnDetails itreturnDetails)
+        public ITReturnComplexAPIModelResponse InsertorUpdateITReturnDetails(ITReturnComplexAPIModel itreturnDetails)
         {
             try
             {

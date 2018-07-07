@@ -170,6 +170,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\CompanyList.cs" />
+    <Compile Include="Models\ITReturnComplexModel.cs" />
     <Compile Include="Models\ComplianceDocumentListModel.cs" />
     <Compile Include="Models\ComplianceListModel.cs" />
     <Compile Include="Models\ITReturnDetailsModel.cs" />
