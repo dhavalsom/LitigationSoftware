@@ -37,7 +37,7 @@ FROM   @COMPLIANCE_XML.nodes('ComplianceMaster') AS ComplianceMasterList(Columns
 
 IF @SrNo = 0
 BEGIN
-	SELECT @SrNo = MAX(SrNo) + 1 FROM [dbo].[ComplianceMaster]
+	SELECT @SrNo = isnull(MAX(SrNo),0) + 1 FROM [dbo].[ComplianceMaster]
 END
 /*BLOCK TO READ THE VARIABLES ENDS HERE*/
 IF @OPERATION IS NULL

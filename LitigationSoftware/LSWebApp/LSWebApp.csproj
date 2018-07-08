@@ -173,6 +173,7 @@
     <Compile Include="Models\ITReturnComplexModel.cs" />
     <Compile Include="Models\ComplianceDocumentListModel.cs" />
     <Compile Include="Models\ComplianceListModel.cs" />
+    <Compile Include="Models\ITReturnDetailsListModel.cs" />
     <Compile Include="Models\ITReturnDetailsModel.cs" />
     <Compile Include="Models\ITReturnDetailsExtensionModel.cs" />
     <Compile Include="Models\LitigationDDModel.cs" />
@@ -280,6 +281,7 @@
     <Content Include="Views\TaxReturn\ExistingITReturnDetails.cshtml" />
     <Content Include="Views\TaxReturn\ComplianceDocumentList.cshtml" />
     <Content Include="Views\TaxReturn\ComplianceList.cshtml" />
+    <Content Include="Views\TaxReturn\ExistingSectionWiseDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

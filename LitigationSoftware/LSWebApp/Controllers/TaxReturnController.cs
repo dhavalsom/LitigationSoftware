@@ -213,20 +213,13 @@ namespace LSWebApp.Controllers
                 return View(itrdetails);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SearchITReturnDetails(ITReturnDetailsModel itrdetails1)
+        [HttpGet]
+        public async Task<ActionResult> SearchITReturnDetails(int companyId, int fyayId)
         {
-            ITReturnDetailsModel itrdetails = new ITReturnDetailsModel
+            ITReturnDetailsListModel itrdetail = new ITReturnDetailsListModel()
             {
-                ITReturnDetailsObject = new ITReturnDetails
-                {
-                    CompanyID = itrdetails1.ITReturnDetailsObject.CompanyID,
-                    CompanyName = itrdetails1.ITReturnDetailsObject.CompanyName,
-                    AddedBy = itrdetails1.ITReturnDetailsObject.AddedBy,
-                    IncomefromBusinessProf = false,
-                    RevisedReturnFile = false
-                }
+                CompanyId = companyId,
+                FYAYId = fyayId,
             };
 
             using (var client = new HttpClient())
@@ -234,14 +227,14 @@ namespace LSWebApp.Controllers
                 client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetFYAYList");
+                HttpResponseMessage Res = await client.GetAsync("api/TaxReturnAPI/GetExistingITReturnDetailsList?companyId=" + companyId + "&fyayId=" + fyayId);
                 if (Res.IsSuccessStatusCode)
                 {
-                    itrdetails.FYAYList = JsonConvert.DeserializeObject<List<FYAY>>(Res.Content.ReadAsStringAsync().Result);
+                    itrdetail.ITReturnDetailsListObject = JsonConvert.DeserializeObject<ITReturnDetailsListResponse>(Res.Content.ReadAsStringAsync().Result).ITReturnDetailsListObject;
                 }
             }
 
-            return View("ExistingITReturnDetails",itrdetails);
+            return PartialView("ExistingSectionWiseDetails", itrdetail);
         }
 
 
@@ -394,8 +387,8 @@ namespace LSWebApp.Controllers
                 Directory.CreateDirectory(path);
             }
             objComplianceListModel.ReportFile.SaveAs(path + Path.GetFileName(objComplianceListModel.ReportFile.FileName));
-            objComplianceListModel.ObjComplianceDocuments.FileName = objComplianceListModel.ReportFile.FileName;
-            objComplianceListModel.ObjComplianceDocuments.FilePath = relativePath + objComplianceListModel.ReportFile.FileName;
+            objComplianceListModel.ObjComplianceDocuments.FileName = Path.GetFileName(objComplianceListModel.ReportFile.FileName);
+            objComplianceListModel.ObjComplianceDocuments.FilePath = relativePath + Path.GetFileName(objComplianceListModel.ReportFile.FileName);
             objComplianceListModel.ObjComplianceDocuments.AddedBy = 1;
             objComplianceListModel.ObjComplianceDocuments.ModifiedBy = 1;
             objComplianceListModel.ObjComplianceDocuments.Active = true;

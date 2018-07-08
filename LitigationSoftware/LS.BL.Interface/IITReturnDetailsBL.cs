@@ -8,5 +8,6 @@ namespace LS.BL.Interface
         ITReturnComplexAPIModelResponse InsertorUpdateITReturnDetails(ITReturnComplexAPIModel itreturnDetails);
         ComplianceDocumentsResponse InsertUpdateComplianceDocuments(ComplianceDocuments complianceDocuments, string operation);
         ComplianceDocumentsResponse GetComplianceDocumentsList(int companyId, int fyayId, int? complianceId, int? complianceDocumentId);
+        ITReturnDetailsListResponse GetExistingITReturnDetailsList(int companyId, int fyayId);
     }
 }

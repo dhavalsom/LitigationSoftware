@@ -75,6 +75,15 @@ namespace LSApi.Controllers
             return complianceDocumentsResult;
         }
 
+        [HttpGet]
+        [Route("GetExistingITReturnDetailsList")]
+        // GET: api/TaxReturnAPI/GetExistingITReturnDetailsList
+        public ITReturnDetailsListResponse GetExistingITReturnDetailsList(int companyId, int fyayId)
+        {
+            var ItReturnObj = _Kernel.Get<IITReturnDetailsBL>();
+            return ItReturnObj.GetExistingITReturnDetailsList(companyId, fyayId);
+        }
+
         #endregion
     }
 }

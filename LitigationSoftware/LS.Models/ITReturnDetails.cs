@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace LS.Models
 {
@@ -184,6 +185,17 @@ namespace LS.Models
         public ITReturnDetailsResponse()
         {
             ITReturnDetailsObject = new ITReturnDetails();
+        }
+    }
+
+    public class ITReturnDetailsListResponse
+    {
+        public string Message { get; set; }
+        public bool IsSuccess { get; set; }
+        public List<ITReturnDetails> ITReturnDetailsListObject { get; set; }
+        public ITReturnDetailsListResponse()
+        {
+            ITReturnDetailsListObject = new List<ITReturnDetails>();
         }
     }
 }

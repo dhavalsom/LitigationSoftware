@@ -1,0 +1,24 @@
+﻿@model LSWebApp.Models.ITReturnDetailsListModel
+
+<table class="table table-hover">
+    @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+    {
+        <thead>
+            <tr>
+                <th>Section</th>
+                <th scope="col">@itsectiondetail.ITSectionDescription</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="table-active">
+                <td>Filling Date</td>
+                <td>@itsectiondetail.ITReturnFillingDate</td>
+            </tr>
+            <tr class="table-active">
+                <td>Due Date</td>
+                <td>@itsectiondetail.ITReturnDueDate</td>
+            </tr>
+        </tbody>
+    }
+</table>
+

@@ -6,7 +6,7 @@ namespace LSWebApp.Models
 {
     public class ComplianceDocumentListModel
     {
-        #region Proeprties
+        #region Properties
         public List<ComplianceMaster> ComplianceList { get; set; }
         public List<ComplianceDocumentsDisplay> ComplianceDocumentList { get; set; }
         public int CompanyId { get; set; }

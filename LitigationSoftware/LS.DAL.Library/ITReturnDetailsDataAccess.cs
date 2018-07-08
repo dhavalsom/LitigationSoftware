@@ -175,6 +175,55 @@ namespace LS.DAL.Library
             }
         }
 
+
+        public ITReturnDetailsListResponse GetExistingITReturnDetailsList(int companyId, int fyayId)
+        {
+            try
+            {
+                Log.Info("Started call to GetExistingITReturnDetailsList");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(new
+                {
+                    companyId = companyId,
+                    fyayId = fyayId,
+                }));
+                Command.CommandText = "SP_GET_ITReturnDetails";
+                Command.CommandType = CommandType.StoredProcedure;
+                Command.Parameters.AddWithValue("@COMPANY_ID", companyId);
+                Command.Parameters.AddWithValue("@FYAYID", fyayId);
+               
+                Connection.Open();
+
+                SqlDataReader reader = Command.ExecuteReader();
+                ITReturnDetailsListResponse result = new ITReturnDetailsListResponse();
+                result.ITReturnDetailsListObject = new List<ITReturnDetails>();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result.ITReturnDetailsListObject.Add(new ITReturnDetails
+                        {
+                            ITSectionID = reader["ITSectionID"] != DBNull.Value ? int.Parse(reader["ITSectionID"].ToString()) : 0,
+                            ITSectionDescription = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : null,
+                            ITReturnFillingDate = Convert.ToDateTime(reader["ITReturnFillingDate"].ToString()),
+                            ITReturnDueDate = Convert.ToDateTime(reader["ITReturnDueDate"].ToString()),
+                            FYAYID = Convert.ToInt32(reader["FYAYId"].ToString()),
+                            CompanyID = Convert.ToInt32(reader["FYAYId"].ToString())
+                        });
+                    }
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            finally
+            {
+                Connection.Close();
+            }
+        }
+
         #endregion
     }
 }

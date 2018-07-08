@@ -70,6 +70,23 @@ namespace LS.BL.Library
                 //Log
             }
         }
+
+        public ITReturnDetailsListResponse GetExistingITReturnDetailsList(int companyId, int fyayId)
+        {
+            try
+            {
+                return this._itReturnDA.GetExistingITReturnDetailsList(companyId, fyayId);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                //Log
+            }
+        }
+
         #endregion
 
 

@@ -6,7 +6,7 @@ namespace LSWebApp.Models
 {
     public class ITReturnDetailsModel
     {
-        #region Proeprties
+        #region Properties
         public ITReturnDetails ITReturnDetailsObject { get; set; }
         public List<FYAY> FYAYList { get; set; }
         public Dictionary<string, ITHeadMaster> ITHeadMasterList { get; set; }
