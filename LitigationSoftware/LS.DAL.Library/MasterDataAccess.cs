@@ -144,6 +144,7 @@ namespace LS.DAL.Library
                         {
                             Description = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : null,
                             IsDefault = Convert.ToBoolean(reader["IsDefault"].ToString()),
+                            IsReturn = Convert.ToBoolean(reader["IsReturn"].ToString()),
                             Active = Convert.ToBoolean(reader["IsDefault"].ToString()),
                             Id = Convert.ToInt32(reader["ID"].ToString())
                         });
@@ -258,7 +259,7 @@ namespace LS.DAL.Library
                 Command.CommandText = "SP_GET_IT_SUB_HEAD_MASTER";
                 Command.CommandType = CommandType.StoredProcedure;
                 Connection.Open();
-
+                Command.Parameters.AddWithValue("@ACTIVE", true);
                 SqlDataReader reader = Command.ExecuteReader();
                 List<ITSubHeadMaster> result = new List<ITSubHeadMaster>();
                 if (reader.HasRows)

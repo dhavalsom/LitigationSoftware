@@ -8,6 +8,14 @@ namespace LSWebApp.Models
         public List<SelectListItem> Source { get; set; }
         public string BindingProperty { get; set; }
         public string Description { get; set; }
+        public bool CheckboxValue { get; set; }
+        public bool CheckboxVisible
+        {
+            get
+            {
+                return AddActionName == "manageITSection";
+            }
+        }
         public string AddActionName { get; set; }
         public string RefreshActionName { get; set; }
 

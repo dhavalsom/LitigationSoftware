@@ -4,6 +4,7 @@
     {
         public string Description { get; set; }
         public bool IsDefault { get; set; }
+        public bool IsReturn { get; set; }
     }
 
     public class ITSectionResponse
