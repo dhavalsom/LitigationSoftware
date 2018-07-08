@@ -13,7 +13,7 @@
                     <tr>
                         <th colspan="2">Company Name</th>
                         <th>Financial Year</th>
-                        <th>Assessment Year</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -21,6 +21,7 @@
                         <td colspan="2">
                             @*@Model.ITReturnDetailsObject.CompanyName*@
                             @Html.LabelFor(m => m.ITReturnDetailsObject.CompanyName, Model.ITReturnDetailsObject.CompanyName)
+                            @Html.HiddenFor(m => m.ITReturnDetailsObject.CompanyName)
                             @Html.HiddenFor(m => m.ITReturnDetailsObject.CompanyID)
                         </td>
                         <td>
