@@ -8,6 +8,8 @@
         , new { @style = "display:none;", @class = "hdIIHeadIdSubHead" })
         @Html.TextBox("txtSubHeadDesc_" + Model.ITHeadId.ToString(), "", new { @style = "display:none;", @class = "txtSubHead" })
         @Html.CheckBox("chkSubHeadDesc_" + Model.ITHeadId.ToString(), new { @style = "display:none;", @class = "chkSubHead" })
+        <label for="@Html.Name("chkSubHeadDesc_" + Model.ITHeadId.ToString())" 
+               style="display:none;" class="chkSubHeadLabel">Is Allowance</label>
         <img src="~/images/plus.png"
              class="imgSubHead"
              style="width:20px;height:20px;" />
