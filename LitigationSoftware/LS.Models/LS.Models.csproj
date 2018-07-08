@@ -42,6 +42,8 @@
   <ItemGroup>
     <Compile Include="BaseEntity.cs" />
     <Compile Include="Company.cs" />
+    <Compile Include="ComplianceDocuments.cs" />
+    <Compile Include="ComplianceMaster.cs" />
     <Compile Include="ErrorLog.cs" />
     <Compile Include="FYAY.cs" />
     <Compile Include="ITHeadMaster.cs" />

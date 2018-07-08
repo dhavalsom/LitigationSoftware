@@ -149,6 +149,38 @@ namespace LS.BL.Library
                 //Log
             }
         }
+
+        public List<ComplianceMaster> GetComplianceMaster(int? complianceId)
+        {
+            try
+            {
+                return this._masterDA.GetComplianceMaster(complianceId);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                //Log
+            }
+        }
+
+        public ComplianceMasterResponse InsertUpdateComplianceMaster(ComplianceMaster objComplianceMaster)
+        {
+            try
+            {
+                return this._masterDA.InsertUpdateComplianceMaster(objComplianceMaster);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                //Log
+            }
+        }
         #endregion
 
         #region IDisposable

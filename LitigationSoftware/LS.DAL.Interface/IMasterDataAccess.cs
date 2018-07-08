@@ -13,5 +13,7 @@ namespace LS.DAL.Interface
         List<ITHeadMaster> GetITHeadMaster();
         List<ITSubHeadMaster> GetITSubHeadMaster(int? itHeadId);
         ITSubHeadMasterResponse InsertUpdateITSubHeadMaster(ITSubHeadMaster objITSubHeadMaster);
+        List<ComplianceMaster> GetComplianceMaster(int? complianceId);
+        ComplianceMasterResponse InsertUpdateComplianceMaster(ComplianceMaster objComplianceMaster);
     }
 }

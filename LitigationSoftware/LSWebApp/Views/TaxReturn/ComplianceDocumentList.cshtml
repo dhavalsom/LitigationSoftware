@@ -1,0 +1,43 @@
+﻿@model LSWebApp.Models.ComplianceDocumentListModel
+@{
+    ViewBag.Title = "Compliances";
+}
+<style>
+    .tdBorder {
+        border: 1px solid black;
+        align-content: center;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+</style>
+<table>
+    @foreach (var compliance in Model.ComplianceList)
+    {
+        <tr>
+            <td class="tdBorder">
+                @compliance.SrNo
+            </td>
+            <td class="tdBorder">
+                @compliance.Description
+            </td>
+            <td class="tdBorder">
+                @foreach (var document in Model.ComplianceDocumentList.Where(d => d.ComplianceId == compliance.Id))
+                {
+                    <ul>
+                        <li>
+                            <a href=" @Url.Content("~/ComplianceDocumentsUpload/"+document.FilePath)"
+                               target="_blank">
+                                @document.FileName
+                            </a>
+                            <span class="deleteDoc" onclick="deleteDocument(@(document.Id), '@(document.FilePath)')">
+                                <i class="fa fa-calendar" aria-hidden="true">
+                                </i>
+                            </span>
+                            @*<button type="button" class="deleteDoc" onclick="deleteDocument(@(document.Id))">Delete</button>*@
+                        </li>
+                    </ul>
+                }
+            </td>
+        </tr>
+    }
+</table>

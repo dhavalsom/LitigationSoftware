@@ -38,6 +38,38 @@ namespace LS.BL.Library
             }
         }
 
+        public ComplianceDocumentsResponse InsertUpdateComplianceDocuments(ComplianceDocuments complianceDocuments, string operation)
+        {
+            try
+            {
+                return this._itReturnDA.InsertUpdateComplianceDocuments(complianceDocuments, operation);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                //Log
+            }
+        }
+
+        public ComplianceDocumentsResponse GetComplianceDocumentsList(int companyId, int fyayId, 
+            int? complianceId, int? complianceDocumentId)
+        {
+            try
+            {
+                return this._itReturnDA.GetComplianceDocumentsList(companyId, fyayId, complianceId, complianceDocumentId);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                //Log
+            }
+        }
         #endregion
 
 
