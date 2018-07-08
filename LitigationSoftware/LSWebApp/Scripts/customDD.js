@@ -4,6 +4,7 @@
 
 $(".imgLitigationDDSave").click(function (e) {
     var txtControl = null;
+    var chkControl = null;
     var ddControl = null;
     var saveButton = $(this);
     var addActionName = "", refreshActionName = "";
@@ -19,6 +20,9 @@ $(".imgLitigationDDSave").click(function (e) {
     $(e.target).closest(".custom-dd").find('.hdRefreshActionNameLitigationDD').each(function () {
         refreshActionName = $(this).val();
     });
+    $(e.target).closest(".custom-dd").find('.chkLitigationDD').each(function () {
+        chkControl = $(this);
+    });
     if (txtControl.val() == "") {
         txtControl.addClass("validationError");
         return;
@@ -31,7 +35,9 @@ $(".imgLitigationDDSave").click(function (e) {
     item.Description = txtControl.val();
     item.IsDefault = false;
     item.Active = true;
-    
+    if (chkControl != null) {
+        item.IsReturn = chkControl.is(':checked');
+    }
     $.ajax({
         type: 'POST',
         url: '/' + addActionName + '/',
@@ -75,6 +81,9 @@ function showHideControls(control) {
         $(this).css("display", isAddMode ? "inline" : "none");
     });
     control.closest(".custom-dd").find('.txtLitigationDD').each(function () {
+        $(this).css("display", isAddMode ? "inline" : "none");
+    });
+    control.closest(".custom-dd").find('.chkLitigationDD').each(function () {
         $(this).css("display", isAddMode ? "inline" : "none");
     });
 }

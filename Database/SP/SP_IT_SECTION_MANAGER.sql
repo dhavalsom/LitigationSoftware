@@ -1,16 +1,18 @@
 USE [LitigationApp]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_IT_SECTION_MANAGER]    Script Date: 6/24/2018 8:44:56 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_IT_SECTION_MANAGER]    Script Date: 7/8/2018 5:25:40 PM ******/
 DROP PROCEDURE [dbo].[SP_IT_SECTION_MANAGER]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_IT_SECTION_MANAGER]    Script Date: 6/24/2018 8:44:56 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_IT_SECTION_MANAGER]    Script Date: 7/8/2018 5:25:40 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
+
 
 CREATE PROCEDURE [dbo].[SP_IT_SECTION_MANAGER]
 (
@@ -27,11 +29,12 @@ BEGIN
 
 DECLARE @Id AS BIGINT
 DECLARE @ReturnMessage as NVARCHAR(MAX), @Description as NVARCHAR(MAX)
-DECLARE @Active AS BIT, @Result as BIT, @IsDefault AS BIT
+DECLARE @Active AS BIT, @Result as BIT, @IsDefault AS BIT, @IsReturn AS BIT 
 
 SELECT	 @Id = ITSectionList.Columns.value('Id[1]', 'BIGINT')
 	   , @Description = ITSectionList.Columns.value('Description[1]', 'NVARCHAR(MAX)')
 	   , @IsDefault = ITSectionList.Columns.value('IsDefault[1]', 'bit')
+	   , @IsReturn = ITSectionList.Columns.value('IsReturn[1]', 'bit')
 	   , @Active = ITSectionList.Columns.value('Active[1]', 'bit')
 FROM   @IT_SECTION_XML.nodes('ITSection') AS ITSectionList(Columns)
 
@@ -45,12 +48,14 @@ BEGIN
 	INSERT INTO [dbo].[ITSectionMaster]
            ([Description]
            ,[IsDefault]
+		   ,[IsReturn]
            ,[Active]
            ,[AddedBy]
            ,[AddedDate])
      VALUES
            (@Description
            ,@IsDefault
+		   ,@IsReturn
            ,@Active
 		   ,@USER_ID
 		   ,GETUTCDATE())
@@ -65,6 +70,7 @@ BEGIN
 		UPDATE [dbo].[ITSectionMaster]
 		   SET [Description] = ISNULL(@Description,[Description])
 			  ,[IsDefault] = ISNULL(@IsDefault,[IsDefault])
+			  ,[IsReturn] = ISNULL(@IsReturn,[IsReturn])
 			  ,[ModifiedBy] = @USER_ID
 			  ,[ModifiedDate] = GETUTCDATE()
 		WHERE Id = @Id
@@ -75,6 +81,8 @@ END
 
 SELECT @Result AS Result, @ReturnMessage AS ReturnMessage
 END
+
+
 
 
 

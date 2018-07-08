@@ -144,6 +144,7 @@ namespace LS.DAL.Library
                         {
                             Description = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : null,
                             IsDefault = Convert.ToBoolean(reader["IsDefault"].ToString()),
+                            IsReturn = Convert.ToBoolean(reader["IsReturn"].ToString()),
                             Active = Convert.ToBoolean(reader["IsDefault"].ToString()),
                             Id = Convert.ToInt32(reader["ID"].ToString())
                         });
