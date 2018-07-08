@@ -259,7 +259,7 @@ namespace LS.DAL.Library
                 Command.CommandText = "SP_GET_IT_SUB_HEAD_MASTER";
                 Command.CommandType = CommandType.StoredProcedure;
                 Connection.Open();
-
+                Command.Parameters.AddWithValue("@ACTIVE", true);
                 SqlDataReader reader = Command.ExecuteReader();
                 List<ITSubHeadMaster> result = new List<ITSubHeadMaster>();
                 if (reader.HasRows)

@@ -54,9 +54,11 @@ $(".imgSubHeadSave").click(function (e) {
                 .replace("{ITSubHeadId}", data.Id)
                 .replace("{ITSubHeadId}", data.Id)
                 .replace("{Description}", item.Description);
-            $.each($('.tblITRetDetails tr.' + (item.IsAllowance ? 'trAllowance' : 'trDisallownace') + itHeadId), function (val, obj) {
-                $(this).after(trHtml);
-            });            
+            $.each($('.tblITRetDetails tr.' + (item.IsAllowance ? 'trAllowance' : 'trDisallowance') + itHeadId),
+                function (val, obj) {
+                    $(this).after(trHtml);
+                }); 
+            showHideSubHeadControls(saveButton);
         },
         contentType: "application/json",
         dataType: 'json'
@@ -67,7 +69,6 @@ function showHideSubHeadControls(control) {
     control.css("display", "none");
     var isAddMode = control.hasClass("imgSubHead"); //in add mode and switch to the save mode now
     var isSaveMode = !isAddMode;
-
     control.closest(".custom-sub-head").find('.imgSubHead').each(function () {
         $(this).css("display", isAddMode ? "none" : "inline");
     });
@@ -79,6 +80,9 @@ function showHideSubHeadControls(control) {
         $(this).css("display", isAddMode ? "inline" : "none");
     });
     control.closest(".custom-sub-head").find('.chkSubHead').each(function () {
+        $(this).css("display", isAddMode ? "inline" : "none");
+    });
+    control.closest(".custom-sub-head").find('.chkSubHeadLabel').each(function () {
         $(this).css("display", isAddMode ? "inline" : "none");
     });
 }
