@@ -13,6 +13,7 @@ namespace LSWebApp.Models
         public List<ITSection> ITSectionList { get; set; }
         public List<ITReturnDetailsExtension> ExtensionList { get; set; }
         public LitigationDDModel ITSectionListSource { get; set; }
+        public bool IsReturn { get; set; }
         #endregion
 
         #region Constructors

@@ -25,6 +25,7 @@ BEGIN
 	SELECT DISTINCT ITSM.Id
 	  ,ITSM.[Description]
       ,ITSM.[IsDefault]
+	  ,ISNULL(ITSM.[IsReturn],0) AS IsReturn
       ,ITSM.[Active]
 	FROM [dbo].[ITSectionMaster] ITSM
 	WHERE (@ACTIVE IS NULL OR ITSM.[Active] = @ACTIVE) AND
