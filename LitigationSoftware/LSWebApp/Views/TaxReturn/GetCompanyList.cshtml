@@ -25,16 +25,19 @@
 
             @foreach (var company in Model.Companies)
             {
-                <tr class="table-active">
-                    <td>
-                        @Html.HiddenFor(m => company.Id, company.Id)
-                        @company.CompanyName
-                    </td>
-                    <td>@company.PANNumber</td>
-                    <td>
-                        @Html.ActionLink("Create IT Return Details", "GetITReturnDetails", "TaxReturn", new { userId = Model.UserId, companyId = company.Id,companyname = company.CompanyName }, null)
-                    </td>
-                </tr>
+            <tr class="table-active">
+                <td>
+                    @Html.HiddenFor(m => company.Id, company.Id)
+                    @company.CompanyName
+                </td>
+                <td>@company.PANNumber</td>
+                <td>
+                    @Html.ActionLink("Get Existing IT Return Details", "ExistingITReturnDetails", "TaxReturn", new { AddedBy = Model.UserId, CompanyID = company.Id, CompanyName = company.CompanyName }, null)
+                </td>
+                <td>
+                    @Html.ActionLink("Create IT Return Details", "GetITReturnDetails", "TaxReturn", new { userId = Model.UserId, companyId = company.Id, companyname = company.CompanyName }, null)
+                </td>
+            </tr>
             }
         </table>
     }

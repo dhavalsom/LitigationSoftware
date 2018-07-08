@@ -275,6 +275,7 @@
     <Content Include="Views\TaxReturn\ITReturnResponse.cshtml" />
     <Content Include="Views\Shared\_LitigationDD.cshtml" />
     <Content Include="Views\TaxReturn\ITSubHeadDetails.cshtml" />
+    <Content Include="Views\TaxReturn\ExistingITReturnDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

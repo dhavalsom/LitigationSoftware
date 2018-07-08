@@ -1,0 +1,45 @@
+﻿@model  LSWebApp.Models.ITReturnDetailsModel
+
+<h3>Existing ITReturn Details</h3>
+
+@using (Html.BeginForm("SearchITReturnDetails", "TaxReturn"))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="container">
+        <div class="bs-component">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th colspan="2">Company Name</th>
+                        <th>Financial Year</th>
+                        <th>Assessment Year</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="table-active">
+                        <td colspan="2">
+                            @*@Model.ITReturnDetailsObject.CompanyName*@
+                            @Html.LabelFor(m => m.ITReturnDetailsObject.CompanyName, Model.ITReturnDetailsObject.CompanyName)
+                            @Html.HiddenFor(m => m.ITReturnDetailsObject.CompanyID)
+                        </td>
+                        <td>
+                            @Html.DropDownListFor(m => m.ITReturnDetailsObject.FYAYID, new SelectList(Model.FYAYList, "ID", "FinancialYear"))
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-primary btn-sm">Search</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <br />
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="bs-component">
+
+        </div>
+    </div>
+  }
+

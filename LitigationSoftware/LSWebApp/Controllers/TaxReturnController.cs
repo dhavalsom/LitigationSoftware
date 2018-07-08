@@ -184,6 +184,68 @@ namespace LSWebApp.Controllers
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public async Task<ActionResult> ExistingITReturnDetails(ITReturnDetails itrdetails1)
+        {
+            ITReturnDetailsModel itrdetails = new ITReturnDetailsModel
+            {
+                ITReturnDetailsObject = new ITReturnDetails
+                {
+                    CompanyID = itrdetails1.CompanyID,
+                    CompanyName = itrdetails1.CompanyName,
+                    AddedBy = itrdetails1.AddedBy,
+                    IncomefromBusinessProf = false,
+                    RevisedReturnFile = false
+                }
+            };
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetFYAYList");
+                if (Res.IsSuccessStatusCode)
+                {
+                    itrdetails.FYAYList = JsonConvert.DeserializeObject<List<FYAY>>(Res.Content.ReadAsStringAsync().Result);
+                }
+            }
+
+                return View(itrdetails);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SearchITReturnDetails(ITReturnDetailsModel itrdetails1)
+        {
+            ITReturnDetailsModel itrdetails = new ITReturnDetailsModel
+            {
+                ITReturnDetailsObject = new ITReturnDetails
+                {
+                    CompanyID = itrdetails1.ITReturnDetailsObject.CompanyID,
+                    CompanyName = itrdetails1.ITReturnDetailsObject.CompanyName,
+                    AddedBy = itrdetails1.ITReturnDetailsObject.AddedBy,
+                    IncomefromBusinessProf = false,
+                    RevisedReturnFile = false
+                }
+            };
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetFYAYList");
+                if (Res.IsSuccessStatusCode)
+                {
+                    itrdetails.FYAYList = JsonConvert.DeserializeObject<List<FYAY>>(Res.Content.ReadAsStringAsync().Result);
+                }
+            }
+
+            return View("ExistingITReturnDetails",itrdetails);
+        }
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> InsertorUpdateITReturnDetails(ITReturnDetailsModel itReturn, FormCollection form)
