@@ -176,7 +176,7 @@ namespace LS.DAL.Library
         }
 
 
-        public ITReturnDetailsListResponse GetExistingITReturnDetailsList(int companyId, int fyayId)
+        public ITReturnDetailsListResponse GetExistingITReturnDetailsList(int companyId, int fyayId,int? itsectionid,int? itreturnid)
         {
             try
             {
@@ -185,12 +185,22 @@ namespace LS.DAL.Library
                 {
                     companyId = companyId,
                     fyayId = fyayId,
+                    itsectionid = itsectionid,
+                    itreturnid = itreturnid
                 }));
                 Command.CommandText = "SP_GET_ITReturnDetails";
                 Command.CommandType = CommandType.StoredProcedure;
                 Command.Parameters.AddWithValue("@COMPANY_ID", companyId);
                 Command.Parameters.AddWithValue("@FYAYID", fyayId);
-               
+                if (itsectionid.HasValue && itsectionid > 0)
+                {
+                    Command.Parameters.AddWithValue("@ITSectionID", itsectionid);
+                }
+                if(itreturnid.HasValue && itreturnid >0)
+                {
+                    Command.Parameters.AddWithValue("@ITReturnID", itreturnid);
+                }
+
                 Connection.Open();
 
                 SqlDataReader reader = Command.ExecuteReader();
@@ -202,12 +212,38 @@ namespace LS.DAL.Library
                     {
                         result.ITReturnDetailsListObject.Add(new ITReturnDetails
                         {
+                            Id = int.Parse(reader["ITReturnDetailsId"].ToString()),
                             ITSectionID = reader["ITSectionID"] != DBNull.Value ? int.Parse(reader["ITSectionID"].ToString()) : 0,
                             ITSectionDescription = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : null,
-                            ITReturnFillingDate = Convert.ToDateTime(reader["ITReturnFillingDate"].ToString()),
-                            ITReturnDueDate = Convert.ToDateTime(reader["ITReturnDueDate"].ToString()),
+                            ITReturnFillingDate = reader["ITReturnFillingDate"] != DBNull.Value ? Convert.ToDateTime(reader["ITReturnFillingDate"].ToString()) : (DateTime?)null,
+                            ITReturnDueDate = reader["ITReturnDueDate"] != DBNull.Value ? Convert.ToDateTime(reader["ITReturnDueDate"].ToString()) : (DateTime?)null,
                             FYAYID = Convert.ToInt32(reader["FYAYId"].ToString()),
-                            CompanyID = Convert.ToInt32(reader["FYAYId"].ToString())
+                            CompanyID = Convert.ToInt32(reader["CompanyID"].ToString()),
+                            CompanyName = reader["CompanyName"] != DBNull.Value ? reader["CompanyName"].ToString() : null,
+                            HousePropIncome = reader["HousePropIncome"] != DBNull.Value ? Convert.ToInt32(reader["HousePropIncome"].ToString()) : (int?)null,
+                            IncomefromBusinessProf = Convert.ToBoolean(reader["IncomefromBusinessProf"]),
+                            RevisedReturnFile = Convert.ToBoolean(reader["RevisedReturnFile"]),
+                            IsReturn = Convert.ToBoolean(reader["IsReturn"]),
+                            IncomefromCapGainsNonSTT = reader["IncomefromCapGainsNonSTT"] != DBNull.Value ? Convert.ToInt32(reader["IncomefromCapGainsNonSTT"].ToString()) : (int?)null,
+                            IncomefromCapGainsSTT = reader["IncomefromCapGainsSTT"] != DBNull.Value ? Convert.ToInt32(reader["IncomefromCapGainsSTT"].ToString()) : (int?)null,
+                            UnabsorbedDepreciation = reader["UnabsorbedDepreciation"] != DBNull.Value ? Convert.ToInt32(reader["UnabsorbedDepreciation"].ToString()) : (int?)null,
+                            Broughtforwardlosses = reader["Broughtforwardlosses"] != DBNull.Value ? Convert.ToInt32(reader["Broughtforwardlosses"].ToString()) : (int?)null,
+                            IncomeFromOtherSources = reader["IncomeFromOtherSources"] != DBNull.Value ? Convert.ToInt32(reader["IncomeFromOtherSources"].ToString()) : (int?)null,
+                            DeductChapterVIA = reader["DeductChapterVIA"] != DBNull.Value ? Convert.ToInt32(reader["DeductChapterVIA"].ToString()) : (int?)null,
+                            ProfitUS115JB = reader["ProfitUS115JB"] != DBNull.Value ? Convert.ToInt32(reader["ProfitUS115JB"].ToString()) : (int?)null,
+                            AdvanceTax1installment = reader["AdvanceTax1installment"] != DBNull.Value ? Convert.ToInt32(reader["AdvanceTax1installment"].ToString()) : (int?)null,
+                            AdvanceTax2installment = reader["AdvanceTax2installment"] != DBNull.Value ? Convert.ToInt32(reader["AdvanceTax2installment"].ToString()) : (int?)null,
+                            AdvanceTax3installment = reader["AdvanceTax3installment"] != DBNull.Value ? Convert.ToInt32(reader["AdvanceTax3installment"].ToString()) : (int?)null,
+                            AdvanceTax4installment = reader["AdvanceTax4installment"] != DBNull.Value ? Convert.ToInt32(reader["AdvanceTax4installment"].ToString()) : (int?)null,
+                            TDS = reader["TDS"] != DBNull.Value ? Convert.ToInt32(reader["TDS"].ToString()) : (int?)null,
+                            TCSPaidbyCompany = reader["TCSPaidbyCompany"] != DBNull.Value ? Convert.ToInt32(reader["TCSPaidbyCompany"].ToString()) : (int?)null,
+                            SelfAssessmentTax = reader["SelfassessmentTax"] != DBNull.Value ? Convert.ToBoolean(reader["SelfassessmentTax"]) : (bool?)null,
+                            MATCredit = reader["MATCredit"] != DBNull.Value ? Convert.ToInt32(reader["MATCredit"].ToString()) : (int?)null,
+                            InterestUS234A = reader["InterestUS234A"] != DBNull.Value ? Convert.ToInt32(reader["InterestUS234A"].ToString()) : (int?)null,
+                            InterestUS234B = reader["InterestUS234B"] != DBNull.Value ? Convert.ToInt32(reader["InterestUS234B"].ToString()) : (int?)null,
+                            InterestUS234C = reader["InterestUS234C"] != DBNull.Value ? Convert.ToInt32(reader["InterestUS234C"].ToString()) : (int?)null,
+                            InterestUS244A = reader["InterestUS244A"] != DBNull.Value ? Convert.ToInt32(reader["InterestUS244A"].ToString()) : (int?)null,
+                            RefundReceived = reader["RefundReceived"] != DBNull.Value ? Convert.ToInt32(reader["RefundReceived"].ToString()) : (int?)null
                         });
                     }
                 }
@@ -223,6 +259,55 @@ namespace LS.DAL.Library
                 Connection.Close();
             }
         }
+
+        public List<ITReturnDetailsExtension> GetExistingITReturnDetailsExtension(int? itreturnid)
+        {
+            try
+            {
+                Log.Info("Started call to GetExistingITReturnDetailsExtension");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(new
+                {
+                    itreturnid = itreturnid
+                }));
+                Command.CommandText = "SP_GET_ITRETURNDETAILSEXTENSION";
+                Command.CommandType = CommandType.StoredProcedure;
+                if (itreturnid.HasValue && itreturnid > 0)
+                {
+                    Command.Parameters.AddWithValue("@ITRETURNDETAILS_ID", itreturnid);
+                }
+
+                Connection.Open();
+
+                SqlDataReader reader = Command.ExecuteReader();
+                List<ITReturnDetailsExtension> itrde = new List<ITReturnDetailsExtension>();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        itrde.Add(new ITReturnDetailsExtension
+                        {
+                            Id = int.Parse(reader["Id"].ToString()),
+                            ITReturnDetailsId = int.Parse(reader["ITReturnDetailsId"].ToString()),
+                            ITSubHeadId = int.Parse(reader["ITSubHeadId"].ToString()),
+                            ITSubHeadValue = decimal.Parse(reader["ITSubHeadValue"].ToString()),
+                            Active = bool.Parse(reader["Active"].ToString()) 
+                        });
+                    }
+                }
+                return itrde;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            finally
+            {
+                Connection.Close();
+            }
+        }
+
+
 
         #endregion
     }

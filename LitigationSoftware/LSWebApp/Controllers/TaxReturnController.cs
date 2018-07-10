@@ -99,7 +99,16 @@ namespace LSWebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetITReturnDetails(int userId, int companyId, string companyname)
+        public async Task<ActionResult> GetITReturnDetails(int? userId, int companyId, string companyname,int FYAYID, int? itsectionid, int? itreturnid)
+        {
+
+            ITReturnDetailsModel itrdetails = await CommonGetITReturnDetails(userId, companyId, companyname, FYAYID, itsectionid, itreturnid);
+
+            return View(itrdetails);
+            //return View(itrdetails);
+        }
+
+        private async Task<ITReturnDetailsModel> CommonGetITReturnDetails(int? userId, int companyId, string companyname, int FYAYID, int? itsectionid, int? itreturnid)
         {
             ITReturnDetailsModel itrdetails = new ITReturnDetailsModel
             {
@@ -109,39 +118,101 @@ namespace LSWebApp.Controllers
                     CompanyName = companyname,
                     AddedBy = userId,
                     IncomefromBusinessProf = false,
-                    RevisedReturnFile = false
+                    RevisedReturnFile = false,
+                    FYAYID = FYAYID,
+                    ITSectionID = itsectionid.HasValue ? itsectionid.Value : 0,
+                    IsReturn = true
                 }
             };
-            using (var client = new HttpClient())
-            {
-                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
-                client.DefaultRequestHeaders.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetFYAYList");
-                if (Res.IsSuccessStatusCode)
-                {
-                    itrdetails.FYAYList = JsonConvert.DeserializeObject<List<FYAY>>(Res.Content.ReadAsStringAsync().Result);
-                }
-                Res = await client.GetAsync("api/MasterAPI/GetITSubHeadMaster?itHeadId=");
-                var itSubHeads = JsonConvert.DeserializeObject<List<ITSubHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
-                Res = await client.GetAsync("api/MasterAPI/GetITHeadMaster");
-                var itHeads = JsonConvert.DeserializeObject<List<ITHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
 
-                Res = await client.GetAsync("api/MasterAPI/GetITSectionList");
-                if (Res.IsSuccessStatusCode)
+            try
+            {
+                using (var client = new HttpClient())
                 {
-                    itrdetails.ITSectionList = JsonConvert.DeserializeObject<List<ITSection>>(Res.Content.ReadAsStringAsync().Result);
-                    itrdetails.ITSectionListSource = new LitigationDDModel(
-                       itrdetails.ITSectionList.Select(x =>
-                        new SelectListItem() { Value = x.Id.ToString(), Text = x.Description }).ToList()
-                       , "ITReturnDetailsObject.ITSectionID"
-                       , "manageITSection"
-                       , "getITSections"
-                    );
+                    client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                    client.DefaultRequestHeaders.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetFYAYList");
+                    if (Res.IsSuccessStatusCode)
+                    {
+                        itrdetails.FYAYList = JsonConvert.DeserializeObject<List<FYAY>>(Res.Content.ReadAsStringAsync().Result);
+                    }
+                    Res = await client.GetAsync("api/MasterAPI/GetITSubHeadMaster?itHeadId=");
+                    var itSubHeads = JsonConvert.DeserializeObject<List<ITSubHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
+                    Res = await client.GetAsync("api/MasterAPI/GetITHeadMaster");
+                    var itHeads = JsonConvert.DeserializeObject<List<ITHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
+
+                    if (itsectionid.HasValue)
+                    {
+                        Res = await client.GetAsync("api/TaxReturnAPI/GetExistingITReturnDetailsList?companyId=" + companyId + "&fyayId=" + FYAYID + "&itsectionid=" + itsectionid + "&itreturnid=" + itreturnid);
+                        if (Res.IsSuccessStatusCode)
+                        {
+                            if (JsonConvert.DeserializeObject<ITReturnDetailsListResponse>(Res.Content.ReadAsStringAsync().Result).ITReturnDetailsListObject.Count > 0)
+                                itrdetails.ITReturnDetailsObject = JsonConvert.DeserializeObject<ITReturnDetailsListResponse>(Res.Content.ReadAsStringAsync().Result).ITReturnDetailsListObject.First<ITReturnDetails>();
+
+
+                           
+
+                        }
+                    }
+
+                    Res = await client.GetAsync("api/MasterAPI/GetITSectionList");
+                    if (Res.IsSuccessStatusCode)
+                    {
+                        itrdetails.ITSectionList = JsonConvert.DeserializeObject<List<ITSection>>(Res.Content.ReadAsStringAsync().Result);
+                        itrdetails.ITSectionListSource = new LitigationDDModel(
+                           itrdetails.ITSectionList.Select(x =>
+                            new SelectListItem()
+                            {
+                                Value = x.Id.ToString(),
+                                Text = x.Description,
+                                Selected = x.Id == itrdetails.ITReturnDetailsObject.ITSectionID,
+                            }).ToList()
+                           , "ITReturnDetailsObject.ITSectionID"
+                           , "manageITSection"
+                           , "getITSections"
+                        );
+
+                        itrdetails.ITReturnDetailsObject.IsReturn = itrdetails.ITSectionList.Where(x => x.Id == itrdetails.ITReturnDetailsObject.ITSectionID)
+                                                                    .Select(x => x.IsReturn).First();
+                    }
+
+                    itrdetails.PopulateITHeadMasters(itHeads, itSubHeads, itrdetails.ITReturnDetailsObject.Id);
+
+                    if (!itrdetails.ITReturnDetailsObject.IsReturn)
+                    {
+                        List<ITReturnDetailsExtension> itSubHeadValues = new List<ITReturnDetailsExtension>();
+
+                        Res = await client.GetAsync("api/TaxReturnAPI/GetExistingITReturnDetailsExtension?itreturnid=" + itrdetails.ITReturnDetailsObject.Id);
+                        if (Res.IsSuccessStatusCode)
+                        {
+                            if (JsonConvert.DeserializeObject<List<ITReturnDetailsExtension>>(Res.Content.ReadAsStringAsync().Result).Count > 0)
+                            {
+                                itSubHeadValues = JsonConvert.DeserializeObject<List<ITReturnDetailsExtension>>(Res.Content.ReadAsStringAsync().Result);
+                            }
+                        }
+ 
+                        if (itSubHeadValues.Count > 0)
+                        {
+                            foreach(var item in itrdetails.ExtensionList)
+                            {
+                                foreach(var subvalue in itSubHeadValues)
+                                {
+                                    if (subvalue.ITReturnDetailsId == item.ITReturnDetailsId && subvalue.ITSubHeadId == item.ITSubHeadId)
+                                        item.ITSubHeadValue = subvalue.ITSubHeadValue;
+                                }
+                                //item.ITSubHeadValue = itSubHeadValues.Where(sh => sh.ITReturnDetailsId == item.ITReturnDetailsId && sh.ITSubHeadId == item.ITSubHeadId).Select(sh => sh.ITSubHeadValue).First();
+                            }
+                        }
+                    }
                 }
-                itrdetails.PopulateITHeadMasters(itHeads, itSubHeads);
             }
-            return View(itrdetails);
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return itrdetails;
         }
 
         [HttpGet]
@@ -227,7 +298,7 @@ namespace LSWebApp.Controllers
                 client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage Res = await client.GetAsync("api/TaxReturnAPI/GetExistingITReturnDetailsList?companyId=" + companyId + "&fyayId=" + fyayId);
+                HttpResponseMessage Res = await client.GetAsync("api/TaxReturnAPI/GetExistingITReturnDetailsList?companyId=" + companyId + "&fyayId=" + fyayId + "&itsectionid=0&itreturnid=0");
                 if (Res.IsSuccessStatusCode)
                 {
                     itrdetail.ITReturnDetailsListObject = JsonConvert.DeserializeObject<ITReturnDetailsListResponse>(Res.Content.ReadAsStringAsync().Result).ITReturnDetailsListObject;
@@ -275,6 +346,16 @@ namespace LSWebApp.Controllers
                 {
                     result.IsSuccess = true;
                     result.Message = Res.Content.ReadAsStringAsync().Result;
+
+                    itReturn = await CommonGetITReturnDetails(itrcomplexmodel.ITReturnDetailsObject.AddedBy, itrcomplexmodel.ITReturnDetailsObject.CompanyID, itrcomplexmodel.ITReturnDetailsObject.CompanyName, itrcomplexmodel.ITReturnDetailsObject.FYAYID, itrcomplexmodel.ITReturnDetailsObject.ITSectionID, itrcomplexmodel.ITReturnDetailsObject.Id);
+
+                    //Res = await client.GetAsync("api/TaxReturnAPI/GetExistingITReturnDetailsList?companyId=" + itrcomplexmodel.ITReturnDetailsObject.CompanyID + "&fyayId=" + itrcomplexmodel.ITReturnDetailsObject.FYAYID + "&itsectionid=" + itrcomplexmodel.ITReturnDetailsObject.ITSectionID + "&itreturnid=" + itrcomplexmodel.ITReturnDetailsObject.Id);
+                    //if (Res.IsSuccessStatusCode)
+                    //{
+                    //    if (JsonConvert.DeserializeObject<ITReturnDetailsListResponse>(Res.Content.ReadAsStringAsync().Result).ITReturnDetailsListObject.Count > 0)
+                    //        itReturn.ITReturnDetailsObject = JsonConvert.DeserializeObject<ITReturnDetailsListResponse>(Res.Content.ReadAsStringAsync().Result).ITReturnDetailsListObject.First<ITReturnDetails>();
+
+                    //}
                 }
                 else
                 {
@@ -282,7 +363,8 @@ namespace LSWebApp.Controllers
                     result.Message = Res.Content.ReadAsStringAsync().Result;
 
                 }
-                return View("ITReturnResponse", result);
+                //return View("ITReturnResponse", result);
+                return View("GetITReturnDetails", itReturn);
             }
         }
 

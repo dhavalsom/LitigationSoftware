@@ -40,6 +40,7 @@ namespace LS.Models
         public int? InterestUS244A { get; set; }
         public int? RefundReceived { get; set; }
         public bool? RevisedReturnFile { get; set; }
+        public bool IsReturn { get; set; }
 
         #endregion
 

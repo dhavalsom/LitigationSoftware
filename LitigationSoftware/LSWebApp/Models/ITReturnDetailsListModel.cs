@@ -10,6 +10,7 @@ namespace LSWebApp.Models
         public List<ITReturnDetails> ITReturnDetailsListObject { get; set; }
         public int? CompanyId { get; set; }
         public int? FYAYId { get; set; }
+        public int? Id { get; set; }
         #endregion
 
         #region Constructors

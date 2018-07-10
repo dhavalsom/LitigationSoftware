@@ -2,6 +2,7 @@
 using LS.DAL.Interface;
 using LS.Models;
 using System;
+using System.Collections.Generic;
 
 namespace LS.BL.Library
 {
@@ -71,11 +72,28 @@ namespace LS.BL.Library
             }
         }
 
-        public ITReturnDetailsListResponse GetExistingITReturnDetailsList(int companyId, int fyayId)
+        public ITReturnDetailsListResponse GetExistingITReturnDetailsList(int companyId, int fyayId, int? itsectionid, int? itreturnid)
         {
             try
             {
-                return this._itReturnDA.GetExistingITReturnDetailsList(companyId, fyayId);
+                return this._itReturnDA.GetExistingITReturnDetailsList(companyId, fyayId, itsectionid,itreturnid);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                //Log
+            }
+        }
+
+
+        public List<ITReturnDetailsExtension> GetExistingITReturnDetailsExtension(int? itreturnid)
+        {
+            try
+            {
+                return this._itReturnDA.GetExistingITReturnDetailsExtension(itreturnid);
             }
             catch (Exception ex)
             {

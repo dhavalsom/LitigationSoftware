@@ -1,16 +1,19 @@
 USE [LitigationApp]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_ITRETURNDETAILS_MANAGER]    Script Date: 7/2/2018 1:24:53 AM ******/
+/****** Object:  StoredProcedure [dbo].[SP_ITRETURNDETAILS_MANAGER]    Script Date: 7/11/2018 4:33:34 AM ******/
 DROP PROCEDURE [dbo].[SP_ITRETURNDETAILS_MANAGER]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_ITRETURNDETAILS_MANAGER]    Script Date: 7/2/2018 1:24:53 AM ******/
+/****** Object:  StoredProcedure [dbo].[SP_ITRETURNDETAILS_MANAGER]    Script Date: 7/11/2018 4:33:34 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
+
+
 
 
 CREATE PROCEDURE [dbo].[SP_ITRETURNDETAILS_MANAGER]
@@ -222,18 +225,55 @@ FROM @EXTENSIONDETAILS_XML.nodes('/ArrayOfITReturnDetailsExtension/ITReturnDetai
 		IF @ITSubHeadId IS NOT NULL AND @ITSubHeadValue IS NOT NULL
 		BEGIN
 
-		declare @DocHandle int
+		with cte as
+		(
+		SELECT x.Rec.query('./Id').value('.', 'bigint') as ITReturnID,
+						x.Rec.query('./ITSubHeadId').value('.', 'bigint') as ITSubHeadID,
+						x.Rec.query('./ITSubHeadValue').value('.', 'decimal') as ITSubHeadValue
+					FROM @EXTENSIONDETAILS_XML.nodes('/ArrayOfITReturnDetailsExtension/ITReturnDetailsExtension') as x(Rec)
+		)
 
-		EXEC sp_xml_preparedocument @DocHandle OUTPUT, @EXTENSIONDETAILS_XML 
+		merge [dbo].[ITReturnDetailsExtension] as itrde
+		using cte as cte1
+		on (cte1.ITReturnID = itrde.itreturndetailsid and cte1.ITSubHeadID = itrde.ITSubHeadID)
+		when matched then
+		update set itrde.ITSubHeadValue = cte1.ITSubHeadValue,itrde.ModifiedBy = @USER_ID,[ModifiedDate] = GETUTCDATE()
+		when not matched then
+		INSERT ( 
+					   [ITReturnDetailsId]
+					  ,[ITSubHeadId]
+					  ,[ITSubHeadValue]
+					  ,[Active]
+					  ,[AddedBy]
+					  ,[AddedDate]
+					)
+					values
+					(	cte1.ITReturnID,
+						cte1.ITSubHeadID,
+						cte1.ITSubHeadValue,
+						1,
+						@USER_ID,
+						GETUTCDATE());
 
-		UPDATE [dbo].[ITReturnDetailsExtension]
-		   SET [ITSubHeadValue] = XM.ITSubHeadValue
-		   from OPENXML(@DocHandle,'/ArrayOfITReturnDetailsExtension/ITReturnDetailsExtension',2)
-		   WITH (ITSubHeadId bigINT,[ITSubHeadValue] DECIMAL) AS XM
-		   INNER JOIN [dbo].[ITReturnDetailsExtension] ITRDE ON ITRDE.ITSubHeadId = XM.ITSubHeadId
+
+		--declare @DocHandle int
+
+		--EXEC sp_xml_preparedocument @DocHandle OUTPUT, @EXTENSIONDETAILS_XML 
+
+		--UPDATE [dbo].[ITReturnDetailsExtension]
+		--   SET [ITSubHeadValue] = XM.ITSubHeadValue
+		--   ,[ModifiedBy] = @USER_ID
+		--  ,[ModifiedDate] = GETUTCDATE()
+		--   from OPENXML(@DocHandle,'/ArrayOfITReturnDetailsExtension/ITReturnDetailsExtension',2)
+		--   WITH (ITSubHeadId bigINT,[ITSubHeadValue] DECIMAL) AS XM
+		--   INNER JOIN [dbo].[ITReturnDetailsExtension] ITRDE ON ITRDE.ITSubHeadId = XM.ITSubHeadId
+		--   AND ITRDE.ITReturnDetailsId = @Id
+		
+		--EXEC sp_xml_removedocument @DocHandle
+		
 		END
 
-		EXEC sp_xml_removedocument @DocHandle
+		
 
 		SET @Result = 1;
 		SET @ReturnMessage = 'Record updated successfully.'
@@ -242,7 +282,11 @@ FROM @EXTENSIONDETAILS_XML.nodes('/ArrayOfITReturnDetailsExtension/ITReturnDetai
 
 
 SELECT @Result AS Result, @ReturnMessage AS ReturnMessage
+
 END
 
 
+
 GO
+
+

@@ -8,6 +8,7 @@ namespace LS.DAL.Interface
         ITReturnComplexAPIModelResponse InsertorUpdateITReturnDetails(ITReturnComplexAPIModel itReturnDetails);
         ComplianceDocumentsResponse InsertUpdateComplianceDocuments(ComplianceDocuments complianceDocuments, string operation);
         ComplianceDocumentsResponse GetComplianceDocumentsList(int companyId, int fyayId, int? complianceId, int? complianceDocumentId);
-        ITReturnDetailsListResponse GetExistingITReturnDetailsList(int companyId, int fyayId);
+        ITReturnDetailsListResponse GetExistingITReturnDetailsList(int companyId, int fyayId, int? itsectionid, int? itreturnid);
+        List<ITReturnDetailsExtension> GetExistingITReturnDetailsExtension(int? itreturnid);
     }
 }

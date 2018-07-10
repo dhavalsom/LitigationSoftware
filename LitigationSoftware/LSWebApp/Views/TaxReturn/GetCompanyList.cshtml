@@ -20,7 +20,7 @@
             <thead>
             <th>Company Name</th>
             <th>PAN Number</th>
-            <th></th>
+            <th colspan="2"></th>
             </thead>
 
             @foreach (var company in Model.Companies)
@@ -35,7 +35,7 @@
                     @Html.ActionLink("Get Existing IT Return Details", "ExistingITReturnDetails", "TaxReturn", new { AddedBy = Model.UserId, CompanyID = company.Id, CompanyName = company.CompanyName }, null)
                 </td>
                 <td>
-                    @Html.ActionLink("Create IT Return Details", "GetITReturnDetails", "TaxReturn", new { userId = Model.UserId, companyId = company.Id, companyname = company.CompanyName }, null)
+                    @Html.ActionLink("Create IT Return Details", "GetITReturnDetails", "TaxReturn", new { userId = Model.UserId, companyId = company.Id, companyname = company.CompanyName, FYAYID=0, itreturnid=0 }, null)
                 </td>
             </tr>
             }

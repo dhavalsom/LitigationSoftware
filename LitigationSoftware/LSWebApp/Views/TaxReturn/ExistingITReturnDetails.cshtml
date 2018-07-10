@@ -22,7 +22,7 @@
                             @*@Model.ITReturnDetailsObject.CompanyName*@
                             @Html.LabelFor(m => m.ITReturnDetailsObject.CompanyName, Model.ITReturnDetailsObject.CompanyName)
                             @Html.HiddenFor(m => m.ITReturnDetailsObject.CompanyName)
-                            @Html.HiddenFor(m => m.ITReturnDetailsObject.CompanyID,Model.ITReturnDetailsObject.CompanyID)
+                            @Html.HiddenFor(m => m.ITReturnDetailsObject.CompanyID, Model.ITReturnDetailsObject.CompanyID)
                         </td>
                         <td>
                             @Html.DropDownListFor(m => m.ITReturnDetailsObject.FYAYID, new SelectList(Model.FYAYList, "ID", "FinancialYear"))
