@@ -1,0 +1,42 @@
+﻿@model LSWebApp.Models.ITReturnDetailsListModel
+
+<table class="table table-hover">
+  
+        <thead>
+            <tr>
+                <th>Section</th> 
+                @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+                {
+                <th align="center">
+                    @*@itsectiondetail.ITSectionDescription*@
+                    @Html.ActionLink(@itsectiondetail.ITSectionDescription, "GetITReturnDetails", "TaxReturn", new { AddedBy = itsectiondetail.AddedBy, CompanyID = Model.CompanyId, CompanyName = @itsectiondetail.CompanyName, FYAYID = Model.FYAYId, itsectionid = @itsectiondetail.ITSectionID, itreturnid = @itsectiondetail.Id }, null)
+                    @*@Html.HiddenFor(m => m.Id, itsectiondetail.Id)*@
+                </th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="table-active">
+                <td>Filling Date</td>
+                @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+                {
+                    <td>@itsectiondetail.ITReturnFillingDate.Value.ToShortDateString()</td>
+                }
+            </tr>
+            <tr class="table-active">
+                <td>Due Date</td>
+                @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+                {
+                    <td>@itsectiondetail.ITReturnDueDate.Value.ToShortDateString()</td>
+                }
+            </tr>
+            <tr class="table-active">
+                <td>Income from House Property</td>
+                @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+                {   
+                    <td>@itsectiondetail.HousePropIncome</td>
+                }
+            </tr>
+        </tbody>
+</table>
+

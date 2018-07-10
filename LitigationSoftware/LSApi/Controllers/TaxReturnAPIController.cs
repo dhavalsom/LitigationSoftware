@@ -1,6 +1,7 @@
 ﻿using LS.BL.Interface;
 using LS.Models;
 using Ninject;
+using System.Collections.Generic;
 using System.Web.Http;
 
 namespace LSApi.Controllers
@@ -73,6 +74,24 @@ namespace LSApi.Controllers
             var ItReturnObj = _Kernel.Get<IITReturnDetailsBL>();
             var complianceDocumentsResult = ItReturnObj.InsertUpdateComplianceDocuments(complianceDocuments, "Delete");
             return complianceDocumentsResult;
+        }
+
+        [HttpGet]
+        [Route("GetExistingITReturnDetailsList")]
+        // GET: api/TaxReturnAPI/GetExistingITReturnDetailsList
+        public ITReturnDetailsListResponse GetExistingITReturnDetailsList(int companyId, int fyayId, int? itsectionid, int? itreturnid)
+        {
+            var ItReturnObj = _Kernel.Get<IITReturnDetailsBL>();
+            return ItReturnObj.GetExistingITReturnDetailsList(companyId, fyayId, itsectionid, itreturnid);
+        }
+
+        [HttpGet]
+        [Route("GetExistingITReturnDetailsExtension")]
+        // GET: api/TaxReturnAPI/GetExistingITReturnDetailsExtension
+        public List<ITReturnDetailsExtension> GetExistingITReturnDetailsExtension(int? itreturnid)
+        {
+            var ItReturnObj = _Kernel.Get<IITReturnDetailsBL>();
+            return ItReturnObj.GetExistingITReturnDetailsExtension(itreturnid);
         }
 
         #endregion

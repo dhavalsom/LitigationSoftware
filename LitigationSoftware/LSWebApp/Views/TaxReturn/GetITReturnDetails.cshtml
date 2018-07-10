@@ -2,7 +2,7 @@
 @using LS.Models;
 @model  LSWebApp.Models.ITReturnDetailsModel
 
-<h3>Original Return/Revised Return</h3>
+<h3>Original Return/Revised Return/Assessment Order</h3>
 
 @using (Html.BeginForm("InsertorUpdateITReturnDetails", "TaxReturn"))
 {
@@ -13,7 +13,7 @@
             <tr>
                 <th colspan="2">Company Name</th>
                 <th>Financial Year</th>
-                <th>Assessment Year</th>
+                @*<th>Assessment Year</th>*@
             </tr>
         </thead>
         <tbody>
@@ -21,13 +21,14 @@
                 <td colspan="2">
                     @Model.ITReturnDetailsObject.CompanyName
                     @Html.HiddenFor(m => m.ITReturnDetailsObject.CompanyID)
+                    @Html.HiddenFor(m => m.ITReturnDetailsObject.CompanyName)
                 </td>
                 <td>
                     @Html.DropDownListFor(m => m.ITReturnDetailsObject.FYAYID, new SelectList(Model.FYAYList, "ID", "FinancialYear"))
                 </td>
-                <td>
+                @*<td>
                     @Html.LabelFor(m => m.ITReturnDetailsObject.AssessmentYear)
-                </td>
+                </td>*@
             </tr>
         </tbody>
      </table>
@@ -47,6 +48,7 @@
                  <td>The information is being updated for:-</td>
                  <td>
                      @Html.Partial("_LitigationDD", Model.ITSectionListSource)
+                     @Html.HiddenFor(m=>m.ITReturnDetailsObject.Id, Model.ITReturnDetailsObject.Id)
                  </td>
              </tr>
              <tr>
@@ -62,7 +64,6 @@
                                      {
                                          @class = "form-control",
                                          @size = "16",
-                                         @readonly = "readonly",
                                          @value = ""
                                      })
                          <span class="input-group-addon">
@@ -86,7 +87,6 @@
                                      {
                                          @class = "form-control",
                                          @size = "16",
-                                         @readonly = "readonly",
                                          @value = ""
                                      })
                          <span class="input-group-addon">
@@ -106,7 +106,7 @@
                      @Html.TextBoxFor(m => m.ITReturnDetailsObject.HousePropIncome, string.Format("{0:f}", Model.ITReturnDetailsObject.HousePropIncome), new {@class= "form - control form - control - sm" })
                  </td>
              </tr>
-             @if (!Model.IsReturn)
+             @if (!Model.ITReturnDetailsObject.IsReturn)
              {
                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
                  .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["HousePropIncome"].Id)
@@ -120,7 +120,7 @@
                  <td>@Model.ITHeadMasterList["IncomefromCapGainsNonSTT"].Description:-</td>
                  <td>@Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomefromCapGainsNonSTT, Model.ITReturnDetailsObject.IncomefromCapGainsNonSTT)</td>
              </tr>
-            @if (!Model.IsReturn)
+            @if (!Model.ITReturnDetailsObject.IsReturn)
             {
                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
                 .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomefromCapGainsNonSTT"].Id)
@@ -142,7 +142,7 @@
                      @Html.RadioButtonFor(m => m.ITReturnDetailsObject.IncomefromBusinessProf, Model.ITReturnDetailsObject.IncomefromBusinessProf) No
                  </td>
              </tr>
-            @if (!Model.IsReturn)
+            @if (!Model.ITReturnDetailsObject.IsReturn)
             {
                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
                      .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomefromBusinessProf"].Id)
@@ -174,7 +174,7 @@
                      @Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomeFromOtherSources, Model.ITReturnDetailsObject.IncomeFromOtherSources)
                  </td>
              </tr>
-            @if (!Model.IsReturn)
+            @if (!Model.ITReturnDetailsObject.IsReturn)
             {
                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
                      .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomeFromOtherSources"].Id)
@@ -188,7 +188,7 @@
                      @Html.TextBoxFor(m => m.ITReturnDetailsObject.DeductChapterVIA, Model.ITReturnDetailsObject.DeductChapterVIA)
                  </td>
              </tr>
-             @if (!Model.IsReturn)
+             @if (!Model.ITReturnDetailsObject.IsReturn)
              {
                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
                    .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["DeductChapterVIA"].Id)
@@ -202,7 +202,7 @@
                      @Html.TextBoxFor(m => m.ITReturnDetailsObject.ProfitUS115JB, Model.ITReturnDetailsObject.ProfitUS115JB)
                  </td>
              </tr>
-             @if (!Model.IsReturn)
+             @if (!Model.ITReturnDetailsObject.IsReturn)
              {
                  @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
                   .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["ProfitUS115JB"].Id)
@@ -339,6 +339,11 @@
                 minView: 2,
                 forceParse: 0
             });
+        });
+
+        $(".ddFYAY").change(function () {
+            $("#FinancialYear").val($(this).find("option:selected").text());
+            loadComplianceDocuments();
         });
     </script>
 }

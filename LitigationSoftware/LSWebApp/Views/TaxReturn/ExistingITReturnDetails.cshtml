@@ -1,0 +1,79 @@
+﻿@model  LSWebApp.Models.ITReturnDetailsModel
+
+<h3>Existing ITReturn Details</h3>
+
+@using (Html.BeginForm("SearchITReturnDetails", "TaxReturn"))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="container">
+        <div class="bs-component">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th colspan="2">Company Name</th>
+                        <th>Financial Year</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="table-active">
+                        <td colspan="2">
+                            @*@Model.ITReturnDetailsObject.CompanyName*@
+                            @Html.LabelFor(m => m.ITReturnDetailsObject.CompanyName, Model.ITReturnDetailsObject.CompanyName)
+                            @Html.HiddenFor(m => m.ITReturnDetailsObject.CompanyName)
+                            @Html.HiddenFor(m => m.ITReturnDetailsObject.CompanyID, Model.ITReturnDetailsObject.CompanyID)
+                        </td>
+                        <td>
+                            @Html.DropDownListFor(m => m.ITReturnDetailsObject.FYAYID, new SelectList(Model.FYAYList, "ID", "FinancialYear"))
+                        </td>
+                        <td>
+                            <button type="submit" class="btn btn-primary btn-sm" id="btnsrch">Search</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <br />
+        </div>
+    </div>
+
+}
+<div class="container">
+    <div class="bs-component" id="sectionDiv">
+
+    </div>
+</div>
+@section scripts
+{
+<script type="text/javascript">
+    $(document).ready(function () {
+       
+            //loadexistingitsections();
+
+            $("#btnsrch").click(function () {
+                loadexistingitsections();
+                return false;
+            });
+        });
+
+    function loadexistingitsections() {
+        
+        var url = "@Url.Action("SearchITReturnDetails", "TaxReturn")" + '?companyId=' + $('#ITReturnDetailsObject_CompanyID').val() + '&fyayId=' + $('#ITReturnDetailsObject_FYAYID').val();
+
+        $.ajax({
+            url: url ,
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            type: 'GET',
+            error: function (xhr,status,error) {
+                alert("inside error " + xhr.responseText);
+            },
+            dataType: 'html',
+            success: function (data) {
+                 $("#sectionDiv").html(data);
+            }
+            });
+        }
+</script>
+
+}

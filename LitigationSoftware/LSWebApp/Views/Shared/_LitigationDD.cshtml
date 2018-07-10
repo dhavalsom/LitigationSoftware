@@ -2,7 +2,7 @@
 <div class="custom-dd" id="dv">
     @Html.TextBoxFor(m=>m.AddActionName, Model.AddActionName, new { @style = "display:none;", @class = "hdActionNameLitigationDD" })
     @Html.TextBoxFor(m => m.RefreshActionName, Model.RefreshActionName, new { @style = "display:none;", @class = "hdRefreshActionNameLitigationDD" })
-    @Html.DropDownList(Model.BindingProperty, Model.Source, new { @class = "ddLitigationDD" })   
+    @Html.DropDownList(Model.BindingProperty, Model.Source  , new { @class = "ddLitigationDD" })   
     @Html.TextBoxFor(m=>m.Description, Model.Description, new { @style = "display:none;", @class= "txtLitigationDD" })
     @if (Model.CheckboxVisible)
     {           

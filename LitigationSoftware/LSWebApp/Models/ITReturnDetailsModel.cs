@@ -6,14 +6,13 @@ namespace LSWebApp.Models
 {
     public class ITReturnDetailsModel
     {
-        #region Proeprties
+        #region Properties
         public ITReturnDetails ITReturnDetailsObject { get; set; }
         public List<FYAY> FYAYList { get; set; }
         public Dictionary<string, ITHeadMaster> ITHeadMasterList { get; set; }
         public List<ITSection> ITSectionList { get; set; }
         public List<ITReturnDetailsExtension> ExtensionList { get; set; }
         public LitigationDDModel ITSectionListSource { get; set; }
-        public bool IsReturn { get; set; }
         #endregion
 
         #region Constructors
@@ -25,7 +24,7 @@ namespace LSWebApp.Models
         #endregion
 
         #region Methods
-        public void PopulateITHeadMasters(List<ITHeadMaster> headList, List<ITSubHeadMaster> subHeadList)
+        public void PopulateITHeadMasters(List<ITHeadMaster> headList, List<ITSubHeadMaster> subHeadList,int? itreturnId)
         {
             this.ITHeadMasterList = new Dictionary<string, ITHeadMaster>();
             foreach (var item in headList)
@@ -38,7 +37,8 @@ namespace LSWebApp.Models
                     {
                         ITSubHeadId = subItem.Id,
                         SubHeadMasterObject = subItem,
-                        HeadMasterObject = item
+                        HeadMasterObject = item,
+                        ITReturnDetailsId= itreturnId.HasValue ? itreturnId.Value : 0
                     });
                 }
             }
