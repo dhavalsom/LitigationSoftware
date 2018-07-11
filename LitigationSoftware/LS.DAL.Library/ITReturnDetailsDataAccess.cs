@@ -237,7 +237,7 @@ namespace LS.DAL.Library
                             AdvanceTax4installment = reader["AdvanceTax4installment"] != DBNull.Value ? Convert.ToInt32(reader["AdvanceTax4installment"].ToString()) : (int?)null,
                             TDS = reader["TDS"] != DBNull.Value ? Convert.ToInt32(reader["TDS"].ToString()) : (int?)null,
                             TCSPaidbyCompany = reader["TCSPaidbyCompany"] != DBNull.Value ? Convert.ToInt32(reader["TCSPaidbyCompany"].ToString()) : (int?)null,
-                            SelfAssessmentTax = reader["SelfassessmentTax"] != DBNull.Value ? Convert.ToBoolean(reader["SelfassessmentTax"]) : (bool?)null,
+                            SelfAssessmentTax = reader["SelfassessmentTax"] != DBNull.Value ? Convert.ToInt32(reader["SelfassessmentTax"]) : (int?)null,
                             MATCredit = reader["MATCredit"] != DBNull.Value ? Convert.ToInt32(reader["MATCredit"].ToString()) : (int?)null,
                             InterestUS234A = reader["InterestUS234A"] != DBNull.Value ? Convert.ToInt32(reader["InterestUS234A"].ToString()) : (int?)null,
                             InterestUS234B = reader["InterestUS234B"] != DBNull.Value ? Convert.ToInt32(reader["InterestUS234B"].ToString()) : (int?)null,

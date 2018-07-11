@@ -105,7 +105,9 @@
                  <td></td>
                  <td>@Model.ITHeadMasterList["HousePropIncome"].Description:-</td>
                  <td>
-                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.HousePropIncome, string.Format("{0:f}", Model.ITReturnDetailsObject.HousePropIncome), new {@class= "form - control form - control - sm" })
+                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.HousePropIncome
+                        , string.Format("{0:d}", Model.ITReturnDetailsObject.HousePropIncome)
+                        , new { @class = "form-control form-control-sm numericOnly" })
                  </td>
              </tr>
              @if (!Model.ITReturnDetailsObject.IsReturn)
@@ -120,7 +122,10 @@
                  <td>5</td>
                  <td></td>
                  <td>@Model.ITHeadMasterList["IncomefromCapGainsNonSTT"].Description:-</td>
-                 <td>@Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomefromCapGainsNonSTT, Model.ITReturnDetailsObject.IncomefromCapGainsNonSTT)</td>
+                 <td>@Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomefromCapGainsNonSTT
+                    , string.Format("{0:d}", Model.ITReturnDetailsObject.IncomefromCapGainsNonSTT)
+                    , new { @class = "numericOnly" })
+                 </td>
              </tr>
             @if (!Model.ITReturnDetailsObject.IsReturn)
             {
@@ -132,7 +137,10 @@
                  <td></td>
                  <td></td>
                  <td>@Model.ITHeadMasterList["IncomefromCapGainsSTT"].Description:-</td>
-                 <td>@Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomefromCapGainsSTT, Model.ITReturnDetailsObject.IncomefromCapGainsSTT)</td>
+                 <td>@Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomefromCapGainsSTT
+                    , string.Format("{0:d}", Model.ITReturnDetailsObject.IncomefromCapGainsSTT)
+                    , new { @class = "numericOnly" })
+                 </td>
              </tr>
 
              <tr>
@@ -155,7 +163,9 @@
                  <td>a</td>
                  <td>@Model.ITHeadMasterList["UnabsorbedDepreciation"].Description:-</td>
                  <td>
-                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.UnabsorbedDepreciation, Model.ITReturnDetailsObject.UnabsorbedDepreciation)
+                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.UnabsorbedDepreciation
+                    , string.Format("{0:d}", Model.ITReturnDetailsObject.UnabsorbedDepreciation)
+                    , new { @class = "numericOnly" })
                  </td>
              </tr>
 
@@ -164,7 +174,9 @@
                  <td>b</td>
                  <td>@Model.ITHeadMasterList["Broughtforwardlosses"].Description:-</td>
                  <td>
-                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.Broughtforwardlosses, Model.ITReturnDetailsObject.Broughtforwardlosses)
+                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.Broughtforwardlosses
+                    , string.Format("{0:d}", Model.ITReturnDetailsObject.Broughtforwardlosses)
+                    , new { @class = "numericOnly" })
                  </td>
              </tr>
 
@@ -173,7 +185,9 @@
                  <td></td>
                  <td>@Model.ITHeadMasterList["IncomeFromOtherSources"].Description:-</td>
                  <td>
-                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomeFromOtherSources, Model.ITReturnDetailsObject.IncomeFromOtherSources)
+                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomeFromOtherSources
+                    , string.Format("{0:d}", Model.ITReturnDetailsObject.IncomeFromOtherSources)
+                    , new { @class = "numericOnly" })
                  </td>
              </tr>
             @if (!Model.ITReturnDetailsObject.IsReturn)
@@ -187,7 +201,9 @@
                  <td></td>
                  <td>@Model.ITHeadMasterList["DeductChapterVIA"].Description:-</td>
                  <td>
-                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.DeductChapterVIA, Model.ITReturnDetailsObject.DeductChapterVIA)
+                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.DeductChapterVIA
+                    , string.Format("{0:d}", Model.ITReturnDetailsObject.DeductChapterVIA)
+                    , new { @class = "numericOnly" })
                  </td>
              </tr>
              @if (!Model.ITReturnDetailsObject.IsReturn)
@@ -201,7 +217,9 @@
                  <td></td>
                  <td>@Model.ITHeadMasterList["ProfitUS115JB"].Description:-</td>
                  <td>
-                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.ProfitUS115JB, Model.ITReturnDetailsObject.ProfitUS115JB)
+                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.ProfitUS115JB
+                    , string.Format("{0:d}", Model.ITReturnDetailsObject.ProfitUS115JB)
+                    , new { @class = "numericOnly" })
                  </td>
              </tr>
              @if (!Model.ITReturnDetailsObject.IsReturn)
@@ -215,7 +233,9 @@
                  <td></td>
                  <td>@Model.ITHeadMasterList["AdvanceTax1installment"].Description:-</td>
                  <td>
-                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.AdvanceTax1installment, Model.ITReturnDetailsObject.AdvanceTax1installment)
+                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.AdvanceTax1installment
+                    , string.Format("{0:d}", Model.ITReturnDetailsObject.AdvanceTax1installment)
+                    , new { @class = "numericOnly" })
                  </td>
              </tr>
              <tr>
@@ -223,7 +243,9 @@
                  <td></td>
                  <td>@Model.ITHeadMasterList["AdvanceTax2installment"].Description:-</td>
                  <td>
-                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.AdvanceTax2installment, Model.ITReturnDetailsObject.AdvanceTax2installment)
+                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.AdvanceTax2installment
+                    , string.Format("{0:d}", Model.ITReturnDetailsObject.AdvanceTax2installment)
+                    , new { @class = "numericOnly" })
                  </td>
              </tr>
              <tr>
@@ -231,7 +253,9 @@
                  <td></td>
                  <td>@Model.ITHeadMasterList["AdvanceTax3installment"].Description:-</td>
                  <td>
-                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.AdvanceTax3installment, Model.ITReturnDetailsObject.AdvanceTax3installment)
+                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.AdvanceTax3installment
+                    , string.Format("{0:d}", Model.ITReturnDetailsObject.AdvanceTax3installment)
+                    , new { @class = "numericOnly" })
                  </td>
              </tr>
              <tr>
@@ -239,7 +263,9 @@
                  <td></td>
                  <td>@Model.ITHeadMasterList["AdvanceTax4installment"].Description:-</td>
                  <td>
-                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.AdvanceTax4installment, Model.ITReturnDetailsObject.AdvanceTax4installment)
+                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.AdvanceTax4installment
+                    , string.Format("{0:d}", Model.ITReturnDetailsObject.AdvanceTax4installment)
+                    , new { @class = "numericOnly" })
                  </td>
              </tr>
              <tr>
@@ -247,7 +273,9 @@
                  <td></td>
                  <td>@Model.ITHeadMasterList["TDS"].Description:-</td>
                  <td>
-                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.TDS, Model.ITReturnDetailsObject.TDS)
+                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.TDS
+                    , string.Format("{0:d}", Model.ITReturnDetailsObject.TDS)
+                    , new { @class = "numericOnly" })
                  </td>
              </tr>
              <tr>
@@ -255,7 +283,9 @@
                  <td></td>
                  <td>@Model.ITHeadMasterList["TCSPaidbyCompany"].Description:-</td>
                  <td>
-                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.TCSPaidbyCompany, Model.ITReturnDetailsObject.TCSPaidbyCompany)
+                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.TCSPaidbyCompany
+                     , string.Format("{0:d}", Model.ITReturnDetailsObject.TCSPaidbyCompany)
+                    , new { @class = "numericOnly" })
                  </td>
              </tr>
              <tr>
@@ -263,35 +293,45 @@
                  <td></td>
                  <td>@Model.ITHeadMasterList["SelfAssessmentTax"].Description:-</td>
                  <td>
-                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.SelfAssessmentTax, Model.ITReturnDetailsObject.SelfAssessmentTax)
+                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.SelfAssessmentTax
+                     , string.Format("{0:d}", Model.ITReturnDetailsObject.SelfAssessmentTax)
+                    , new { @class = "numericOnly" })
                  </td>
              </tr>
              <tr>
                  <td colspan="2"></td>
                  <td>@Model.ITHeadMasterList["MATCredit"].Description:-</td>
                  <td>
-                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.MATCredit, Model.ITReturnDetailsObject.MATCredit)
+                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.MATCredit
+                    , string.Format("{0:d}", Model.ITReturnDetailsObject.MATCredit)
+                    , new { @class = "numericOnly" })
                  </td>
              </tr>
              <tr>
                  <td colspan="2"></td>
                  <td>@Model.ITHeadMasterList["InterestUS234A"].Description:-</td>
                  <td>
-                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.InterestUS234A, Model.ITReturnDetailsObject.InterestUS234A)
+                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.InterestUS234A
+                    , string.Format("{0:d}", Model.ITReturnDetailsObject.InterestUS234A)
+                    , new { @class = "numericOnly" })
                  </td>
              </tr>
              <tr>
                  <td colspan="2"></td>
                  <td>@Model.ITHeadMasterList["InterestUS234B"].Description:-</td>
                  <td>
-                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.InterestUS234B, Model.ITReturnDetailsObject.InterestUS234B)
+                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.InterestUS234B
+                     , string.Format("{0:d}", Model.ITReturnDetailsObject.InterestUS234B)
+                    , new { @class = "numericOnly" })
                  </td>
              </tr>
              <tr>
                  <td colspan="2"></td>
                  <td>@Model.ITHeadMasterList["InterestUS234C"].Description:-</td>
                  <td>
-                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.InterestUS234C, Model.ITReturnDetailsObject.InterestUS234C)
+                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.InterestUS234C
+                     , string.Format("{0:d}", Model.ITReturnDetailsObject.InterestUS234C)
+                    , new { @class = "numericOnly" })
                  </td>
              </tr>
              <tr>
@@ -299,7 +339,9 @@
                  <td></td>
                  <td>@Model.ITHeadMasterList["InterestUS244A"].Description:-</td>
                  <td>
-                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.InterestUS244A, Model.ITReturnDetailsObject.InterestUS244A)
+                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.InterestUS244A
+                    , string.Format("{0:d}", Model.ITReturnDetailsObject.InterestUS244A)
+                    , new { @class = "numericOnly" })
                  </td>
              </tr>
              <tr>
@@ -307,7 +349,9 @@
                  <td></td>
                  <td>@Model.ITHeadMasterList["RefundReceived"].Description:-</td>
                  <td>
-                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.RefundReceived, Model.ITReturnDetailsObject.RefundReceived)
+                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.RefundReceived
+                    , string.Format("{0:d}", Model.ITReturnDetailsObject.RefundReceived)
+                    , new { @class = "numericOnly" })
                  </td>
              </tr>
              <tr>
@@ -341,7 +385,26 @@
                 minView: 2,
                 forceParse: 0
             });
+
+            $(".numericOnly").keypress(function (e) {
+                return isANumber(e);
+            });
+            $(".numericOnly").change(function (e) {
+                if ($.isNumeric($(this).val())) {
+                    $(this).val(parseFloat($(this).val()).toFixed(0));
+                }
+                else {
+                    $(this).val("0");
+                }
+            });
         });
+
+        function isANumber(evt) {
+            var charCode = (evt.which) ? evt.which : evt.keyCode
+            if (charCode == 45 || charCode == 46 || (charCode >= 48 && charCode <= 57))
+                return true;
+            return false;
+        }
 
         $(".ddFYAY").change(function () {
             $("#FinancialYear").val($(this).find("option:selected").text());

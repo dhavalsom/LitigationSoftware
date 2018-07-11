@@ -32,7 +32,7 @@ namespace LS.Models
         public int? AdvanceTax4installment { get; set; }
         public int? TDS { get; set; }
         public int? TCSPaidbyCompany { get; set; }
-        public bool? SelfAssessmentTax { get; set; }
+        public int? SelfAssessmentTax { get; set; }
         public int? MATCredit { get; set; }
         public int? InterestUS234A { get; set; }
         public int? InterestUS234B { get; set; }
