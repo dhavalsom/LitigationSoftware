@@ -173,8 +173,11 @@ namespace LSWebApp.Controllers
                            , "getITSections"
                         );
 
-                        itrdetails.ITReturnDetailsObject.IsReturn = itrdetails.ITSectionList.Where(x => x.Id == itrdetails.ITReturnDetailsObject.ITSectionID)
-                                                                    .Select(x => x.IsReturn).First();
+                        if (itrdetails.ITReturnDetailsObject.ITSectionID > 0)
+                        {
+                            itrdetails.ITReturnDetailsObject.IsReturn = itrdetails.ITSectionList.Where(x => x.Id == itrdetails.ITReturnDetailsObject.ITSectionID)
+                                                                        .Select(x => x.IsReturn).First();
+                        }
                     }
 
                     itrdetails.PopulateITHeadMasters(itHeads, itSubHeads, itrdetails.ITReturnDetailsObject.Id);
