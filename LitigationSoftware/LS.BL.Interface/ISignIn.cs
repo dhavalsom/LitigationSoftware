@@ -5,6 +5,6 @@ namespace LS.BL.Interface
 {
     public interface ISignIn : IDisposable
     {
-        SignInResponse InitiateSignInProcess(UserLogin user);
+        UserLogin InitiateSignInProcess(UserLogin user);
     }
 }
