@@ -37,7 +37,7 @@ namespace LSWebApp.Controllers
         // GET: Login
         public ActionResult Index()
         {
-            return View();
+            return View(new UserLogin());
         }
 
         [HttpPost]
@@ -65,10 +65,16 @@ namespace LSWebApp.Controllers
                         return View("~/Views/TaxReturn/Index.cshtml");
                     }
                     else
-                        return View("Index");
+                    {
+                        user.Message = "Incorrect username or password";
+                        return View("Index", user);
+                    }
                 }
                 else
-                    return View("Index");
+                {
+                    user.Message = "Incorrect username or password";
+                    return View("Index", user);
+                }
             }
         }
 
