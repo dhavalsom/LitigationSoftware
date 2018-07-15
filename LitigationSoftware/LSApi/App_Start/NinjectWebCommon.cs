@@ -47,7 +47,7 @@ namespace LSApi
 
                 return kernel;
             }
-            catch
+            catch(Exception ex)
             {
                 kernel.Dispose();
                 throw;

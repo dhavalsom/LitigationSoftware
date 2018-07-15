@@ -1,4 +1,5 @@
 ﻿using LS.Models;
+using LSWebApp.Infrastructure;
 using LSWebApp.Models;
 using Newtonsoft.Json;
 using Ninject;
@@ -15,7 +16,8 @@ using System.Web.Mvc;
 
 namespace LSWebApp.Controllers
 {
-    public class TaxReturnController : Controller
+    [LitigationAuthorizeAttribute]
+    public class TaxReturnController : ControllerBase
     {
         #region Declarations
 

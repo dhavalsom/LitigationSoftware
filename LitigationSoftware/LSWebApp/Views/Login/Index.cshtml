@@ -12,15 +12,20 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-    @*<h2>Login here</h2>*@
 </head>
 <body>
     @using (Html.BeginForm("Signin", "Login"))
     {
-
         @Html.AntiForgeryToken()
         <div style="text-align:center;position: fixed;top: 0;bottom: 0;left: 0;right: 0;margin: auto;">
             <table style="width:500px;margin: 10px auto;">
+                <tr>
+                    <td colspan="2">
+                        <div class="form-group text-danger">
+                            @Model.Message
+                        </div>
+                    </td>                    
+                </tr>
                 <tr>
                     <td>
                         <div class="form-group">
@@ -29,7 +34,7 @@
                     </td>
                     <td>
                         <div class="form-group">
-                            @Html.TextBoxFor(m => m.Username, new { @type = "email", @class = "form-control form-control-sm", @placeholder = "Enter email" })
+                            @Html.TextBoxFor(m => m.EmailAddress, new { @type = "email", @class = "form-control form-control-sm", @placeholder = "Enter email" })
                         </div>
                     </td>
 

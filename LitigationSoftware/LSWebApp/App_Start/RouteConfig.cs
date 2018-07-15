@@ -14,6 +14,12 @@ namespace LSWebApp
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+               name: "login",
+               url: "login",
+               defaults: new { controller = "Login", action = "Index", id = UrlParameter.Optional }
+           );
+
+            routes.MapRoute(
                name: "getITSections",
                url: "getITSections",
                defaults: new { controller = "TaxReturn", action = "GetITSectionList", id = UrlParameter.Optional }
@@ -76,7 +82,7 @@ namespace LSWebApp
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Login", action = "Index", id = UrlParameter.Optional }
             );
         }
     }

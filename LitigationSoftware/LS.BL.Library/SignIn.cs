@@ -17,12 +17,11 @@ namespace LS.BL.Library
             this._signInDA = SignInDA;
         }
 
-        public SignInResponse InitiateSignInProcess(UserLogin user)
+        public UserLogin InitiateSignInProcess(UserLogin user)
         {
             try
             {
-                SignInResponse isSignin = this._signInDA.InitiateSignInProcess(user);
-                return isSignin;
+                return this._signInDA.InitiateSignInProcess(user);
             }
             catch (Exception ex)
             {
