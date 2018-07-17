@@ -43,7 +43,11 @@ namespace LS.DAL.Library
                         result = new ITReturnComplexAPIModelResponse
                         {
                             Message = reader["ReturnMessage"] != DBNull.Value ? reader["ReturnMessage"].ToString() : null,
-                            IsSuccess = Convert.ToBoolean(reader["Result"].ToString())
+                            IsSuccess = Convert.ToBoolean(reader["Result"].ToString()),
+                            ITReturnDetailsObject = new ITReturnDetails
+                            {
+                                Id = Convert.ToInt32(reader["ITReturDetailsId"].ToString())
+                            }
                         };
                     }
                 }

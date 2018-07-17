@@ -12,23 +12,21 @@
         <thead>
             <tr>
                 <th colspan="2">Company Name</th>
-                <th>Financial Year</th>
-                @*<th>Assessment Year</th>*@
+                <th>Financial Year</th>                
             </tr>
         </thead>
         <tbody>
             <tr class="table-active">
                 <td colspan="2">
                     @Model.ITReturnDetailsObject.CompanyName
+
+                    @Html.HiddenFor(m => m.ITReturnDetailsObject.Id, Model.ITReturnDetailsObject.Id)
                     @Html.HiddenFor(m => m.ITReturnDetailsObject.CompanyID)
                     @Html.HiddenFor(m => m.ITReturnDetailsObject.CompanyName)
                 </td>
                 <td>
                     @Html.DropDownListFor(m => m.ITReturnDetailsObject.FYAYID, new SelectList(Model.FYAYList, "ID", "FinancialYear"))
                 </td>
-                @*<td>
-                    @Html.LabelFor(m => m.ITReturnDetailsObject.AssessmentYear)
-                </td>*@
             </tr>
         </tbody>
      </table>
@@ -48,7 +46,6 @@
                  <td>The information is being updated for:-</td>
                  <td>
                      @Html.Partial("_LitigationDD", Model.ITSectionListSource)
-                     @Html.HiddenFor(m=>m.ITReturnDetailsObject.Id, Model.ITReturnDetailsObject.Id)
                  </td>
              </tr>
              <tr>
