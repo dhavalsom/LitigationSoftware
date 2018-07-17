@@ -1,16 +1,18 @@
 USE [LitigationApp]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_ITRETURNDETAILS_MANAGER]    Script Date: 7/15/2018 3:01:57 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_ITRETURNDETAILS_MANAGER]    Script Date: 7/17/2018 9:00:56 AM ******/
 DROP PROCEDURE [dbo].[SP_ITRETURNDETAILS_MANAGER]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_ITRETURNDETAILS_MANAGER]    Script Date: 7/15/2018 3:01:57 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_ITRETURNDETAILS_MANAGER]    Script Date: 7/17/2018 9:00:56 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
+
 
 
 
@@ -40,7 +42,7 @@ DECLARE @Id AS BIGINT, @CompanyID AS BIGINT, @FYAYID AS BIGINT,@ITSectionID AS B
         @TCSPaidbyCompany AS DECIMAL (18, 2), @SelfassessmentTax AS DECIMAL (18, 2), @MATCredit AS DECIMAL (18, 2),
 		@InterestUS234A AS DECIMAL (18, 2), @InterestUS234B AS DECIMAL (18, 2), @InterestUS234C AS DECIMAL (18, 2),
         @InterestUS244A AS DECIMAL (18, 2), @RefundReceived AS DECIMAL (18, 2), @RevisedReturnFile AS BIT,
-		@ExtId AS BIGINT, @ITSubHeadId AS DECIMAL (18, 2), @ITSubHeadValue AS DECIMAL (18, 2),@IdentityVal AS BIGINT
+		@ExtId AS BIGINT, @ITSubHeadId AS DECIMAL (18, 2), @ITSubHeadValue AS DECIMAL (18, 2)
 
 
 SELECT	 @Id = ITReturnDetailsList.Columns.value('Id[1]', 'BIGINT')
@@ -156,7 +158,7 @@ FROM @EXTENSIONDETAILS_XML.nodes('/ArrayOfITReturnDetailsExtension/ITReturnDetai
 		,@USER_ID
 		,GETUTCDATE())
 
-	set @IdentityVal = @@IDENTITY
+	set @Id = @@IDENTITY
 	
 	IF @ITSubHeadId IS NOT NULL AND @ITSubHeadValue IS NOT NULL
 		BEGIN
@@ -170,7 +172,7 @@ FROM @EXTENSIONDETAILS_XML.nodes('/ArrayOfITReturnDetailsExtension/ITReturnDetai
 			  ,[AddedDate]
 			)
 			SELECT 
-				@IdentityVal,
+				@Id,
 				x.Rec.query('./ITSubHeadId').value('.', 'bigint'),
 				x.Rec.query('./ITSubHeadValue').value('.', 'DECIMAL (18, 2)'),
 				1,
@@ -255,22 +257,6 @@ FROM @EXTENSIONDETAILS_XML.nodes('/ArrayOfITReturnDetailsExtension/ITReturnDetai
 						1,
 						@USER_ID,
 						GETUTCDATE());
-
-
-		--declare @DocHandle int
-
-		--EXEC sp_xml_preparedocument @DocHandle OUTPUT, @EXTENSIONDETAILS_XML 
-
-		--UPDATE [dbo].[ITReturnDetailsExtension]
-		--   SET [ITSubHeadValue] = XM.ITSubHeadValue
-		--   ,[ModifiedBy] = @USER_ID
-		--  ,[ModifiedDate] = GETUTCDATE()
-		--   from OPENXML(@DocHandle,'/ArrayOfITReturnDetailsExtension/ITReturnDetailsExtension',2)
-		--   WITH (ITSubHeadId bigINT,[ITSubHeadValue] DECIMAL (18, 2)) AS XM
-		--   INNER JOIN [dbo].[ITReturnDetailsExtension] ITRDE ON ITRDE.ITSubHeadId = XM.ITSubHeadId
-		--   AND ITRDE.ITReturnDetailsId = @Id
-		
-		--EXEC sp_xml_removedocument @DocHandle
 		
 		END
 
@@ -282,9 +268,11 @@ FROM @EXTENSIONDETAILS_XML.nodes('/ArrayOfITReturnDetailsExtension/ITReturnDetai
 	END
 
 
-SELECT @Result AS Result, @ReturnMessage AS ReturnMessage
+SELECT @Id as ITReturDetailsId, @Result AS Result, @ReturnMessage AS ReturnMessage
 
 END
+
+
 
 
 
