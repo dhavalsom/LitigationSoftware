@@ -60,7 +60,7 @@
                           data-date="" data-date-format="dd M yyyy" data-link-field="ITReturnDetailsObject_ITReturnFillingDate"
                           data-link-format="dd/M/yyyy">
                          @Html.TextBoxFor(m => m.ITReturnDetailsObject.ITReturnFillingDate
-                                     , Model.ITReturnDetailsObject.ITReturnFillingDate.HasValue ? Model.ITReturnDetailsObject.ITReturnFillingDate.Value.ToString("dd/MMM/yyyy") : string.Empty
+                                     , Model.ITReturnDetailsObject.ITReturnFillingDate.HasValue ? Model.ITReturnDetailsObject.ITReturnFillingDate.Value.ToShortDateString() : string.Empty
                                      , new
                                      {
                                          @class = "form-control",
@@ -84,7 +84,7 @@
                           data-date="" data-date-format="dd M yyyy" data-link-field="ITReturnDetailsObject_ITReturnDueDate"
                           data-link-format="dd/M/yyyy">
                          @Html.TextBoxFor(m => m.ITReturnDetailsObject.ITReturnDueDate
-                                     , Model.ITReturnDetailsObject.ITReturnDueDate.HasValue ? Model.ITReturnDetailsObject.ITReturnDueDate.Value.ToString("dd/MMM/yyyy") : string.Empty
+                                     , Model.ITReturnDetailsObject.ITReturnDueDate.HasValue ? Model.ITReturnDetailsObject.ITReturnDueDate.Value.ToShortDateString() : string.Empty
                                      , new
                                      {
                                          @class = "form-control",
