@@ -1,7 +1,20 @@
-USE LitigationApp
+USE [LitigationApp]
 GO
 
-/****** Object:  Table [dbo].[ITReturnDetails]    Script Date: 5/5/2018 7:52:41 PM ******/
+ALTER TABLE [dbo].[ITReturnDetails] DROP CONSTRAINT [FK_ITReturnDetails_ITSectionID]
+GO
+
+ALTER TABLE [dbo].[ITReturnDetails] DROP CONSTRAINT [FK_ITReturnDetails_FYAYID]
+GO
+
+ALTER TABLE [dbo].[ITReturnDetails] DROP CONSTRAINT [FK_ITReturnDetails_CompanyID]
+GO
+
+/****** Object:  Table [dbo].[ITReturnDetails]    Script Date: 7/15/2018 2:26:34 PM ******/
+DROP TABLE [dbo].[ITReturnDetails]
+GO
+
+/****** Object:  Table [dbo].[ITReturnDetails]    Script Date: 7/15/2018 2:26:34 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -10,33 +23,33 @@ GO
 
 CREATE TABLE [dbo].[ITReturnDetails](
 	[Id] [bigint] IDENTITY(1,1) NOT NULL,
-	[CompanyID] [bigint] not null,
-	[FYAYID] [bigint] not null,
-	[ITSectionID] [bigint] not null,
-	[ITReturnFillingDate] [datetime] null,
-	[ITReturnDueDate] [datetime] null,
-	[HousePropIncome] [bigint] null,
-	[IncomefromCapGainsNonSTT] [bigint] null,
-	[IncomefromCapGainsSTT] [bigint] null,
-	[IncomefromBusinessProf] [bit] null,
-	[UnabsorbedDepreciation] [bigint] null,
-	[Broughtforwardlosses] [bigint] null,
-	[IncomeFromOtherSources] [bigint] null,
-	[DeductChapterVIA] [bigint] null,
-	[ProfitUS115JB] [bigint] null,
-	[AdvanceTax1installment] [bigint] null,
-	[AdvanceTax2installment] [bigint] null,
-	[AdvanceTax3installment] [bigint] null,
-	[AdvanceTax4installment] [bigint] null,
-	[TDS] [bigint] null,
-	[TCSPaidbyCompany] [bigint] null,
-	[SelfassessmentTax] [bit] null,
-	[MATCredit] [bigint] null,
-	[InterestUS234A] [bigint] null,
-	[InterestUS234B] [bigint] null,
-	[InterestUS234C] [bigint] null,
-	[InterestUS244A] [bigint] null,
-	[RefundReceived] [bigint] null,
+	[CompanyID] [bigint] NOT NULL,
+	[FYAYID] [bigint] NOT NULL,
+	[ITSectionID] [bigint] NOT NULL,
+	[ITReturnFillingDate] [datetime] NULL,
+	[ITReturnDueDate] [datetime] NULL,
+	[HousePropIncome] [decimal](18, 2) NULL,
+	[IncomefromCapGainsNonSTT] [decimal](18, 2) NULL,
+	[IncomefromCapGainsSTT] [decimal](18, 2) NULL,
+	[IncomefromBusinessProf] [bit] NULL,
+	[UnabsorbedDepreciation] [decimal](18, 2) NULL,
+	[Broughtforwardlosses] [decimal](18, 2) NULL,
+	[IncomeFromOtherSources] [decimal](18, 2) NULL,
+	[DeductChapterVIA] [decimal](18, 2) NULL,
+	[ProfitUS115JB] [decimal](18, 2) NULL,
+	[AdvanceTax1installment] [decimal](18, 2) NULL,
+	[AdvanceTax2installment] [decimal](18, 2) NULL,
+	[AdvanceTax3installment] [decimal](18, 2) NULL,
+	[AdvanceTax4installment] [decimal](18, 2) NULL,
+	[TDS] [decimal](18, 2) NULL,
+	[TCSPaidbyCompany] [decimal](18, 2) NULL,
+	[SelfassessmentTax] [decimal](18, 2) NULL,
+	[MATCredit] [decimal](18, 2) NULL,
+	[InterestUS234A] [decimal](18, 2) NULL,
+	[InterestUS234B] [decimal](18, 2) NULL,
+	[InterestUS234C] [decimal](18, 2) NULL,
+	[InterestUS244A] [decimal](18, 2) NULL,
+	[RefundReceived] [decimal](18, 2) NULL,
 	[RevisedReturnFile] [bit] NULL,
 	[IsDefault] [bit] NULL,
 	[Active] [bit] NOT NULL,
@@ -74,3 +87,5 @@ GO
 
 ALTER TABLE [dbo].[ITReturnDetails] CHECK CONSTRAINT [FK_ITReturnDetails_ITSectionID]
 GO
+
+

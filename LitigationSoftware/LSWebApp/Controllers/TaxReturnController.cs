@@ -1,4 +1,5 @@
 ﻿using LS.Models;
+using LSWebApp.Infrastructure;
 using LSWebApp.Models;
 using Newtonsoft.Json;
 using Ninject;
@@ -12,10 +13,12 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace LSWebApp.Controllers
 {
-    public class TaxReturnController : Controller
+    [LitigationAuthorizeAttribute]
+    public class TaxReturnController : ControllerBase
     {
         #region Declarations
 
@@ -66,27 +69,8 @@ namespace LSWebApp.Controllers
                         if (Res.IsSuccessStatusCode)
                         {
                             model.Companies = JsonConvert.DeserializeObject<List<Company>>(Res.Content.ReadAsStringAsync().Result);
-
-                           // RedirectToAction("CompanyList", "TaxReturn");
                             return View("GetCompanyList", model);
                         }
-
-                        //if (objSignInResponse.TwoFactorAuthDone)
-                        //{
-                        //return View(objSignInResponse);
-                        //}
-                        //else
-                        //{
-                        //    //var model = new GetAccessCodeModel
-                        //    //{
-                        //    //    ObjSignInResponse = objSignInResponse,
-                        //    //    IPAddress = user.IPAddress,
-                        //    //    UserName = user.Username,
-                        //    //    Method = "Email"
-                        //    //};
-                        //    //return View("GetAccessCode", model);
-                        //    return View("Index");
-                        //}
                         return View("CompanyRegistrationFailure", objCompResponse);
                     }
                     else
@@ -101,11 +85,8 @@ namespace LSWebApp.Controllers
         [HttpGet]
         public async Task<ActionResult> GetITReturnDetails(int? userId, int companyId, string companyname,int FYAYID, int? itsectionid, int? itreturnid)
         {
-
             ITReturnDetailsModel itrdetails = await CommonGetITReturnDetails(userId, companyId, companyname, FYAYID, itsectionid, itreturnid);
-
             return View(itrdetails);
-            //return View(itrdetails);
         }
 
         private async Task<ITReturnDetailsModel> CommonGetITReturnDetails(int? userId, int companyId, string companyname, int FYAYID, int? itsectionid, int? itreturnid)
@@ -344,29 +325,26 @@ namespace LSWebApp.Controllers
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpResponseMessage Res = await client.PostAsync("api/TaxReturnAPI/InsertorUpdateITReturnDetails", content);
-                ITReturnDetailsResponse result = new ITReturnDetailsResponse();
+                ITReturnComplexAPIModelResponse result = new ITReturnComplexAPIModelResponse();
                 if (Res.IsSuccessStatusCode)
                 {
-                    result.IsSuccess = true;
-                    result.Message = Res.Content.ReadAsStringAsync().Result;
-
-                    itReturn = await CommonGetITReturnDetails(itrcomplexmodel.ITReturnDetailsObject.AddedBy, itrcomplexmodel.ITReturnDetailsObject.CompanyID, itrcomplexmodel.ITReturnDetailsObject.CompanyName, itrcomplexmodel.ITReturnDetailsObject.FYAYID, itrcomplexmodel.ITReturnDetailsObject.ITSectionID, itrcomplexmodel.ITReturnDetailsObject.Id);
-
-                    //Res = await client.GetAsync("api/TaxReturnAPI/GetExistingITReturnDetailsList?companyId=" + itrcomplexmodel.ITReturnDetailsObject.CompanyID + "&fyayId=" + itrcomplexmodel.ITReturnDetailsObject.FYAYID + "&itsectionid=" + itrcomplexmodel.ITReturnDetailsObject.ITSectionID + "&itreturnid=" + itrcomplexmodel.ITReturnDetailsObject.Id);
-                    //if (Res.IsSuccessStatusCode)
-                    //{
-                    //    if (JsonConvert.DeserializeObject<ITReturnDetailsListResponse>(Res.Content.ReadAsStringAsync().Result).ITReturnDetailsListObject.Count > 0)
-                    //        itReturn.ITReturnDetailsObject = JsonConvert.DeserializeObject<ITReturnDetailsListResponse>(Res.Content.ReadAsStringAsync().Result).ITReturnDetailsListObject.First<ITReturnDetails>();
-
-                    //}
+                    result = JsonConvert.DeserializeObject<ITReturnComplexAPIModelResponse>(Res.Content.ReadAsStringAsync().Result);
+                    return RedirectToAction("GetITReturnDetails"
+                    , new RouteValueDictionary(new
+                    {
+                        userId = itrcomplexmodel.ITReturnDetailsObject.AddedBy,
+                        companyId = itrcomplexmodel.ITReturnDetailsObject.CompanyID,
+                        companyname = itrcomplexmodel.ITReturnDetailsObject.CompanyName,
+                        FYAYID = itrcomplexmodel.ITReturnDetailsObject.FYAYID,
+                        itsectionid = itrcomplexmodel.ITReturnDetailsObject.ITSectionID,
+                        itreturnid = result.ITReturnDetailsObject.Id
+                    }));result.ITReturnDetailsObject.Id);
                 }
                 else
                 {
                     result.IsSuccess = false;
                     result.Message = Res.Content.ReadAsStringAsync().Result;
-
                 }
-                //return View("ITReturnResponse", result);
                 return View("GetITReturnDetails", itReturn);
             }
         }

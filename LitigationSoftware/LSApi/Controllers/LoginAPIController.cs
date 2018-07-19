@@ -29,7 +29,7 @@ namespace LSApi.Controllers
         // POST: api/LoginAPI
         [HttpPost]
         [Route("PostUserLogin")]
-        public SignInResponse PostUserLogin([FromBody]UserLogin user)
+        public UserLogin PostUserLogin([FromBody]UserLogin user)
         {
             var SignInObj = _Kernel.Get<ISignIn>();
             var SignInResult = SignInObj.InitiateSignInProcess(user);

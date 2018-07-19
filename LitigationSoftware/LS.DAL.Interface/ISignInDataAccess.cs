@@ -4,6 +4,6 @@ namespace LS.DAL.Interface
 {
     public interface ISignInDataAccess
     {
-        SignInResponse InitiateSignInProcess(UserLogin user);
+        UserLogin InitiateSignInProcess(UserLogin user);
     }
 }

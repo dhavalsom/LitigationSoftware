@@ -26,17 +26,7 @@ namespace LSApi.Controllers
         #endregion
 
         #region Actions
-
-        // POST: api/InsertorUpdateITReturnDetails
-        //[HttpPost]
-        //[Route("InsertorUpdateITReturnDetails")]
-        //public ITReturnDetailsResponse InsertorUpdateITReturnDetails([FromBody]ITReturnDetails itreturn)
-        //{
-        //    var ItReturnObj = _Kernel.Get<IITReturnDetailsBL>();
-        //    var ItReturnResult = ItReturnObj.InsertorUpdateITReturnDetails(itreturn);
-        //    return ItReturnResult;
-        //}
-
+        
         [HttpPost]
         [Route("InsertorUpdateITReturnDetails")]
         public ITReturnComplexAPIModelResponse InsertorUpdateITReturnDetails(ITReturnComplexAPIModel itreturn)

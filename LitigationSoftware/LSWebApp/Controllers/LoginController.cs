@@ -12,10 +12,11 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Net;
 using System.Net.Sockets;
+using System.Web.Security;
 
 namespace LSWebApp.Controllers
 {
-    public class LoginController : Controller
+    public class LoginController : ControllerBase
     {
         #region Declarations
 
@@ -36,15 +37,13 @@ namespace LSWebApp.Controllers
         // GET: Login
         public ActionResult Index()
         {
-            return View();
+            return View(new UserLogin());
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Signin(UserLogin user)
         {
-            user.IPAddress = string.IsNullOrEmpty(user.IPAddress)?GetLocalIPAddress():user.IPAddress;
-
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
@@ -56,50 +55,41 @@ namespace LSWebApp.Controllers
 
                 if (Res.IsSuccessStatusCode)
                 {
-                    var objSignInResponse = JsonConvert.DeserializeObject<SignInResponse>(Res.Content.ReadAsStringAsync().Result);
-                    if (objSignInResponse.IsPasswordVerified
-                        && objSignInResponse.IsUserActive)
+                    var objSignInResponse = JsonConvert.DeserializeObject<UserLogin>(Res.Content.ReadAsStringAsync().Result);
+                    if (objSignInResponse.Id > 0)
                     {
+                        Session[SESSION_LOGON_USER] = user;
+                        Session["User"] = objSignInResponse;
+                        FormsAuthentication.SetAuthCookie(user.Id.ToString(), true);
                         RedirectToAction("Index", "TaxReturn");
                         return View("~/Views/TaxReturn/Index.cshtml");
-                        //if (objSignInResponse.TwoFactorAuthDone)
-                        //{
-                        //return View(objSignInResponse);
-                        //}
-                        //else
-                        //{
-                        //    //var model = new GetAccessCodeModel
-                        //    //{
-                        //    //    ObjSignInResponse = objSignInResponse,
-                        //    //    IPAddress = user.IPAddress,
-                        //    //    UserName = user.Username,
-                        //    //    Method = "Email"
-                        //    //};
-                        //    //return View("GetAccessCode", model);
-                        //    return View("Index");
-                        //}
                     }
                     else
-                        return View("LoginFailure", objSignInResponse);
+                    {
+                        user.Message = "Incorrect username or password";
+                        return View("Index", user);
+                    }
                 }
                 else
-                    return View("LoginFailure", new SignInResponse { IsPasswordVerified = false });
-
-            }
-
-        }
-
-        public static string GetLocalIPAddress()
-        {
-            var host = Dns.GetHostEntry(Dns.GetHostName());
-            foreach (var ip in host.AddressList)
-            {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
                 {
-                    return ip.ToString();
+                    user.Message = "Incorrect username or password";
+                    return View("Index", user);
                 }
             }
-            throw new Exception("No network adapters with an IPv4 address in the system!");
+        }
+
+        [AllowAnonymous]
+        public ActionResult UnAuthorizedAjaxCall(string message)
+        {
+            return Json(new { Success = false, Message = message }, JsonRequestBehavior.AllowGet);
+        }
+
+        [AllowAnonymous]
+        public ActionResult Signout()
+        {
+            Session[SESSION_LOGON_USER] = null;
+            Session["User"] = null;
+            return View("Index");
         }
     }
 }
