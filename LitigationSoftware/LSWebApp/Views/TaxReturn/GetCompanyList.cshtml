@@ -1,6 +1,7 @@
 ﻿@model  LSWebApp.Models.CompanyList
 @{
     ViewBag.Title = "GetCompanyList";
+    Layout = "~/Views/Shared/_LayoutDynemicMenu.cshtml";
 }
 <style>
     table, th, td {
@@ -10,7 +11,7 @@
         margin-right: 5px;
     }
 </style>
-<h3>List of Companies registered</h3>
+<h3>List of Companies</h3>
 
 @{
     if (Model.Companies != null)

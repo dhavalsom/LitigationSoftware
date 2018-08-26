@@ -1,15 +1,15 @@
 ﻿using LS.Models;
+using LSWebApp.Infrastructure;
 using System.Collections.Generic;
-
 
 namespace LSWebApp.Models
 {
-    public class CompanyList
+    public class CompanyList : ViewModelBase
     {
         public int UserId { get; set; }
         public List<Company> Companies;
 
-        public CompanyList()
+        public CompanyList(): base(Pages.MainPage)
         {
             Companies = new List<Company>();
         }
