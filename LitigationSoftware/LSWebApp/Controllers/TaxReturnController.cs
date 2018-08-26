@@ -338,7 +338,7 @@ namespace LSWebApp.Controllers
                         FYAYID = itrcomplexmodel.ITReturnDetailsObject.FYAYID,
                         itsectionid = itrcomplexmodel.ITReturnDetailsObject.ITSectionID,
                         itreturnid = result.ITReturnDetailsObject.Id
-                    }));result.ITReturnDetailsObject.Id);
+                    }));
                 }
                 else
                 {

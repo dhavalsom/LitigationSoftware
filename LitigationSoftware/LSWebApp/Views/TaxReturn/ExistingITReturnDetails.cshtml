@@ -13,6 +13,7 @@
                     <tr>
                         <th colspan="2">Company Name</th>
                         <th>Financial Year</th>
+                        <th>Assesment Year</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -25,8 +26,15 @@
                             @Html.HiddenFor(m => m.ITReturnDetailsObject.CompanyID, Model.ITReturnDetailsObject.CompanyID)
                         </td>
                         <td>
-                            @Html.DropDownListFor(m => m.ITReturnDetailsObject.FYAYID, new SelectList(Model.FYAYList, "ID", "FinancialYear"))
+                            <select id="ITReturnDetailsObject_FYAYID" name="@Html.NameFor(m=>m.ITReturnDetailsObject.FYAYID)">
+                                @foreach (var item in Model.FYAYList)
+                                {
+                                    <option value="@item.Id.ToString()" data-year="@item.AssessmentYear">@item.FinancialYear</option>
+                                }
+                            </select>
+                            @*@Html.DropDownListFor(m => m.ITReturnDetailsObject.FYAYID, new SelectList(Model.FYAYList, "ID", "FinancialYear"))*@
                         </td>
+                        <td class="tdAssessmentYear"></td>
                         <td>
                             <button type="submit" class="btn btn-primary btn-sm" id="btnsrch">Search</button>
                         </td>
@@ -47,17 +55,22 @@
 {
 <script type="text/javascript">
     $(document).ready(function () {
-       
-            //loadexistingitsections();
-
-            $("#btnsrch").click(function () {
-                loadexistingitsections();
-                return false;
-            });
+        $("#btnsrch").click(function () {
+            loadexistingitsections();
+            return false;
         });
 
+        $("#ITReturnDetailsObject_FYAYID").change(function () {
+            loadAssessmentYear();
+        });
+        loadAssessmentYear();
+    });
+
+    function loadAssessmentYear() {
+        $(".tdAssessmentYear").html($("#ITReturnDetailsObject_FYAYID").find(':selected').data('year'));
+    }
     function loadexistingitsections() {
-        
+        alert($('#ITReturnDetailsObject_FYAYID').val());
         var url = "@Url.Action("SearchITReturnDetails", "TaxReturn")" + '?companyId=' + $('#ITReturnDetailsObject_CompanyID').val() + '&fyayId=' + $('#ITReturnDetailsObject_FYAYID').val();
 
         $.ajax({
@@ -73,7 +86,7 @@
                  $("#sectionDiv").html(data);
             }
             });
-        }
+    }
 </script>
 
 }
