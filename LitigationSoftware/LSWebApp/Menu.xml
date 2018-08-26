@@ -1,0 +1,48 @@
+﻿<Pages>
+  <PageId Value="1">
+    <MenuItem 
+      DisplayText="Register Company"
+      ControllerName="TaxReturn"
+      ActionName="Index"
+      Id="1">      
+    </MenuItem>
+    <MenuItem
+      DisplayText="List of Companies"
+      ControllerName="TaxReturn"
+      ActionName="GetCompanyList"
+      Id="2">
+    </MenuItem>
+    <MenuItem
+      DisplayText="Compliances"
+      ControllerName="TaxReturn"
+      ActionName="GetComplianceList"
+      Id="3">
+    </MenuItem>
+  </PageId>
+  <PageId Value="2">
+    <MenuItem
+      DisplayText="Menu List"
+      ControllerName=""
+      ActionName=""
+      Id="-1">
+      <MenuItem
+       DisplayText="Register Company"
+       ControllerName="TaxReturn"
+       ActionName="Index"
+       Id="1">        
+      </MenuItem>
+      <MenuItem
+       DisplayText="List of Companies"
+       ControllerName="TaxReturn"
+       ActionName="GetCompanyList"
+       Id="2">
+      </MenuItem>
+      <MenuItem
+        DisplayText="Compliances"
+        ControllerName="TaxReturn"
+        ActionName="GetComplianceList"
+        Id="3">
+      </MenuItem>
+    </MenuItem>
+  </PageId>
+</Pages>
