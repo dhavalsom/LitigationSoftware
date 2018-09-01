@@ -16,7 +16,7 @@ namespace LS.DAL.Library
             try
             {
                 Log.Info("Started call to GetCompanies");
-                
+
                 Command.CommandText = "SP_GET_COMPANY";
                 Command.CommandType = CommandType.StoredProcedure;
                 Connection.Open();
@@ -47,7 +47,43 @@ namespace LS.DAL.Library
                 Connection.Close();
             }
         }
-        
+
+        public List<CompanyCategory> GetCompanyCategories()
+        {
+            try
+            {
+                Log.Info("Started call to GetCompanyCategories");
+
+                Command.CommandText = "SP_GET_COMPANYCATEGORIES";
+                Command.CommandType = CommandType.StoredProcedure;
+                Connection.Open();
+
+                SqlDataReader reader = Command.ExecuteReader();
+                List<CompanyCategory> result = new List<CompanyCategory>();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result.Add(new CompanyCategory
+                        {
+                            CategoryDesc = reader["CategoryDesc"] != DBNull.Value ? reader["CategoryDesc"].ToString() : null,
+                            Id = Convert.ToInt32(reader["ID"].ToString())
+                        });
+                    }
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            finally
+            {
+                Connection.Close();
+            }
+        }
+
         public bool CreateCompany(Company comp)
         {
             try
@@ -124,7 +160,45 @@ namespace LS.DAL.Library
             }
         }
 
-        public List<ITSection> GetITSection()
+        public List<ITSectionCategory> GetITSectionCategory()
+        {
+            try
+            {
+                Log.Info("Started call to GetITSectionCategory");
+
+                Command.CommandText = "SP_GET_ITSectionCategory";
+                Command.CommandType = CommandType.StoredProcedure;
+                Connection.Open();
+
+                SqlDataReader reader = Command.ExecuteReader();
+                List<ITSectionCategory> result = new List<ITSectionCategory>();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result.Add(new ITSectionCategory
+                        {
+                            Description = reader["CategoryDesc"] != DBNull.Value ? reader["CategoryDesc"].ToString() : null,
+                            IsDefault = Convert.ToBoolean(reader["IsDefault"].ToString()),
+                            Active = Convert.ToBoolean(reader["IsDefault"].ToString()),
+                            Id = Convert.ToInt32(reader["Id"].ToString())
+                        });
+                    }
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            finally
+            {
+                Connection.Close();
+            }
+        }
+
+        public List<ITSection> GetITSection(int categoryId)
         {
             try
             {
@@ -133,6 +207,11 @@ namespace LS.DAL.Library
                 Command.CommandText = "SP_GET_ITSection";
                 Command.CommandType = CommandType.StoredProcedure;
                 Connection.Open();
+
+                Command.Parameters.Clear();
+
+                Command.Parameters.AddWithValue("@ITSectionCategory_ID", categoryId);
+                Command.Parameters.AddWithValue("@ACTIVE", true);
 
                 SqlDataReader reader = Command.ExecuteReader();
                 List<ITSection> result = new List<ITSection>();

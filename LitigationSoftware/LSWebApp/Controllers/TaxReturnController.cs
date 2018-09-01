@@ -38,21 +38,36 @@ namespace LSWebApp.Controllers
 
         #region Methods
         // GET: TaxReturn
+        //[HttpGet]
         public ActionResult Index()
         {
-            return View();
+            var model = new CompanyCategoryModel();
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                //HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetCompanyCategoryList");
+
+                //if (Res.IsSuccessStatusCode)
+                {
+                    //model.CompanyCategories = JsonConvert.DeserializeObject<List<CompanyCategory>>(Res.Content.ReadAsStringAsync().Result);
+                    //return View(model);
+                }
+                return View(model);
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateCompany(Company comp)
+        public async Task<ActionResult> CreateCompany(CompanyModel comp)
         {
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                var json = JsonConvert.SerializeObject(comp);
+                var json = JsonConvert.SerializeObject(comp.companyObject);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
                 HttpResponseMessage Res = await client.PostAsync("api/MasterAPI/PostCreateCompany", content);
                 var model = new CompanyList();
@@ -98,8 +113,8 @@ namespace LSWebApp.Controllers
                     CompanyID = companyId,
                     CompanyName = companyname,
                     AddedBy = userId,
-                    IncomefromBusinessProf = false,
-                    RevisedReturnFile = false,
+                    //IncomefromBusinessProf = false,
+                    //RevisedReturnFile = false,
                     FYAYID = FYAYID,
                     ITSectionID = itsectionid.HasValue ? itsectionid.Value : 0,
                     IsReturn = true
@@ -118,6 +133,11 @@ namespace LSWebApp.Controllers
                     {
                         itrdetails.FYAYList = JsonConvert.DeserializeObject<List<FYAY>>(Res.Content.ReadAsStringAsync().Result);
                     }
+                    Res = await client.GetAsync("api/MasterAPI/GetITSectionCategoryList");
+                    if (Res.IsSuccessStatusCode)
+                    {
+                        itrdetails.ITSectionCategoryList = JsonConvert.DeserializeObject<List<ITSectionCategory>>(Res.Content.ReadAsStringAsync().Result);
+                    }
                     Res = await client.GetAsync("api/MasterAPI/GetITSubHeadMaster?itHeadId=");
                     var itSubHeads = JsonConvert.DeserializeObject<List<ITSubHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
                     Res = await client.GetAsync("api/MasterAPI/GetITHeadMaster");
@@ -130,14 +150,12 @@ namespace LSWebApp.Controllers
                         {
                             if (JsonConvert.DeserializeObject<ITReturnDetailsListResponse>(Res.Content.ReadAsStringAsync().Result).ITReturnDetailsListObject.Count > 0)
                                 itrdetails.ITReturnDetailsObject = JsonConvert.DeserializeObject<ITReturnDetailsListResponse>(Res.Content.ReadAsStringAsync().Result).ITReturnDetailsListObject.First<ITReturnDetails>();
-
-
-                           
-
                         }
                     }
 
-                    Res = await client.GetAsync("api/MasterAPI/GetITSectionList");
+
+
+                    Res = await client.GetAsync("api/MasterAPI/GetITSectionList?categoryId=1");
                     if (Res.IsSuccessStatusCode)
                     {
                         itrdetails.ITSectionList = JsonConvert.DeserializeObject<List<ITSection>>(Res.Content.ReadAsStringAsync().Result);
@@ -220,7 +238,7 @@ namespace LSWebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetITSectionList()
+        public async Task<ActionResult> GetITSectionList(int categoryId)
         {
             var model = new List<ITSection>();
             using (var client = new HttpClient())
@@ -228,7 +246,7 @@ namespace LSWebApp.Controllers
                 client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetITSectionList");
+                HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetITSectionList?categoryId="+ categoryId);
 
                 if (Res.IsSuccessStatusCode)
                 {
@@ -248,7 +266,7 @@ namespace LSWebApp.Controllers
                     CompanyID = itrdetails1.CompanyID,
                     CompanyName = itrdetails1.CompanyName,
                     AddedBy = itrdetails1.AddedBy,
-                    IncomefromBusinessProf = false,
+                    //IncomefromBusinessProf = false,
                     RevisedReturnFile = false
                 }
             };
@@ -338,7 +356,7 @@ namespace LSWebApp.Controllers
                         FYAYID = itrcomplexmodel.ITReturnDetailsObject.FYAYID,
                         itsectionid = itrcomplexmodel.ITReturnDetailsObject.ITSectionID,
                         itreturnid = result.ITReturnDetailsObject.Id
-                    }));result.ITReturnDetailsObject.Id);
+                    }));
                 }
                 else
                 {

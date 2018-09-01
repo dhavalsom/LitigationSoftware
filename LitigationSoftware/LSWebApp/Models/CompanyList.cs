@@ -14,4 +14,15 @@ namespace LSWebApp.Models
             Companies = new List<Company>();
         }
     }
+
+    public class CompanyCategoryModel
+    {
+        public List<CompanyCategory> CompanyCategories;
+
+        public CompanyCategoryModel()
+        {
+            CompanyCategories = new List<CompanyCategory>();
+        }
+    }
+
 }

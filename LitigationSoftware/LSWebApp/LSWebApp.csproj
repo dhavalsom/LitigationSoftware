@@ -171,6 +171,7 @@
     </Compile>
     <Compile Include="Infrastructure\LitigationAuthorizeAttribute.cs" />
     <Compile Include="Models\CompanyList.cs" />
+    <Compile Include="Models\CompanyModel.cs" />
     <Compile Include="Models\ITReturnComplexModel.cs" />
     <Compile Include="Models\ComplianceDocumentListModel.cs" />
     <Compile Include="Models\ComplianceListModel.cs" />

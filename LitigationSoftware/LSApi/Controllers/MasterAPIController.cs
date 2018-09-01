@@ -45,6 +45,15 @@ namespace LSApi.Controllers
         }
 
         [HttpGet]
+        [Route("GetCompanyCategoryList")]
+        public List<CompanyCategory> GetCompanyCategoryList()
+        {
+            var CompObj = _Kernel.Get<IMaster>();
+            var CompResult = CompObj.GetCompanyCategories();
+            return CompResult;
+        }
+
+        [HttpGet]
         [Route("GetFYAYList")]
         public List<FYAY> GetFYAYList()
         {
@@ -55,12 +64,22 @@ namespace LSApi.Controllers
 
         [HttpGet]
         [Route("GetITSectionList")]
-        public List<ITSection> GetITSectionList()
+        public List<ITSection> GetITSectionList(int categoryId)
         {
             var CompObj = _Kernel.Get<IMaster>();
-            var CompResult = CompObj.GetITSection();
+            var CompResult = CompObj.GetITSection(categoryId);
             return CompResult;
         }
+
+        [HttpGet]
+        [Route("GetITSectionCategoryList")]
+        public List<ITSectionCategory> GetITSectionCategoryList()
+        {
+            var CompObj = _Kernel.Get<IMaster>();
+            var CompResult = CompObj.GetITSectionCategory();
+            return CompResult;
+        }
+
 
         // POST: api/MasterAPI/InsertUpdateITSection
         [HttpPost]

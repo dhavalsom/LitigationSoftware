@@ -12,15 +12,17 @@ namespace LS.Models
         public int FYAYID { get; set; }
         public string FinancialYear { get; set; }
         public string AssessmentYear { get; set; }
+        public int ITSectionCategoryID { get; set; }
         public int ITSectionID { get; set; }
         public string ITSectionDescription { get; set; }
         public DateTime? ITReturnFillingDate { get; set; }
         public DateTime? ITReturnDueDate { get; set; }
+        public decimal? IncomefromSalary { get; set; }
         public decimal? HousePropIncome { get; set; }
-        public decimal? IncomefromCapGainsNonSTT { get; set; }
-        public decimal? IncomefromCapGainsSTT { get; set; }
-        public bool? IncomefromBusinessProf { get; set; }
-        public decimal? UnabsorbedDepreciation { get; set; }
+        public decimal? IncomefromCapGainsLTCG { get; set; }
+        public decimal? IncomefromCapGainsSTCG { get; set; }
+        public decimal? IncomefromBusinessProf { get; set; }
+        public decimal? IncomefromSpeculativeBusiness { get; set; }
         public decimal? Broughtforwardlosses { get; set; }
         public decimal? IncomeFromOtherSources { get; set; }
         public decimal? DeductChapterVIA { get; set; }
@@ -30,6 +32,8 @@ namespace LS.Models
         public decimal? AdvanceTax3installment { get; set; }
         public decimal? AdvanceTax4installment { get; set; }
         public decimal? TDS { get; set; }
+        public decimal? TDS26AS { get; set; }
+        public decimal? TDSasperBooks { get; set; }
         public decimal? TCSPaidbyCompany { get; set; }
         public decimal? SelfAssessmentTax { get; set; }
         public decimal? MATCredit { get; set; }
@@ -59,14 +63,14 @@ namespace LS.Models
             return HousePropIncome.HasValue;
         }
 
-        public bool ShouldSerializeIncomefromCapGainsNonSTT()
+        public bool ShouldSerializeIncomefromCapGainsLTCG()
         {
-            return IncomefromCapGainsNonSTT.HasValue;
+            return IncomefromCapGainsLTCG.HasValue;
         }
 
-        public bool ShouldSerializeIncomefromCapGainsSTT()
+        public bool ShouldSerializeIncomefromCapGainsSTCG()
         {
-            return IncomefromCapGainsSTT.HasValue;
+            return IncomefromCapGainsSTCG.HasValue;
         }
 
         public bool ShouldSerializeIncomefromBusinessProf()
@@ -74,9 +78,9 @@ namespace LS.Models
             return IncomefromBusinessProf.HasValue;
         }
 
-        public bool ShouldSerializeUnabsorbedDepreciation()
+        public bool ShouldSerializeIncomefromSpeculativeBusiness()
         {
-            return UnabsorbedDepreciation.HasValue;
+            return IncomefromSpeculativeBusiness.HasValue;
         }
 
         public bool ShouldSerializeBroughtforwardlosses()
@@ -170,6 +174,20 @@ namespace LS.Models
             return RevisedReturnFile.HasValue;
         }
 
+        public bool ShouldSerializeIncomefromSalary()
+        {
+            return IncomefromSalary.HasValue;
+        }
+
+        public bool ShouldSerializeTDS26AS()
+        {
+            return TDS26AS.HasValue;
+        }
+
+        public bool ShouldSerializeTDSasperBooks()
+        {
+            return TDSasperBooks.HasValue;
+        }
 
         #endregion
 
