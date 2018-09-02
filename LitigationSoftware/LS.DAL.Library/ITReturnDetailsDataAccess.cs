@@ -217,6 +217,8 @@ namespace LS.DAL.Library
                         result.ITReturnDetailsListObject.Add(new ITReturnDetails
                         {
                             Id = int.Parse(reader["ITReturnDetailsId"].ToString()),
+                            ITSectionCategoryID = reader["SECTIONCATEGORYID"] != DBNull.Value ? int.Parse(reader["SECTIONCATEGORYID"].ToString()) : 0,
+                            ITSectionCategoryDesc = reader["CategoryDesc"] != DBNull.Value ? reader["CategoryDesc"].ToString() : null,
                             ITSectionID = reader["ITSectionID"] != DBNull.Value ? int.Parse(reader["ITSectionID"].ToString()) : 0,
                             ITSectionDescription = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : null,
                             ITReturnFillingDate = reader["ITReturnFillingDate"] != DBNull.Value ? Convert.ToDateTime(reader["ITReturnFillingDate"].ToString()) : (DateTime?)null,
@@ -231,8 +233,8 @@ namespace LS.DAL.Library
                             IncomefromCapGainsLTCG = reader["IncomefromCapGainsLTCG"] != DBNull.Value ? Convert.ToDecimal(reader["IncomefromCapGainsLTCG"].ToString()) : (decimal?)null,
                             IncomefromCapGainsSTCG = reader["IncomefromCapGainsSTCG"] != DBNull.Value ? Convert.ToDecimal(reader["IncomefromCapGainsSTCG"].ToString()) : (decimal?)null,
                             IncomefromSpeculativeBusiness = reader["IncomefromSpeculativeBusiness"] != DBNull.Value ? Convert.ToDecimal(reader["IncomefromSpeculativeBusiness"].ToString()) : (decimal?)null,
-                            //Broughtforwardlosses = reader["Broughtforwardlosses"] != DBNull.Value ? Convert.ToDecimal(reader["Broughtforwardlosses"].ToString()) : (decimal?)null,
-                            Broughtforwardlosses = Convert.ToBoolean(reader["Broughtforwardlosses"]),
+                            Broughtforwardlosses = reader["Broughtforwardlosses"] != DBNull.Value ? Convert.ToBoolean(reader["Broughtforwardlosses"].ToString()) : false,
+                            //Broughtforwardlosses = Convert.ToBoolean(reader["Broughtforwardlosses"]),
                             IncomeFromOtherSources = reader["IncomeFromOtherSources"] != DBNull.Value ? Convert.ToDecimal(reader["IncomeFromOtherSources"].ToString()) : (decimal?)null,
                             DeductChapterVIA = reader["DeductChapterVIA"] != DBNull.Value ? Convert.ToDecimal(reader["DeductChapterVIA"].ToString()) : (decimal?)null,
                             ProfitUS115JB = reader["ProfitUS115JB"] != DBNull.Value ? Convert.ToDecimal(reader["ProfitUS115JB"].ToString()) : (decimal?)null,

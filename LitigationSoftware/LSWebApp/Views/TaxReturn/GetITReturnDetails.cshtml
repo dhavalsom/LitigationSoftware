@@ -54,7 +54,9 @@
                  <td></td>
                  <td>The information is being updated for:-</td>
                  <td>
-                     @Html.DropDownListFor(m => m.ITReturnDetailsObject.ITSectionCategoryID, new SelectList(Model.ITSectionCategoryList, "Id", "Description"), new { @class = "ddITSectionCategory" })
+                     @*@Html.DropDownListFor(m => m.ITReturnDetailsObject.ITSectionCategoryID, new SelectList(Model.ITSectionCategoryList, "Id", "Description"), new { @class = "ddITSectionCategory" })*@
+                     @Html.DropDownListFor(m => m.ITReturnDetailsObject.ITSectionCategoryID, Model.ITSectionCategorySelectItems, new { @class = "ddITSectionCategory" })
+                     
                  </td>
              </tr>
              <tr>
@@ -452,7 +454,7 @@
                     $(this).val("0.00");
                 }
             });
-            $('.ddLitigationDD').html('');
+            //$('.ddLitigationDD').html('');
         });
 
         function loadAssessmentYear() {

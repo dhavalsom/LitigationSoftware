@@ -98,13 +98,13 @@ namespace LSWebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetITReturnDetails(int? userId, int companyId, string companyname,int FYAYID, int? itsectionid, int? itreturnid)
+        public async Task<ActionResult> GetITReturnDetails(int? userId, int companyId, string companyname,int FYAYID, int? itsectionid, int? itreturnid,int? itsectioncategoryid)
         {
-            ITReturnDetailsModel itrdetails = await CommonGetITReturnDetails(userId, companyId, companyname, FYAYID, itsectionid, itreturnid);
+            ITReturnDetailsModel itrdetails = await CommonGetITReturnDetails(userId, companyId, companyname, FYAYID, itsectionid, itreturnid, itsectioncategoryid);
             return View(itrdetails);
         }
 
-        private async Task<ITReturnDetailsModel> CommonGetITReturnDetails(int? userId, int companyId, string companyname, int FYAYID, int? itsectionid, int? itreturnid)
+        private async Task<ITReturnDetailsModel> CommonGetITReturnDetails(int? userId, int companyId, string companyname, int FYAYID, int? itsectionid, int? itreturnid, int? itsectioncategoryid)
         {
             ITReturnDetailsModel itrdetails = new ITReturnDetailsModel
             {
@@ -118,6 +118,7 @@ namespace LSWebApp.Controllers
                     Broughtforwardlosses = false,
                     FYAYID = FYAYID,
                     ITSectionID = itsectionid.HasValue ? itsectionid.Value : 0,
+                    ITSectionCategoryID = itsectioncategoryid.HasValue ? itsectioncategoryid.Value : 0,
                     IsReturn = true
                 }
             };
@@ -138,6 +139,39 @@ namespace LSWebApp.Controllers
                     if (Res.IsSuccessStatusCode)
                     {
                         itrdetails.ITSectionCategoryList = JsonConvert.DeserializeObject<List<ITSectionCategory>>(Res.Content.ReadAsStringAsync().Result);
+                        itrdetails.ITSectionCategorySelectItems = itrdetails.ITSectionCategoryList.Select(x =>
+                           new SelectListItem()
+                           {
+                               Value = x.Id.ToString(),
+                               Text = x.Description,
+                               Selected = x.Id == itrdetails.ITReturnDetailsObject.ITSectionCategoryID,
+                           }).ToList();
+
+
+                        Res = await client.GetAsync("api/MasterAPI/GetITSectionList?categoryId="+ (itrdetails.ITReturnDetailsObject.ITSectionCategoryID != 0 ? itrdetails.ITReturnDetailsObject.ITSectionCategoryID : 1 ));
+                        if (Res.IsSuccessStatusCode)
+                        {
+                            itrdetails.ITSectionList = JsonConvert.DeserializeObject<List<ITSection>>(Res.Content.ReadAsStringAsync().Result);
+                            itrdetails.ITSectionListSource = new LitigationDDModel(
+                               itrdetails.ITSectionList.Select(x =>
+                                new SelectListItem()
+                                {
+                                    Value = x.Id.ToString(),
+                                    Text = x.Description,
+                                    Selected = x.Id == itrdetails.ITReturnDetailsObject.ITSectionID,
+                                }).ToList()
+                               , "ITReturnDetailsObject.ITSectionID"
+                               , "manageITSection"
+                               , "getITSections"
+                            );
+
+                            if (itrdetails.ITReturnDetailsObject.ITSectionID > 0)
+                            {
+                                itrdetails.ITReturnDetailsObject.IsReturn = itrdetails.ITSectionList.Where(x => x.Id == itrdetails.ITReturnDetailsObject.ITSectionID)
+                                                                            .Select(x => x.IsReturn).First();
+                            }
+                        }
+
                     }
                     Res = await client.GetAsync("api/MasterAPI/GetITSubHeadMaster?itHeadId=");
                     var itSubHeads = JsonConvert.DeserializeObject<List<ITSubHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
@@ -156,29 +190,7 @@ namespace LSWebApp.Controllers
 
 
 
-                    Res = await client.GetAsync("api/MasterAPI/GetITSectionList?categoryId=1");
-                    if (Res.IsSuccessStatusCode)
-                    {
-                        itrdetails.ITSectionList = JsonConvert.DeserializeObject<List<ITSection>>(Res.Content.ReadAsStringAsync().Result);
-                        itrdetails.ITSectionListSource = new LitigationDDModel(
-                           itrdetails.ITSectionList.Select(x =>
-                            new SelectListItem()
-                            {
-                                Value = x.Id.ToString(),
-                                Text = x.Description,
-                                Selected = x.Id == itrdetails.ITReturnDetailsObject.ITSectionID,
-                            }).ToList()
-                           , "ITReturnDetailsObject.ITSectionID"
-                           , "manageITSection"
-                           , "getITSections"
-                        );
-
-                        if (itrdetails.ITReturnDetailsObject.ITSectionID > 0)
-                        {
-                            itrdetails.ITReturnDetailsObject.IsReturn = itrdetails.ITSectionList.Where(x => x.Id == itrdetails.ITReturnDetailsObject.ITSectionID)
-                                                                        .Select(x => x.IsReturn).First();
-                        }
-                    }
+                   
 
                     itrdetails.PopulateITHeadMasters(itHeads, itSubHeads, itrdetails.ITReturnDetailsObject.Id);
 

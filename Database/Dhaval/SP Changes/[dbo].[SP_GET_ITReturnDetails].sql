@@ -37,6 +37,8 @@ BEGIN
       ,[FYAYID]
       ,[ITSectionID]
 	  ,ITSM.Description
+	  ,ITSM.[SECTIONCATEGORYID]
+	  ,ITSC.[CategoryDesc]
 	  ,isnull(ITSM.IsReturn,0) as IsReturn
       ,[ITReturnFillingDate]
       ,[ITReturnDueDate]
@@ -68,14 +70,15 @@ BEGIN
       ,[RevisedReturnFile]
       ,ITRD.[IsDefault]
   FROM [LitigationApp].[dbo].[ITReturnDetails] ITRD,[LitigationApp].[dbo].[ITSectionMaster] ITSM,
-  [LitigationApp].[dbo].CompanyMaster cm
+  [LitigationApp].[dbo].CompanyMaster cm,[LitigationApp].[dbo].[ITSectionCategory] ITSC
 	WHERE 
 	(@COMPANY_ID IS NULL OR ITRD.CompanyID = @COMPANY_ID) AND
 	(@FYAYID IS NULL OR ITRD.FYAYID = @FYAYID) AND
 	(@ITSectionID IS NULL OR ITRD.ITSectionID = @ITSectionID) AND
 	(@ITReturnID IS NULL OR ITRD.Id = @ITReturnID) AND
 	ITRD.ITSectionID = ITSM.Id and
-	cm.id = itrd.CompanyID
+	cm.id = itrd.CompanyID AND
+	ITSC.ID = ITSM.SECTIONCATEGORYID
 	order by [ITReturnFillingDate],[ITReturnDueDate]
 END
 

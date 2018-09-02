@@ -13,6 +13,7 @@ namespace LS.Models
         public string FinancialYear { get; set; }
         public string AssessmentYear { get; set; }
         public int ITSectionCategoryID { get; set; }
+        public string ITSectionCategoryDesc { get; set; }
         public int ITSectionID { get; set; }
         public string ITSectionDescription { get; set; }
         public DateTime? ITReturnFillingDate { get; set; }
