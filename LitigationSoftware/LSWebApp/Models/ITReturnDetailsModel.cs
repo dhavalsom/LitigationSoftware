@@ -1,6 +1,7 @@
 ﻿using LS.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web.Mvc;
 
 namespace LSWebApp.Models
 {
@@ -14,6 +15,7 @@ namespace LSWebApp.Models
         public List<ITSection> ITSectionList { get; set; }
         public List<ITReturnDetailsExtension> ExtensionList { get; set; }
         public LitigationDDModel ITSectionListSource { get; set; }
+        public List<SelectListItem> ITSectionCategorySelectItems { get; set; }
         #endregion
 
         #region Constructors

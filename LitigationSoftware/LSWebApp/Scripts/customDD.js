@@ -60,29 +60,9 @@ $(".imgLitigationDDSave").click(function (e) {
 });
 
 $(".ddLitigationDD").change(function (e) {
-    //var form = $(".ddLitigationDD").closest("form");
-    //    form.submit();
     
-    window.location = '/TaxReturn/GetITReturnDetails?companyId=' + $('#ITReturnDetailsObject_CompanyID').val() + '&companyname=' + $('#ITReturnDetailsObject_CompanyName').val() + '&fyayId=' + $('#ITReturnDetailsObject_FYAYID').val() + '&itsectionid=' + $('#ITReturnDetailsObject_ITSectionID').val();
-    //alert("hre");
-    //alert(url);
-    //$.ajax({
-    //    type: 'GET',
-    //    url: url,
-    //    contentType: "application/json",
-    //    dataType: 'json',
-    //    error: function (xhr, status, error) {
-    //        alert("inside error");
-    //        alert(error);
-    //        alert(status);
-    //    },
-    //    success: function (data) {
-    //        alert("inside success");
-    //        //alert(data);
-           
-    //    }
-        
-    //});
+    window.location = '/TaxReturn/GetITReturnDetails?companyId=' + $('#ITReturnDetailsObject_CompanyID').val() + '&companyname=' + $('#ITReturnDetailsObject_CompanyName').val() + '&fyayId=' + $('#ITReturnDetailsObject_FYAYID').val() + '&itsectionid=' + $('#ITReturnDetailsObject_ITSectionID').val() + '&itsectioncategoryid=' + $('#ITReturnDetailsObject_ITSectionCategoryID').val();
+
 });
 
 

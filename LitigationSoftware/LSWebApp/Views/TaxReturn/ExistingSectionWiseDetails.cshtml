@@ -4,12 +4,20 @@
   
         <thead>
             <tr>
+                <th>Category</th>
+                @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+                {
+                    <th>@itsectiondetail.ITSectionCategoryDesc</th>
+                    @Html.Hidden(@itsectiondetail.ITSectionCategoryDesc, @itsectiondetail.ITSectionCategoryID)
+                }
+            </tr>
+            <tr>
                 <th>Section</th> 
                 @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
                 {
                 <th align="center">
                     @*@itsectiondetail.ITSectionDescription*@
-                    @Html.ActionLink(@itsectiondetail.ITSectionDescription, "GetITReturnDetails", "TaxReturn", new { AddedBy = itsectiondetail.AddedBy, CompanyID = Model.CompanyId, CompanyName = @itsectiondetail.CompanyName, FYAYID = Model.FYAYId, itsectionid = @itsectiondetail.ITSectionID, itreturnid = @itsectiondetail.Id }, null)
+                    @Html.ActionLink(@itsectiondetail.ITSectionDescription, "GetITReturnDetails", "TaxReturn", new { AddedBy = itsectiondetail.AddedBy, CompanyID = Model.CompanyId, CompanyName = @itsectiondetail.CompanyName, FYAYID = Model.FYAYId, itsectionid = @itsectiondetail.ITSectionID, itreturnid = @itsectiondetail.Id,itsectioncategoryid = @itsectiondetail.ITSectionCategoryID }, null)
                     @*@Html.HiddenFor(m => m.Id, itsectiondetail.Id)*@
                 </th>
                 }
