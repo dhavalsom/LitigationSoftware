@@ -170,6 +170,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\LitigationAuthorizeAttribute.cs" />
+    <Compile Include="Infrastructure\Menu.cs" />
+    <Compile Include="Infrastructure\MenuItem.cs" />
     <Compile Include="Models\CompanyList.cs" />
     <Compile Include="Models\CompanyModel.cs" />
     <Compile Include="Models\ITReturnComplexModel.cs" />
@@ -179,6 +181,7 @@
     <Compile Include="Models\ITReturnDetailsModel.cs" />
     <Compile Include="Models\ITReturnDetailsExtensionModel.cs" />
     <Compile Include="Models\LitigationDDModel.cs" />
+    <Compile Include="Models\ViewModelBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -232,6 +235,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="images\plus.png" />
     <Content Include="images\save.png" />
+    <Content Include="Menu.xml" />
     <Content Include="Scripts\bootstrap-datepicker.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -282,6 +286,7 @@
     <Content Include="Views\TaxReturn\ComplianceDocumentList.cshtml" />
     <Content Include="Views\TaxReturn\ComplianceList.cshtml" />
     <Content Include="Views\TaxReturn\ExistingSectionWiseDetails.cshtml" />
+    <Content Include="Views\Shared\_LayoutDynemicMenu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

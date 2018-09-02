@@ -26,3 +26,14 @@ textarea {
 .validationError {
     border-color: red;    
 }
+
+.navbar-default .navbar-nav > li.dropdown:hover > a,
+.navbar-default .navbar-nav > li.dropdown:hover > a:hover,
+.navbar-default .navbar-nav > li.dropdown:hover > a:focus {
+    /*background-color: rgb(231, 231, 231);*/
+    color: white;
+}
+
+li.dropdown:hover > .dropdown-menu {
+    display: block;
+}

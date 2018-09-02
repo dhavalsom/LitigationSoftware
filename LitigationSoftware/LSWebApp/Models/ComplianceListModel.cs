@@ -1,10 +1,11 @@
 ﻿using LS.Models;
+using LSWebApp.Infrastructure;
 using System.Collections.Generic;
 using System.Web;
 
 namespace LSWebApp.Models
 {
-    public class ComplianceListModel
+    public class ComplianceListModel : ViewModelBase
     {
         #region Proeprties
         public int? CompanyId { get; set; }
@@ -21,7 +22,7 @@ namespace LSWebApp.Models
         #endregion
 
         #region Constructors
-        public ComplianceListModel()
+        public ComplianceListModel() : base(Pages.SecondPage)
         {
         }
         #endregion
