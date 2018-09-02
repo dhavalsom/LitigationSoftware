@@ -12,7 +12,8 @@
         <thead>
             <tr>
                 <th colspan="2">Company Name</th>
-                <th>Financial Year</th>                
+                <th>Financial Year</th>
+                <th>Assesment Year</th>
             </tr>
         </thead>
         <tbody>
@@ -25,8 +26,16 @@
                     @Html.HiddenFor(m => m.ITReturnDetailsObject.CompanyName)
                 </td>
                 <td>
-                    @Html.DropDownListFor(m => m.ITReturnDetailsObject.FYAYID, new SelectList(Model.FYAYList, "ID", "FinancialYear"))
+                    <select id="ITReturnDetailsObject_FYAYID" name="@Html.NameFor(m=>m.ITReturnDetailsObject.FYAYID)">
+                        @foreach (var item in Model.FYAYList)
+            {
+                <option value="@item.Id.ToString()" data-year="@item.AssessmentYear">@item.FinancialYear</option>
+}
+                    </select>
+
+                    @*@Html.DropDownListFor(m => m.ITReturnDetailsObject.FYAYID, new SelectList(Model.FYAYList, "ID", "FinancialYear"))*@
                 </td>
+                <td class="tdAssessmentYear"></td>
             </tr>
         </tbody>
      </table>
@@ -414,6 +423,12 @@
 {
     <script type="text/javascript">
         $(document).ready(function () {
+
+            $("#ITReturnDetailsObject_FYAYID").change(function () {
+                loadAssessmentYear();
+            });
+            loadAssessmentYear();
+
             $('.form_datetime').datetimepicker({
                 weekStart: 1,
                 todayBtn: 1,
@@ -437,6 +452,10 @@
             });
             $('.ddLitigationDD').html('');
         });
+
+        function loadAssessmentYear() {
+            $(".tdAssessmentYear").html($("#ITReturnDetailsObject_FYAYID").find(':selected').data('year'));
+        }
 
         function isANumber(evt) {
             var charCode = (evt.which) ? evt.which : evt.keyCode

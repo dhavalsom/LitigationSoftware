@@ -22,7 +22,7 @@ namespace LSWebApp.Models
         #endregion
 
         #region Constructors
-        public ComplianceListModel() : base(Pages.SecondPage)
+        public ComplianceListModel() : base(Pages.ITReturnDetailsPage)
         {
         }
         #endregion
