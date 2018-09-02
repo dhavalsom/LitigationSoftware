@@ -23,7 +23,7 @@ namespace LS.Models
         public decimal? IncomefromCapGainsSTCG { get; set; }
         public decimal? IncomefromBusinessProf { get; set; }
         public decimal? IncomefromSpeculativeBusiness { get; set; }
-        public decimal? Broughtforwardlosses { get; set; }
+        public bool? Broughtforwardlosses { get; set; }
         public decimal? IncomeFromOtherSources { get; set; }
         public decimal? DeductChapterVIA { get; set; }
         public decimal? ProfitUS115JB { get; set; }

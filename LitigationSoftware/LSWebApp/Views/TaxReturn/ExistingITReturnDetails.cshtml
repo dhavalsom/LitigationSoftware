@@ -70,7 +70,7 @@
         $(".tdAssessmentYear").html($("#ITReturnDetailsObject_FYAYID").find(':selected').data('year'));
     }
     function loadexistingitsections() {
-        alert($('#ITReturnDetailsObject_FYAYID').val());
+       // alert($('#ITReturnDetailsObject_FYAYID').val());
         var url = "@Url.Action("SearchITReturnDetails", "TaxReturn")" + '?companyId=' + $('#ITReturnDetailsObject_CompanyID').val() + '&fyayId=' + $('#ITReturnDetailsObject_FYAYID').val();
 
         $.ajax({

@@ -217,9 +217,11 @@
                  <td></td>
                  <td>@Model.ITHeadMasterList["Broughtforwardlosses"].Description:-</td>
                  <td>
-                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.Broughtforwardlosses
-, string.Format("{0:f}", Model.ITReturnDetailsObject.Broughtforwardlosses)
-, new { @class = "numericOnly" })
+                     @Html.RadioButtonFor(m => m.ITReturnDetailsObject.Broughtforwardlosses, !Model.ITReturnDetailsObject.Broughtforwardlosses) Yes
+                     @Html.RadioButtonFor(m => m.ITReturnDetailsObject.Broughtforwardlosses, Model.ITReturnDetailsObject.Broughtforwardlosses) No
+                     @*@Html.TextBoxFor(m => m.ITReturnDetailsObject.Broughtforwardlosses
+        , string.Format("{0:f}", Model.ITReturnDetailsObject.Broughtforwardlosses)
+        , new { @class = "numericOnly" })*@
                  </td>
              </tr>
 

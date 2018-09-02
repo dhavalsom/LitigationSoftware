@@ -115,6 +115,7 @@ namespace LSWebApp.Controllers
                     AddedBy = userId,
                     //IncomefromBusinessProf = false,
                     //RevisedReturnFile = false,
+                    Broughtforwardlosses = false,
                     FYAYID = FYAYID,
                     ITSectionID = itsectionid.HasValue ? itsectionid.Value : 0,
                     IsReturn = true
@@ -266,8 +267,9 @@ namespace LSWebApp.Controllers
                     CompanyID = itrdetails1.CompanyID,
                     CompanyName = itrdetails1.CompanyName,
                     AddedBy = itrdetails1.AddedBy,
+                    Broughtforwardlosses = false
                     //IncomefromBusinessProf = false,
-                    RevisedReturnFile = false
+                    //RevisedReturnFile = false
                 }
             };
 
