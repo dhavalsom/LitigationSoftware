@@ -10,6 +10,7 @@ namespace LSWebApp.Models
         public ITReturnDetails ITReturnDetailsObject { get; set; }
         public List<FYAY> FYAYList { get; set; }
         public Dictionary<string, ITHeadMaster> ITHeadMasterList { get; set; }
+        public List<ITSectionCategory> ITSectionCategoryList { get; set; }
         public List<ITSection> ITSectionList { get; set; }
         public List<ITReturnDetailsExtension> ExtensionList { get; set; }
         public LitigationDDModel ITSectionListSource { get; set; }
@@ -30,7 +31,15 @@ namespace LSWebApp.Models
             foreach (var item in headList)
             {
                 item.SubHeadList = subHeadList.Where(sh => sh.ITHeadId == item.Id).ToList<ITSubHeadMaster>();
-                this.ITHeadMasterList.Add(item.PropertyName, item);
+                
+                if(!this.ITHeadMasterList.ContainsKey(item.PropertyName))
+                {
+                    this.ITHeadMasterList.Add(item.PropertyName, item);
+                }
+                else
+                {
+                    var item2 = item;
+                }
                 foreach (var subItem in item.SubHeadList)
                 {
                     ExtensionList.Add(new ITReturnDetailsExtension

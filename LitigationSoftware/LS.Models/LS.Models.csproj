@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -51,6 +52,7 @@
     <Compile Include="ITReturnDetails.cs" />
     <Compile Include="ITReturnDetailsExtension.cs" />
     <Compile Include="ITSection.cs" />
+    <Compile Include="ITSectionCategory.cs" />
     <Compile Include="ITSubHeadMaster.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Role.cs" />

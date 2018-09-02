@@ -13,6 +13,7 @@ using System.Web.Mvc;
 using System.Net;
 using System.Net.Sockets;
 using System.Web.Security;
+using LSWebApp.Models;
 
 namespace LSWebApp.Controllers
 {
@@ -61,8 +62,22 @@ namespace LSWebApp.Controllers
                         Session[SESSION_LOGON_USER] = user;
                         Session["User"] = objSignInResponse;
                         FormsAuthentication.SetAuthCookie(user.Id.ToString(), true);
-                        RedirectToAction("Index", "TaxReturn");
-                        return View("~/Views/TaxReturn/Index.cshtml");
+                        //RedirectToAction("Index", "TaxReturn");
+
+                        var model = new CompanyModel();
+                        Res = await client.GetAsync("api/MasterAPI/GetCompanyCategoryList");
+
+                        if (Res.IsSuccessStatusCode)
+                            {
+                                model.CompanyCategoriesList = JsonConvert.DeserializeObject<List<CompanyCategory>>(Res.Content.ReadAsStringAsync().Result);
+                                return View("~/Views/TaxReturn/Index.cshtml", model);
+                            }
+                        else
+                        {
+                            user.Message = "Incorrect username or password";
+                            return View("Index", user);
+                        }
+
                     }
                     else
                     {

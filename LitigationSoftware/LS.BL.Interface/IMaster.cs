@@ -7,9 +7,11 @@ namespace LS.BL.Interface
     public interface IMaster : IDisposable
     {
         List<Company> GetCompanies();
+        List<CompanyCategory> GetCompanyCategories();
         bool CreateCompany(Company comp);
         List<FYAY> GetFYAY();
-        List<ITSection> GetITSection();
+        List<ITSection> GetITSection(int categoryId);
+        List<ITSectionCategory> GetITSectionCategory();
         ITSectionResponse InsertUpdateITSection(ITSection objITSection);
         List<ITHeadMaster> GetITHeadMaster();
         List<ITSubHeadMaster> GetITSubHeadMaster(int? itHeadId);

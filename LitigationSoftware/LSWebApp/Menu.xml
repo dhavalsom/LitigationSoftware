@@ -21,6 +21,26 @@
   </PageId>
   <PageId Value="2">
     <MenuItem
+      DisplayText="Input Sheet"
+      ControllerName="TaxReturn"
+      ActionName="GetITReturnDetails"
+      Id="1">
+    </MenuItem>
+    <MenuItem
+      DisplayText="List of Companies"
+      ControllerName="TaxReturn"
+      ActionName="GetCompanyList"
+      Id="2">
+    </MenuItem>
+    <MenuItem
+      DisplayText="Compliances"
+      ControllerName="TaxReturn"
+      ActionName="GetComplianceList"
+      Id="3">
+    </MenuItem>
+  </PageId>
+  <PageId Value="3">
+    <MenuItem
       DisplayText="Menu List"
       ControllerName=""
       ActionName=""

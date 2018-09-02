@@ -1,6 +1,7 @@
-﻿@model  LS.Models.Company
+﻿@model  LSWebApp.Models.CompanyModel
 @{
     ViewBag.Title = "My Dashboard";
+    //Layout = "~/Views/Shared/_LayoutDynemicMenu.cshtml";
 }
 
 <h3>Register a new company</h3>
@@ -8,7 +9,7 @@
 @using (Html.BeginForm("CreateCompany", "TaxReturn"))
 {
 
-    @Html.AntiForgeryToken()
+    @*@Html.AntiForgeryToken()*@
     <table>
         <tr>
             <td>
@@ -17,10 +18,19 @@
                 </div>
             </td>
             <td>
-                @Html.TextBoxFor(m => m.CompanyName, new { @class="form-control", @placeholder = "Enter new company name" })
+                @Html.TextBoxFor(m => m.companyObject.CompanyName, new { @class = "form-control-sm", @placeholder = "Enter new company name" })
             </td>
         </tr>
-        <tr style="height:20px;"></tr>
+        <tr>
+            <td>
+                <div class="form-group">
+                    Category:
+                </div>
+            </td>
+            <td>
+                @Html.DropDownListFor(m => m.companyObject.CategoryID, new SelectList(Model.CompanyCategoriesList, "Id", "CategoryDesc"))
+            </td>
+        </tr>
         <tr>
             <td>
                 <div class="form-group">
@@ -28,19 +38,53 @@
                 </div>
             </td>
             <td>
-                @Html.TextBoxFor(m => m.PANNumber, new { @class = "form-control", @placeholder = "Enter PAN number" })
+                @Html.TextBoxFor(m => m.companyObject.PANNumber, new { @class = "form-control-sm panvalidation", @placeholder = "Enter PAN number" })
+                <div class="form-group text-danger">
+                    Invalid Pan number
+                </div>
             </td>
         </tr>
         <tr style="height:20px;"></tr>
         <tr style="height:20px;"></tr>
         <tr>
             <td colspan="2" align="center">
-               <button type="submit" class="btn btn-primary">Create Company</button>
+                <button type="submit" class="btn btn-primary">Create Company</button>
             </td>
         </tr>
 
     </table>
 
 }
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".text-danger").hide();
+
+            $(".panvalidation").keypress(function (e) {
+                 var regpan = /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/;
+                if (e.target.value.length == 9) {
+                    if (regpan.test(e.target.value)) {
+                        $(".text-danger").show();
+                        $(".btn-primary").attr("disabled", true);
+                        // invalid pan card number
+                    } else {
+                        $(".text-danger").hide();
+                        $(".btn-primary").attr("disabled", false);
+                        // valid pan card number
+                    }
+                }
+                else {
+                    if (e.target.value.length > 9)
+                        $(".text-danger").show();
+                    $(".btn-primary").attr("disabled", true);
+                }
+            });
+
+    });
+    </script>
+}
+    
 
 

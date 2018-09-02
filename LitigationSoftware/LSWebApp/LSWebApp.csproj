@@ -173,6 +173,7 @@
     <Compile Include="Infrastructure\Menu.cs" />
     <Compile Include="Infrastructure\MenuItem.cs" />
     <Compile Include="Models\CompanyList.cs" />
+    <Compile Include="Models\CompanyModel.cs" />
     <Compile Include="Models\ITReturnComplexModel.cs" />
     <Compile Include="Models\ComplianceDocumentListModel.cs" />
     <Compile Include="Models\ComplianceListModel.cs" />
@@ -243,6 +244,7 @@
     </Content>
     <Content Include="Scripts\customDD.js" />
     <Content Include="Scripts\DatePickerReady.js" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />

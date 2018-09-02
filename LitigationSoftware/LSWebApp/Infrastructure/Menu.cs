@@ -11,6 +11,6 @@ namespace LSWebApp.Infrastructure
     {
         None,
         MainPage,
-        SecondPage
+        ITReturnDetailsPage
     }
 }

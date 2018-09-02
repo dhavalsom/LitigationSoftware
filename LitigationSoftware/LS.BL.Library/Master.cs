@@ -38,6 +38,22 @@ namespace LS.BL.Library
             }
         }
 
+        public List<CompanyCategory> GetCompanyCategories()
+        {
+            try
+            {
+                return this._masterDA.GetCompanyCategories();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                //Log
+            }
+        }
+
         public bool CreateCompany(Company comp)
         {
             try
@@ -70,11 +86,27 @@ namespace LS.BL.Library
             }
         }
 
-        public List<ITSection> GetITSection()
+        public List<ITSection> GetITSection(int categoryId)
         {
             try
             {
-                return this._masterDA.GetITSection();
+                return this._masterDA.GetITSection(categoryId);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                //Log
+            }
+        }
+
+        public List<ITSectionCategory> GetITSectionCategory()
+        {
+            try
+            {
+                return this._masterDA.GetITSectionCategory();
             }
             catch (Exception ex)
             {

@@ -225,12 +225,12 @@ namespace LS.DAL.Library
                             CompanyID = Convert.ToInt32(reader["CompanyID"].ToString()),
                             CompanyName = reader["CompanyName"] != DBNull.Value ? reader["CompanyName"].ToString() : null,
                             HousePropIncome = reader["HousePropIncome"] != DBNull.Value ? Convert.ToDecimal(reader["HousePropIncome"].ToString()) : (decimal?)null,
-                            IncomefromBusinessProf = Convert.ToBoolean(reader["IncomefromBusinessProf"]),
+                            IncomefromBusinessProf = reader["IncomefromBusinessProf"] != DBNull.Value ? Convert.ToDecimal(reader["IncomefromBusinessProf"].ToString()) : (decimal?)null,
                             RevisedReturnFile = Convert.ToBoolean(reader["RevisedReturnFile"]),
                             IsReturn = Convert.ToBoolean(reader["IsReturn"]),
-                            IncomefromCapGainsNonSTT = reader["IncomefromCapGainsNonSTT"] != DBNull.Value ? Convert.ToDecimal(reader["IncomefromCapGainsNonSTT"].ToString()) : (decimal?)null,
-                            IncomefromCapGainsSTT = reader["IncomefromCapGainsSTT"] != DBNull.Value ? Convert.ToDecimal(reader["IncomefromCapGainsSTT"].ToString()) : (decimal?)null,
-                            UnabsorbedDepreciation = reader["UnabsorbedDepreciation"] != DBNull.Value ? Convert.ToDecimal(reader["UnabsorbedDepreciation"].ToString()) : (decimal?)null,
+                            IncomefromCapGainsLTCG = reader["IncomefromCapGainsLTCG"] != DBNull.Value ? Convert.ToDecimal(reader["IncomefromCapGainsLTCG"].ToString()) : (decimal?)null,
+                            IncomefromCapGainsSTCG = reader["IncomefromCapGainsSTCG"] != DBNull.Value ? Convert.ToDecimal(reader["IncomefromCapGainsSTCG"].ToString()) : (decimal?)null,
+                            IncomefromSpeculativeBusiness = reader["IncomefromSpeculativeBusiness"] != DBNull.Value ? Convert.ToDecimal(reader["IncomefromSpeculativeBusiness"].ToString()) : (decimal?)null,
                             Broughtforwardlosses = reader["Broughtforwardlosses"] != DBNull.Value ? Convert.ToDecimal(reader["Broughtforwardlosses"].ToString()) : (decimal?)null,
                             IncomeFromOtherSources = reader["IncomeFromOtherSources"] != DBNull.Value ? Convert.ToDecimal(reader["IncomeFromOtherSources"].ToString()) : (decimal?)null,
                             DeductChapterVIA = reader["DeductChapterVIA"] != DBNull.Value ? Convert.ToDecimal(reader["DeductChapterVIA"].ToString()) : (decimal?)null,
@@ -247,7 +247,10 @@ namespace LS.DAL.Library
                             InterestUS234B = reader["InterestUS234B"] != DBNull.Value ? Convert.ToDecimal(reader["InterestUS234B"].ToString()) : (decimal?)null,
                             InterestUS234C = reader["InterestUS234C"] != DBNull.Value ? Convert.ToDecimal(reader["InterestUS234C"].ToString()) : (decimal?)null,
                             InterestUS244A = reader["InterestUS244A"] != DBNull.Value ? Convert.ToDecimal(reader["InterestUS244A"].ToString()) : (decimal?)null,
-                            RefundReceived = reader["RefundReceived"] != DBNull.Value ? Convert.ToDecimal(reader["RefundReceived"].ToString()) : (decimal?)null
+                            RefundReceived = reader["RefundReceived"] != DBNull.Value ? Convert.ToDecimal(reader["RefundReceived"].ToString()) : (decimal?)null,
+                            IncomefromSalary = reader["IncomefromSalary"] != DBNull.Value ? Convert.ToDecimal(reader["IncomefromSalary"].ToString()) : (decimal?)null,
+                            TDS26AS = reader["TDS26AS"] != DBNull.Value ? Convert.ToDecimal(reader["TDS26AS"].ToString()) : (decimal?)null,
+                            TDSasperBooks = reader["TDSasperBooks"] != DBNull.Value ? Convert.ToDecimal(reader["TDSasperBooks"].ToString()) : (decimal?)null
                         });
                     }
                 }
