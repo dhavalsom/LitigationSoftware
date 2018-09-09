@@ -310,7 +310,8 @@ namespace LS.DAL.Library
                             ExcelSrNo = reader["ExcelSrNo"] != DBNull.Value ? reader["ExcelSrNo"].ToString() : null,
                             Description = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : null,
                             PropertyName = reader["PropertyName"] != DBNull.Value ? reader["PropertyName"].ToString() : null,
-                            CanAddSubHead = Convert.ToBoolean(reader["CanAddSubHead"].ToString()),
+                            CanAddSubHead = reader["CanAddSubHead"] != DBNull.Value ? Convert.ToBoolean(reader["CanAddSubHead"].ToString()) : false,
+                            CanAddDocuments = reader["CanAddDocuments"] != DBNull.Value ? Convert.ToBoolean(reader["CanAddDocuments"].ToString()) : false,
                             Active = Convert.ToBoolean(reader["Active"].ToString()),
                             Id = Convert.ToInt32(reader["Id"].ToString())
                         });

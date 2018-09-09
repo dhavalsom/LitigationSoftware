@@ -87,8 +87,7 @@ namespace LS.BL.Library
                 //Log
             }
         }
-
-
+        
         public List<ITReturnDetailsExtension> GetExistingITReturnDetailsExtension(int? itreturnid)
         {
             try
@@ -105,6 +104,40 @@ namespace LS.BL.Library
             }
         }
 
+        public ITReturnDocumentsResponse InsertUpdateITReturnDocuments(ITReturnDocuments itReturnDocuments
+            , string operation)
+        {
+            try
+            {
+                return this._itReturnDA.InsertUpdateITReturnDocuments(itReturnDocuments, operation);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                //Log
+            }
+        }
+
+        public ITReturnDocumentsResponse GetITReturnDocumentsList(int? companyId,
+            int? fyayId, int? itReturnDetailsId, int? itHeadId, int? itReturnDocumentId)
+        {
+            try
+            {
+                return this._itReturnDA.GetITReturnDocumentsList(companyId, fyayId,
+                    itReturnDetailsId, itHeadId, itReturnDocumentId);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                //Log
+            }
+        }
         #endregion
 
 

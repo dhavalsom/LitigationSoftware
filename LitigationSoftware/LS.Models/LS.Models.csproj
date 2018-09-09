@@ -51,6 +51,7 @@
     <Compile Include="ITReturnComplexAPIModel.cs" />
     <Compile Include="ITReturnDetails.cs" />
     <Compile Include="ITReturnDetailsExtension.cs" />
+    <Compile Include="ITReturnDocuments.cs" />
     <Compile Include="ITSection.cs" />
     <Compile Include="ITSectionCategory.cs" />
     <Compile Include="ITSubHeadMaster.cs" />

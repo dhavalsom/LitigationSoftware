@@ -104,7 +104,8 @@ namespace LSWebApp.Controllers
             return View(itrdetails);
         }
 
-        private async Task<ITReturnDetailsModel> CommonGetITReturnDetails(int? userId, int companyId, string companyname, int FYAYID, int? itsectionid, int? itreturnid, int? itsectioncategoryid)
+        private async Task<ITReturnDetailsModel> CommonGetITReturnDetails(int? userId, int companyId
+            , string companyname, int FYAYID, int? itsectionid, int? itreturnid, int? itsectioncategoryid)
         {
             ITReturnDetailsModel itrdetails = new ITReturnDetailsModel
             {
@@ -113,8 +114,6 @@ namespace LSWebApp.Controllers
                     CompanyID = companyId,
                     CompanyName = companyname,
                     AddedBy = userId,
-                    //IncomefromBusinessProf = false,
-                    //RevisedReturnFile = false,
                     Broughtforwardlosses = false,
                     FYAYID = FYAYID,
                     ITSectionID = itsectionid.HasValue ? itsectionid.Value : 0,
@@ -173,6 +172,7 @@ namespace LSWebApp.Controllers
                         }
 
                     }
+
                     Res = await client.GetAsync("api/MasterAPI/GetITSubHeadMaster?itHeadId=");
                     var itSubHeads = JsonConvert.DeserializeObject<List<ITSubHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
                     Res = await client.GetAsync("api/MasterAPI/GetITHeadMaster");
@@ -184,13 +184,51 @@ namespace LSWebApp.Controllers
                         if (Res.IsSuccessStatusCode)
                         {
                             if (JsonConvert.DeserializeObject<ITReturnDetailsListResponse>(Res.Content.ReadAsStringAsync().Result).ITReturnDetailsListObject.Count > 0)
-                                itrdetails.ITReturnDetailsObject = JsonConvert.DeserializeObject<ITReturnDetailsListResponse>(Res.Content.ReadAsStringAsync().Result).ITReturnDetailsListObject.First<ITReturnDetails>();
+                            {
+                                itrdetails.ITReturnDetailsObject = JsonConvert.DeserializeObject<ITReturnDetailsListResponse>
+                                    (Res.Content.ReadAsStringAsync().Result).ITReturnDetailsListObject.First<ITReturnDetails>();
+                                Res = await client.GetAsync("api/TaxReturnAPI/GetITReturnDocumentsList?companyId=&fyayId=&itReturnDetailsId="
+                                    + itrdetails.ITReturnDetailsObject.Id + "&itHeadId=&itReturnDocumentId=");
+                                if (Res.IsSuccessStatusCode)
+                                {
+                                    var objITReturnDocumentsResponse = JsonConvert.DeserializeObject<ITReturnDocumentsResponse>
+                                        (Res.Content.ReadAsStringAsync().Result);
+                                    itrdetails.ITReturnDocumentList = new Dictionary<string, List<ITReturnDocumentsDisplay>>();
+                                    foreach (var item in objITReturnDocumentsResponse.ITReturnDocumentsList)
+                                    {
+                                        if (itrdetails.ITReturnDocumentList.ContainsKey(item.PropertyName))
+                                        {
+                                            itrdetails.ITReturnDocumentList[item.PropertyName].Add(item);
+                                        }
+                                        else
+                                        {
+                                            itrdetails.ITReturnDocumentList.Add(item.PropertyName,
+                                                new List<ITReturnDocumentsDisplay> { item });
+                                        }
+                                    }
+                                    itrdetails.ITHeadDocumentsUploaderModels = new Dictionary<string, ITHeadDocumentsUploaderModel>();
+                                    foreach (var itHead in itHeads)
+                                    {
+                                        if (itHead.CanAddDocuments)
+                                        {
+                                            if (itrdetails.ITReturnDocumentList.ContainsKey(itHead.PropertyName))
+                                            {
+                                                itrdetails.ITHeadDocumentsUploaderModels.Add(itHead.PropertyName
+                                                    , new ITHeadDocumentsUploaderModel(itrdetails.ITReturnDocumentList[itHead.PropertyName]
+                                                    , itHead, itrdetails.ITReturnDetailsObject));
+                                            }
+                                            else
+                                            {
+                                                itrdetails.ITHeadDocumentsUploaderModels.Add(itHead.PropertyName
+                                                    , new ITHeadDocumentsUploaderModel(new List<ITReturnDocumentsDisplay>()
+                                                    , itHead, itrdetails.ITReturnDetailsObject));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
-
-
-
-                   
 
                     itrdetails.PopulateITHeadMasters(itHeads, itSubHeads, itrdetails.ITReturnDetailsObject.Id);
 
@@ -216,7 +254,6 @@ namespace LSWebApp.Controllers
                                     if (subvalue.ITReturnDetailsId == item.ITReturnDetailsId && subvalue.ITSubHeadId == item.ITSubHeadId)
                                         item.ITSubHeadValue = subvalue.ITSubHeadValue;
                                 }
-                                //item.ITSubHeadValue = itSubHeadValues.Where(sh => sh.ITReturnDetailsId == item.ITReturnDetailsId && sh.ITSubHeadId == item.ITSubHeadId).Select(sh => sh.ITSubHeadValue).First();
                             }
                         }
                     }
@@ -324,9 +361,49 @@ namespace LSWebApp.Controllers
             return PartialView("ExistingSectionWiseDetails", itrdetail);
         }
 
+        [HttpPost]
+        public async Task<ActionResult> InsertUpdateITReturnDocuments
+            (ITHeadDocumentsUploaderModel objITHeadDocumentsUploaderModel)
+        {
+            string relativePath = "/" + objITHeadDocumentsUploaderModel.ObjITReturnDocuments.ITReturnDetailsId.ToString() + "/"
+                + objITHeadDocumentsUploaderModel.ObjITReturnDocuments.ITHeadId.ToString() + "/";
+            string path = Server.MapPath("~/ITReturnDetailsDocumentsUpload" + relativePath);
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            objITHeadDocumentsUploaderModel.ITHeadFile.SaveAs(path + Path.GetFileName(objITHeadDocumentsUploaderModel.ITHeadFile.FileName));
+            objITHeadDocumentsUploaderModel.ObjITReturnDocuments.FileName = Path.GetFileName(objITHeadDocumentsUploaderModel.ITHeadFile.FileName);
+            objITHeadDocumentsUploaderModel.ObjITReturnDocuments.FilePath = relativePath + Path.GetFileName(objITHeadDocumentsUploaderModel.ITHeadFile.FileName);
+            objITHeadDocumentsUploaderModel.ObjITReturnDocuments.AddedBy = 1;
+            objITHeadDocumentsUploaderModel.ObjITReturnDocuments.ModifiedBy = 1;
+            objITHeadDocumentsUploaderModel.ObjITReturnDocuments.Active = true;
+
+            using (var client = new HttpClient())
+            {
+                var json = JsonConvert.SerializeObject(objITHeadDocumentsUploaderModel.ObjITReturnDocuments);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.PostAsync("api/TaxReturnAPI/InsertUpdateITReturnDocuments", content);
+                ITReturnDocumentsResponse result = JsonConvert.DeserializeObject<ITReturnDocumentsResponse>(Res.Content.ReadAsStringAsync().Result);
+
+                return RedirectToAction("GetITReturnDetails"
+                    , new RouteValueDictionary(new
+                    {
+                        userId = objITHeadDocumentsUploaderModel.ObjITReturnDocuments.AddedBy,
+                        companyId = objITHeadDocumentsUploaderModel.ObjITReturnDetails.CompanyID,
+                        companyname = objITHeadDocumentsUploaderModel.ObjITReturnDetails.CompanyName,
+                        FYAYID = objITHeadDocumentsUploaderModel.ObjITReturnDetails.FYAYID,
+                        itsectionid = objITHeadDocumentsUploaderModel.ObjITReturnDetails.ITSectionID,
+                        itreturnid = objITHeadDocumentsUploaderModel.ObjITReturnDocuments.ITReturnDetailsId
+                    }));
+            }
+        }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<ActionResult> InsertorUpdateITReturnDetails(ITReturnDetailsModel itReturn, FormCollection form)
         {
             foreach (var control in form.Keys)

@@ -67,6 +67,40 @@ namespace LSApi.Controllers
         }
 
         [HttpGet]
+        [Route("GetITReturnDocumentsList")]
+        // GET: api/TaxReturnAPI/GetITReturnDocumentsList
+        public ITReturnDocumentsResponse GetITReturnDocumentsList(int? companyId,
+            int? fyayId, int? itReturnDetailsId, int? itHeadId, int? itReturnDocumentId)
+        {
+            var ItReturnObj = _Kernel.Get<IITReturnDetailsBL>();
+            return ItReturnObj.GetITReturnDocumentsList(companyId, fyayId
+                , itReturnDetailsId, itHeadId, itReturnDocumentId);
+        }
+
+        // POST: api/InsertUpdateITReturnDocuments
+        [HttpPost]
+        [Route("InsertUpdateITReturnDocuments")]
+        public ITReturnDocumentsResponse InsertUpdateITReturnDocuments
+            ([FromBody]ITReturnDocuments itReturnDocuments)
+        {
+            var ItReturnObj = _Kernel.Get<IITReturnDetailsBL>();
+            var itReturnDocumentsResult = ItReturnObj.InsertUpdateITReturnDocuments
+                (itReturnDocuments, string.Empty);
+            return itReturnDocumentsResult;
+        }
+
+        // POST: api/DeleteITReturnDocuments
+        [HttpPost]
+        [Route("DeleteITReturnDocuments")]
+        public ITReturnDocumentsResponse DeleteITReturnDocuments
+            ([FromBody]ITReturnDocuments itReturnDocuments)
+        {
+            var ItReturnObj = _Kernel.Get<IITReturnDetailsBL>();
+            var itReturnDocumentsResult = ItReturnObj.InsertUpdateITReturnDocuments(itReturnDocuments, "Delete");
+            return itReturnDocumentsResult;
+        }
+
+        [HttpGet]
         [Route("GetExistingITReturnDetailsList")]
         // GET: api/TaxReturnAPI/GetExistingITReturnDetailsList
         public ITReturnDetailsListResponse GetExistingITReturnDetailsList(int companyId, int fyayId, int? itsectionid, int? itreturnid)
