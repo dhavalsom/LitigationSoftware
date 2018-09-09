@@ -48,9 +48,15 @@
                                                 @document.FileName
                                             </td>
                                             <td>
-                                                <a href=" @Url.Content("~/ITReturnDetailsDocumentsUpload/" + document.FilePath)"
+                                                <a href="@Url.Content("~/ITReturnDetailsDocumentsUpload/" + document.FilePath)"
                                                    target="_blank">
                                                     View
+                                                </a>
+                                                &nbsp;
+                                                <a href="#"
+                                                   title="click to delete the document"
+                                                   onclick="deleteITReturnDetailsDocument(@(document.Id), '@(document.FilePath)')">
+                                                    Delete
                                                 </a>
                                             </td>
                                         </tr>
