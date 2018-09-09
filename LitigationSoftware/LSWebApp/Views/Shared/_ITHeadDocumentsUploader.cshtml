@@ -1,0 +1,80 @@
+﻿@model  LSWebApp.Models.ITHeadDocumentsUploaderModel
+@using(Html.BeginForm("InsertUpdateITReturnDocuments", "TaxReturn", FormMethod.Post
+    , new { enctype = "multipart/form-data" }))
+{
+    if(Model.ITHeadObject.Id > 0)
+    {    
+        <div style="margin-left:5px;">
+            @Html.HiddenFor(m => m.ObjITReturnDocuments.ITHeadId, Model.ObjITReturnDocuments.ITHeadId)      
+            @Html.HiddenFor(m => m.ObjITReturnDocuments.ITReturnDetailsId
+            , Model.ObjITReturnDocuments.ITReturnDetailsId)
+            @Html.HiddenFor(m => m.ObjITReturnDetails.Id, Model.ObjITReturnDetails.Id)  
+            @Html.HiddenFor(m => m.ObjITReturnDetails.CompanyID, Model.ObjITReturnDetails.CompanyID)   
+            @Html.HiddenFor(m => m.ObjITReturnDetails.FYAYID, Model.ObjITReturnDetails.FYAYID)        
+            @Html.HiddenFor(m => m.ObjITReturnDetails.CompanyName, Model.ObjITReturnDetails.CompanyName)
+            @Html.HiddenFor(m => m.ObjITReturnDetails.ITSectionID, Model.ObjITReturnDetails.ITSectionID)
+
+            <div>
+                <a href="#myModal_@(Model.ITHeadObject.Id.ToString())" role="button" class="btn" data-toggle="modal">
+                    <img src="~/images/upload.png"
+                         class="imgITHeadDocumentsUploader"
+                         title="click to upload the documents"
+                         style="width:20px;height:20px;" />
+                </a>
+            </div>
+            <div class="modal" id="myModal_@(Model.ITHeadObject.Id.ToString())">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Documents for @Model.ITHeadObject.Description</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <table class="table table-hover tblITRetDetails">
+                                <thead>
+                                    <tr>
+                                        <th>File Name</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var document in Model.DocumentList)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @document.FileName
+                                            </td>
+                                            <td>
+                                                <a href=" @Url.Content("~/ITReturnDetailsDocumentsUpload/" + document.FilePath)"
+                                                   target="_blank">
+                                                    View
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <table>
+                                <tr>
+                                    <td>
+                                        Choose File:
+                                    </td>
+                                    <td colspan="2">
+                                        @Html.TextBoxFor(model => model.ITHeadFile, new { type = "file" })
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary btn-sm">Upload File</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

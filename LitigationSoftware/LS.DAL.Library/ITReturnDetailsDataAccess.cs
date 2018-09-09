@@ -178,8 +178,7 @@ namespace LS.DAL.Library
                 Connection.Close();
             }
         }
-
-
+        
         public ITReturnDetailsListResponse GetExistingITReturnDetailsList(int companyId, int fyayId,int? itsectionid,int? itreturnid)
         {
             try
@@ -317,8 +316,141 @@ namespace LS.DAL.Library
             }
         }
 
+        public ITReturnDocumentsResponse InsertUpdateITReturnDocuments(ITReturnDocuments itReturnDocuments
+            , string operation)
+        {
+            try
+            {
+                Log.Info("Started call to InsertUpdateITReturnDocuments");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(
+                    new { itReturnDocuments = itReturnDocuments, operation = operation }));
+                Command.CommandText = "SP_IT_RETURN_DOCUMENT_MANAGER";
+                Command.CommandType = CommandType.StoredProcedure;
+                Command.Parameters.Clear();
 
+                Command.Parameters.AddWithValue("@IT_RETURN_DOCUMENT_XML", GetXMLFromObject(itReturnDocuments));
+                if (!string.IsNullOrEmpty(operation))
+                {
+                    Command.Parameters.AddWithValue("@OPERATION", operation);
+                }
+                if (itReturnDocuments.AddedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", itReturnDocuments.AddedBy.Value);
+                }
+                else if (itReturnDocuments.ModifiedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", itReturnDocuments.ModifiedBy.Value);
+                }
+                else if (itReturnDocuments.DeletedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", itReturnDocuments.DeletedBy.Value);
+                }
+                Connection.Open();
+                SqlDataReader reader = Command.ExecuteReader();
 
+                ITReturnDocumentsResponse result = new ITReturnDocumentsResponse();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result = new ITReturnDocumentsResponse
+                        {
+                            Message = reader["ReturnMessage"] != DBNull.Value ? reader["ReturnMessage"].ToString() : null,
+                            IsSuccess = Convert.ToBoolean(reader["Result"].ToString())
+                        };
+                    }
+                }
+                Log.Info("End call to InsertUpdateITReturnDocuments");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                Connection.Close();
+            }
+        }
+
+        public ITReturnDocumentsResponse GetITReturnDocumentsList(int? companyId,
+            int? fyayId, int? itReturnDetailsId, int? itHeadId, int? itReturnDocumentId)
+        {
+            try
+            {
+                Log.Info("Started call to GetITReturnDocumentsList");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(new
+                {
+                    companyId = companyId,
+                    fyayId = fyayId,
+                    itReturnDetailsId = itReturnDetailsId,
+                    itHeadId = itHeadId,
+                    itReturnDocumentId = itReturnDocumentId,
+                }));
+                Command.CommandText = "SP_GET_IT_RETURN_DOCUMENT_LIST";
+                Command.CommandType = CommandType.StoredProcedure;
+                if (companyId.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@COMPANY_ID", companyId);
+                }
+                if (fyayId.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@FYAY_ID", fyayId);
+                }
+                if (itReturnDetailsId.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@IT_RETURN_DETAILS_ID", itReturnDetailsId);
+                }
+                if (itHeadId.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@IT_HEAD_ID", itHeadId);
+                }
+                if (itReturnDocumentId.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@IT_RETURN_DOCUMENT_ID", itReturnDocumentId);
+                }
+                Connection.Open();
+
+                SqlDataReader reader = Command.ExecuteReader();
+                ITReturnDocumentsResponse result = new ITReturnDocumentsResponse();
+                result.ITReturnDocumentsList = new List<ITReturnDocumentsDisplay>();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result.ITReturnDocumentsList.Add(new ITReturnDocumentsDisplay
+                        {
+                            Id = Convert.ToInt32(reader["Id"].ToString()),
+                            ITReturnDetailsId = Convert.ToInt32(reader["ITReturnDetailsId"].ToString()),
+                            ITHeadId = Convert.ToInt32(reader["ITHeadId"].ToString()),
+                            ExcelSrNo = reader["ExcelSrNo"] != DBNull.Value ? reader["ExcelSrNo"].ToString() : null,
+                            ITHeadDescription = reader["ITHeadDescription"] != DBNull.Value ? reader["ITHeadDescription"].ToString() : null,
+                            PropertyName = reader["PropertyName"] != DBNull.Value ? reader["PropertyName"].ToString() : null,
+                            FileName = reader["FileName"] != DBNull.Value ? reader["FileName"].ToString() : null,
+                            FilePath = reader["FilePath"] != DBNull.Value ? reader["FilePath"].ToString() : null,
+                            CompanyId = Convert.ToInt32(reader["CompanyId"].ToString()),
+                            CompanyName = reader["CompanyName"] != DBNull.Value ? reader["CompanyName"].ToString() : null,
+                            FYAYId = Convert.ToInt32(reader["FYAYId"].ToString()),
+                            FinancialYear = reader["FinancialYear"] != DBNull.Value ? reader["FinancialYear"].ToString() : null,
+                            AssessmentYear = reader["AssessmentYear"] != DBNull.Value ? reader["AssessmentYear"].ToString() : null,
+                            Active = Convert.ToBoolean(reader["Active"].ToString()),                            
+                        });
+                    }
+                }
+                Log.Info("End call to GetITReturnDocumentsList");
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            finally
+            {
+                Connection.Close();
+            }
+        }
         #endregion
     }
 }

@@ -11,6 +11,8 @@ namespace LSWebApp.Models
         public ITReturnDetails ITReturnDetailsObject { get; set; }
         public List<FYAY> FYAYList { get; set; }
         public Dictionary<string, ITHeadMaster> ITHeadMasterList { get; set; }
+        public Dictionary<string, List<ITReturnDocumentsDisplay>> ITReturnDocumentList { get; set; }
+        public Dictionary<string, ITHeadDocumentsUploaderModel> ITHeadDocumentsUploaderModels { get; set; }
         public List<ITSectionCategory> ITSectionCategoryList { get; set; }
         public List<ITSection> ITSectionList { get; set; }
         public List<ITReturnDetailsExtension> ExtensionList { get; set; }
