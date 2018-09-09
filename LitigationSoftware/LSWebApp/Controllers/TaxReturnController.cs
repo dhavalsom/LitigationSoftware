@@ -362,6 +362,29 @@ namespace LSWebApp.Controllers
         }
 
         [HttpPost]
+        public async Task<ActionResult> DeleteITReturnDocuments(ITReturnDocuments itReturnDocuments)
+        {
+            itReturnDocuments.DeletedBy = (Session[SESSION_LOGON_USER] as UserLogin).Id;
+            string relativePath = "/" + itReturnDocuments.FilePath;
+            string path = Server.MapPath("~/ITReturnDetailsDocumentsUpload" + relativePath);
+            if (System.IO.File.Exists(path))
+            {
+                System.IO.File.Delete(path);
+            }
+            using (var client = new HttpClient())
+            {
+                var json = JsonConvert.SerializeObject(itReturnDocuments);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.PostAsync("api/TaxReturnAPI/DeleteITReturnDocuments", content);
+                ITReturnDocumentsResponse result = JsonConvert.DeserializeObject<ITReturnDocumentsResponse>(Res.Content.ReadAsStringAsync().Result);
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
         public async Task<ActionResult> InsertUpdateITReturnDocuments
             (ITHeadDocumentsUploaderModel objITHeadDocumentsUploaderModel)
         {
@@ -613,7 +636,7 @@ namespace LSWebApp.Controllers
         [HttpPost]
         public async Task<ActionResult> DeleteComplianceDocuments(ComplianceDocuments complianceDocuments)
         {
-            complianceDocuments.DeletedBy = 1;
+            complianceDocuments.DeletedBy = (Session[SESSION_LOGON_USER] as UserLogin).Id;
             string relativePath = "/" + complianceDocuments.FilePath;
             string path = Server.MapPath("~/ComplianceDocumentsUpload" + relativePath);
             if (System.IO.File.Exists(path))

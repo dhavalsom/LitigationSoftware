@@ -22,6 +22,8 @@
                     @Html.HiddenFor(m => m.ITReturnDetailsObject.Id, Model.ITReturnDetailsObject.Id)
                     @Html.HiddenFor(m => m.ITReturnDetailsObject.CompanyID)
                     @Html.HiddenFor(m => m.ITReturnDetailsObject.CompanyName)
+                    @*This is to fix/hook the wierd bug of missing the <form> 
+                    tag for first instance of file upload popup*@                    
                     @Html.Partial("_ITHeadDocumentsUploader"
                                 , new ITHeadDocumentsUploaderModel( 
                                     new List<ITReturnDocumentsDisplay>()
@@ -134,7 +136,8 @@
                             , string.Format("{0:f}", Model.ITReturnDetailsObject.IncomefromSalary)
                             , new { @class = "form-control form-control-sm numericOnly" })
 
-                         @if (Model.ITHeadMasterList["IncomefromSalary"].CanAddDocuments)
+                         @if (Model.ITReturnDetailsObject.Id >0
+                             && Model.ITHeadMasterList["IncomefromSalary"].CanAddDocuments)
                          {
                              @Html.Partial("_ITHeadDocumentsUploader"
                                 ,Model.ITHeadDocumentsUploaderModels["IncomefromSalary"])
@@ -152,7 +155,8 @@
                          @Html.TextBoxFor(m => m.ITReturnDetailsObject.HousePropIncome
                             , string.Format("{0:f}", Model.ITReturnDetailsObject.HousePropIncome)
                             , new { @class = "form-control form-control-sm numericOnly" })
-                         @if (Model.ITHeadMasterList["HousePropIncome"].CanAddDocuments)
+                         @if (Model.ITReturnDetailsObject.Id > 0
+                             && Model.ITHeadMasterList["HousePropIncome"].CanAddDocuments)
                          {
                              @Html.Partial("_ITHeadDocumentsUploader"
                                 , Model.ITHeadDocumentsUploaderModels["HousePropIncome"])
@@ -169,7 +173,8 @@
                          @Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomefromCapGainsLTCG
                             , string.Format("{0:f}", Model.ITReturnDetailsObject.IncomefromCapGainsLTCG)
                             , new { @class = "numericOnly" })
-                         @if (Model.ITHeadMasterList["IncomefromCapGainsLTCG"].CanAddDocuments)
+                         @if (Model.ITReturnDetailsObject.Id > 0
+                             && Model.ITHeadMasterList["IncomefromCapGainsLTCG"].CanAddDocuments)
                          {
                             @Html.Partial("_ITHeadDocumentsUploader"
                                 , Model.ITHeadDocumentsUploaderModels["IncomefromCapGainsLTCG"])
@@ -187,7 +192,8 @@
                          @Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomefromCapGainsSTCG
                             , string.Format("{0:f}", Model.ITReturnDetailsObject.IncomefromCapGainsSTCG)
                             , new { @class = "numericOnly" })
-                         @if (Model.ITHeadMasterList["IncomefromCapGainsSTCG"].CanAddDocuments)
+                         @if (Model.ITReturnDetailsObject.Id > 0
+                             && Model.ITHeadMasterList["IncomefromCapGainsSTCG"].CanAddDocuments)
                          {
                             @Html.Partial("_ITHeadDocumentsUploader"
                                 , Model.ITHeadDocumentsUploaderModels["IncomefromCapGainsSTCG"])
@@ -205,7 +211,8 @@
                          @Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomefromBusinessProf
                             , string.Format("{0:f}", Model.ITReturnDetailsObject.IncomefromBusinessProf)
                             , new { @class = "numericOnly" })
-                         @if (Model.ITHeadMasterList["IncomefromBusinessProf"].CanAddDocuments)
+                         @if (Model.ITReturnDetailsObject.Id > 0
+                             && Model.ITHeadMasterList["IncomefromBusinessProf"].CanAddDocuments)
                          {
                             @Html.Partial("_ITHeadDocumentsUploader"
                                 , Model.ITHeadDocumentsUploaderModels["IncomefromBusinessProf"])
@@ -223,7 +230,8 @@
                          @Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomefromSpeculativeBusiness
                         , string.Format("{0:f}", Model.ITReturnDetailsObject.IncomefromSpeculativeBusiness)
                         , new { @class = "numericOnly" })
-                         @if (Model.ITHeadMasterList["IncomefromSpeculativeBusiness"].CanAddDocuments)
+                         @if (Model.ITReturnDetailsObject.Id > 0
+                             && Model.ITHeadMasterList["IncomefromSpeculativeBusiness"].CanAddDocuments)
                          {
                             @Html.Partial("_ITHeadDocumentsUploader"
                                 , Model.ITHeadDocumentsUploaderModels["IncomefromSpeculativeBusiness"])
@@ -241,7 +249,8 @@
                          @Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomeFromOtherSources
                             , string.Format("{0:f}", Model.ITReturnDetailsObject.IncomeFromOtherSources)
                             , new { @class = "numericOnly" })
-                         @if (Model.ITHeadMasterList["IncomeFromOtherSources"].CanAddDocuments)
+                         @if (Model.ITReturnDetailsObject.Id > 0
+                             && Model.ITHeadMasterList["IncomeFromOtherSources"].CanAddDocuments)
                          {
                             @Html.Partial("_ITHeadDocumentsUploader"
                                 , Model.ITHeadDocumentsUploaderModels["IncomeFromOtherSources"])
@@ -270,7 +279,8 @@
                          , string.Format("{0:f}", Model.ITReturnDetailsObject.DeductChapterVIA)
                          , new { @class = "numericOnly" })
 
-                         @if (Model.ITHeadMasterList["DeductChapterVIA"].CanAddDocuments)
+                         @if (Model.ITReturnDetailsObject.Id > 0
+                             && Model.ITHeadMasterList["DeductChapterVIA"].CanAddDocuments)
                          {
                             @Html.Partial("_ITHeadDocumentsUploader"
                                 , Model.ITHeadDocumentsUploaderModels["DeductChapterVIA"])
@@ -288,7 +298,8 @@
                             , string.Format("{0:f}", Model.ITReturnDetailsObject.ProfitUS115JB)
                             , new { @class = "numericOnly" })
 
-                         @if (Model.ITHeadMasterList["ProfitUS115JB"].CanAddDocuments)
+                         @if (Model.ITReturnDetailsObject.Id > 0
+                             && Model.ITHeadMasterList["ProfitUS115JB"].CanAddDocuments)
                          {
                             @Html.Partial("_ITHeadDocumentsUploader"
                                 , Model.ITHeadDocumentsUploaderModels["ProfitUS115JB"])
@@ -306,7 +317,8 @@
                          @Html.TextBoxFor(m => m.ITReturnDetailsObject.AdvanceTax1installment
                             , string.Format("{0:f}", Model.ITReturnDetailsObject.AdvanceTax1installment)
                             , new { @class = "numericOnly" })
-                         @if (Model.ITHeadMasterList["AdvanceTax1installment"].CanAddDocuments)
+                         @if (Model.ITReturnDetailsObject.Id > 0
+                             && Model.ITHeadMasterList["AdvanceTax1installment"].CanAddDocuments)
                          {
                             @Html.Partial("_ITHeadDocumentsUploader"
                                 , Model.ITHeadDocumentsUploaderModels["AdvanceTax1installment"])
@@ -323,7 +335,8 @@
                          @Html.TextBoxFor(m => m.ITReturnDetailsObject.AdvanceTax2installment
                             , string.Format("{0:f}", Model.ITReturnDetailsObject.AdvanceTax2installment)
                             , new { @class = "numericOnly" })
-                         @if (Model.ITHeadMasterList["AdvanceTax2installment"].CanAddDocuments)
+                         @if (Model.ITReturnDetailsObject.Id > 0
+                             && Model.ITHeadMasterList["AdvanceTax2installment"].CanAddDocuments)
                          {
                             @Html.Partial("_ITHeadDocumentsUploader"
                                 , Model.ITHeadDocumentsUploaderModels["AdvanceTax2installment"])
@@ -340,7 +353,8 @@
                          @Html.TextBoxFor(m => m.ITReturnDetailsObject.AdvanceTax3installment
                             , string.Format("{0:f}", Model.ITReturnDetailsObject.AdvanceTax3installment)
                             , new { @class = "numericOnly" })
-                         @if (Model.ITHeadMasterList["AdvanceTax3installment"].CanAddDocuments)
+                         @if (Model.ITReturnDetailsObject.Id > 0
+                             && Model.ITHeadMasterList["AdvanceTax3installment"].CanAddDocuments)
                          {
                             @Html.Partial("_ITHeadDocumentsUploader"
                                 , Model.ITHeadDocumentsUploaderModels["AdvanceTax3installment"])
@@ -357,7 +371,8 @@
                          @Html.TextBoxFor(m => m.ITReturnDetailsObject.AdvanceTax4installment
                             , string.Format("{0:f}", Model.ITReturnDetailsObject.AdvanceTax4installment)
                             , new { @class = "numericOnly" })
-                         @if (Model.ITHeadMasterList["AdvanceTax4installment"].CanAddDocuments)
+                         @if (Model.ITReturnDetailsObject.Id > 0
+                             && Model.ITHeadMasterList["AdvanceTax4installment"].CanAddDocuments)
                          {
                             @Html.Partial("_ITHeadDocumentsUploader"
                                 , Model.ITHeadDocumentsUploaderModels["AdvanceTax4installment"])
@@ -374,7 +389,8 @@
                          @Html.TextBoxFor(m => m.ITReturnDetailsObject.TDS
                             , string.Format("{0:f}", Model.ITReturnDetailsObject.TDS)
                             , new { @class = "numericOnly" })
-                         @if (Model.ITHeadMasterList["TDS"].CanAddDocuments)
+                         @if (Model.ITReturnDetailsObject.Id > 0
+                             && Model.ITHeadMasterList["TDS"].CanAddDocuments)
                          {
                             @Html.Partial("_ITHeadDocumentsUploader"
                                 , Model.ITHeadDocumentsUploaderModels["TDS"])
@@ -392,7 +408,8 @@
                              , string.Format("{0:f}", Model.ITReturnDetailsObject.TDS26AS)
                              , new { @class = "numericOnly" })
 
-                         @if (Model.ITHeadMasterList["TDS26AS"].CanAddDocuments)
+                         @if (Model.ITReturnDetailsObject.Id > 0
+                             && Model.ITHeadMasterList["TDS26AS"].CanAddDocuments)
                          {
                             @Html.Partial("_ITHeadDocumentsUploader"
                                 , Model.ITHeadDocumentsUploaderModels["TDS26AS"])
@@ -409,7 +426,8 @@
                          @Html.TextBoxFor(m => m.ITReturnDetailsObject.TDSasperBooks
                             , string.Format("{0:f}", Model.ITReturnDetailsObject.TDSasperBooks)
                             , new { @class = "numericOnly" })
-                         @if (Model.ITHeadMasterList["TDSasperBooks"].CanAddDocuments)
+                         @if (Model.ITReturnDetailsObject.Id > 0
+                             && Model.ITHeadMasterList["TDSasperBooks"].CanAddDocuments)
                          {
                             @Html.Partial("_ITHeadDocumentsUploader"
                                 , Model.ITHeadDocumentsUploaderModels["TDSasperBooks"])
@@ -426,7 +444,8 @@
                          @Html.TextBoxFor(m => m.ITReturnDetailsObject.TCSPaidbyCompany
                          , string.Format("{0:f}", Model.ITReturnDetailsObject.TCSPaidbyCompany)
                         , new { @class = "numericOnly" })
-                         @if (Model.ITHeadMasterList["TCSPaidbyCompany"].CanAddDocuments)
+                         @if (Model.ITReturnDetailsObject.Id > 0
+                             && Model.ITHeadMasterList["TCSPaidbyCompany"].CanAddDocuments)
                          {
                             @Html.Partial("_ITHeadDocumentsUploader"
                                 , Model.ITHeadDocumentsUploaderModels["TCSPaidbyCompany"])
@@ -443,7 +462,8 @@
                          @Html.TextBoxFor(m => m.ITReturnDetailsObject.SelfAssessmentTax
                          , string.Format("{0:f}", Model.ITReturnDetailsObject.SelfAssessmentTax)
                         , new { @class = "numericOnly" })
-                         @if (Model.ITHeadMasterList["SelfAssessmentTax"].CanAddDocuments)
+                         @if (Model.ITReturnDetailsObject.Id > 0
+                             && Model.ITHeadMasterList["SelfAssessmentTax"].CanAddDocuments)
                          {
                             @Html.Partial("_ITHeadDocumentsUploader"
                                 , Model.ITHeadDocumentsUploaderModels["SelfAssessmentTax"])
@@ -459,7 +479,8 @@
                          @Html.TextBoxFor(m => m.ITReturnDetailsObject.MATCredit
                             , string.Format("{0:f}", Model.ITReturnDetailsObject.MATCredit)
                             , new { @class = "numericOnly" })
-                         @if (Model.ITHeadMasterList["MATCredit"].CanAddDocuments)
+                         @if (Model.ITReturnDetailsObject.Id > 0
+                             && Model.ITHeadMasterList["MATCredit"].CanAddDocuments)
                          {
                             @Html.Partial("_ITHeadDocumentsUploader"
                                 , Model.ITHeadDocumentsUploaderModels["MATCredit"])
@@ -475,7 +496,8 @@
                          @Html.TextBoxFor(m => m.ITReturnDetailsObject.InterestUS234A
                             , string.Format("{0:f}", Model.ITReturnDetailsObject.InterestUS234A)
                             , new { @class = "numericOnly" })
-                         @if (Model.ITHeadMasterList["InterestUS234A"].CanAddDocuments)
+                         @if (Model.ITReturnDetailsObject.Id > 0
+                             && Model.ITHeadMasterList["InterestUS234A"].CanAddDocuments)
                          {
                             @Html.Partial("_ITHeadDocumentsUploader"
                                 , Model.ITHeadDocumentsUploaderModels["InterestUS234A"])
@@ -491,7 +513,8 @@
                          @Html.TextBoxFor(m => m.ITReturnDetailsObject.InterestUS234B
                          , string.Format("{0:f}", Model.ITReturnDetailsObject.InterestUS234B)
                         , new { @class = "numericOnly" })
-                         @if (Model.ITHeadMasterList["InterestUS234B"].CanAddDocuments)
+                         @if (Model.ITReturnDetailsObject.Id > 0
+                             && Model.ITHeadMasterList["InterestUS234B"].CanAddDocuments)
                          {
                             @Html.Partial("_ITHeadDocumentsUploader"
                                 , Model.ITHeadDocumentsUploaderModels["InterestUS234B"])
@@ -507,7 +530,8 @@
                          @Html.TextBoxFor(m => m.ITReturnDetailsObject.InterestUS234C
                          , string.Format("{0:f}", Model.ITReturnDetailsObject.InterestUS234C)
                         , new { @class = "numericOnly" })
-                         @if (Model.ITHeadMasterList["InterestUS234C"].CanAddDocuments)
+                         @if (Model.ITReturnDetailsObject.Id > 0
+                             && Model.ITHeadMasterList["InterestUS234C"].CanAddDocuments)
                          {
                             @Html.Partial("_ITHeadDocumentsUploader"
                                 , Model.ITHeadDocumentsUploaderModels["InterestUS234C"])
@@ -557,6 +581,21 @@
                 }
             });
         });
+
+        function deleteITReturnDetailsDocument(itReturnDocumentId, filePath) {
+            alert('itReturnDocumentId=' + itReturnDocumentId + ',filePath=' + filePath);
+            $.ajax({
+                url: '/deletetITReturnDocument?Id=' + itReturnDocumentId + '&FilePath=' + filePath,
+                error: function () {
+                },
+                dataType: 'json',
+                success: function (data) {
+                    window.location.reload();
+                },
+                type: 'POST'
+            });
+            return false;
+        }
 
         function loadAssessmentYear() {
             $(".tdAssessmentYear").html($("#ITReturnDetailsObject_FYAYID").find(':selected').data('year'));
