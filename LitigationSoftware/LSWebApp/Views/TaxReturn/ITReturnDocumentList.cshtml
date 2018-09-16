@@ -1,0 +1,47 @@
+﻿@model LSWebApp.Models.ITReturnDocumentListModel
+<style>
+    table, th, td {
+        border: 1px solid black;
+        align-content: center;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+</style>
+<table class="table table-hover">
+    <thead>
+        <th>Company Name</th>
+        <th>Financial Year</th>
+        <th>IT Head</th>
+        <th>File Name</th>
+        <th>Actions</th>
+    </thead>
+    @foreach (var document in Model.ITReturnDocumentsList)
+    {
+        <tr>
+            <td class="tdBorder">
+                @document.CompanyName
+            </td>
+            <td class="tdBorder">
+                @document.FinancialYear
+            </td>
+            <td class="tdBorder">
+                @document.ITHeadDescription
+            </td>
+            <td class="tdBorder">
+                @document.FileName
+            </td>
+            <td>
+                <a href="@Url.Content("~/ITReturnDetailsDocumentsUpload/" + document.FilePath)"
+                   target="_blank">
+                    View
+                </a>
+                &nbsp;
+                <a href="#"
+                   title="click to delete the document"
+                   onclick="deleteITReturnDetailsDocument(@(document.Id), '@(document.FilePath)')">
+                    Delete
+                </a>
+            </td>
+        </tr>
+    }
+</table>

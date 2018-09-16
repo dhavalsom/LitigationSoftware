@@ -181,6 +181,8 @@
     <Compile Include="Models\ITReturnDetailsListModel.cs" />
     <Compile Include="Models\ITReturnDetailsModel.cs" />
     <Compile Include="Models\ITReturnDetailsExtensionModel.cs" />
+    <Compile Include="Models\ITReturnDocumentListModel.cs" />
+    <Compile Include="Models\ITReturnDocumentsModel.cs" />
     <Compile Include="Models\LitigationDDModel.cs" />
     <Compile Include="Models\ViewModelBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -289,6 +291,8 @@
     <Content Include="Views\TaxReturn\ExistingSectionWiseDetails.cshtml" />
     <Content Include="Views\Shared\_LayoutDynemicMenu.cshtml" />
     <Content Include="Views\Shared\_ITHeadDocumentsUploader.cshtml" />
+    <Content Include="Views\TaxReturn\ITReturnDocumentList.cshtml" />
+    <Content Include="Views\TaxReturn\ITReturnDocuments.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
