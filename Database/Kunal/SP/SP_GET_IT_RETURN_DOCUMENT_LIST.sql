@@ -1,11 +1,11 @@
 USE [LitigationApp]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_GET_IT_RETURN_DOCUMENT_LIST]    Script Date: 9/4/2018 10:26:30 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_GET_IT_RETURN_DOCUMENT_LIST]    Script Date: 9/16/2018 9:23:14 PM ******/
 DROP PROCEDURE [dbo].[SP_GET_IT_RETURN_DOCUMENT_LIST]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_GET_IT_RETURN_DOCUMENT_LIST]    Script Date: 9/4/2018 10:26:30 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_GET_IT_RETURN_DOCUMENT_LIST]    Script Date: 9/16/2018 9:23:14 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -55,7 +55,7 @@ SELECT ITRD.Id
 	AND (@IT_RETURN_DETAILS_ID IS NULL OR ITR.Id = @IT_RETURN_DETAILS_ID)
 	AND (@IT_HEAD_ID IS NULL OR ITH.Id = @IT_HEAD_ID)
 	AND (@IT_RETURN_DOCUMENT_ID IS NULL OR ITRD.Id = @IT_RETURN_DOCUMENT_ID)
-	ORDER BY ITRD.AddedDate DESC
+	ORDER BY  COMP.CompanyName, FYAY.FinancialYear, ITH.[Description], ITRD.AddedDate DESC
 END
 
 

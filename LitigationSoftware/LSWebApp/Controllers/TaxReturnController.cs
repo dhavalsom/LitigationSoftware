@@ -518,6 +518,59 @@ namespace LSWebApp.Controllers
         }
 
         [HttpGet]
+        public async Task<ActionResult> GetITReturnDocuments(int? companyId, int? fyayId, int? itHeadId)
+        {
+            ITReturnDocumentsModel model = new ITReturnDocumentsModel()
+            {
+                CompanyId = companyId,
+                FYAYId = fyayId,
+                ITHeadId = itHeadId
+            };
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetFYAYList");
+                model.FYAYList = JsonConvert.DeserializeObject<List<FYAY>>(Res.Content.ReadAsStringAsync().Result);
+                Res = await client.GetAsync("api/MasterAPI/GetCompanyList");
+                model.CompanyList = JsonConvert.DeserializeObject<List<Company>>(Res.Content.ReadAsStringAsync().Result);
+                Res = await client.GetAsync("api/MasterAPI/GetITHeadMaster");
+                model.ITHeadList = JsonConvert.DeserializeObject<List<ITHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
+            }
+
+            return View("ITReturnDocuments", model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetITReturnDocumentList(int? companyId, int? fyayId
+            , int? itReturnDetailsId, int? itHeadId, int? itReturnDocumentId)
+        {
+            ITReturnDocumentListModel model = new ITReturnDocumentListModel()
+            {
+                CompanyId = companyId,
+                FYAYId = fyayId,
+                ITHeadId = itHeadId,
+                ITReturnDetailsId = itReturnDetailsId,
+                ITReturnDocumentId = itReturnDocumentId
+            };
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.GetAsync("api/TaxReturnAPI/GetITReturnDocumentsList?companyId="
+                     + companyId + "&fyayId=" + fyayId
+                     + "&itReturnDetailsId=" + itReturnDetailsId
+                     + "&itHeadId=" + itHeadId
+                     + "&itReturnDocumentId=" + itReturnDocumentId);
+                model.ITReturnDocumentsList = (JsonConvert.DeserializeObject<ITReturnDocumentsResponse>(Res.Content.ReadAsStringAsync().Result)).ITReturnDocumentsList;
+            }
+
+            return PartialView("ITReturnDocumentList", model);
+        }
+
+        [HttpGet]
         public async Task<ActionResult> GetComplianceList(int? companyId, int? fyayId)
         {
             ComplianceListModel model = new ComplianceListModel()

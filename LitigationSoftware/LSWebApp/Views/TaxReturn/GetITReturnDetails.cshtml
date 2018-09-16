@@ -583,7 +583,6 @@
         });
 
         function deleteITReturnDetailsDocument(itReturnDocumentId, filePath) {
-            alert('itReturnDocumentId=' + itReturnDocumentId + ',filePath=' + filePath);
             $.ajax({
                 url: '/deletetITReturnDocument?Id=' + itReturnDocumentId + '&FilePath=' + filePath,
                 error: function () {
