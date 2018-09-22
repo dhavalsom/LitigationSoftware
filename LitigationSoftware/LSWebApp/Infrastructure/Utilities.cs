@@ -1,8 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.Threading;
-
-namespace LSWebApp.Infrastructure
+﻿namespace LSWebApp.Infrastructure
 {
     public class Utilities
     {
