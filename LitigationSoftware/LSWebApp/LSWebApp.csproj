@@ -172,6 +172,7 @@
     <Compile Include="Infrastructure\LitigationAuthorizeAttribute.cs" />
     <Compile Include="Infrastructure\Menu.cs" />
     <Compile Include="Infrastructure\MenuItem.cs" />
+    <Compile Include="Infrastructure\Utilities.cs" />
     <Compile Include="Models\CompanyList.cs" />
     <Compile Include="Models\CompanyModel.cs" />
     <Compile Include="Models\ITHeadDocumentsUploaderModel.cs" />
