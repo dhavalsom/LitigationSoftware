@@ -1,5 +1,5 @@
 ﻿@model LSWebApp.Models.ITReturnDetailsListModel
-
+@using LSWebApp.Infrastructure;
 <table class="table table-hover">
   
         <thead>
@@ -42,7 +42,9 @@
                 <td>Income from House Property</td>
                 @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
                 {   
-                    <td>@itsectiondetail.HousePropIncome</td>
+                    <td>
+                        @Utilities.FormatNumber(itsectiondetail.HousePropIncome)
+                    </td>
                 }
             </tr>
         </tbody>
