@@ -164,6 +164,14 @@
                      </div>
                  </td>
              </tr>
+             @if (!Model.ITReturnDetailsObject.IsReturn)
+            {
+                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+              .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["HousePropIncome"].Id)
+              .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["HousePropIncome"].Id))
+        }
+
+
              <tr>
                  <td>@Model.ITHeadMasterList["IncomefromCapGainsLTCG"].ExcelSrNo</td>
                  <td></td>
@@ -182,7 +190,12 @@
                      </div>
                  </td>
              </tr>
-             
+             @if (!Model.ITReturnDetailsObject.IsReturn)
+            {
+                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+         .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomefromCapGainsLTCG"].Id)
+         .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["IncomefromCapGainsLTCG"].Id))
+        }
              <tr>
                  <td>@Model.ITHeadMasterList["IncomefromCapGainsSTCG"].ExcelSrNo</td>
                  <td></td>
@@ -220,7 +233,12 @@
                      </div>
                  </td>
              </tr>
-            
+             @if (!Model.ITReturnDetailsObject.IsReturn)
+            {
+                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+              .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomefromBusinessProf"].Id)
+              .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["IncomefromBusinessProf"].Id))
+        }
              <tr>
                  <td>@Model.ITHeadMasterList["IncomefromSpeculativeBusiness"].ExcelSrNo</td>
                  <td></td>
@@ -258,7 +276,12 @@
                      </div>
                  </td>
              </tr>
-             
+             @if (!Model.ITReturnDetailsObject.IsReturn)
+            {
+                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+          .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomeFromOtherSources"].Id)
+          .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["IncomeFromOtherSources"].Id))
+        }
              <tr>
                  <td>@Model.ITHeadMasterList["Broughtforwardlosses"].ExcelSrNo</td>
                  <td></td>
@@ -288,6 +311,12 @@
                     </div>
                 </td>
              </tr>
+             @if (!Model.ITReturnDetailsObject.IsReturn)
+            {
+                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+        .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["DeductChapterVIA"].Id)
+        .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["DeductChapterVIA"].Id))
+        }
              <tr>
                  <td>@Model.ITHeadMasterList["ProfitUS115JB"].ExcelSrNo</td>
                  <td></td>
@@ -307,7 +336,12 @@
                      </div>
                  </td>
              </tr>
-            
+             @if (!Model.ITReturnDetailsObject.IsReturn)
+            {
+                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+        .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["ProfitUS115JB"].Id)
+        .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["ProfitUS115JB"].Id))
+        }
              <tr>
                  <td>@Model.ITHeadMasterList["AdvanceTax1installment"].ExcelSrNo</td>
                  <td></td>
@@ -628,6 +662,7 @@
 //                        debugger;
                         $('.ddLitigationDD').append(option);
                     });
+                    window.location = '/TaxReturn/GetITReturnDetails?companyId=' + $('#ITReturnDetailsObject_CompanyID').val() + '&companyname=' + $('#ITReturnDetailsObject_CompanyName').val() + '&fyayId=' + $('#ITReturnDetailsObject_FYAYID').val() + '&itsectionid=' + $('#ITReturnDetailsObject_ITSectionID').val() + '&itsectioncategoryid=' + $('#ITReturnDetailsObject_ITSectionCategoryID').val();
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown)
                 {

@@ -13,7 +13,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 
---exec dbo.[SP_GET_ITReturnDetails] 3,1,4
+--exec dbo.[SP_GET_ITReturnDetails] 3,1
 
 
 CREATE PROCEDURE [dbo].[SP_GET_ITReturnDetails]
@@ -29,15 +29,12 @@ AS
 BEGIN
 	
 	DECLARE @GET_DEFAULT_DATA AS BIT = 0;
-	DECLARE @GET_COMPUTATION_DATA AS BIT = 0;
 
 	/*Check for the @ITReturnID if the  @ITReturnID is NOT passed 
 	and (@COMPANY_ID and @FYAYID) are passed*/
 	IF @ITReturnID IS NULL AND @COMPANY_ID IS NOT NULL AND @FYAYID IS NOT NULL
 	BEGIN
-		IF @ITSectionID IS NOT NULL
-		BEGIN
-			SELECT @ITReturnID = ITRD.Id
+		SELECT @ITReturnID = ITRD.Id
 		FROM ITReturnDetails ITRD
 		  INNER JOIN ITSectionMaster ITSM ON ITRD.ITSectionID = ITSM.Id
 		  INNER JOIN CompanyMaster cm ON cm.id = itrd.CompanyID
@@ -47,7 +44,7 @@ BEGIN
 			(@FYAYID IS NULL OR ITRD.FYAYID = @FYAYID) AND
 			(@ITSectionID IS NULL OR ITRD.ITSectionID = @ITSectionID)
 
-			IF @ITReturnID IS NULL
+		IF @ITReturnID IS NULL
 		BEGIN
 			SELECT TOP 1 @ITReturnID = ITRD.Id FROM ITReturnDetails ITRD
 			INNER JOIN ITSectionMaster ITSM ON ITRD.ITSectionID = ITSM.Id
@@ -58,18 +55,9 @@ BEGIN
 				ORDER BY ITRD.[ITReturnFillingDate] DESC
 			SET @GET_DEFAULT_DATA =  1;
 		END
-		END
-		ELSE 
-		BEGIN
-			SET @GET_COMPUTATION_DATA =  1;
-		END
 	END
 
-
-	PRINT '@GET_DEFAULT_DATA' 
 	PRINT @GET_DEFAULT_DATA
-	PRINT '@@GET_COMPUTATION_DATA' 
-	PRINT @GET_COMPUTATION_DATA
 	PRINT @ITReturnID
 	SELECT 
 	  CASE @GET_DEFAULT_DATA WHEN 0 THEN itrd.id  ELSE 0 END as ITReturnDetailsId,
@@ -78,9 +66,7 @@ BEGIN
       ,[FYAYID]
       ,CASE @GET_DEFAULT_DATA WHEN 0 THEN [ITSectionID] ELSE @ITSectionID END as [ITSectionID]
 	  ,ITSM.Description
-	  ,CASE @GET_DEFAULT_DATA WHEN 0 THEN ITSM.[SECTIONCATEGORYID] ELSE 
-		(SELECT SECTIONCATEGORYID FROM ITSectionMaster WHERE Id = @ITSectionID)
-		END as [SECTIONCATEGORYID]
+	  ,ITSM.[SECTIONCATEGORYID]
 	  ,ITSC.[CategoryDesc]
 	  ,isnull(ITSM.IsReturn,0) as IsReturn
       ,[ITReturnFillingDate]
@@ -116,7 +102,7 @@ BEGIN
   INNER JOIN ITSectionMaster ITSM ON ITRD.ITSectionID = ITSM.Id
   INNER JOIN CompanyMaster cm ON cm.id = itrd.CompanyID
   INNER JOIN ITSectionCategory ITSC ON ITSC.ID = ITSM.SECTIONCATEGORYID  
-	WHERE (@GET_COMPUTATION_DATA = 1 OR ITRD.Id = @ITReturnID)
+	WHERE ITRD.Id = @ITReturnID
 	ORDER BY [ITReturnFillingDate],[ITReturnDueDate]
 END
 

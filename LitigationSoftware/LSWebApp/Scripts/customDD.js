@@ -65,7 +65,11 @@ $(".ddLitigationDD").change(function (e) {
 
 });
 
+//$(".ddITSectionCategory").change(function (e) {
 
+//    window.location = '/TaxReturn/GetITReturnDetails?companyId=' + $('#ITReturnDetailsObject_CompanyID').val() + '&companyname=' + $('#ITReturnDetailsObject_CompanyName').val() + '&fyayId=' + $('#ITReturnDetailsObject_FYAYID').val() + '&itsectionid=' + $('#ITReturnDetailsObject_ITSectionID').val() + '&itsectioncategoryid=' + $('#ITReturnDetailsObject_ITSectionCategoryID').val();
+
+//});
 
 function refreshOptions(ddControl, list, defaultVal) {
     ddControl.empty(); 

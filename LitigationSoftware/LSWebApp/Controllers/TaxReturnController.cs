@@ -147,7 +147,7 @@ namespace LSWebApp.Controllers
                            }).ToList();
 
 
-                        Res = await client.GetAsync("api/MasterAPI/GetITSectionList?categoryId="+ (itrdetails.ITReturnDetailsObject.ITSectionCategoryID != 0 ? itrdetails.ITReturnDetailsObject.ITSectionCategoryID : 1 ));
+                        Res = await client.GetAsync("api/MasterAPI/GetITSectionList?categoryId="+ (itrdetails.ITReturnDetailsObject.ITSectionCategoryID != 0 ? itrdetails.ITReturnDetailsObject.ITSectionCategoryID : 0 ));
                         if (Res.IsSuccessStatusCode)
                         {
                             itrdetails.ITSectionList = JsonConvert.DeserializeObject<List<ITSection>>(Res.Content.ReadAsStringAsync().Result);
@@ -163,12 +163,7 @@ namespace LSWebApp.Controllers
                                , "manageITSection"
                                , "getITSections"
                             );
-
-                            if (itrdetails.ITReturnDetailsObject.ITSectionID > 0)
-                            {
-                                itrdetails.ITReturnDetailsObject.IsReturn = itrdetails.ITSectionList.Where(x => x.Id == itrdetails.ITReturnDetailsObject.ITSectionID)
-                                                                            .Select(x => x.IsReturn).First();
-                            }
+                            
                         }
 
                     }
@@ -227,6 +222,10 @@ namespace LSWebApp.Controllers
                                     }
                                 }
                             }
+
+                            //itrdetails.ITReturnDetailsObject.IsReturn = itrdetails.ITSectionList.Where(x => x.Id == itrdetails.ITReturnDetailsObject.ITSectionID)
+                            //                                                .Select(x => x.IsReturn).First();
+                            
                         }
                     }
 
