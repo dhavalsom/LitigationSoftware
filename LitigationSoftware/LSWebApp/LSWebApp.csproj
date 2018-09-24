@@ -172,14 +172,18 @@
     <Compile Include="Infrastructure\LitigationAuthorizeAttribute.cs" />
     <Compile Include="Infrastructure\Menu.cs" />
     <Compile Include="Infrastructure\MenuItem.cs" />
+    <Compile Include="Infrastructure\Utilities.cs" />
     <Compile Include="Models\CompanyList.cs" />
     <Compile Include="Models\CompanyModel.cs" />
+    <Compile Include="Models\ITHeadDocumentsUploaderModel.cs" />
     <Compile Include="Models\ITReturnComplexModel.cs" />
     <Compile Include="Models\ComplianceDocumentListModel.cs" />
     <Compile Include="Models\ComplianceListModel.cs" />
     <Compile Include="Models\ITReturnDetailsListModel.cs" />
     <Compile Include="Models\ITReturnDetailsModel.cs" />
     <Compile Include="Models\ITReturnDetailsExtensionModel.cs" />
+    <Compile Include="Models\ITReturnDocumentListModel.cs" />
+    <Compile Include="Models\ITReturnDocumentsModel.cs" />
     <Compile Include="Models\LitigationDDModel.cs" />
     <Compile Include="Models\ViewModelBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -287,6 +291,9 @@
     <Content Include="Views\TaxReturn\ComplianceList.cshtml" />
     <Content Include="Views\TaxReturn\ExistingSectionWiseDetails.cshtml" />
     <Content Include="Views\Shared\_LayoutDynemicMenu.cshtml" />
+    <Content Include="Views\Shared\_ITHeadDocumentsUploader.cshtml" />
+    <Content Include="Views\TaxReturn\ITReturnDocumentList.cshtml" />
+    <Content Include="Views\TaxReturn\ITReturnDocuments.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

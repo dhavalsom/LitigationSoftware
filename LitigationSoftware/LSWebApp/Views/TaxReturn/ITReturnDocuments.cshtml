@@ -1,0 +1,97 @@
+﻿@model LSWebApp.Models.ITReturnDocumentsModel
+@{
+    ViewBag.Title = "Manage IT Return Documents";
+}
+<h2>Manage IT Return Documents</h2>
+<div>
+    <table>
+        <tr>
+            <td>
+                Select Company:
+            </td>
+            <td>
+                @Html.HiddenFor(m=>m.CompanyName, Model.CompanyName)
+                @Html.DropDownListFor(m => m.CompanyId
+                , new SelectList(Model.CompanyList, "Id", "CompanyName", Model.CompanyId)
+                , "All"
+                , new { @name = "CompanyId", @id = "CompanyId", @class = "ddCompanyITRD", @style = "width:400px" })
+            </td>
+        </tr>
+        <tr style="height:5px;"></tr>
+        <tr>
+            <td>
+                Select Financial Year:
+            </td>
+            <td>
+                @Html.HiddenFor(m => m.FinancialYear, Model.FinancialYear)
+                @Html.DropDownListFor(m => m.FYAYId
+                , new SelectList(Model.FYAYList, "Id", "FinancialYear", Model.FYAYId)
+                , "All"
+                , new { @name = "FYAYId", @id = "FYAYId", @class = "ddFYAYITRD", @style = "width:400px" })
+            </td>
+        </tr>
+        <tr style="height:5px;"></tr>
+        <tr>
+            <td>
+                Select IT Head:
+            </td>
+            <td>
+                @Html.HiddenFor(m => m.ITHeadId, Model.ITHeadId)
+                @Html.DropDownListFor(m => m.ITHeadId
+                , new SelectList(Model.ITHeadList.Where(ith=>ith.CanAddDocuments), "Id", "Description", Model.ITHeadId)
+                , "All"
+                , new { @name = "ITHeadId", @id = "ITHeadId", @class = "ddITHeadITRD", @style = "width:400px" })
+            </td>               
+        </tr>            
+    </table>
+    <br />
+
+    <div id="itrDocList">
+
+    </div>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () { 
+            loadITReturnDetailDocuments();
+            $(".ddFYAYITRD").change(function () {
+                loadITReturnDetailDocuments();
+            });
+            $(".ddCompanyITRD").change(function () {
+                loadITReturnDetailDocuments();
+            });
+            $(".ddITHeadITRD").change(function () {
+                loadITReturnDetailDocuments();
+            });
+        }); 
+
+        function deleteITReturnDetailsDocument(itReturnDocumentId, filePath) {
+            $.ajax({
+                url: '/deletetITReturnDocument?Id=' + itReturnDocumentId + '&FilePath=' + filePath,
+                error: function () {
+                },
+                dataType: 'json',
+                success: function (data) {
+                    window.location.reload();
+                },
+                type: 'POST'
+            });
+            return false;
+        }
+
+        function loadITReturnDetailDocuments() {
+            $.ajax({
+                url: '/itreturndetaildocuments?companyId=' + $(".ddCompanyITRD").val()
+                + '&fyayId=' + $(".ddFYAYITRD").val() + '&itHeadId=' + $(".ddITHeadITRD").val(),
+                error: function () {
+                },
+                dataType: 'html',
+                success: function (data) {
+                    $("#itrDocList").html(data);
+                },
+                type: 'GET'
+            });
+        }
+    </script>
+}

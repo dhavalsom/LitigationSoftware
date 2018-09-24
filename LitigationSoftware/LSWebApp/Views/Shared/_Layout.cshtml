@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Litigation Tracking Application</title>
     @Styles.Render("~/Content/css")
-    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-
-
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" 
+          rel="stylesheet" type="text/css" />
 </head>
 <body>
     <div>
@@ -29,6 +28,9 @@
                         <a class="nav-link" href="@Url.Action("GetComplianceList","TaxReturn")">Compliances</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("GetITReturnDocuments","TaxReturn")">Documents</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="#">About</a>
                     </li>
                 </ul>
@@ -48,6 +50,7 @@
     @Scripts.Render("~/bundles/bootstrap")
     <script src="@Url.Content("~/Scripts/customDD.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/manageSubHead.js")" type="text/javascript"></script>
+    @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">*@
     @RenderSection("scripts", required: false)
 
 </body>

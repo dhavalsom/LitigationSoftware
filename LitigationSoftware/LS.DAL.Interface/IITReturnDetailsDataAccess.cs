@@ -10,5 +10,9 @@ namespace LS.DAL.Interface
         ComplianceDocumentsResponse GetComplianceDocumentsList(int companyId, int fyayId, int? complianceId, int? complianceDocumentId);
         ITReturnDetailsListResponse GetExistingITReturnDetailsList(int companyId, int fyayId, int? itsectionid, int? itreturnid);
         List<ITReturnDetailsExtension> GetExistingITReturnDetailsExtension(int? itreturnid);
+        ITReturnDocumentsResponse InsertUpdateITReturnDocuments(ITReturnDocuments itReturnDocuments
+        , string operation);
+        ITReturnDocumentsResponse GetITReturnDocumentsList(int? companyId,
+            int? fyayId, int? itReturnDetailsId, int? itHeadId, int? itReturnDocumentId);
     }
 }

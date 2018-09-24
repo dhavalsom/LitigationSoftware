@@ -1,0 +1,963 @@
+var templates = 
+{
+	trDemoPurpose: function(){/*
+    <tr>
+		<td>
+		</td>
+		<td colspan="2" style="text-align:right">
+			<span style="font-size: 12px;margin-left: 10%; color:darkblue;">SRX Barcode Version
+			</span>
+		</td>
+	</tr>
+	*/}.toString().slice(14,-3)
+	,spanDownload : function(){/*
+		<span>
+			<img id="imgSrx" src="./images/download.png" 
+				style="cursor:hand;cursor:pointer;margin-bottom:5px;" 
+				title="click to extract the data" 
+				onclick="fnExtractVaccineMaster()"/>
+		</span>
+	*/}.toString().slice(14,-3)
+	,srxControlsDiv: function(){/*
+		<div id="srxControls">
+			<table style="width:830px;">
+				<tr style="height: 25px;" valign="top">
+					<td style="text-align: right;width: 125px;">
+						<img id="imgSrx" src='./images/favicon.ico'/>
+						<span>SRX Barcode</span>
+					</td>
+					<td>
+						<input type="text" id="oBarcode" class="Input-Element" style="width: 325px"/>
+					</td>
+					<td>
+						<input type="button" class="btn" style="width:170px;" id="btnLookupBarcode" value="Retrieve Barcode Data" onclick="fnLookupBarcode()"/>
+					</td>
+					<td>	
+						<input type="checkbox"  id="oManualEntry" value="false" style="margin-top:5px;">Manual</input>
+					</td>
+				</tr>
+			</table>
+		</div>
+	*/}.toString().slice(14,-3)
+	,dataExtractTemplate: function(){/*
+	<!-- SRX begin Data Extract password dialog starts here -->
+		<div id="oDataExtract" title="Authanticate">
+			<table>
+				<tr>
+					<td><b style="padding-left: 20px;">Password:</b></td>
+					<td align="left">
+						<input type="password" id="oPassword" class="Input-Element" value="Himanshu"/>
+					</td>
+				</tr>
+			</table>
+		</div>
+		
+		<div id="oNDCDataExtract" title="NDC Data">
+			<table>
+				<tr>
+					<td style="text-align: center;">
+						<span>Full Data</span>
+					</td>
+				</tr>
+				
+				<tr>
+					<td>
+						<textarea rows="9" id="oFullData" style="overflow-x: hidden; overflow-y: scroll; width: 910px;font-size:11px" class="Scrollbar">
+						</textarea>
+					</td>
+				</tr>
+				
+				<tr>
+					<td style="text-align: center">
+						<span id="spSpecific">Specific Data</span>
+					</td>
+				</tr>
+				
+				<tr>
+					<td>
+						<textarea rows="9" id="oSpecificData" style="overflow-x: hidden; overflow-y: scroll; width: 910px;font-size:11px" class="Scrollbar">
+						</textarea>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<!-- SRX end Data Extract password dialog ends here -->
+	*/}.toString().slice(14,-3)
+}
+
+//SRX variables
+var gIsBarCode = false;
+
+//Call this method to initializelize
+function InitializeSRXChanges(){
+	//formVersionDetails = formVersionDetails + ". Modified to allow SRX barcode integration.";
+	InsertHtmlControls();
+	HandleSRXControlsOnLoad();
+}
+
+function InsertHtmlControls(){	
+	$("#IMcopyright").closest('td').css("text-align", "right");
+	$("#IMcopyright").closest('td').css("margin-right", "5px");
+	$("#IMcopyright").closest('tr').after(templates.trDemoPurpose);	
+	$("#oVaccineCustomList").after(templates.spanDownload);
+	$("#oVaccineCustomList").closest('span').css("padding-left", "0px");
+	$("#oAlpha").closest('span').css("padding-left", "5px");
+	
+	$("#oVaccineCustomList").closest('div').find("span").each(function()
+	{
+		if($(this).html() == ""){
+			$(this).css("padding-left", "0px");
+		}
+		if($(this).html() == "View"){
+			$(this).css("padding-left", "5px");
+		}
+	});
+	
+	$("#oIconLegend").after(templates.dataExtractTemplate);
+	
+	$("#oHxSource").closest('table').after(templates.srxControlsDiv);
+		
+	//SRX added keydown event for the  barcode input box
+	$( "#oBarcode" ).on( "keydown", function(event) {
+      if(event.which == 13) 
+	  {
+         fnLookupBarcode();
+		 event.preventDefault();
+	  }
+    });
+	
+	$('#oDataExtract').dialog({
+        autoOpen: false,
+        height: 150,
+        width: 400,
+        modal: true,
+        closeOnEscape: true,
+        resizable: false,
+        buttons: {
+            " Extract Data ": function () { fnExtractData(); },
+            " Cancel ": function () { $(this).dialog("close"); }
+        }
+    });
+	
+	$('#oNDCDataExtract').dialog({
+        autoOpen: false,
+        height: 500,
+        width: 950,
+        modal: true,
+        closeOnEscape: true,
+        resizable: false,
+        buttons: {
+            " Close ": function () { $(this).dialog("close"); }
+        }
+    });
+}
+
+//this function checks the cofig file to show/hide srx controls
+//manages the lot manager controls
+function HandleSRXControlsOnLoad(){
+	$("#lotMgmtCheckBox").prop('checked', false);
+    $("#lmButton").prop("disabled", false);
+    $("#lotMgmtCheckBox").prop('disabled', false);
+	$("#oLotText").show();
+	$("#oLotDD").hide();
+
+	if (_config.defaults.srxEnabled==true){
+		$("#srxControls").show();	
+		}
+	else {
+		if (_config.defaults.srxControlsBehavior==1){
+			$("#srxControls").show();
+			$("#oBarcode").prop('disabled', true);
+			$("#btnLookupBarcode").prop('disabled', true);
+		}
+		else {
+			$("#srxControls").hide();
+		}
+	}	
+	
+	$("#oManualEntry").change(function () {
+		var isManualChecked = $(this).is(":checked");		
+		$("#btnLookupBarcode").attr('disabled', isManualChecked);
+		$("#oBarcode").attr('disabled', isManualChecked);
+		if(isManualChecked){
+			gIsBarCode = false;
+			$("#oBarcode").val("");
+		}
+		EnableDisableBarcodeControls(true);	
+	});
+}
+//SRX added a logging mechanism
+
+function writeToFile(content){
+	//return if the flag is set to false
+	if(!(_config.defaults.writeLogTofiles))
+		return;
+	try{
+		var fso = new ActiveXObject("Scripting.FileSystemObject");
+		var filePath = _config.defaults.logFolderPath + "\\logs.txt";
+		if(!fso.FolderExists(_config.defaults.logFolderPath)){
+			fso.CreateFolder(_config.defaults.logFolderPath);
+		}
+		if(!fso.FileExists(filePath)){
+			fso.CreateTextFile(filePath);
+		}
+		
+		var logger = fso.OpenTextFile(filePath, 8);
+		logger.WriteLine("\n" + content);
+		logger.Close();
+	}
+	catch(err) {
+		if(err.message.indexOf("create object") != -1){
+			var message = "Some settings are missing.\nGo to Internet Explorer --> Internet options --> Security --> Local Intranet --> Custom Level --> ActiveX controls and plug-ins --> Initialize and script ActiveX controls not marked as safe for scripting. \nSelect Enable";
+			Mel.eval("{userok(\"" + message + "\")}");
+		}
+		else{
+			Mel.eval("{userok(\"" + err.message + "\")}");
+		}
+	}
+}
+//SRX added a logging mechanism ends here 
+
+//SRX added code to reload the barcode/mfr
+function reloadBarcodeFromDb(vacGiveTodayList){	 
+	if(vacGiveTodayList[44]){
+		$("#oBarcode").val(vacGiveTodayList[44]);
+		$.when($("#oVaccine").trigger('change')).then(function() {
+			$("#oMfr").find('option:contains("' + vacGiveTodayList[23] + '")').prop('selected', true);
+			gIsBarCode = true;
+		});
+	}
+}
+
+//This function is used to set the default date, time and user. Controlled from config
+function setDefaultsForUserDateTime(){
+	if (_config.defaults.defaultAdministeredby && !($("#oAdministeredBychoices").val())){
+		//set the default Administeredby value
+		fnShowUser('oAdministeredBychoices');
+	}
+	if (_config.defaults.defaultAdministeredDate && !($("#oDate").val())){
+		//set the default date value
+		fnGetToday('oDate');
+	}
+	if (_config.defaults.defaultAdministeredTime && !($("#oTime").val())){
+		//set the default time value
+		fnGetTime('oTime');
+	}
+}
+
+//function to set barcode control enable/disable on popup open
+function setBarcodeControlsOnStart(){
+	$("#oBarcode").focus();	 							
+	EnableDisableBarcodeControls(false);
+	if(gIsBarCode){
+	  $("#btnLookupBarcode").attr('disabled', gIsBarCode);
+	  $("#oBarcode").attr('disabled', gIsBarCode);
+	}
+}
+
+//this is for barcode validation and some of the manual validation code
+function srxCustomValidation(queryObj){	
+	if(gIsBarCode){
+		queryObj = validateBarcodeInput(false);
+	}
+	else{
+		queryObj.err = {};
+		queryObj.err.msg = "";
+		var qty = $("#oDose").combobox('selText');
+		var unit = $("#oUnits").combobox('selText');
+		if (!$('#oVaccine').find(':selected').text().trim()) {
+			queryObj.err.msg = "Please select a Vaccine from the available vaccine list.";
+		}
+		else if (!$('#oMfr').find(':selected').text().trim() && !$("#oMfrText").val()) {
+			queryObj.err.msg = "Please select a Manufacturer from the available manufacturer list.";
+		}
+		else if (!$('#oNDC').val()) {
+			queryObj.err.msg = "Please provide NDC.";
+		}
+		else if (!$('#oLotText').val() && !$('#oLot').find(':selected').text().trim()) {
+			queryObj.err.msg = "Please provide Lot Number.";
+		}
+		else if (!$('#oExpDate').val()) {
+			queryObj.err.msg = "Please provide Expiration date.";
+		}
+		else if (!qty || (qty && isNaN(qty))) {
+			queryObj.err.msg = "Non-numeric entry in Amount Given field.";
+		}
+		else if (!unit) {
+			queryObj.err.msg = "No Units specified.";
+		}
+	}
+	
+	return queryObj;
+}
+
+//SRX added code to extract  Vaccine Master data
+function fnExtractVaccineMaster(){
+	$.support.cors = true;
+	$.ajax({
+		type: "Get",
+		dataType: "json",
+		url: _config.ndcGetAllUrl,
+		crossDomain: true,
+		success: function(srxNdcData, _) { 
+			//writeToFile('In success of get all ndc: d='+JSON.stringify(srxNdcData));				
+			fnExtractData(srxNdcData);
+		},
+		error: function(_, _2, msg) {
+			Mel.eval("{userok('Get all NDC service. Please contact your system administrator.')}");
+			return;
+		}
+	});
+}
+
+function fnExtractData(srxNdcData){
+	$('#oNDCDataExtract').dialog("open");
+	var pass = $("#oPassword").val();
+	if(pass == "" || pass != _config.defaults.extractDataPassword){
+		alert("wrong password");
+		$("#oPassword").focus();
+	}
+	else{
+		var extractedData = [];
+		var dataForExport = [];
+		var refIndex = 1;
+		//get the data for the custom list
+		var strImmCustList = Mel.eval("{MEL_Get_Content(\"GE.IMM.CUSL\", \"match\")}");
+		if (strImmCustList != "" && strImmCustList != "undefined") {
+			arrImmCustList = strImmCustList.split("|");
+			for (custListIndex = 0; custListIndex < arrImmCustList.length; custListIndex++) {
+				var customListObject={};
+				arrImmCustListItem = arrImmCustList[custListIndex].split("^");
+				customListObject.CustomListValue = arrImmCustListItem[2].toString();
+				customListObject.CustomListText = arrImmCustListItem[3].toString();
+				//get the data for the vaccine group for the custom list in process				
+				gImmuCustList = Mel.eval("{MEL_Get_Content(\"GE.IMM.CUSL." + customListObject.CustomListValue + "\", \"contains\")}");         
+				var strImmClasses = fnImmuGetCustList("GE.IMM.CUSL." + customListObject.CustomListValue, "match");
+				if (strImmClasses != "") {
+					customListObject.VxGrpList = [];
+					arrImmClasses = strImmClasses.split("|");
+					for (vxGroupIndex = 0; vxGroupIndex < arrImmClasses.length; vxGroupIndex++) {
+						arrImmClassItem = arrImmClasses[vxGroupIndex].split("^");
+						var vxGrpListObject={};
+						vxGrpListObject.VxGroupValue = arrImmClassItem[2].toString();
+						vxGrpListObject.VxGroupText = arrImmClassItem[3].toString();
+						
+						//Write code to fetch the vaccine list
+						vxGrpListObject.Vaccines=[];
+						var strVxList = fnImmuGetCustList("GE.IMM.CUSL." + customListObject.CustomListValue + "." + vxGrpListObject.VxGroupValue, "contains"); //Added for PnS
+						if (strVxList != "" && strVxList != "undefined") {
+							var arrVxList = strVxList.split("|");
+							for (var vaccineIndex = 0; vaccineIndex < arrVxList.length; vaccineIndex++) {
+								arrVxItem = arrVxList[vaccineIndex].split("^");
+								if (arrVxItem[1].toString() == "GE.IMM.CUSL." + customListObject.CustomListValue + "." + vxGrpListObject.VxGroupValue) {
+									var vaccineObject={};
+									vaccineObject.VaccineValue = arrVxItem[2].toString();
+									vaccineObject.VaccineText = arrVxItem[3].toString();
+									
+									//write code to load mfr for the vaccine
+									vaccineObject.Manufacturers=[];
+									var strList = Mel.eval("{MEL_Get_Content(\"GE.IMM.CUSL." + customListObject.CustomListValue + "." + vxGrpListObject.VxGroupValue + "." + vaccineObject.VaccineValue + "\", \"contains\")}");
+									if (strList != "" && strList != "undefined") {
+										arrList = strList.split("|");
+										for (arrListIndex = 0; arrListIndex < arrList.length; arrListIndex++) {
+											
+											arrItem = arrList[arrListIndex].split("^");
+											//block for the manufacturer
+											if (arrItem[1].toString() == "GE.IMM.CUSL." + customListObject.CustomListValue + "." + vxGrpListObject.VxGroupValue + "." + vaccineObject.VaccineValue + ".MFR") {
+												var manufacturerObject={};
+												manufacturerObject.ManufacturerValue = arrItem[2].toString();
+												manufacturerObject.ManufacturerText = arrItem[3].toString();
+												vaccineObject.Manufacturers.push(manufacturerObject);
+											}
+											//block for the cvx
+											if (arrItem[1].toString() == "GE.IMM.CUSL." + customListObject.CustomListValue + "." + vxGrpListObject.VxGroupValue + "." + vaccineObject.VaccineValue + ".CVX") {
+												vaccineObject.CVX = arrItem[5].toString();
+											}
+											//block for the ndc
+											if (arrItem[1].toString() == "GE.IMM.CUSL." + customListObject.CustomListValue + "." + vxGrpListObject.VxGroupValue + "." + vaccineObject.VaccineValue + ".NDC") {
+												vaccineObject.NDC = arrItem[3].toString();
+											}
+											var dataForExportObject= {};
+											dataForExportObject.REF_NUM = "Ref U_" + refIndex.toString();
+											dataForExportObject.RxName = vaccineObject && vaccineObject.VaccineText ? vaccineObject.VaccineText : "";
+											dataForExportObject.Manufacturer = vaccineObject.Manufacturers.length 
+																			 ? (vaccineObject.Manufacturers[0].ManufacturerText ? vaccineObject.Manufacturers[0].ManufacturerText : "")
+																			 : "";
+											dataForExportObject.CVX = vaccineObject && vaccineObject.CVX ? vaccineObject.CVX : "";
+											dataForExportObject.RxGroup = vxGrpListObject.VxGroupText;
+											dataForExportObject.UserDef1 = vaccineObject && vaccineObject.NDC ? vaccineObject.NDC : ""
+											
+											dataForExportObject.NDC_11_Code = vaccineObject && vaccineObject.NDC ? vaccineObject.NDC : "";
+											
+											var userDef1 = vaccineObject.VaccineValue + "|" 
+														 + dataForExportObject.NDC_11_Code;
+											var filteredResult = $.grep(srxNdcData, function (element, index) {
+												return element.NDC11 == dataForExportObject.NDC_11_Code;
+											});	
+											
+											dataForExportObject.ClientVerified = filteredResult && filteredResult.length > 0 ? "Y" : "N";
+											dataForExportObject.NDC_10_Code = filteredResult && filteredResult.length > 0 ? filteredResult[0].NDC10 : "";											
+											//writeToFile("ClientVerified:"+ dataForExportObject.ClientVerified + ",NDC_11_Code:" + dataForExportObject.NDC_11_Code); 											
+											dataForExportObject.CustomListValue = customListObject.CustomListValue;
+											dataForExportObject.CustomListText = customListObject.CustomListText;
+											dataForExportObject.VxGroupValue = vxGrpListObject.VxGroupValue;
+											dataForExportObject.VxGroupText = vxGrpListObject.VxGroupText;
+											dataForExportObject.VaccineValue = vaccineObject.VaccineValue;
+											dataForExportObject.VaccineText = vaccineObject.VaccineText;
+											dataForExportObject.ManufacturerValue = vaccineObject.Manufacturers.length 
+																			 ? (vaccineObject.Manufacturers[0].ManufacturerValue ? vaccineObject.Manufacturers[0].ManufacturerValue : "")
+																			 : "";	
+											//export the record only if it has CVX and NDC 11 code && manufacturer
+											if(dataForExportObject.CVX && dataForExportObject.NDC_11_Code && dataForExportObject.Manufacturer){
+												//check if record with same combination of [Rx Name], Manufacturer,CVX, userdef1 exist
+												//writeToFile("record details:" + dataForExportObject.VaccineValue + " " + dataForExportObject.Manufacturer + " " + dataForExportObject.CVX + " " + dataForExportObject.NDC_11_Code);
+												var isRecordExist = $.grep(dataForExport, function (element, index) {
+													return element.VaccineValue == dataForExportObject.VaccineValue
+														   && element.Manufacturer == dataForExportObject.Manufacturer
+														   && element.CVX == dataForExportObject.CVX
+														   && element.NDC_11_Code == dataForExportObject.NDC_11_Code;
+													}).length > 0;	
+												//writeToFile("isRecordExist:"+ isRecordExist + ",dataForExport count:" + dataForExport.length); 
+												if(!isRecordExist){
+													dataForExport.push(dataForExportObject);
+													refIndex++;
+												}
+											}
+										}
+									}
+									
+									vxGrpListObject.Vaccines.push(vaccineObject);
+								}
+							}
+						}
+						customListObject.VxGrpList.push(vxGrpListObject);
+					}
+				}
+				
+				
+				extractedData.push(customListObject);
+			}			
+		}
+		try {
+			JSONToCSVConvertor(dataForExport, null, true);
+			var fileName = JSONToCSVConvertor(dataForExport, $("#oVaccineCustomList").val(), true);
+			var msg="Data exported to \nFile name: " + fileName + " \nLocation: " + _config.defaults.extractDataFolderPath;
+			Mel.eval("{userok(\"" + msg + "\")}");
+		}
+		catch(err) {			
+			JSONToCSVConvertor(dataForExport, null, false);
+			JSONToCSVConvertor(dataForExport, $("#oVaccineCustomList").val(), false);
+			if(err.message.indexOf("create object") != -1){
+				var message = "Some settings are missing.\nGo to Internet Explorer --> Internet options --> Security --> Local Intranet --> Custom Level --> ActiveX controls and plug-ins --> Initialize and script ActiveX controls not marked as safe for scripting. \nSelect Enable";
+				Mel.eval("{userok(\"" + message + "\")}");
+			}
+			else{
+				Mel.eval("{userok(\"" + err.message + "\")}");
+			}
+		}
+		//$('#oDataExtract').dialog("close");
+	}
+}
+
+//KM added writeToFiles flag to skip the writing part
+function JSONToCSVConvertor(dataToExport, customListId, writeToFiles) { 
+	var csv = '';   
+	var filename ='';	
+	if(writeToFiles){
+		var fso = new ActiveXObject("Scripting.FileSystemObject");
+		var filePath = _config.defaults.logFilePath;	
+		if(!fso.FolderExists(_config.defaults.extractDataFolderPath)){
+			fso.CreateFolder(_config.defaults.extractDataFolderPath);
+		}
+	}
+	
+	if(customListId){
+		csv += 'REF_NUM,Rx Name,Manufacturer,CVX,Rx Group,UserDef1,NDC-10 Code,Client Verified';
+		var timestamp = new Date().toISOString().replace(/\D/g,"").substr(0,14);
+		filename = $("#oVaccineCustomList option:selected").text() + "_" + timestamp + ".csv";
+		if(writeToFiles){
+			fso.CreateTextFile(_config.defaults.extractDataFolderPath + "\\" + filename);
+		}
+	}
+	else{
+		csv += 'CustomListValue,CustomListText,VxGroupValue,VxGroupText,VaccineValue,VaccineText,ManufacturerValue,Manufacturer,CVX,NDC';
+		filename = "fullDataDump.csv";	
+		if(writeToFiles){
+			fso.CreateTextFile(_config.defaults.extractDataFolderPath + "\\" + filename);		
+		}
+	}
+    csv += '\r\n';
+	if(writeToFiles){
+		var logger = fso.OpenTextFile(_config.defaults.extractDataFolderPath + "\\" + filename, customListId ? 8 : 2);
+	}
+    for (var dataIndex = 0; dataIndex < dataToExport.length; dataIndex++) {
+        if(customListId){	
+			if(customListId == dataToExport[dataIndex].CustomListValue){
+				csv += dataToExport[dataIndex].REF_NUM +",";
+				csv += dataToExport[dataIndex].RxName +",";
+				csv += "\"" +  dataToExport[dataIndex].Manufacturer +"\",";
+				csv += dataToExport[dataIndex].CVX +",";
+				csv += dataToExport[dataIndex].RxGroup +",";
+				csv += dataToExport[dataIndex].UserDef1 +",";
+				csv += dataToExport[dataIndex].NDC_10_Code +",";
+				csv += dataToExport[dataIndex].ClientVerified;
+				csv += '\r\n';
+			}
+		}
+		else{			
+			csv += "=\"" + dataToExport[dataIndex].CustomListValue +"\",";
+			csv += dataToExport[dataIndex].CustomListText +",";
+			csv += "=\"" + dataToExport[dataIndex].VxGroupValue +"\",";
+			csv += dataToExport[dataIndex].VxGroupText +",";
+			csv += "=\"" + dataToExport[dataIndex].VaccineValue +"\",";
+			csv += dataToExport[dataIndex].VaccineText +",";
+			csv += "=\"" + dataToExport[dataIndex].ManufacturerValue +"\",";
+			csv += "\"" +  dataToExport[dataIndex].Manufacturer +"\",";
+			csv += dataToExport[dataIndex].CVX +",";
+			csv += dataToExport[dataIndex].NDC_11_Code;			
+			csv += '\r\n';
+		}
+    }
+	if(writeToFiles){
+		logger.WriteLine(csv);
+		logger.Close();
+	}
+	if(customListId == null){
+		$("#oFullData").val(csv);
+	}
+	else{
+		$("#spSpecific").html($("#oVaccineCustomList option:selected").text());
+		$("#oSpecificData").val(csv);
+	}
+	return filename;
+}
+//SRX code ends 
+
+function handleCommitCompleteSrx(queryObj, oImmUpdate){
+	if(gIsBarCode && oImmUpdate != "UPDATE"){
+		$.support.cors = true;
+			$.ajax({
+				type: "POST",
+				dataType: "json",
+				url: _config.serviceURL,
+				crossDomain: true,
+				data: queryObj,
+				success: function(d, _) { 
+					$("#oAdministerVaccine").dialog("close");
+					gImmComboVx = false;
+					fnDisplayImmunizations();
+				},
+				error: function(_, _2, msg) {
+					Mel.eval("{userok('Access to Barcode service failed. Please contact your system administrator.')}");
+					return;
+				}
+			});
+	}            
+	else{
+		if(_config.defaults.sendEmailOnManualEntry){
+			queryObj = validateBarcodeInput(true);
+			var body = queryObj.PatId + "   " + queryObj.PatFName + "   " + queryObj.PatLName + "  " + queryObj.Location;
+			sendEmail("Vaccine given",body);
+		}
+		$("#oAdministerVaccine").dialog("close");
+		gImmComboVx = false;
+		fnDisplayImmunizations();
+	}
+}
+
+function sendEmail(subject, body){
+	var url = _config.sendEmailUrl;
+	url = url.replace("{from}",_config.defaults.fromEmail);
+	url = url.replace("{to}",_config.defaults.toEmail);
+	url = url.replace("{cc}",_config.defaults.ccEmail);
+	url = url.replace("{subject}",subject);
+	url = url.replace("{body}",body);
+	$.support.cors = true;
+	$.ajax({
+		type: "get",
+		url: url,
+		crossDomain: true,
+		success: function(d, _) { 
+			return;
+		},
+		error: function(_, _2, msg) { 
+			Mel.eval("{userok('Access to email service failed. Please contact your system administrator.')}");
+			return;
+		}
+	});
+}
+
+function addBarcodeStatusMsg (err) {
+	if (err && err.level !== "success") {
+		 Mel.eval("{userok(\"" + err.msg + "\")}");
+	}
+}
+
+//SRX added EnableDisableBarcodeControls
+function EnableDisableBarcodeControls(setLotManagementCheckbox){
+	$("#oVaccine").attr('disabled', gIsBarCode);
+	$("#oMfr").attr('disabled', gIsBarCode);	
+	$("#oUnits").combobox(gIsBarCode ? 'disable' : 'enable');
+	$("#oLotText").attr('disabled', gIsBarCode);
+	$("#oExpDate").attr('disabled', gIsBarCode);
+	$("#lotMgmtCheckBox").attr('disabled', gIsBarCode);
+	if(gIsBarCode && setLotManagementCheckbox){
+		$("#lotMgmtCheckBox").attr('checked', !gIsBarCode);
+		$("#lotMgmtCheckBox").trigger("change");
+	}
+	$("#lmButton").attr('disabled', gIsBarCode);
+}
+		
+//SRX got the function out of the block to reuse
+
+function twoDigitize(num) {
+	var strNum = num.toString();
+	
+	return strNum.length === 1? "0"+strNum: strNum;
+}
+    
+function formatDate (dt) {
+	return twoDigitize(dt.getMonth()+1)+"/"+twoDigitize(dt.getDate())+"/"+twoDigitize(dt.getFullYear());
+}
+    
+function formatTime(date) {
+	var hours = date.getHours();
+	var minutes = date.getMinutes();
+	var seconds = date.getSeconds();
+	var ampm = hours >= 12 ? 'PM' : 'AM';
+	hours = hours % 12;
+	hours = hours ? hours : 12; // the hour '0' should be '12'
+	hours = twoDigitize(hours);
+	minutes = twoDigitize(minutes);
+	seconds = twoDigitize(seconds);
+	var strTime = hours + ':' + minutes + ':' + seconds +' ' + ampm;
+	return strTime;
+}
+    
+function validateBarcodeInput (isQuery) {
+	function getConfigString() {
+		return _config.configString;
+	};
+
+	function parseFullName(str) {
+	//FullName string has the format: Lastname[, Degree], Firstname Middlename
+	var emptyName = { first:"", middle: "", last: "" };
+	var nameRE = /(\w+)\W+(\w+)\W+(\w+)(?:\W+(\w+){0,1}){0,1}/;
+	//alert(JSON.stringify(nameRE));
+	var parts = str.match(nameRE);
+	//alert(JSON.stringify(parts));
+	if (!parts) return emptyName;
+	var ln = parts[1];
+	var fn = parts.length == 4? parts[2]: parts[3];
+	var mi = parts.length == 4? parts[3]: parts[4];
+	//alert(ln+" "+fn+" "+mi);
+	return { first: fn, middle: mi, last: ln };
+	};
+
+	var emptyHCPInfo = { npi: "", dea: "", lic: "", name: parseFullName("") };
+
+	function getHCPInfo(login) {
+		var str = Mel.eval("{GETUSERINFO('"+login+"')}");
+		//alert("login: "+ login+", str: "+str);
+		if (!str) return 
+		var split = str.split("^");
+		var login = split[0];
+		var npi = split[8];
+		var dea = split[10];
+		var lic = split[11];
+		var retval = { login: login, npi: npi, dea: dea, lic: lic, name: parseFullName(split[1]) };
+		//alert(JSON.stringify(retval)+" "+str);
+		return retval;
+	};
+
+	var sex = Mel.eval("{PATIENT.SEX}");
+	if (sex !== "M" && sex !== "F") {
+		if (sex === "Male") sex = "M";
+		else if (sex === "Female") sex = "F";
+		else sex = "U";
+	};
+	
+	var hcpSelection = $("#oAdministeredBychoices").find('option:selected').val();
+	var HCPInfo = !hcpSelection? emptyHCPInfo: getHCPInfo(hcpSelection);
+	var loginName = Mel.eval("{USER.LOGINNAME}");
+	var userInfo = getHCPInfo(loginName);
+	var currDate = new Date();
+	var workstationID = Mel.eval("{PATIENT.PATIENTID}").toString()+Mel.eval("{DOCUMENT.VISDOCID}").toString();
+	var patientMName = Mel.eval("{PATIENT.MIDDLENAME}");
+	var pmi = patientMName?patientMName[0]:"";
+
+	var q = {
+		"ConfigStr": getConfigString(),
+		"PatId": Mel.eval("{PATIENT.PATIENTID}"),
+		"PatFName": Mel.eval("{PATIENT.FIRSTNAME}"),
+		"PatMName": pmi,
+		"PatLName": Mel.eval("{PATIENT.LASTNAME}"),
+		"PatDOB": Mel.eval("{PATIENT.DATEOFBIRTH}"),
+		"PatGender": sex,
+		"UserID": loginName,
+		"UserFName": userInfo.name.first,
+		"UserMName": userInfo.name.middle,
+		"UserLName": userInfo.name.last,
+		"UserNPI": userInfo.npi,
+		"UserDEA": userInfo.dea,
+		"UserLic": userInfo.lic,
+		"HCPID": HCPInfo.login,
+		"HCPFName": HCPInfo.name.first,
+		"HCPMName": HCPInfo.name.middle,
+		"HCPLName": HCPInfo.name.last,
+		"HCPNPI": HCPInfo.npi,
+		"HCPDEA": HCPInfo.dea,
+		"HCPLic": HCPInfo.lic,
+		"ServerDate": formatDate(currDate),
+		"ServerTime": formatTime(currDate),
+		"WkStationID": workstationID,
+		"WkStationIP": "127.0.0.1",
+		"Location": Mel.eval("{find('AllLocation', 'ABBREVNAME', 'LOCID', DOCUMENT.LOCOFCARE)}"),
+        "Barcode": $("#oBarcode").val(),
+		"VISDate": $("#oVISDate").val(),
+		"Qty": $("#oDose").combobox('selText'),
+		"Units": $("#oUnits").combobox('selText'),
+		"query": isQuery,
+		"UniqueId": workstationID+"-"+
+			currDate.getFullYear()+twoDigitize(currDate.getMonth()+1)+twoDigitize(currDate.getDate())+"-"+
+			twoDigitize(currDate.getHours())+twoDigitize(currDate.getMinutes())+twoDigitize(currDate.getSeconds())
+	};
+	
+	function augmentErrorMsg (badMsg) {
+		var msg = q.err && q.err.msg? q.err.msg + "\n" + badMsg: badMsg;
+		
+		q.err = { level: "Error", msg: msg };            
+	};
+	
+	if (!q.Barcode || q.Barcode.length === 0) {
+		var badBarcodeMsg = "No entry in Barcode field.";
+		augmentErrorMsg (badBarcodeMsg);        
+	}
+	if (q.Barcode && q.Barcode.length > 35) {
+		var badBarcodeMsg = "Barcode field too long.";
+		augmentErrorMsg (badBarcodeMsg);        
+	}
+
+	if (!q.query) {
+		if (!q.Qty || (q.Qty && isNaN(q.Qty))) {
+			var badQtyMsg = "Non-numeric entry in Amount Given field.";
+			augmentErrorMsg (badQtyMsg);        
+		}
+		if (!q.Units) {
+			var badUnitsMsg = "No Units specified.";
+			augmentErrorMsg (badUnitsMsg);        
+		}
+		if (!($("#oDate").val())) {
+			var badDateMsg = "No administration date specified.";
+			augmentErrorMsg (badDateMsg);        
+		}
+		if (!($("#oTime").val())) {
+			var badTimeMsg = "No administration time specified.";
+			augmentErrorMsg (badTimeMsg);        
+		}
+		if (!($("#oAdministeredBychoices").val())) {
+			var badAdministeredByMsg = 'No one specified as giving the vaccination - fill in the Administered By field.';
+			augmentErrorMsg (badAdministeredByMsg);        
+		}
+		if (!$('#oVaccine').find(':selected').text().trim()) {
+			var badTimeMsg = "Please select a Vaccine from the available vaccine list.";
+			augmentErrorMsg (badTimeMsg);        
+		}
+	}
+	return q;
+}
+
+function fnLookupBarcode () {
+    function setBarcodeFields(d) {
+        var bcdErrMsg ="";
+		
+        function addLot(lotInfo) {
+            $("#oLotID").val(lotInfo.LotNo);
+            $("#oLotExpDate").val(lotInfo.ExpDate);
+            $("#oVacMfrs").val(lotInfo.Manufacturer);
+            
+			//fnAddLotEntered(); //commented this as GE removed this from new version
+            fnSaveLotEntered("close");
+        }
+        
+		function fnIsInCustomList(ddName, displayText) {
+			var matchFound = false;
+			$.each($("#" + ddName + " option"), function( index, value ) {			  
+			  if (value.text.toLowerCase()==displayText.toLowerCase()){
+				  matchFound = true;			  
+				  if(ddName=="oUnits"){
+					  $("#oUnits").combobox("setValue", value.text);
+				  }
+				  else{
+					$(this).attr("selected", true);
+				  }
+				  return true;
+			  }
+			});
+			return matchFound;
+		}
+
+		//SRX added code to check if lot exist
+		function fnIsLotExist(d, isDateMatchingNeeded){
+			var matchFound = false;
+			$.each(arrLotEntered, function( index, value ) {
+			var lotNo = value.split(";")[0];
+			var expDate = value.split(";")[1].split(":")[1].trim();
+			  if (lotNo.toLowerCase() == d.LotNo.toLowerCase()){				  
+				  matchFound = true;
+				  if(isDateMatchingNeeded && matchFound){
+					 matchFound = expDate == d.ExpDate;
+					 return matchFound;
+				  }
+				  return true;
+			  }
+			});
+			return matchFound;
+		}
+		
+		function normalizeStatus(d) {
+			//d.UOM="KL";
+			//save the vaccine, mfr selected prior to barcode
+			var selectedVaccineHist = $("#oVaccine").val();
+			var selectedMfrHist = $("#oMfr").val();
+			
+			if (!fnIsInCustomList("oVaccine", d.RxName)) {	
+				bcdErrMsg = "Scanned Vaccine " + ' "' + d.RxName + '"' + " does not exist in Vaccine List! \nPlease process manually.";
+				if (_config.defaults.vacNameMismatchWarning==1) {
+					alert(bcdErrMsg);
+				}
+				//Warn and do not process
+				if (_config.defaults.vacNameMismatchWarning == 2){
+					alert(bcdErrMsg);
+					return;
+				}
+				//Do not warn BUT process
+				if (_config.defaults.vacNameMismatchWarning == 3){
+				}
+				return false;
+			}
+			else{
+				
+				$.when($("#oVaccine").trigger('change')).then(function() {
+				  if (!fnIsInCustomList("oMfr", d.Manufacturer))  {
+					  bcdErrMsg = "Scanned Vaccine " + ' "' + d.RxName + '"' + " exist in Vaccine List!\n" 
+								+ "Scanned Menufacturer " + ' "' + d.Manufacturer + '"' + " does not exist in Manufacturer List! \nPlease process manually.";
+					  alert(bcdErrMsg);
+					  //vaccine matched but mfr didn't, reset the vaccine name to the prev one and re-load the mfr
+					  $("#oVaccine").val(selectedVaccineHist);
+					  $("#oVaccine").trigger('change');
+					  return false;
+				  }
+				  else{						  
+					  $.when($("#oMfr").trigger('change')).then(function() {						  
+						  if (!fnIsInCustomList("oUnits", d.UOM)) {	
+							 bcdErrMsg = "Scanned Vaccine " + ' "' + d.RxName + '"' + " exist in Vaccine List!\n" 
+								      + "Scanned Menufacturer " + ' "' + d.Manufacturer + '"' + " exist in Manufacturer List!\n"
+									  + "Scanned UOM " + ' "' + d.UOM + '"' + " does not exist in UOM List! \nPlease process manually.";
+							alert(bcdErrMsg);
+							//vaccine/mfr matched but UOM didn't, reset the vaccine name/mfr to the prev one
+							$("#oVaccine").val(selectedVaccineHist);
+							$.when($("#oVaccine").trigger('change')).then(function() {
+								$("#oMfr").val(selectedMfrHist);
+							});
+							return false;
+						  }	
+						  //reached here i.e. barcode loaded all the data
+						  else{
+							  fnLoadAllMFRLOTS();
+							  fnDisplayLotEntered();
+							  fnGetLotMfrs();
+							  if(!fnIsLotExist(d, false)){
+								  //call the add lot method to add the lot
+								  addLot(d);
+							  }
+							  //in case lot exist but the exp date doesn't match, display warning and stop
+							  else{
+								  if(!fnIsLotExist(d, true)){
+									  bcdErrMsg = "Scanned Vaccine " + ' "' + d.RxName + '"' + " exist in Vaccine List!\n" 
+								      + "Scanned Menufacturer " + ' "' + d.Manufacturer + '"' + " exist in Manufacturer List!\n"
+									  + "Scanned UOM " + ' "' + d.UOM + '"' + " exist in UOM List! \n"
+									  + "Scanned Lot Number " + ' "' + d.LotNo + '"' + " exist in Lot List!\n"
+									  + "Scanned Expiry date " + ' "' + d.ExpDate + '"' + " does not match!\n"
+									  + "Please process manually.";
+									alert(bcdErrMsg);
+									//vaccine/mfr matched but UOM didn't, reset the vaccine name/mfr to the prev one
+									$("#oVaccine").val(selectedVaccineHist);
+									$.when($("#oVaccine").trigger('change')).then(function() {
+										$("#oMfr").val(selectedMfrHist);
+									});
+									return false;
+								  }
+							  }
+							  gIsBarCode = true;
+							  EnableDisableBarcodeControls(true);
+							  //IF REACH HERE THEN FILL THE LOT & EXPDATE
+							  $('#oLotText').val(d.LotNo);
+							  $("#oExpDate").val(d.ExpDate);
+							  
+							  //disable the barcode controls
+							  $("#btnLookupBarcode").attr('disabled', gIsBarCode);
+							  $("#oBarcode").attr('disabled', gIsBarCode);
+	
+							//IF CONFIRMATION TRUE THEN SHOW
+							if (_config.defaults.lotExpFilledConfirmation == 1){
+								var msg="Lot and Expiration Dates have been entered. Please verify before proceeding.";
+								Mel.eval("{userok(\"" + msg + "\")}");
+							}
+						  }						  
+					  });
+				  }
+				});
+			}
+			return true;
+        }
+   
+        var clearFields = false;    //Used in warning processing - should we clear barcode fields or not?
+		
+		if(d.Status == 'F') {
+			Mel.eval("{userok(\"" + d.Msg + "\")}");
+			return;
+		}
+		
+        if (normalizeStatus(d)){
+			//All was successful. Reset the below two values.
+			//$("#oBarcode").val("");		
+		}
+		else{	
+			return;
+		}
+    }
+    
+    //clearBarcodeStatus();
+    var q = validateBarcodeInput(true);
+	writeToFile('validateBarcodeInput q='+JSON.stringify(q));
+    //alert("Sending to server: "+JSON.stringify(q));
+    if (q && q.err) {
+		//alert('error in validate');		
+        addBarcodeStatusMsg(q.err);
+    } else {
+        //alert("Calling AJAX.");
+        $.support.cors = true;
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            url: _config.serviceURL,
+            crossDomain: true,
+            data: q,
+            success: function(d, _) {  
+				writeToFile('In success: _config.serviceURL='+_config.serviceURL);
+				writeToFile('In success: d='+JSON.stringify(d));
+                //alert("In success: "+JSON.stringify(d)); 
+                setBarcodeFields(d);
+				return;
+            },
+            error: function(_, _2, msg) {
+                //alert("In error: "+msg+", "+JSON.stringify(_)+", "+JSON.stringify(_2));
+                //Himanshu9 //setBarcodeFields({err: { level: _2.charAt(0).toUpperCase() + _2.slice(1), msg: msg }}); 
+				Mel.eval("{userok('Access to Barcode service failed. Please contact your system administrator.')}");
+				return;
+            }
+        });
+    }
+}
+		

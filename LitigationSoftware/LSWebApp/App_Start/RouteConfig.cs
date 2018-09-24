@@ -80,6 +80,18 @@ namespace LSWebApp
             );
 
             routes.MapRoute(
+                name: "deletetITReturnDocument",
+                url: "deletetITReturnDocument",
+                defaults: new { controller = "TaxReturn", action = "DeleteITReturnDocuments", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
+                name: "itreturndetaildocuments",
+                url: "itreturndetaildocuments",
+                defaults: new { controller = "TaxReturn", action = "GetITReturnDocumentList", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Login", action = "Index", id = UrlParameter.Optional }
