@@ -122,7 +122,7 @@
                  <td>
                      @Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomefromSalary
     , string.Format("{0:f}", Model.ITReturnDetailsObject.IncomefromSalary)
-    , new { @class = "form-control form-control-sm numericOnly" })
+    , new { @class = "numericOnly" })
                  </td>
              </tr>
 
@@ -133,15 +133,15 @@
                  <td>
                      @Html.TextBoxFor(m => m.ITReturnDetailsObject.HousePropIncome
     , string.Format("{0:f}", Model.ITReturnDetailsObject.HousePropIncome)
-    , new { @class = "form-control form-control-sm numericOnly" })
+    , new { @class = "numericOnly" })
                  </td>
              </tr>
-             @*@if (!Model.ITReturnDetailsObject.IsReturn)
+             @if (!Model.ITReturnDetailsObject.IsReturn)
             {
                  @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
               .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["HousePropIncome"].Id)
               .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["HousePropIncome"].Id))
-        }*@
+        }
 
 
              <tr>
@@ -154,12 +154,12 @@
 , new { @class = "numericOnly" })
                  </td>
              </tr>
-             @*@if (!Model.ITReturnDetailsObject.IsReturn)
+             @if (!Model.ITReturnDetailsObject.IsReturn)
             {
                  @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
-         .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomefromCapGainsNonSTT"].Id)
-         .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["IncomefromCapGainsNonSTT"].Id))
-        }*@
+         .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomefromCapGainsLTCG"].Id)
+         .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["IncomefromCapGainsLTCG"].Id))
+        }
              <tr>
                  <td>8</td>
                  <td></td>
@@ -181,12 +181,12 @@
             , new { @class = "numericOnly" })
                  </td>
              </tr>
-             @*@if (!Model.ITReturnDetailsObject.IsReturn)
+             @if (!Model.ITReturnDetailsObject.IsReturn)
             {
                  @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
               .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomefromBusinessProf"].Id)
               .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["IncomefromBusinessProf"].Id))
-        }*@
+        }
              <tr>
                  <td>10</td>
                  <td></td>
@@ -208,12 +208,12 @@
 , new { @class = "numericOnly" })
                  </td>
              </tr>
-             @*@if (!Model.ITReturnDetailsObject.IsReturn)
+             @if (!Model.ITReturnDetailsObject.IsReturn)
             {
                  @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
           .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomeFromOtherSources"].Id)
           .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["IncomeFromOtherSources"].Id))
-        }*@
+        }
              <tr>
                  <td>12</td>
                  <td></td>
@@ -237,12 +237,12 @@
 , new { @class = "numericOnly" })
                  </td>
              </tr>
-             @*@if (!Model.ITReturnDetailsObject.IsReturn)
+             @if (!Model.ITReturnDetailsObject.IsReturn)
             {
                  @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
         .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["DeductChapterVIA"].Id)
         .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["DeductChapterVIA"].Id))
-        }*@
+        }
              <tr>
                  <td>14</td>
                  <td></td>
@@ -253,12 +253,12 @@
 , new { @class = "numericOnly" })
                  </td>
              </tr>
-             @*@if (!Model.ITReturnDetailsObject.IsReturn)
+             @if (!Model.ITReturnDetailsObject.IsReturn)
             {
                  @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
         .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["ProfitUS115JB"].Id)
         .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["ProfitUS115JB"].Id))
-        }*@
+        }
              <tr>
                  <td>15</td>
                  <td></td>
@@ -489,6 +489,7 @@
 //                        debugger;
                         $('.ddLitigationDD').append(option);
                     });
+                    window.location = '/TaxReturn/GetITReturnDetails?companyId=' + $('#ITReturnDetailsObject_CompanyID').val() + '&companyname=' + $('#ITReturnDetailsObject_CompanyName').val() + '&fyayId=' + $('#ITReturnDetailsObject_FYAYID').val() + '&itsectionid=' + $('#ITReturnDetailsObject_ITSectionID').val() + '&itsectioncategoryid=' + $('#ITReturnDetailsObject_ITSectionCategoryID').val();
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown)
                 {
