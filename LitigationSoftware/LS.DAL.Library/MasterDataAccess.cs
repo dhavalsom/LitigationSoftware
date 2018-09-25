@@ -225,7 +225,8 @@ namespace LS.DAL.Library
                             IsDefault = Convert.ToBoolean(reader["IsDefault"].ToString()),
                             IsReturn = Convert.ToBoolean(reader["IsReturn"].ToString()),
                             Active = Convert.ToBoolean(reader["IsDefault"].ToString()),
-                            Id = Convert.ToInt32(reader["ID"].ToString())
+                            Id = Convert.ToInt32(reader["ID"].ToString()),
+                            SectionCategoryId = reader["SectionCategoryId"] != DBNull.Value ? Convert.ToInt32(reader["SectionCategoryId"].ToString()) : (int?)null
                         });
                     }
                 }
