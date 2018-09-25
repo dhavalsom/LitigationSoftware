@@ -4,16 +4,14 @@
     @Html.TextBoxFor(m => m.RefreshActionName, Model.RefreshActionName, new { @style = "display:none;", @class = "hdRefreshActionNameLitigationDD" })
     @Html.DropDownList(Model.BindingProperty, Model.Source  , new { @class = "ddLitigationDD" })   
     @Html.TextBoxFor(m=>m.Description, Model.Description, new { @style = "display:none;", @class= "txtLitigationDD" })
-    @if (Model.CheckboxVisible)
-    {           
-        @Html.CheckBoxFor(m => m.CheckboxValue, new { @style = "display:none;", @title = "Is return?"
-        , @class = "chkLitigationDD" })
-        <label for="@Html.NameFor(x => x.CheckboxValue)" style = "display:none;" class = "chkLitigationDD">Is Return</label>
-    }
+   
     <img src="~/images/plus.png" 
          class="imgLitigationDD"
          style="width:20px;height:20px;"/>
     <img src="~/images/save.png"
          class="imgLitigationDDSave"
+         style="width:20px;height:20px;display:none;" />
+    <img src="~/images/close.png"
+         class="imgLitigationDDClose"
          style="width:20px;height:20px;display:none;" />
 </div>

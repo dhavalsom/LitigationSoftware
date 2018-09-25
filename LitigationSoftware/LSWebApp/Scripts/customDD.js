@@ -4,7 +4,7 @@
 
 $(".imgLitigationDDSave").click(function (e) {
     var txtControl = null;
-    var chkControl = null;
+    var itSectionDDControl = null;
     var ddControl = null;
     var saveButton = $(this);
     var addActionName = "", refreshActionName = "";
@@ -20,8 +20,8 @@ $(".imgLitigationDDSave").click(function (e) {
     $(e.target).closest(".custom-dd").find('.hdRefreshActionNameLitigationDD').each(function () {
         refreshActionName = $(this).val();
     });
-    $(e.target).closest(".custom-dd").find('.chkLitigationDD').each(function () {
-        chkControl = $(this);
+    $('.ddITSectionCategory').each(function () {
+        itSectionDDControl = $(this);
     });
     if (txtControl.val() == "") {
         txtControl.addClass("validationError");
@@ -35,8 +35,19 @@ $(".imgLitigationDDSave").click(function (e) {
     item.Description = txtControl.val();
     item.IsDefault = false;
     item.Active = true;
-    if (chkControl != null) {
-        item.IsReturn = chkControl.is(':checked');
+    //code specific to ITReturn details
+    if (itSectionDDControl != null) {
+        item.IsReturn = itSectionDDControl.val() == "1"; //i.e. if it is ROI
+        item.SectionCategoryId = itSectionDDControl.val();
+        refreshActionName += "?categoryId=" + item.SectionCategoryId;
+        $(".ddLitigationDD").change(function (e) {
+            window.location = '/TaxReturn/GetITReturnDetails?companyId='
+                + $('#ITReturnDetailsObject_CompanyID').val()
+                + '&companyname=' + $('#ITReturnDetailsObject_CompanyName').val()
+                + '&fyayId=' + $('#ITReturnDetailsObject_FYAYID').val()
+                + '&itsectionid=' + $('#ITReturnDetailsObject_ITSectionID').val()
+                + '&itsectioncategoryid=' + $('#ITReturnDetailsObject_ITSectionCategoryID').val();
+        });
     }
     $.ajax({
         type: 'POST',
@@ -45,7 +56,7 @@ $(".imgLitigationDDSave").click(function (e) {
         success: function (data) {
             $.ajax({
                 type: 'GET',
-                url: '/' + refreshActionName + '/',
+                url: '/' + refreshActionName,
                 success: function (refreshedData) {
                     refreshOptions(ddControl, refreshedData, txtControl.val());
                     showHideControls(saveButton);
@@ -59,18 +70,6 @@ $(".imgLitigationDDSave").click(function (e) {
     });
 });
 
-$(".ddLitigationDD").change(function (e) {
-    
-    window.location = '/TaxReturn/GetITReturnDetails?companyId=' + $('#ITReturnDetailsObject_CompanyID').val() + '&companyname=' + $('#ITReturnDetailsObject_CompanyName').val() + '&fyayId=' + $('#ITReturnDetailsObject_FYAYID').val() + '&itsectionid=' + $('#ITReturnDetailsObject_ITSectionID').val() + '&itsectioncategoryid=' + $('#ITReturnDetailsObject_ITSectionCategoryID').val();
-
-});
-
-//$(".ddITSectionCategory").change(function (e) {
-
-//    window.location = '/TaxReturn/GetITReturnDetails?companyId=' + $('#ITReturnDetailsObject_CompanyID').val() + '&companyname=' + $('#ITReturnDetailsObject_CompanyName').val() + '&fyayId=' + $('#ITReturnDetailsObject_FYAYID').val() + '&itsectionid=' + $('#ITReturnDetailsObject_ITSectionID').val() + '&itsectioncategoryid=' + $('#ITReturnDetailsObject_ITSectionCategoryID').val();
-
-//});
-
 function refreshOptions(ddControl, list, defaultVal) {
     ddControl.empty(); 
     $.each(list, function (val, obj) {
@@ -79,6 +78,10 @@ function refreshOptions(ddControl, list, defaultVal) {
         );
     });
 }
+
+$(".imgLitigationDDClose").click(function (e) {
+    showHideControls($(this));
+});
 
 function showHideControls(control) {
     control.css("display", "none");
@@ -95,7 +98,7 @@ function showHideControls(control) {
     control.closest(".custom-dd").find('.txtLitigationDD').each(function () {
         $(this).css("display", isAddMode ? "inline" : "none");
     });
-    control.closest(".custom-dd").find('.chkLitigationDD').each(function () {
+    control.closest(".custom-dd").find('.imgLitigationDDClose').each(function () {
         $(this).css("display", isAddMode ? "inline" : "none");
     });
 }

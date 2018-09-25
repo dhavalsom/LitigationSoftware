@@ -252,7 +252,7 @@ namespace LS.DAL.Library
                             RefundReceived = reader["RefundReceived"] != DBNull.Value ? Convert.ToDecimal(reader["RefundReceived"].ToString()) : (decimal?)null,
                             IncomefromSalary = reader["IncomefromSalary"] != DBNull.Value ? Convert.ToDecimal(reader["IncomefromSalary"].ToString()) : (decimal?)null,
                             TDS26AS = reader["TDS26AS"] != DBNull.Value ? Convert.ToDecimal(reader["TDS26AS"].ToString()) : (decimal?)null,
-                            TDSasperBooks = reader["TDSasperBooks"] != DBNull.Value ? Convert.ToDecimal(reader["TDSasperBooks"].ToString()) : (decimal?)null,                           ,
+                            TDSasperBooks = reader["TDSasperBooks"] != DBNull.Value ? Convert.ToDecimal(reader["TDSasperBooks"].ToString()) : (decimal?)null,
                             IsReturn = reader["IsReturn"] != DBNull.Value ? Convert.ToBoolean(reader["IsReturn"].ToString()) : false
                         });
                     }
