@@ -165,12 +165,11 @@
                  </td>
              </tr>
              @if (!Model.ITReturnDetailsObject.IsReturn)
-            {
-                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
-              .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["HousePropIncome"].Id)
-              .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["HousePropIncome"].Id))
-        }
-
+                {
+                        @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                    .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["HousePropIncome"].Id)
+                    .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["HousePropIncome"].Id))
+                }
 
              <tr>
                  <td>@Model.ITHeadMasterList["IncomefromCapGainsLTCG"].ExcelSrNo</td>
@@ -192,10 +191,10 @@
              </tr>
              @if (!Model.ITReturnDetailsObject.IsReturn)
             {
-                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
-         .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomefromCapGainsLTCG"].Id)
-         .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["IncomefromCapGainsLTCG"].Id))
-        }
+                     @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+             .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomefromCapGainsLTCG"].Id)
+             .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["IncomefromCapGainsLTCG"].Id))
+            }
              <tr>
                  <td>@Model.ITHeadMasterList["IncomefromCapGainsSTCG"].ExcelSrNo</td>
                  <td></td>
