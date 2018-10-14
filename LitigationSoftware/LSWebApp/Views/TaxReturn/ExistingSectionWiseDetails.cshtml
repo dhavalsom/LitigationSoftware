@@ -40,14 +40,225 @@
                 <td>@itsectiondetail.ITReturnDueDate.Value.ToShortDateString()</td>
                 }
         </tr>
+
         <tr class="table-active">
-            <td>Income from House Property</td>
+            <td>@Model.ITHeadMasterList["IncomefromSalary"].Description</td>
             @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
-                {
+            {
+                <td>
+                    @Utilities.FormatNumber(itsectiondetail.IncomefromSalary)
+                </td>
+            }
+        </tr>
+
+        <tr class="table-active">
+            <td>@Model.ITHeadMasterList["HousePropIncome"].Description</td>
+            @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+            {
                 <td>
                     @Utilities.FormatNumber(itsectiondetail.HousePropIncome)
                 </td>
-                }
+            }
+        </tr>
+
+        <tr class="table-active">
+            <td>@Model.ITHeadMasterList["IncomefromCapGainsLTCG"].Description</td>
+            @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+            {
+                <td>
+                    @Utilities.FormatNumber(itsectiondetail.IncomefromCapGainsLTCG)
+                </td>
+            }
+        </tr>
+
+        <tr class="table-active">
+            <td>@Model.ITHeadMasterList["IncomefromCapGainsSTCG"].Description</td>
+            @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+            {
+                <td>
+                    @Utilities.FormatNumber(itsectiondetail.IncomefromCapGainsSTCG)
+                </td>
+            }
+        </tr>
+
+        <tr class="table-active">
+            <td>@Model.ITHeadMasterList["IncomefromBusinessProf"].Description</td>
+            @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+            {
+                <td>
+                    @Utilities.FormatNumber(itsectiondetail.IncomefromBusinessProf)
+                </td>
+            }
+        </tr>
+
+        <tr class="table-active">
+            <td>@Model.ITHeadMasterList["IncomefromSpeculativeBusiness"].Description</td>
+            @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+            {
+                <td>
+                    @Utilities.FormatNumber(itsectiondetail.IncomefromSpeculativeBusiness)
+                </td>
+            }
+        </tr>
+
+        <tr class="table-active">
+            <td>@Model.ITHeadMasterList["IncomeFromOtherSources"].Description</td>
+            @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+            {
+                <td>
+                    @Utilities.FormatNumber(itsectiondetail.IncomeFromOtherSources)
+                </td>
+            }
+        </tr>
+
+        <tr class="table-active">
+            <td>@Model.ITHeadMasterList["DeductChapterVIA"].Description</td>
+            @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+            {
+                <td>
+                    @Utilities.FormatNumber(itsectiondetail.DeductChapterVIA)
+                </td>
+            }
+        </tr>
+
+        <tr class="table-active">
+            <td>@Model.ITHeadMasterList["ProfitUS115JB"].Description</td>
+            @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+            {
+                <td>
+                    @Utilities.FormatNumber(itsectiondetail.ProfitUS115JB)
+                </td>
+            }
+        </tr>
+
+        <tr class="table-active">
+            <td>@Model.ITHeadMasterList["AdvanceTax1installment"].Description</td>
+            @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+            {
+                <td>
+                    @Utilities.FormatNumber(itsectiondetail.AdvanceTax1installment)
+                </td>
+            }
+        </tr>
+
+        <tr class="table-active">
+            <td>@Model.ITHeadMasterList["AdvanceTax2installment"].Description</td>
+            @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+            {
+                <td>
+                    @Utilities.FormatNumber(itsectiondetail.AdvanceTax2installment)
+                </td>
+            }
+        </tr>
+
+        <tr class="table-active">
+            <td>@Model.ITHeadMasterList["AdvanceTax3installment"].Description</td>
+            @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+            {
+                <td>
+                    @Utilities.FormatNumber(itsectiondetail.AdvanceTax3installment)
+                </td>
+            }
+        </tr>
+
+        <tr class="table-active">
+            <td>@Model.ITHeadMasterList["AdvanceTax4installment"].Description</td>
+            @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+            {
+                <td>
+                    @Utilities.FormatNumber(itsectiondetail.AdvanceTax4installment)
+                </td>
+            }
+        </tr>
+
+        <tr class="table-active">
+            <td>@Model.ITHeadMasterList["TDS"].Description</td>
+            @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+            {
+                <td>
+                    @Utilities.FormatNumber(itsectiondetail.TDS)
+                </td>
+            }
+        </tr>
+
+        <tr class="table-active">
+            <td>@Model.ITHeadMasterList["TDS26AS"].Description</td>
+            @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+            {
+                <td>
+                    @Utilities.FormatNumber(itsectiondetail.TDS26AS)
+                </td>
+            }
+        </tr>
+
+        <tr class="table-active">
+            <td>@Model.ITHeadMasterList["TDSasperBooks"].Description</td>
+            @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+            {
+                <td>
+                    @Utilities.FormatNumber(itsectiondetail.TDSasperBooks)
+                </td>
+            }
+        </tr>
+
+        <tr class="table-active">
+            <td>@Model.ITHeadMasterList["TCSPaidbyCompany"].Description</td>
+            @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+            {
+                <td>
+                    @Utilities.FormatNumber(itsectiondetail.TCSPaidbyCompany)
+                </td>
+            }
+        </tr>
+
+        <tr class="table-active">
+            <td>@Model.ITHeadMasterList["SelfAssessmentTax"].Description</td>
+            @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+            {
+                <td>
+                    @Utilities.FormatNumber(itsectiondetail.SelfAssessmentTax)
+                </td>
+            }
+        </tr>
+
+        <tr class="table-active">
+            <td>@Model.ITHeadMasterList["MATCredit"].Description</td>
+            @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+            {
+                <td>
+                    @Utilities.FormatNumber(itsectiondetail.MATCredit)
+                </td>
+            }
+        </tr>
+
+        <tr class="table-active">
+            <td>@Model.ITHeadMasterList["InterestUS234A"].Description</td>
+            @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+            {
+                <td>
+                    @Utilities.FormatNumber(itsectiondetail.InterestUS234A)
+                </td>
+            }
+        </tr>
+
+        <tr class="table-active">
+            <td>@Model.ITHeadMasterList["InterestUS234B"].Description</td>
+            @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+            {
+                <td>
+                    @Utilities.FormatNumber(itsectiondetail.InterestUS234B)
+                </td>
+            }
+        </tr>
+
+        <tr class="table-active">
+            <td>@Model.ITHeadMasterList["InterestUS234C"].Description</td>
+            @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+            {
+                <td>
+                    @Utilities.FormatNumber(itsectiondetail.InterestUS234C)
+                </td>
+            }
         </tr>
     </tbody>
 </table>
