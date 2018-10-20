@@ -145,7 +145,13 @@
                     </div>
                  </td>
              </tr>
-
+             @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["IncomefromSalary"].CanAddSubHead)
+                {
+                    @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                    .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomefromSalary"].Id)
+                    .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["IncomefromSalary"].Id))
+                }
              <tr>
                  <td>@Model.ITHeadMasterList["HousePropIncome"].ExcelSrNo</td>
                  <td></td>
@@ -164,12 +170,13 @@
                      </div>
                  </td>
              </tr>
-             @if (!Model.ITReturnDetailsObject.IsReturn)
-                {
-                        @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+             @if (!Model.ITReturnDetailsObject.IsReturn
+                   && @Model.ITHeadMasterList["HousePropIncome"].CanAddSubHead)
+             {
+                @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
                     .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["HousePropIncome"].Id)
                     .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["HousePropIncome"].Id))
-                }
+             }
 
              <tr>
                  <td>@Model.ITHeadMasterList["IncomefromCapGainsLTCG"].ExcelSrNo</td>
@@ -189,11 +196,12 @@
                      </div>
                  </td>
              </tr>
-             @if (!Model.ITReturnDetailsObject.IsReturn)
+            @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["IncomefromCapGainsLTCG"].CanAddSubHead)
             {
-                     @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
-             .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomefromCapGainsLTCG"].Id)
-             .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["IncomefromCapGainsLTCG"].Id))
+                @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                    .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomefromCapGainsLTCG"].Id)
+                    .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["IncomefromCapGainsLTCG"].Id))
             }
              <tr>
                  <td>@Model.ITHeadMasterList["IncomefromCapGainsSTCG"].ExcelSrNo</td>
@@ -213,7 +221,13 @@
                      </div>
                  </td>
              </tr>
-
+             @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["IncomefromCapGainsSTCG"].CanAddSubHead)
+             {
+                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                    .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomefromCapGainsSTCG"].Id)
+                    .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["IncomefromCapGainsSTCG"].Id))
+             }
              <tr>
                  <td>@Model.ITHeadMasterList["IncomefromBusinessProf"].ExcelSrNo</td>
                  <td></td>
@@ -232,12 +246,13 @@
                      </div>
                  </td>
              </tr>
-             @if (!Model.ITReturnDetailsObject.IsReturn)
+            @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["IncomefromBusinessProf"].CanAddSubHead)
             {
-                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
-              .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomefromBusinessProf"].Id)
-              .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["IncomefromBusinessProf"].Id))
-        }
+                @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                    .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomefromBusinessProf"].Id)
+                    .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["IncomefromBusinessProf"].Id))
+            }
              <tr>
                  <td>@Model.ITHeadMasterList["IncomefromSpeculativeBusiness"].ExcelSrNo</td>
                  <td></td>
@@ -256,6 +271,13 @@
                     </div>
                  </td>
              </tr>
+             @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["IncomefromSpeculativeBusiness"].CanAddSubHead)
+             {
+                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                    .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomefromSpeculativeBusiness"].Id)
+                    .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["IncomefromSpeculativeBusiness"].Id))
+             }
 
              <tr>
                  <td>@Model.ITHeadMasterList["IncomeFromOtherSources"].ExcelSrNo</td>
@@ -275,12 +297,14 @@
                      </div>
                  </td>
              </tr>
-             @if (!Model.ITReturnDetailsObject.IsReturn)
+            @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["IncomeFromOtherSources"].CanAddSubHead)
             {
-                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
-          .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomeFromOtherSources"].Id)
-          .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["IncomeFromOtherSources"].Id))
-        }
+                @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                    .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomeFromOtherSources"].Id)
+                    .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["IncomeFromOtherSources"].Id))
+            }
+
              <tr>
                  <td>@Model.ITHeadMasterList["Broughtforwardlosses"].ExcelSrNo</td>
                  <td></td>
@@ -290,6 +314,13 @@
                      @Html.RadioButtonFor(m => m.ITReturnDetailsObject.Broughtforwardlosses, Model.ITReturnDetailsObject.Broughtforwardlosses) No
                  </td>
              </tr>
+             @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["Broughtforwardlosses"].CanAddSubHead)
+             {
+                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                    .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["Broughtforwardlosses"].Id)
+                    .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["Broughtforwardlosses"].Id))
+             }
 
              <tr>
                  <td>@Model.ITHeadMasterList["DeductChapterVIA"].ExcelSrNo</td>
@@ -310,12 +341,14 @@
                     </div>
                 </td>
              </tr>
-             @if (!Model.ITReturnDetailsObject.IsReturn)
-            {
-                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
-        .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["DeductChapterVIA"].Id)
-        .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["DeductChapterVIA"].Id))
-        }
+             @if (!Model.ITReturnDetailsObject.IsReturn
+                                           && @Model.ITHeadMasterList["DeductChapterVIA"].CanAddSubHead)
+             {
+                @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                    .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["DeductChapterVIA"].Id)
+                    .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["DeductChapterVIA"].Id))
+             }
+
              <tr>
                  <td>@Model.ITHeadMasterList["ProfitUS115JB"].ExcelSrNo</td>
                  <td></td>
@@ -335,12 +368,14 @@
                      </div>
                  </td>
              </tr>
-             @if (!Model.ITReturnDetailsObject.IsReturn)
-            {
-                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
-        .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["ProfitUS115JB"].Id)
-        .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["ProfitUS115JB"].Id))
-        }
+             @if (!Model.ITReturnDetailsObject.IsReturn
+                  && @Model.ITHeadMasterList["ProfitUS115JB"].CanAddSubHead)
+             {
+                @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                    .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["ProfitUS115JB"].Id)
+                    .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["ProfitUS115JB"].Id))
+             }
+
              <tr>
                  <td>@Model.ITHeadMasterList["AdvanceTax1installment"].ExcelSrNo</td>
                  <td></td>
@@ -359,6 +394,14 @@
                      </div>
                  </td>
              </tr>
+             @if (!Model.ITReturnDetailsObject.IsReturn
+                   && @Model.ITHeadMasterList["AdvanceTax1installment"].CanAddSubHead)
+             {
+                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                    .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["AdvanceTax1installment"].Id)
+                    .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["AdvanceTax1installment"].Id))
+             }
+
              <tr>
                  <td>@Model.ITHeadMasterList["AdvanceTax2installment"].ExcelSrNo</td>
                  <td></td>
@@ -377,6 +420,14 @@
                     </div>
                  </td>
              </tr>
+             @if (!Model.ITReturnDetailsObject.IsReturn
+                      && @Model.ITHeadMasterList["AdvanceTax2installment"].CanAddSubHead)
+             {
+                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                    .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["AdvanceTax2installment"].Id)
+                    .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["AdvanceTax2installment"].Id))
+             }
+
              <tr>
                  <td>@Model.ITHeadMasterList["AdvanceTax3installment"].ExcelSrNo</td>
                  <td></td>
@@ -395,6 +446,14 @@
                      </div>
                  </td>
              </tr>
+             @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["AdvanceTax3installment"].CanAddSubHead)
+             {
+                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                    .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["AdvanceTax3installment"].Id)
+                    .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["AdvanceTax3installment"].Id))
+             }
+
              <tr>
                  <td>@Model.ITHeadMasterList["AdvanceTax4installment"].ExcelSrNo</td>
                  <td></td>
@@ -413,6 +472,14 @@
                      </div>
                  </td>
              </tr>
+             @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["AdvanceTax4installment"].CanAddSubHead)
+             {
+                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                    .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["AdvanceTax4installment"].Id)
+                    .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["AdvanceTax4installment"].Id))
+             }
+
              <tr>
                  <td>@Model.ITHeadMasterList["TDS"].ExcelSrNo</td>
                  <td></td>
@@ -431,6 +498,14 @@
                     </div>
                  </td>
              </tr>
+             @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["TDS"].CanAddSubHead)
+             {
+                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                    .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["TDS"].Id)
+                    .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["TDS"].Id))
+             }
+
              <tr>
                  <td>@Model.ITHeadMasterList["TDS26AS"].ExcelSrNo</td>
                  <td></td>
@@ -450,6 +525,14 @@
                      </div>
                  </td>
              </tr>
+             @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["TDS26AS"].CanAddSubHead)
+             {
+                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                    .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["TDS26AS"].Id)
+                    .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["TDS26AS"].Id))
+             }
+
              <tr>
                  <td>@Model.ITHeadMasterList["TDSasperBooks"].ExcelSrNo</td>
                  <td></td>
@@ -468,6 +551,14 @@
                     </div>
                  </td>
              </tr>
+             @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["TDSasperBooks"].CanAddSubHead)
+             {
+                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                    .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["TDSasperBooks"].Id)
+                    .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["TDSasperBooks"].Id))
+             }
+
              <tr>
                  <td>@Model.ITHeadMasterList["TCSPaidbyCompany"].ExcelSrNo</td>
                  <td></td>
@@ -486,6 +577,14 @@
                     </div>
                  </td>
              </tr>
+             @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["TCSPaidbyCompany"].CanAddSubHead)
+             {
+                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                    .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["TCSPaidbyCompany"].Id)
+                    .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["TCSPaidbyCompany"].Id))
+             }
+
              <tr>
                  <td>@Model.ITHeadMasterList["SelfAssessmentTax"].ExcelSrNo</td>
                  <td></td>
@@ -504,6 +603,14 @@
                     </div>
                  </td>
              </tr>
+             @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["SelfAssessmentTax"].CanAddSubHead)
+             {
+                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                    .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["SelfAssessmentTax"].Id)
+                    .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["SelfAssessmentTax"].Id))
+             }
+
              <tr>
                  <td colspan="2"></td>
                  <td>@Model.ITHeadMasterList["MATCredit"].Description:-</td>
@@ -521,6 +628,14 @@
                     </div>
                  </td>
              </tr>
+             @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["MATCredit"].CanAddSubHead)
+             {
+                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                    .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["MATCredit"].Id)
+                    .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["MATCredit"].Id))
+             }
+
              <tr>
                  <td colspan="2"></td>
                  <td>@Model.ITHeadMasterList["InterestUS234A"].Description:-</td>
@@ -538,6 +653,14 @@
                     </div>
                  </td>
              </tr>
+             @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["InterestUS234A"].CanAddSubHead)
+             {
+                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                    .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["InterestUS234A"].Id)
+                    .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["InterestUS234A"].Id))
+             }
+
              <tr>
                  <td colspan="2"></td>
                  <td>@Model.ITHeadMasterList["InterestUS234B"].Description:-</td>
@@ -555,6 +678,14 @@
                     </div>
                  </td>
              </tr>
+             @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["InterestUS234B"].CanAddSubHead)
+             {
+                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                    .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["InterestUS234B"].Id)
+                    .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["InterestUS234B"].Id))
+             }
+
              <tr>
                  <td colspan="2"></td>
                  <td>@Model.ITHeadMasterList["InterestUS234C"].Description:-</td>
@@ -572,7 +703,13 @@
                     </div>
                  </td>
              </tr>
-             
+             @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["InterestUS234C"].CanAddSubHead)
+             {
+                 @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                    .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["InterestUS234C"].Id)
+                    .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["InterestUS234C"].Id))
+             }
              <tr>
                  <td colspan="4" align="center"><button type="submit" class="btn btn-primary">Save</button></td>
              </tr>
