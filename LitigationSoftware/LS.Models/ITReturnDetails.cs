@@ -45,7 +45,7 @@ namespace LS.Models
         public decimal? RefundReceived { get; set; }
         public bool? RevisedReturnFile { get; set; }
         public bool IsReturn { get; set; }
-
+        public List<ITReturnDetailsExtension> Extensions { get; set; }
         #endregion
 
         #region Serialization

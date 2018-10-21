@@ -12,12 +12,38 @@ namespace LSWebApp.Models
         public int? CompanyId { get; set; }
         public int? FYAYId { get; set; }
         public int? Id { get; set; }
+        public List<string> ItemsWithAmounts { get; set; }
         #endregion
 
         #region Constructors
         public ITReturnDetailsListModel()
         {
             ITReturnDetailsListObject = new List<ITReturnDetails>();
+            ItemsWithAmounts = new List<string>
+            {
+                "IncomefromSalary",
+                "HousePropIncome",
+                "IncomefromCapGainsLTCG",
+                "IncomefromCapGainsSTCG",
+                "IncomefromBusinessProf",
+                "IncomefromSpeculativeBusiness",
+                "IncomeFromOtherSources",
+                "DeductChapterVIA",
+                "ProfitUS115JB",
+                "AdvanceTax1installment",
+                "AdvanceTax2installment",
+                "AdvanceTax3installment",
+                "AdvanceTax4installment",
+                "TDS",
+                "TDS26AS",
+                "TDSasperBooks",
+                "TCSPaidbyCompany",
+                "SelfAssessmentTax",
+                "MATCredit",
+                "InterestUS234A",
+                "InterestUS234B",
+                "InterestUS234C"
+            };
         }
         #endregion
 
@@ -40,5 +66,18 @@ namespace LSWebApp.Models
             }
         }
         #endregion
+    }
+
+    public class ITReturnDetailsListItemModel
+    {
+        public ITHeadMaster CurrentItem { get; set; }
+        public List<ITReturnDetails> ITReturnDetailsListObject { get; set; }
+
+        public ITReturnDetailsListItemModel(ITHeadMaster currentItem,
+            List<ITReturnDetails> itReturnDetailsListObject)
+        {
+            this.CurrentItem = currentItem;
+            this.ITReturnDetailsListObject = itReturnDetailsListObject;
+        }
     }
 }
