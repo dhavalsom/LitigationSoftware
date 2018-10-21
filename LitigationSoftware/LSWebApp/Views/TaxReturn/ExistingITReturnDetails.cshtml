@@ -54,6 +54,12 @@
 @section scripts
 {
 <script type="text/javascript">
+    $(document).on('change', '.collapsible', function (event) {
+        var sender = event.target;
+        var trClass = sender.getAttribute("title");
+        $('.' + trClass).toggle();
+    });
+
     $(document).ready(function () {
         $("#btnsrch").click(function () {
             loadexistingitsections();
@@ -63,6 +69,7 @@
         $("#ITReturnDetailsObject_FYAYID").change(function () {
             loadAssessmentYear();
         });
+
         loadAssessmentYear();
     });
 

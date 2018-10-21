@@ -1,0 +1,104 @@
+﻿@model LSWebApp.Models.ITReturnDetailsListItemModel
+@using LSWebApp.Infrastructure;
+
+<tr class="table-active">
+    <td>
+        @if (Model.CurrentItem.SubHeadList.Any())
+        {
+            <input id="toggle" type="checkbox" class="collapsible" title="@(Model.CurrentItem.PropertyName)"/>
+        }
+        @Model.CurrentItem.Description
+    </td>
+    @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+    {
+        <td>
+            @switch (Model.CurrentItem.PropertyName)
+            {
+                case "IncomefromSalary":
+                    @Utilities.FormatNumber(itsectiondetail.IncomefromSalary)
+                    break;
+                case "HousePropIncome":
+                    @Utilities.FormatNumber(itsectiondetail.HousePropIncome)
+                    break;
+                case "IncomefromCapGainsLTCG":
+                    @Utilities.FormatNumber(itsectiondetail.IncomefromCapGainsLTCG)
+                    break;
+                case "IncomefromCapGainsSTCG":
+                    @Utilities.FormatNumber(itsectiondetail.IncomefromCapGainsSTCG)
+                    break;
+                case "IncomefromBusinessProf":
+                    @Utilities.FormatNumber(itsectiondetail.IncomefromBusinessProf)
+                    break;
+                case "IncomefromSpeculativeBusiness":
+                    @Utilities.FormatNumber(itsectiondetail.IncomefromSpeculativeBusiness)
+                    break;
+                case "IncomeFromOtherSources":
+                    @Utilities.FormatNumber(itsectiondetail.IncomeFromOtherSources)
+                    break;
+                case "DeductChapterVIA":
+                    @Utilities.FormatNumber(itsectiondetail.DeductChapterVIA)
+                    break;
+                case "ProfitUS115JB":
+                    @Utilities.FormatNumber(itsectiondetail.ProfitUS115JB)
+                    break;
+                case "AdvanceTax1installment":
+                    @Utilities.FormatNumber(itsectiondetail.AdvanceTax1installment)
+                    break;
+                case "AdvanceTax2installment":
+                    @Utilities.FormatNumber(itsectiondetail.AdvanceTax2installment)
+                    break;
+                case "AdvanceTax3installment":
+                    @Utilities.FormatNumber(itsectiondetail.AdvanceTax3installment)
+                    break;
+                case "AdvanceTax4installment":
+                    @Utilities.FormatNumber(itsectiondetail.AdvanceTax4installment)
+                    break;
+                case "TDS":
+                    @Utilities.FormatNumber(itsectiondetail.TDS)
+                    break;
+                case "TDS26AS":
+                    @Utilities.FormatNumber(itsectiondetail.TDS26AS)
+                    break;
+                case "TDSasperBooks":
+                    @Utilities.FormatNumber(itsectiondetail.TDSasperBooks)
+                    break;
+                case "TCSPaidbyCompany":
+                    @Utilities.FormatNumber(itsectiondetail.TCSPaidbyCompany)
+                    break;
+                case "SelfAssessmentTax":
+                    @Utilities.FormatNumber(itsectiondetail.SelfAssessmentTax)
+                    break;
+                case "MATCredit":
+                    @Utilities.FormatNumber(itsectiondetail.MATCredit)
+                    break;
+                case "InterestUS234A":
+                    @Utilities.FormatNumber(itsectiondetail.InterestUS234A)
+                    break;
+                case "InterestUS234B":
+                    @Utilities.FormatNumber(itsectiondetail.InterestUS234B)
+                    break;
+                case "InterestUS234C":
+                    @Utilities.FormatNumber(itsectiondetail.InterestUS234C)
+                    break;
+                default:
+                    break;
+            }
+            
+        </td>
+    }
+</tr>
+@foreach (var subHead in @Model.CurrentItem.SubHeadList)
+{
+    <tr class="table-info @(Model.CurrentItem.PropertyName)" style="display:none;">
+        <td>@subHead.Description</td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+                {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.Extensions
+                .Where(e => e.ITSubHeadId == subHead.Id)
+                .FirstOrDefault().ITSubHeadValue)
+            </td>
+        }
+    </tr>
+}
+

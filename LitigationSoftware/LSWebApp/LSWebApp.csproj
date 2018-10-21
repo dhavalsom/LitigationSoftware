@@ -297,6 +297,7 @@
     <Content Include="Views\Shared\_ITHeadDocumentsUploader.cshtml" />
     <Content Include="Views\TaxReturn\ITReturnDocumentList.cshtml" />
     <Content Include="Views\TaxReturn\ITReturnDocuments.cshtml" />
+    <Content Include="Views\TaxReturn\ITReturnDetailsListItem.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

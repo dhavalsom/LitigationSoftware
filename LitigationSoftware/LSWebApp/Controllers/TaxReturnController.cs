@@ -354,6 +354,15 @@ namespace LSWebApp.Controllers
                 if (Res.IsSuccessStatusCode)
                 {
                     itrdetail.ITReturnDetailsListObject = JsonConvert.DeserializeObject<ITReturnDetailsListResponse>(Res.Content.ReadAsStringAsync().Result).ITReturnDetailsListObject;
+                    foreach (var itReturn in itrdetail.ITReturnDetailsListObject)
+                    {
+                        itReturn.Extensions = new List<ITReturnDetailsExtension>();
+                        Res = await client.GetAsync("api/TaxReturnAPI/GetExistingITReturnDetailsExtension?itreturnid=" + itReturn.Id);
+                        if (Res.IsSuccessStatusCode)
+                        {
+                            itReturn.Extensions = JsonConvert.DeserializeObject<List<ITReturnDetailsExtension>>(Res.Content.ReadAsStringAsync().Result);
+                        }
+                    }
                     Res = await client.GetAsync("api/MasterAPI/GetITSubHeadMaster?itHeadId=");
                     var itSubHeads = JsonConvert.DeserializeObject<List<ITSubHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
                     Res = await client.GetAsync("api/MasterAPI/GetITHeadMaster");
