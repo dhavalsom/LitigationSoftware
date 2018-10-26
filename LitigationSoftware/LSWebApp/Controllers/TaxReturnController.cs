@@ -38,24 +38,26 @@ namespace LSWebApp.Controllers
 
         #region Methods
         // GET: TaxReturn
-        //[HttpGet]
-        public ActionResult Index()
+        [HttpGet]
+        public async Task<ActionResult> Index()
         {
-            var model = new CompanyCategoryModel();
+            var model = new CompanyModel();
+            //return View(model);
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                //HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetCompanyCategoryList");
+                HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetCompanyCategoryList");
 
-                //if (Res.IsSuccessStatusCode)
+                if (Res.IsSuccessStatusCode)
                 {
-                    //model.CompanyCategories = JsonConvert.DeserializeObject<List<CompanyCategory>>(Res.Content.ReadAsStringAsync().Result);
-                    //return View(model);
+                    model.CompanyCategoriesList = JsonConvert.DeserializeObject<List<CompanyCategory>>(Res.Content.ReadAsStringAsync().Result);
+                   
                 }
-                return View(model);
+
             }
+            return View(model);
         }
 
         [HttpPost]
@@ -147,7 +149,7 @@ namespace LSWebApp.Controllers
                            }).ToList();
 
 
-                        Res = await client.GetAsync("api/MasterAPI/GetITSectionList?categoryId="+ (itrdetails.ITReturnDetailsObject.ITSectionCategoryID != 0 ? itrdetails.ITReturnDetailsObject.ITSectionCategoryID : 0 ));
+                        Res = await client.GetAsync("api/MasterAPI/GetITSectionList?categoryId="+ (itrdetails.ITReturnDetailsObject.ITSectionCategoryID != 0 ? itrdetails.ITReturnDetailsObject.ITSectionCategoryID : itrdetails.ITSectionCategoryList.First().Id));
                         if (Res.IsSuccessStatusCode)
                         {
                             itrdetails.ITSectionList = JsonConvert.DeserializeObject<List<ITSection>>(Res.Content.ReadAsStringAsync().Result);

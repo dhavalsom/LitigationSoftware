@@ -59,7 +59,7 @@
       <HintPath>..\LS.DAL.Library\bin\Debug\LS.DAL.Library.dll</HintPath>
     </Reference>
     <Reference Include="LS.Models">
-      <HintPath>..\LS.Models\bin\Debug\LS.Models.dll</HintPath>
+      <HintPath>..\LS.Models\bin\Release\LS.Models.dll</HintPath>
     </Reference>
     <Reference Include="LS.Modules">
       <HintPath>..\LS.Modules\bin\Debug\LS.Modules.dll</HintPath>
