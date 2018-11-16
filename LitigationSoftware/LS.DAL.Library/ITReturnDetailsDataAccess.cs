@@ -298,6 +298,7 @@ namespace LS.DAL.Library
                         {
                             Id = int.Parse(reader["Id"].ToString()),
                             ITReturnDetailsId = int.Parse(reader["ITReturnDetailsId"].ToString()),
+                            ITHeadId = int.Parse(reader["ITHeadId"].ToString()),
                             ITSubHeadId = int.Parse(reader["ITSubHeadId"].ToString()),
                             ITSubHeadValue = decimal.Parse(reader["ITSubHeadValue"].ToString()),
                             Active = bool.Parse(reader["Active"].ToString()) 

@@ -58,9 +58,6 @@
     <Reference Include="LS.DAL.Library">
       <HintPath>..\LS.DAL.Library\bin\Debug\LS.DAL.Library.dll</HintPath>
     </Reference>
-    <Reference Include="LS.Models">
-      <HintPath>..\LS.Models\bin\Release\LS.Models.dll</HintPath>
-    </Reference>
     <Reference Include="LS.Modules">
       <HintPath>..\LS.Modules\bin\Debug\LS.Modules.dll</HintPath>
     </Reference>
@@ -316,6 +313,12 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LS.Models\LS.Models.csproj">
+      <Project>{8de0c954-d2d6-420e-8682-586e78d8d593}</Project>
+      <Name>LS.Models</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

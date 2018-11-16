@@ -9,6 +9,7 @@
         #region Display Properties
         public ITSubHeadMaster SubHeadMasterObject { get; set; }
         public ITHeadMaster HeadMasterObject { get; set; }
+        public int ITHeadId { get; set; }
         #endregion
     }
 }

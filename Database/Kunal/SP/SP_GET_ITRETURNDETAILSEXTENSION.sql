@@ -1,16 +1,17 @@
 USE [LitigationApp]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_GET_ITRETURNDETAILSEXTENSION]    Script Date: 10/20/2018 11:20:15 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_GET_ITRETURNDETAILSEXTENSION]    Script Date: 11/16/2018 7:59:18 PM ******/
 DROP PROCEDURE [dbo].[SP_GET_ITRETURNDETAILSEXTENSION]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_GET_ITRETURNDETAILSEXTENSION]    Script Date: 10/20/2018 11:20:15 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_GET_ITRETURNDETAILSEXTENSION]    Script Date: 11/16/2018 7:59:18 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 
@@ -30,20 +31,23 @@ BEGIN
 	IF @ITRETURNDETAILS_ID IS NULL
 	BEGIN
 
-	SELECT [Id]
-      ,ITReturnDetailsId
-	  ,ITSubHeadId
-      ,ITSubHeadValue
-      ,Active
+	SELECT ITRDE.[Id]
+      ,ITRDE.ITReturnDetailsId
+	  ,SH.ITHeadId
+	  ,ITRDE.ITSubHeadId
+      ,ITRDE.ITSubHeadValue
+      ,ITRDE.Active
 	FROM [ITReturnDetailsExtension] ITRDE
+	LEFT OUTER JOIN ITSubHeadMaster SH ON SH.Id = ITRDE.ITSubHeadId
 	WHERE (@ACTIVE IS NULL OR ITRDE.[Active] = @ACTIVE)
-	ORDER BY [Id]
+	ORDER BY ITRDE.[Id]
 
 	END
 	ELSE
 	BEGIN
 		SELECT ISNULL(ITRDE.[Id],0) [Id]
 		  ,@ITRETURNDETAILS_ID AS ITReturnDetailsId
+		  ,SH.ITHeadId
 		  ,SH.Id AS ITSubHeadId
 		  ,ISNULL(ITRDE.ITSubHeadValue,0) AS ITSubHeadValue
 		  ,ISNULL(ITRDE.Active, CONVERT(BIT, 1)) AS Active
@@ -52,6 +56,7 @@ BEGIN
 		ORDER BY ITRDE.[Id]
 	END
 END
+
 
 
 
