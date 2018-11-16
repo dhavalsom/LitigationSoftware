@@ -1,11 +1,51 @@
 ﻿@model LSWebApp.Models.ITReturnDetailsListItemModel
 @using LSWebApp.Infrastructure;
+<style>    
+    .css-label {
+        cursor: pointer;
+    }
+    .css-checkbox {
+        display: none;
+    }
+    .fa {
+        color: white;
+        line-height: 16px;
+        border-radius: 4px;
+    }
+    .fa-plus {
+        padding-top: 2px;
+        padding-right: 2px;
+        padding-left: 2px;
+        background-color: #3AC5C9;
+    }
+    .fa-minus {
+        padding-top: 1px;
+        padding-right: 2px;
+        padding-left: 2px;
+        background-color: #E85764;
+        display: none;
+    }
+    .css-checkbox:checked + .css-label .fa-minus {
+        display: inline;
+    }
+    .css-checkbox:checked + .css-label .fa-plus {
+        display: none;
+    }
+</style>
 
 <tr class="table-active">
     <td>
         @if (Model.CurrentItem.SubHeadList.Any())
         {
-            <input id="toggle" type="checkbox" class="collapsible" title="@(Model.CurrentItem.PropertyName)"/>
+            <input id="toggle_@(Model.CurrentItem.Id.ToString())"
+                   name="toggle_@(Model.CurrentItem.Id.ToString())"
+                   type="checkbox"
+                   class="css-checkbox collapsible"
+                   title="@(Model.CurrentItem.PropertyName)" />
+            <label for="toggle_@(Model.CurrentItem.Id.ToString())" class="css-label">
+                <span class="fa fa-plus"></span>
+                <span class="fa fa-minus"></span>
+            </label>
         }
         @Model.CurrentItem.Description
     </td>
