@@ -193,6 +193,7 @@ namespace LS.Models
         #endregion
 
         #region Methods
+        
         #endregion
     }
 
