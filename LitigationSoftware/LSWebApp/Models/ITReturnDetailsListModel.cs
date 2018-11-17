@@ -53,15 +53,11 @@ namespace LSWebApp.Models
             this.ITHeadMasterList = new Dictionary<string, ITHeadMaster>();
             foreach (var item in headList)
             {
-                item.SubHeadList = subHeadList.Where(sh => sh.ITHeadId == item.Id).ToList<ITSubHeadMaster>();
-
+                item.SubHeadList = subHeadList.Where(sh => sh.ITHeadId == item.Id)
+                                    .ToList<ITSubHeadMaster>();
                 if (!this.ITHeadMasterList.ContainsKey(item.PropertyName))
                 {
                     this.ITHeadMasterList.Add(item.PropertyName, item);
-                }
-                else
-                {
-                    var item2 = item;
                 }
             }
         }

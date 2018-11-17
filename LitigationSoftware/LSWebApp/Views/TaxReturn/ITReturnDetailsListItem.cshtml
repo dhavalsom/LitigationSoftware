@@ -1,89 +1,138 @@
 ﻿@model LSWebApp.Models.ITReturnDetailsListItemModel
 @using LSWebApp.Infrastructure;
+<style>    
+    .css-label {
+        cursor: pointer;
+    }
+    .css-checkbox {
+        display: none;
+    }
+    .fa {
+        color: white;
+        line-height: 16px;
+        border-radius: 4px;
+    }
+    .fa-plus {
+        padding-top: 2px;
+        padding-right: 2px;
+        padding-left: 2px;
+        background-color: #3AC5C9;
+    }
+    .fa-minus {
+        padding-top: 1px;
+        padding-right: 2px;
+        padding-left: 2px;
+        background-color: #E85764;
+        display: none;
+    }
+    .css-checkbox:checked + .css-label .fa-minus {
+        display: inline;
+    }
+    .css-checkbox:checked + .css-label .fa-plus {
+        display: none;
+    }
+</style>
 
 <tr class="table-active">
     <td>
         @if (Model.CurrentItem.SubHeadList.Any())
         {
-            <input id="toggle" type="checkbox" class="collapsible" title="@(Model.CurrentItem.PropertyName)"/>
+            <input id="toggle_@(Model.CurrentItem.Id.ToString())"
+                   name="toggle_@(Model.CurrentItem.Id.ToString())"
+                   type="checkbox"
+                   class="css-checkbox collapsible"
+                   title="@(Model.CurrentItem.PropertyName)" />
+            <label for="toggle_@(Model.CurrentItem.Id.ToString())" class="css-label">
+                <span class="fa fa-plus"></span>
+                <span class="fa fa-minus"></span>
+            </label>
         }
         @Model.CurrentItem.Description
     </td>
     @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
     {
         <td>
-            @switch (Model.CurrentItem.PropertyName)
-            {
-                case "IncomefromSalary":
-                    @Utilities.FormatNumber(itsectiondetail.IncomefromSalary)
-                    break;
-                case "HousePropIncome":
-                    @Utilities.FormatNumber(itsectiondetail.HousePropIncome)
-                    break;
-                case "IncomefromCapGainsLTCG":
-                    @Utilities.FormatNumber(itsectiondetail.IncomefromCapGainsLTCG)
-                    break;
-                case "IncomefromCapGainsSTCG":
-                    @Utilities.FormatNumber(itsectiondetail.IncomefromCapGainsSTCG)
-                    break;
-                case "IncomefromBusinessProf":
-                    @Utilities.FormatNumber(itsectiondetail.IncomefromBusinessProf)
-                    break;
-                case "IncomefromSpeculativeBusiness":
-                    @Utilities.FormatNumber(itsectiondetail.IncomefromSpeculativeBusiness)
-                    break;
-                case "IncomeFromOtherSources":
-                    @Utilities.FormatNumber(itsectiondetail.IncomeFromOtherSources)
-                    break;
-                case "DeductChapterVIA":
-                    @Utilities.FormatNumber(itsectiondetail.DeductChapterVIA)
-                    break;
-                case "ProfitUS115JB":
-                    @Utilities.FormatNumber(itsectiondetail.ProfitUS115JB)
-                    break;
-                case "AdvanceTax1installment":
-                    @Utilities.FormatNumber(itsectiondetail.AdvanceTax1installment)
-                    break;
-                case "AdvanceTax2installment":
-                    @Utilities.FormatNumber(itsectiondetail.AdvanceTax2installment)
-                    break;
-                case "AdvanceTax3installment":
-                    @Utilities.FormatNumber(itsectiondetail.AdvanceTax3installment)
-                    break;
-                case "AdvanceTax4installment":
-                    @Utilities.FormatNumber(itsectiondetail.AdvanceTax4installment)
-                    break;
-                case "TDS":
-                    @Utilities.FormatNumber(itsectiondetail.TDS)
-                    break;
-                case "TDS26AS":
-                    @Utilities.FormatNumber(itsectiondetail.TDS26AS)
-                    break;
-                case "TDSasperBooks":
-                    @Utilities.FormatNumber(itsectiondetail.TDSasperBooks)
-                    break;
-                case "TCSPaidbyCompany":
-                    @Utilities.FormatNumber(itsectiondetail.TCSPaidbyCompany)
-                    break;
-                case "SelfAssessmentTax":
-                    @Utilities.FormatNumber(itsectiondetail.SelfAssessmentTax)
-                    break;
-                case "MATCredit":
-                    @Utilities.FormatNumber(itsectiondetail.MATCredit)
-                    break;
-                case "InterestUS234A":
-                    @Utilities.FormatNumber(itsectiondetail.InterestUS234A)
-                    break;
-                case "InterestUS234B":
-                    @Utilities.FormatNumber(itsectiondetail.InterestUS234B)
-                    break;
-                case "InterestUS234C":
-                    @Utilities.FormatNumber(itsectiondetail.InterestUS234C)
-                    break;
-                default:
-                    break;
+            @if (itsectiondetail.IsReturn
+                || !Model.CurrentItem.CanAddSubHead)
+            {  
+                switch (Model.CurrentItem.PropertyName)
+                {
+                    case "IncomefromSalary":
+                        @Utilities.FormatNumber(itsectiondetail.IncomefromSalary)
+                        break;
+                    case "HousePropIncome":
+                        @Utilities.FormatNumber(itsectiondetail.HousePropIncome)
+                        break;
+                    case "IncomefromCapGainsLTCG":
+                        @Utilities.FormatNumber(itsectiondetail.IncomefromCapGainsLTCG)
+                        break;
+                    case "IncomefromCapGainsSTCG":
+                        @Utilities.FormatNumber(itsectiondetail.IncomefromCapGainsSTCG)
+                        break;
+                    case "IncomefromBusinessProf":
+                        @Utilities.FormatNumber(itsectiondetail.IncomefromBusinessProf)
+                        break;
+                    case "IncomefromSpeculativeBusiness":
+                        @Utilities.FormatNumber(itsectiondetail.IncomefromSpeculativeBusiness)
+                        break;
+                    case "IncomeFromOtherSources":
+                        @Utilities.FormatNumber(itsectiondetail.IncomeFromOtherSources)
+                        break;
+                    case "DeductChapterVIA":
+                        @Utilities.FormatNumber(itsectiondetail.DeductChapterVIA)
+                        break;
+                    case "ProfitUS115JB":
+                        @Utilities.FormatNumber(itsectiondetail.ProfitUS115JB)
+                        break;
+                    case "AdvanceTax1installment":
+                        @Utilities.FormatNumber(itsectiondetail.AdvanceTax1installment)
+                        break;
+                    case "AdvanceTax2installment":
+                        @Utilities.FormatNumber(itsectiondetail.AdvanceTax2installment)
+                        break;
+                    case "AdvanceTax3installment":
+                        @Utilities.FormatNumber(itsectiondetail.AdvanceTax3installment)
+                        break;
+                    case "AdvanceTax4installment":
+                        @Utilities.FormatNumber(itsectiondetail.AdvanceTax4installment)
+                        break;
+                    case "TDS":
+                        @Utilities.FormatNumber(itsectiondetail.TDS)
+                        break;
+                    case "TDS26AS":
+                        @Utilities.FormatNumber(itsectiondetail.TDS26AS)
+                        break;
+                    case "TDSasperBooks":
+                        @Utilities.FormatNumber(itsectiondetail.TDSasperBooks)
+                        break;
+                    case "TCSPaidbyCompany":
+                        @Utilities.FormatNumber(itsectiondetail.TCSPaidbyCompany)
+                        break;
+                    case "SelfAssessmentTax":
+                        @Utilities.FormatNumber(itsectiondetail.SelfAssessmentTax)
+                        break;
+                    case "MATCredit":
+                        @Utilities.FormatNumber(itsectiondetail.MATCredit)
+                        break;
+                    case "InterestUS234A":
+                        @Utilities.FormatNumber(itsectiondetail.InterestUS234A)
+                        break;
+                    case "InterestUS234B":
+                        @Utilities.FormatNumber(itsectiondetail.InterestUS234B)
+                        break;
+                    case "InterestUS234C":
+                        @Utilities.FormatNumber(itsectiondetail.InterestUS234C)
+                        break;
+                    default:
+                        break;
+                }
             }
-            
+            else
+            {
+                @Utilities.FormatNumber(itsectiondetail.Extensions
+                .Where(e => e.ITHeadId == Model.CurrentItem.Id)
+                .Sum(e=>e.ITSubHeadValue))
+            }
         </td>
     }
 </tr>
