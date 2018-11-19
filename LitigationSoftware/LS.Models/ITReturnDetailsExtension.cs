@@ -10,6 +10,7 @@
         public ITSubHeadMaster SubHeadMasterObject { get; set; }
         public ITHeadMaster HeadMasterObject { get; set; }
         public int ITHeadId { get; set; }
+        public bool IsAllowance { get; set; }
         #endregion
     }
 }

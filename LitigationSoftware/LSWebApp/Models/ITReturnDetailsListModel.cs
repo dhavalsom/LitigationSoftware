@@ -68,12 +68,15 @@ namespace LSWebApp.Models
     {
         public ITHeadMaster CurrentItem { get; set; }
         public List<ITReturnDetails> ITReturnDetailsListObject { get; set; }
+        public Dictionary<string, ITHeadMaster> ITHeadMasterList { get; set; }
 
         public ITReturnDetailsListItemModel(ITHeadMaster currentItem,
-            List<ITReturnDetails> itReturnDetailsListObject)
+            List<ITReturnDetails> itReturnDetailsListObject,
+            Dictionary<string, ITHeadMaster> itHeadMasterList)
         {
             this.CurrentItem = currentItem;
             this.ITReturnDetailsListObject = itReturnDetailsListObject;
+            this.ITHeadMasterList = itHeadMasterList;
         }
     }
 }
