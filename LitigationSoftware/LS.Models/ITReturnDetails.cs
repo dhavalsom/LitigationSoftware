@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LS.Models
 {
@@ -193,7 +194,88 @@ namespace LS.Models
         #endregion
 
         #region Methods
-        
+        public decimal? GetTotalComputedValue(ITHeadMaster itHeadMaster)
+        {
+            decimal? result = 0;
+            switch(itHeadMaster.PropertyName)
+            {
+                case "IncomefromSalary":
+                    result += this.IncomefromSalary.HasValue ? this.IncomefromSalary.Value : 0;
+                    break;
+                case "HousePropIncome":
+                    result += this.HousePropIncome.HasValue ? this.HousePropIncome.Value : 0;
+                    break;
+                case "IncomefromCapGainsLTCG":
+                    result += this.IncomefromCapGainsLTCG.HasValue ? this.IncomefromCapGainsLTCG.Value : 0;
+                    break;
+                case "IncomefromCapGainsSTCG":
+                    result += this.IncomefromCapGainsSTCG.HasValue ? this.IncomefromCapGainsSTCG.Value : 0;
+                    break;
+                case "IncomefromBusinessProf":
+                    result += this.IncomefromBusinessProf.HasValue ? this.IncomefromBusinessProf.Value : 0;
+                    break;
+                case "IncomefromSpeculativeBusiness":
+                    result += this.IncomefromSpeculativeBusiness.HasValue ? this.IncomefromSpeculativeBusiness.Value : 0;
+                    break;
+                case "IncomeFromOtherSources":
+                    result += this.IncomeFromOtherSources.HasValue ? this.IncomeFromOtherSources.Value : 0;
+                    break;
+                case "DeductChapterVIA":
+                    result += this.DeductChapterVIA.HasValue ? this.DeductChapterVIA.Value : 0;
+                    break;
+                case "ProfitUS115JB":
+                    result += this.ProfitUS115JB.HasValue ? this.ProfitUS115JB.Value : 0;
+                    break;
+                case "AdvanceTax1installment":
+                    result += this.AdvanceTax1installment.HasValue ? this.AdvanceTax1installment.Value : 0;
+                    break;
+                case "AdvanceTax2installment":
+                    result += this.AdvanceTax2installment.HasValue ? this.AdvanceTax2installment.Value : 0;
+                    break;
+                case "AdvanceTax3installment":
+                    result += this.AdvanceTax3installment.HasValue ? this.AdvanceTax3installment.Value : 0;
+                    break;
+                case "AdvanceTax4installment":
+                    result += this.AdvanceTax4installment.HasValue ? this.AdvanceTax4installment.Value : 0;
+                    break;
+                case "TDS":
+                    result += this.TDS.HasValue ? this.TDS.Value : 0;
+                    break;
+                case "TDS26AS":
+                    result += this.TDS26AS.HasValue ? this.TDS26AS.Value : 0;
+                    break;
+                case "TDSasperBooks":
+                    result += this.TDSasperBooks.HasValue ? this.TDSasperBooks.Value : 0;
+                    break;
+                case "TCSPaidbyCompany":
+                    result += this.TCSPaidbyCompany.HasValue ? this.TCSPaidbyCompany.Value : 0;
+                    break;
+                case "SelfAssessmentTax":
+                    result += this.SelfAssessmentTax.HasValue ? this.SelfAssessmentTax.Value : 0;
+                    break;
+                case "MATCredit":
+                    result += this.MATCredit.HasValue ? this.MATCredit.Value : 0;
+                    break;
+                case "InterestUS234A":
+                    result += this.InterestUS234A.HasValue ? this.InterestUS234A.Value : 0;
+                    break;
+                case "InterestUS234B":
+                    result += this.InterestUS234B.HasValue ? this.InterestUS234B.Value : 0;
+                    break;
+                case "InterestUS234C":
+                    result += this.InterestUS234C.HasValue ? this.InterestUS234C.Value : 0;
+                    break;
+                default:
+                    break; 
+            }
+            result += this.Extensions
+                    .Where(e => e.ITHeadId == itHeadMaster.Id && !e.IsAllowance)
+                    .Sum(e => e.ITSubHeadValue)
+                - this.Extensions
+                    .Where(e => e.ITHeadId == itHeadMaster.Id && e.IsAllowance)
+                    .Sum(e => e.ITSubHeadValue);
+            return result;
+        }        
         #endregion
     }
 

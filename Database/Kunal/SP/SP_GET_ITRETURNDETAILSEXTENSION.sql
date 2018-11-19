@@ -36,6 +36,7 @@ BEGIN
 	  ,SH.ITHeadId
 	  ,ITRDE.ITSubHeadId
       ,ITRDE.ITSubHeadValue
+	  ,SH.IsAllowance
       ,ITRDE.Active
 	FROM [ITReturnDetailsExtension] ITRDE
 	LEFT OUTER JOIN ITSubHeadMaster SH ON SH.Id = ITRDE.ITSubHeadId
@@ -50,6 +51,7 @@ BEGIN
 		  ,SH.ITHeadId
 		  ,SH.Id AS ITSubHeadId
 		  ,ISNULL(ITRDE.ITSubHeadValue,0) AS ITSubHeadValue
+		  ,SH.IsAllowance
 		  ,ISNULL(ITRDE.Active, CONVERT(BIT, 1)) AS Active
 		FROM ITSubHeadMaster SH
 		LEFT OUTER JOIN [ITReturnDetailsExtension] ITRDE ON ITRDE.ITSubHeadId = SH.Id AND ITRDE.ITReturnDetailsId = @ITRETURNDETAILS_ID
