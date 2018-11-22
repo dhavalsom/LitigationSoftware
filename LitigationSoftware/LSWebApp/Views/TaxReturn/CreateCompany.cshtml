@@ -1,0 +1,63 @@
+﻿@model  LSWebApp.Models.CompanyModel
+@{
+    ViewBag.Title = "Create Company";
+    Layout = "~/Views/Shared/_LayoutDynemicMenu.cshtml";
+}
+
+<h3>Register a new company</h3>
+
+@using (Html.BeginForm("CreateCompany", "TaxReturn"))
+{
+    @Html.AntiForgeryToken()
+    <table>
+        <tr>
+            <td>
+                <div class="form-group">
+                    Company Name:
+                </div>
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.companyObject.CompanyName
+                    , new { @class = "form-control-sm", @placeholder = "Enter new company name" })
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="form-group">
+                    Category:
+                </div>
+            </td>
+            <td>
+                @Html.DropDownListFor(m => m.companyObject.CategoryID
+                , new SelectList(Model.CompanyCategoriesList, "Id", "CategoryDesc"))
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="form-group">
+                    PANNumber:
+                </div>
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.companyObject.PANNumber
+                , new { @class = "form-control-sm panvalidation"
+                , @placeholder = "Enter PAN number" })
+                <div class="form-group text-danger">
+                    Invalid Pan number
+                </div>
+            </td>
+        </tr>
+        <tr style="height:20px;"></tr>
+        <tr style="height:20px;"></tr>
+        <tr>
+            <td colspan="2" align="center">
+                <button type="submit" class="btn btn-primary">Create Company</button>
+            </td>
+        </tr>
+
+    </table>
+
+}
+
+
+

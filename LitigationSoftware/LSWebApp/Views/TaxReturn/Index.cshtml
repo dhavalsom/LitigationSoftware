@@ -1,60 +1,72 @@
-﻿@model  LSWebApp.Models.CompanyModel
+﻿@model  LSWebApp.Models.DashboardModel
 @{
     ViewBag.Title = "My Dashboard";
-    //Layout = "~/Views/Shared/_LayoutDynemicMenu.cshtml";
+    Layout = "~/Views/Shared/_LayoutDynemicMenu.cshtml";
 }
+<style>
+    table, th, td {
+        border: 1px solid black;
+    }
+</style>
 
-<h3>Register a new company</h3>
+<h3>Dashboard</h3>
 
-@using (Html.BeginForm("CreateCompany", "TaxReturn"))
-{
-
-    @*@Html.AntiForgeryToken()*@
-    <table>
-        <tr>
-            <td>
-                <div class="form-group">
-                    Company Name:
-                </div>
-            </td>
-            <td>
-                @Html.TextBoxFor(m => m.companyObject.CompanyName, new { @class = "form-control-sm", @placeholder = "Enter new company name" })
-            </td>
+<table class="table table-hover">
+    <thead>
+        <th>Index</th> 
+        <th>Report</th>
+        <th>Category</th>
+    </thead>
+    <tbody>
+        <tr class="table-active">
+            <td>a)</td>   
+            <td>Litigation management - filing deadlines</td> 
+            <td>- User category to be defined</td>
         </tr>
-        <tr>
-            <td>
-                <div class="form-group">
-                    Category:
-                </div>
-            </td>
-            <td>
-                @Html.DropDownListFor(m => m.companyObject.CategoryID, new SelectList(Model.CompanyCategoriesList, "Id", "CategoryDesc"))
-            </td>
+        <tr class="table-active">
+            <td>b)</td>
+            <td>Statement of tax related disclosure</td>
+            <td>- User category to be defined</td>
         </tr>
-        <tr>
-            <td>
-                <div class="form-group">
-                    PANNumber:
-                </div>
-            </td>
-            <td>
-                @Html.TextBoxFor(m => m.companyObject.PANNumber, new { @class = "form-control-sm panvalidation", @placeholder = "Enter PAN number" })
-                <div class="form-group text-danger">
-                    Invalid Pan number
-                </div>
-            </td>
+        <tr class="table-active">
+            <td>c)</td>
+            <td>ETR analysis</td>
+            <td>- User category to be defined</td>
         </tr>
-        <tr style="height:20px;"></tr>
-        <tr style="height:20px;"></tr>
-        <tr>
-            <td colspan="2" align="center">
-                <button type="submit" class="btn btn-primary">Create Company</button>
-            </td>
+        <tr class="table-active">
+            <td>d)</td>
+            <td>Discharge of tax liability</td>
+            <td>- User category to be defined</td>
         </tr>
+        <tr class="table-active">
+            <td>e)</td>
+            <td>Return filing compliance</td>
+            <td>- User category to be defined</td>
+        </tr>
+        <tr class="table-active">
+            <td>f)</td>
+            <td>Key issues and trends</td>
+            <td>- User category to be defined</td>
+        </tr>
+        <tr class="table-active">
+            <td>g)</td>
+            <td>Working capital lock up</td>
+            <td>- User category to be defined</td>
+        </tr>
+        <tr class="table-active">
+            <td>h)</td>
+            <td>Group summary</td>
+            <td>- User category to be defined</td>
+        </tr>
+        <tr class="table-active">
+            <td>i)</td>
+            <td>Company summary</td>
+            <td>- User category to be defined</td>
+        </tr>
+    </tbody>
+</table>
 
-    </table>
 
-}
 
 @section scripts
 {

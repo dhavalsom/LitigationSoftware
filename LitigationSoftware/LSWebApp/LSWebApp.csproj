@@ -170,7 +170,14 @@
     <Compile Include="Infrastructure\Menu.cs" />
     <Compile Include="Infrastructure\MenuItem.cs" />
     <Compile Include="Infrastructure\Utilities.cs" />
+    <Compile Include="Models\BusinessLossAnalysisModel.cs" />
+    <Compile Include="Models\FlowChartModel.cs" />
+    <Compile Include="Models\MatCreditStatusModel.cs" />
+    <Compile Include="Models\SummaryReportModel.cs" />
+    <Compile Include="Models\RDAnalysisModel.cs" />
     <Compile Include="Models\CompanyList.cs" />
+    <Compile Include="Models\CompanyDashboardModel.cs" />
+    <Compile Include="Models\DashboardModel.cs" />
     <Compile Include="Models\CompanyModel.cs" />
     <Compile Include="Models\ITHeadDocumentsUploaderModel.cs" />
     <Compile Include="Models\ITReturnComplexModel.cs" />
@@ -239,7 +246,9 @@
     <Content Include="images\save.png" />
     <Content Include="images\upload.png" />
     <Content Include="images\view.png" />
-    <Content Include="Menu.xml" />
+    <Content Include="Menu.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Scripts\bootstrap-datepicker.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -295,6 +304,13 @@
     <Content Include="Views\TaxReturn\ITReturnDocumentList.cshtml" />
     <Content Include="Views\TaxReturn\ITReturnDocuments.cshtml" />
     <Content Include="Views\TaxReturn\ITReturnDetailsListItem.cshtml" />
+    <Content Include="Views\TaxReturn\CreateCompany.cshtml" />
+    <Content Include="Views\TaxReturn\CompanyDashboard.cshtml" />
+    <Content Include="Views\TaxReturn\RDAnalysis.cshtml" />
+    <Content Include="Views\TaxReturn\SummaryReport.cshtml" />
+    <Content Include="Views\TaxReturn\MatCreditStatus.cshtml" />
+    <Content Include="Views\TaxReturn\BusinessLossAnalysis.cshtml" />
+    <Content Include="Views\TaxReturn\FlowChart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -12,8 +12,10 @@
 <body>
     <div>
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-            <a class="navbar-brand" href="#">Litigation App</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation" style="">
+            <a class="navbar-brand" href="/dashboard">Litigation App</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" 
+                    data-target="#navbarColor01" aria-controls="navbarColor01" 
+                    aria-expanded="false" aria-label="Toggle navigation" style="">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarColor01">
@@ -47,9 +49,14 @@
                         {
                             <li class="nav-item">
                                 <a class="nav-link" 
-                                    href="@(string.IsNullOrEmpty(menu.ActionName) 
-                                        ? "#" 
-                                        : Url.Action(menu.ActionName, menu.ControllerName))">
+                                    href="@(string.IsNullOrEmpty(menu.ActionName)
+                                        ? "#"
+                                        : (menu.ActionName == "GetITReturnDetails" 
+                                            ? Url.Action(menu.ActionName, menu.ControllerName, new { userId = 0, FYAYID=0, itreturnid=0 })
+                                            : (menu.ActionName == "CompanyDashboard" 
+                                            ? Url.Action(menu.ActionName, menu.ControllerName, new { companyId = (HttpContext.Current.Session["SelectedCompany"] as LS.Models.Company).Id })
+                                            : Url.Action(menu.ActionName, menu.ControllerName)))
+                                            )" >
                                     @menu.DisplayText
                                 </a>
                             </li>

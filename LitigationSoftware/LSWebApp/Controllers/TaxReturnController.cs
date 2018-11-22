@@ -37,27 +37,28 @@ namespace LSWebApp.Controllers
         #endregion
 
         #region Methods
-        // GET: TaxReturn
         [HttpGet]
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
-            var model = new CompanyModel();
-            //return View(model);
+            return View(new DashboardModel());
+        }
+        
+        [HttpGet]
+        public async Task<ActionResult> CreateCompany()
+        {
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetCompanyCategoryList");
-
+                var model = new CompanyModel();
                 if (Res.IsSuccessStatusCode)
                 {
                     model.CompanyCategoriesList = JsonConvert.DeserializeObject<List<CompanyCategory>>(Res.Content.ReadAsStringAsync().Result);
-                   
                 }
-
+                return View(model);
             }
-            return View(model);
         }
 
         [HttpPost]
@@ -100,9 +101,17 @@ namespace LSWebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetITReturnDetails(int? userId, int companyId, string companyname,int FYAYID, int? itsectionid, int? itreturnid,int? itsectioncategoryid)
+        public async Task<ActionResult> GetITReturnDetails(int? userId, int FYAYID
+            , int? itsectionid, int? itreturnid, int? itsectioncategoryid)
         {
-            ITReturnDetailsModel itrdetails = await CommonGetITReturnDetails(userId, companyId, companyname, FYAYID, itsectionid, itreturnid, itsectioncategoryid);
+            var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+
+            ITReturnDetailsModel itrdetails = await CommonGetITReturnDetails(userId, selectedCompany.Id
+                , selectedCompany.CompanyName, FYAYID, itsectionid, itreturnid, itsectioncategoryid);
             return View(itrdetails);
         }
 
@@ -308,21 +317,113 @@ namespace LSWebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> ExistingITReturnDetails(ITReturnDetails itrdetails1)
+        public async Task<ActionResult> CompanyDashboard(int companyId)
         {
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetCompanyList");
+                if (Res.IsSuccessStatusCode)
+                {
+                    var selectedCompany = JsonConvert.DeserializeObject<List<Company>>
+                        (Res.Content.ReadAsStringAsync().Result).Where(c => c.Id == companyId).FirstOrDefault();
+                    if (selectedCompany != null)
+                    {
+                        HttpContext.Session["SelectedCompany"] = selectedCompany;
+                    }
+                }
+            }
+            return View(new CompanyDashboardModel() { CompanyObject = HttpContext.Session["SelectedCompany"]  as Company });
+        }
+
+        [HttpGet]
+        public ActionResult BusinessLossAnalysis()
+        {
+            var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+            return View(new BusinessLossAnalysisModel()
+            {
+                CompanyObject = HttpContext.Session["SelectedCompany"] as Company
+            });
+        }
+
+        [HttpGet]
+        public ActionResult FlowChart()
+        {
+            var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+            return View(new FlowChartModel()
+            {
+                CompanyObject = HttpContext.Session["SelectedCompany"] as Company
+            });
+        }
+
+        [HttpGet]
+        public ActionResult MatCreditStatus()
+        {
+            var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+            return View(new MatCreditStatusModel()
+            {
+                CompanyObject = HttpContext.Session["SelectedCompany"] as Company
+            });
+        }
+
+        [HttpGet]
+        public ActionResult SummaryReport()
+        {
+            var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+            return View(new SummaryReportModel()
+            {
+                CompanyObject = HttpContext.Session["SelectedCompany"] as Company
+            });
+        }
+
+        [HttpGet]
+        public ActionResult RDAnalysis()
+        {
+            var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+            return View(new RDAnalysisModel()
+            {
+                CompanyObject = HttpContext.Session["SelectedCompany"] as Company
+            });
+        }
+        [HttpGet]
+        public async Task<ActionResult> ExistingITReturnDetails()
+        {
+            var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
             ITReturnDetailsModel itrdetails = new ITReturnDetailsModel
             {
                 ITReturnDetailsObject = new ITReturnDetails
                 {
-                    CompanyID = itrdetails1.CompanyID,
-                    CompanyName = itrdetails1.CompanyName,
-                    AddedBy = itrdetails1.AddedBy,
+                    CompanyID = selectedCompany.Id,
+                    CompanyName = selectedCompany.CompanyName,
                     Broughtforwardlosses = false
-                    //IncomefromBusinessProf = false,
-                    //RevisedReturnFile = false
                 }
             };
-
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
@@ -334,8 +435,7 @@ namespace LSWebApp.Controllers
                     itrdetails.FYAYList = JsonConvert.DeserializeObject<List<FYAY>>(Res.Content.ReadAsStringAsync().Result);
                 }
             }
-
-                return View(itrdetails);
+            return View(itrdetails);
         }
 
         [HttpGet]
@@ -431,8 +531,6 @@ namespace LSWebApp.Controllers
                     , new RouteValueDictionary(new
                     {
                         userId = objITHeadDocumentsUploaderModel.ObjITReturnDocuments.AddedBy,
-                        companyId = objITHeadDocumentsUploaderModel.ObjITReturnDetails.CompanyID,
-                        companyname = objITHeadDocumentsUploaderModel.ObjITReturnDetails.CompanyName,
                         FYAYID = objITHeadDocumentsUploaderModel.ObjITReturnDetails.FYAYID,
                         itsectionid = objITHeadDocumentsUploaderModel.ObjITReturnDetails.ITSectionID,
                         itreturnid = objITHeadDocumentsUploaderModel.ObjITReturnDocuments.ITReturnDetailsId
@@ -480,8 +578,6 @@ namespace LSWebApp.Controllers
                     , new RouteValueDictionary(new
                     {
                         userId = itrcomplexmodel.ITReturnDetailsObject.AddedBy,
-                        companyId = itrcomplexmodel.ITReturnDetailsObject.CompanyID,
-                        companyname = itrcomplexmodel.ITReturnDetailsObject.CompanyName,
                         FYAYID = itrcomplexmodel.ITReturnDetailsObject.FYAYID,
                         itsectionid = itrcomplexmodel.ITReturnDetailsObject.ITSectionID,
                         itreturnid = result.ITReturnDetailsObject.Id
@@ -533,11 +629,17 @@ namespace LSWebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetITReturnDocuments(int? companyId, int? fyayId, int? itHeadId)
+        public async Task<ActionResult> GetITReturnDocuments(int? fyayId, int? itHeadId)
         {
+            var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+
             ITReturnDocumentsModel model = new ITReturnDocumentsModel()
             {
-                CompanyId = companyId,
+                CompanyId = selectedCompany.Id,
                 FYAYId = fyayId,
                 ITHeadId = itHeadId
             };
@@ -558,12 +660,17 @@ namespace LSWebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetITReturnDocumentList(int? companyId, int? fyayId
+        public async Task<ActionResult> GetITReturnDocumentList( int? fyayId
             , int? itReturnDetailsId, int? itHeadId, int? itReturnDocumentId)
         {
+            var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
             ITReturnDocumentListModel model = new ITReturnDocumentListModel()
             {
-                CompanyId = companyId,
+                CompanyId = selectedCompany.Id,
                 FYAYId = fyayId,
                 ITHeadId = itHeadId,
                 ITReturnDetailsId = itReturnDetailsId,
@@ -575,7 +682,7 @@ namespace LSWebApp.Controllers
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpResponseMessage Res = await client.GetAsync("api/TaxReturnAPI/GetITReturnDocumentsList?companyId="
-                     + companyId + "&fyayId=" + fyayId
+                     + selectedCompany.Id + "&fyayId=" + fyayId
                      + "&itReturnDetailsId=" + itReturnDetailsId
                      + "&itHeadId=" + itHeadId
                      + "&itReturnDocumentId=" + itReturnDocumentId);
@@ -586,11 +693,17 @@ namespace LSWebApp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetComplianceList(int? companyId, int? fyayId)
+        public async Task<ActionResult> GetComplianceList(int? fyayId)
         {
+            var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+
             ComplianceListModel model = new ComplianceListModel()
             {
-                CompanyId = companyId,
+                CompanyId = selectedCompany.Id,
                 FYAYId = fyayId
             };
             using (var client = new HttpClient())
@@ -762,6 +875,7 @@ namespace LSWebApp.Controllers
             }
             return Json(model, JsonRequestBehavior.AllowGet);
         }
+
         #endregion
     }
 }
