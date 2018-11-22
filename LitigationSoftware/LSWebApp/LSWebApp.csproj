@@ -170,6 +170,11 @@
     <Compile Include="Infrastructure\Menu.cs" />
     <Compile Include="Infrastructure\MenuItem.cs" />
     <Compile Include="Infrastructure\Utilities.cs" />
+    <Compile Include="Models\BusinessLossAnalysisModel.cs" />
+    <Compile Include="Models\FlowChartModel.cs" />
+    <Compile Include="Models\MatCreditStatusModel.cs" />
+    <Compile Include="Models\SummaryReportModel.cs" />
+    <Compile Include="Models\RDAnalysisModel.cs" />
     <Compile Include="Models\CompanyList.cs" />
     <Compile Include="Models\CompanyDashboardModel.cs" />
     <Compile Include="Models\DashboardModel.cs" />
@@ -301,6 +306,11 @@
     <Content Include="Views\TaxReturn\ITReturnDetailsListItem.cshtml" />
     <Content Include="Views\TaxReturn\CreateCompany.cshtml" />
     <Content Include="Views\TaxReturn\CompanyDashboard.cshtml" />
+    <Content Include="Views\TaxReturn\RDAnalysis.cshtml" />
+    <Content Include="Views\TaxReturn\SummaryReport.cshtml" />
+    <Content Include="Views\TaxReturn\MatCreditStatus.cshtml" />
+    <Content Include="Views\TaxReturn\BusinessLossAnalysis.cshtml" />
+    <Content Include="Views\TaxReturn\FlowChart.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

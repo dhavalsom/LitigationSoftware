@@ -335,9 +335,78 @@ namespace LSWebApp.Controllers
                     }
                 }
             }
-            return View(new CompanyDashboardModel());
+            return View(new CompanyDashboardModel() { CompanyObject = HttpContext.Session["SelectedCompany"]  as Company });
         }
 
+        [HttpGet]
+        public ActionResult BusinessLossAnalysis()
+        {
+            var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+            return View(new BusinessLossAnalysisModel()
+            {
+                CompanyObject = HttpContext.Session["SelectedCompany"] as Company
+            });
+        }
+
+        [HttpGet]
+        public ActionResult FlowChart()
+        {
+            var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+            return View(new FlowChartModel()
+            {
+                CompanyObject = HttpContext.Session["SelectedCompany"] as Company
+            });
+        }
+
+        [HttpGet]
+        public ActionResult MatCreditStatus()
+        {
+            var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+            return View(new MatCreditStatusModel()
+            {
+                CompanyObject = HttpContext.Session["SelectedCompany"] as Company
+            });
+        }
+
+        [HttpGet]
+        public ActionResult SummaryReport()
+        {
+            var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+            return View(new SummaryReportModel()
+            {
+                CompanyObject = HttpContext.Session["SelectedCompany"] as Company
+            });
+        }
+
+        [HttpGet]
+        public ActionResult RDAnalysis()
+        {
+            var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+            return View(new RDAnalysisModel()
+            {
+                CompanyObject = HttpContext.Session["SelectedCompany"] as Company
+            });
+        }
         [HttpGet]
         public async Task<ActionResult> ExistingITReturnDetails()
         {

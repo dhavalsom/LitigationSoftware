@@ -53,7 +53,9 @@
                                         ? "#"
                                         : (menu.ActionName == "GetITReturnDetails" 
                                             ? Url.Action(menu.ActionName, menu.ControllerName, new { userId = 0, FYAYID=0, itreturnid=0 })
-                                            : Url.Action(menu.ActionName, menu.ControllerName))
+                                            : (menu.ActionName == "CompanyDashboard" 
+                                            ? Url.Action(menu.ActionName, menu.ControllerName, new { companyId = (HttpContext.Current.Session["SelectedCompany"] as LS.Models.Company).Id })
+                                            : Url.Action(menu.ActionName, menu.ControllerName)))
                                             )" >
                                     @menu.DisplayText
                                 </a>

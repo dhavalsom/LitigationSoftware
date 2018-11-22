@@ -3,10 +3,10 @@ using LSWebApp.Infrastructure;
 
 namespace LSWebApp.Models
 {
-    public class CompanyDashboardModel : ViewModelBase
+    public class FlowChartModel : ViewModelBase
     {
         public Company CompanyObject { get; set; }
-        public CompanyDashboardModel() : base(Pages.ITReturnDetailsPage)
+        public FlowChartModel() : base(Pages.ITReturnDetailsPage)
         {
         }
     }

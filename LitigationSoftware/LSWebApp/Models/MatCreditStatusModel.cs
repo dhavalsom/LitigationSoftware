@@ -3,10 +3,10 @@ using LSWebApp.Infrastructure;
 
 namespace LSWebApp.Models
 {
-    public class CompanyDashboardModel : ViewModelBase
+    public class MatCreditStatusModel : ViewModelBase
     {
         public Company CompanyObject { get; set; }
-        public CompanyDashboardModel() : base(Pages.ITReturnDetailsPage)
+        public MatCreditStatusModel() : base(Pages.ITReturnDetailsPage)
         {
         }
     }

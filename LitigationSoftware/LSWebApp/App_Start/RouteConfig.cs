@@ -128,6 +128,75 @@ namespace LSWebApp
             );
 
             routes.MapRoute(
+                name: "rdanalysis",
+                url: "rdanalysis",
+                defaults: new
+                {
+                    controller = "TaxReturn",
+                    action = "RDAnalysis"
+                    ,
+                    id = UrlParameter.Optional
+                }
+            );
+
+            routes.MapRoute(
+                name: "summaryreport",
+                url: "summaryreport",
+                defaults: new
+                {
+                    controller = "TaxReturn",
+                    action = "SummaryReport"
+                    ,
+                    id = UrlParameter.Optional
+                }
+            );
+
+            routes.MapRoute(
+                name: "flowchart",
+                url: "flowchart",
+                defaults: new
+                {
+                    controller = "TaxReturn",
+                    action = "FlowChart"
+                    ,
+                    id = UrlParameter.Optional
+                }
+            );
+
+            routes.MapRoute(
+                name: "blanalysis",
+                url: "blanalysis",
+                defaults: new
+                {
+                    controller = "TaxReturn",
+                    action = "BusinessLossAnalysis"
+                    ,
+                    id = UrlParameter.Optional
+                }
+            );
+
+            routes.MapRoute(
+                name: "matcredit",
+                url: "matcredit",
+                defaults: new
+                {
+                    controller = "TaxReturn",
+                    action = "MatCreditStatus",
+                    id = UrlParameter.Optional
+                }
+            );
+
+            routes.MapRoute(
+                name: "companydashboard",
+                url: "companydashboard/{companyId}",
+                defaults: new
+                {
+                    controller = "TaxReturn",
+                    action = "CompanyDashboard",
+                    id = UrlParameter.Optional
+                }
+            );
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Login", action = "Index", id = UrlParameter.Optional }
