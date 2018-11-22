@@ -10,7 +10,7 @@ namespace LSWebApp.Models
         public Company companyObject { get; set; }
         public List<CompanyCategory> CompanyCategoriesList { get; set; }
 
-        public CompanyModel() : base(Pages.ITReturnDetailsPage)
+        public CompanyModel() : base(Pages.Dashboard)
         {
         }
     }

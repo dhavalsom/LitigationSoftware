@@ -1,9 +1,9 @@
 ﻿@model LSWebApp.Models.ComplianceListModel
 @{
-    ViewBag.Title = "Manage Compliances";
-    //Layout = "~/Views/Shared/_LayoutDynemicMenu.cshtml";
+    ViewBag.Title = "Compliances";
+    Layout = "~/Views/Shared/_LayoutDynemicMenu.cshtml";
 }
-<h2>Manage Compliances</h2>
+<h2>Compliances</h2>
 <div>
     <form action="insertupdatecompliance" enctype="multipart/form-data" id="frmUpload" method="post">
         <table>
@@ -14,7 +14,8 @@
                 <td>
                     @Html.HiddenFor(m=>m.CompanyName, Model.CompanyName)
                     @Html.DropDownListFor(m => m.ObjComplianceDocuments.CompanyId
-                    , new SelectList(Model.CompanyList, "Id", "CompanyName", Model.CompanyId)
+                    , new SelectList(Model.CompanyList.Where(c=>c.Id == Model.CompanyId.Value)
+                    , "Id", "CompanyName", Model.CompanyId)
                     , new { @name = "CompanyId", @id = "CompanyId", @class = "ddCompany" })
                 </td>
                 <td>

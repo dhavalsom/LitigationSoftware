@@ -1,29 +1,47 @@
 ﻿<Pages>
-  <PageId Value="1">
-    <MenuItem 
-      DisplayText="Register Company"
-      ControllerName="TaxReturn"
-      ActionName="Index"
-      Id="1">      
-    </MenuItem>
-    <MenuItem
-      DisplayText="List of Companies"
-      ControllerName="TaxReturn"
-      ActionName="GetCompanyList"
-      Id="2">
-    </MenuItem>
-    <MenuItem
-      DisplayText="Compliances"
-      ControllerName="TaxReturn"
-      ActionName="GetComplianceList"
-      Id="3">
-    </MenuItem>
-  </PageId>
   <PageId Value="2">
     <MenuItem
       DisplayText="Input Sheet"
       ControllerName="TaxReturn"
       ActionName="GetITReturnDetails"
+      Id="1">
+    </MenuItem>
+    <MenuItem
+      DisplayText="Computation Sheet"
+      ControllerName="TaxReturn"
+      ActionName="ExistingITReturnDetails"
+      Id="2">
+    </MenuItem>
+    <MenuItem
+      DisplayText="Refund/Demand Analysis"
+      Id="3">
+    </MenuItem>
+    <MenuItem
+      DisplayText="Mat Credit Status"
+      Id="4">
+    </MenuItem>
+    <MenuItem
+      DisplayText="Business/Loss Analysis"
+      Id="5">
+    </MenuItem>
+    <MenuItem
+      DisplayText="Compliances"
+      ControllerName="TaxReturn"
+      ActionName="GetComplianceList"
+      Id="5">
+    </MenuItem>
+    <MenuItem
+      DisplayText="Documents"
+      ControllerName="TaxReturn"
+      ActionName="GetITReturnDocuments"
+      Id="5">
+    </MenuItem>
+  </PageId>
+  <PageId Value="1">
+    <MenuItem
+      DisplayText="Dashboard"
+      ControllerName="TaxReturn"
+      ActionName="Index"
       Id="1">
     </MenuItem>
     <MenuItem
@@ -33,9 +51,9 @@
       Id="2">
     </MenuItem>
     <MenuItem
-      DisplayText="Compliances"
+      DisplayText="Create Entity"
       ControllerName="TaxReturn"
-      ActionName="GetComplianceList"
+      ActionName="CreateCompany"
       Id="3">
     </MenuItem>
   </PageId>
@@ -49,7 +67,7 @@
        DisplayText="Register Company"
        ControllerName="TaxReturn"
        ActionName="Index"
-       Id="1">        
+       Id="1">
       </MenuItem>
       <MenuItem
        DisplayText="List of Companies"

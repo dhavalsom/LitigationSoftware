@@ -41,10 +41,8 @@ $(".imgLitigationDDSave").click(function (e) {
         item.SectionCategoryId = itSectionDDControl.val();
         refreshActionName += "?categoryId=" + item.SectionCategoryId;
         $(".ddLitigationDD").change(function (e) {
-            window.location = '/TaxReturn/GetITReturnDetails?companyId='
-                + $('#ITReturnDetailsObject_CompanyID').val()
-                + '&companyname=' + $('#ITReturnDetailsObject_CompanyName').val()
-                + '&fyayId=' + $('#ITReturnDetailsObject_FYAYID').val()
+            window.location = '/TaxReturn/GetITReturnDetails?fyayId='
+                + $('#ITReturnDetailsObject_FYAYID').val()
                 + '&itsectionid=' + $('#ITReturnDetailsObject_ITSectionID').val()
                 + '&itsectioncategoryid=' + $('#ITReturnDetailsObject_ITSectionCategoryID').val();
         });

@@ -9,7 +9,7 @@ namespace LSWebApp.Models
         public int UserId { get; set; }
         public List<Company> Companies;
 
-        public CompanyList(): base(Pages.MainPage)
+        public CompanyList(): base(Pages.Dashboard)
         {
             Companies = new List<Company>();
         }

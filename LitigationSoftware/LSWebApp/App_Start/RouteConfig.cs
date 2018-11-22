@@ -92,6 +92,42 @@ namespace LSWebApp
             );
 
             routes.MapRoute(
+                name: "createcompany",
+                url: "createcompany",
+                defaults: new { controller = "TaxReturn", action = "CreateCompany"
+                    , id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
+                name: "getcompanies",
+                url: "getcompanies",
+                defaults: new { controller = "TaxReturn", action = "GetCompanyList"
+                    , id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
+                name: "computationsheet",
+                url: "computationsheet",
+                defaults: new
+                {
+                    controller = "TaxReturn",
+                    action = "ExistingITReturnDetails"
+                }
+            );
+
+            routes.MapRoute(
+                name: "dashboard",
+                url: "dashboard",
+                defaults: new
+                {
+                    controller = "TaxReturn",
+                    action = "Index"
+                    ,
+                    id = UrlParameter.Optional
+                }
+            );
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Login", action = "Index", id = UrlParameter.Optional }
