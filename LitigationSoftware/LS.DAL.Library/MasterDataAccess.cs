@@ -509,6 +509,103 @@ namespace LS.DAL.Library
                 Connection.Close();
             }
         }
+
+        public List<StandardData> GetStandardData(int? standarddataId)
+        {
+            try
+            {
+                Log.Info("Started call to GetStandardData");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(standarddataId));
+                Command.CommandText = "SP_GET_STANDARDDATA_LIST";
+                Command.CommandType = CommandType.StoredProcedure;
+                Connection.Open();
+
+                Command.Parameters.Clear();
+
+                Command.Parameters.AddWithValue("@StandardData_ID", standarddataId);
+                Command.Parameters.AddWithValue("@ACTIVE", true);
+
+                SqlDataReader reader = Command.ExecuteReader();
+                List<StandardData> result = new List<StandardData>();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result.Add(new StandardData
+                        {
+                            FYAYID = Convert.ToInt32(reader["FYAYID"].ToString()),
+                            FinancialYear = reader["FinancialYear"] != DBNull.Value ? reader["FinancialYear"].ToString() : null,
+                            AssessmentYear = reader["AssessmentYear"] != DBNull.Value ? reader["AssessmentYear"].ToString() : null,
+                            BasicTaxRate =  reader["BasicTaxRate"] != DBNull.Value ? Convert.ToDecimal(reader["BasicTaxRate"].ToString()) : (decimal?)null,
+                            MATRate = reader["MATRate"] != DBNull.Value ? Convert.ToDecimal(reader["MATRate"].ToString()):(decimal?)null,
+                            EducationCess = reader["EducationCess"] != DBNull.Value ? Convert.ToDecimal(reader["EducationCess"].ToString()):(decimal?)null,
+                            Active = Convert.ToBoolean(reader["Active"].ToString()),
+                            Id = Convert.ToInt32(reader["Id"].ToString())
+                        });
+                    }
+                }
+                Log.Info("End call to GetStandardData:" + JsonConvert.SerializeObject(result));
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            finally
+            {
+                Connection.Close();
+            }
+        }
+
+        public List<SurchargeData> GetSurchargeData(int? surchargedataId)
+        {
+            try
+            {
+                Log.Info("Started call to SurchargeData");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(surchargedataId));
+                Command.CommandText = "SP_GET_SURCHARGEDATA_LIST";
+                Command.CommandType = CommandType.StoredProcedure;
+                Connection.Open();
+
+                Command.Parameters.Clear();
+
+                Command.Parameters.AddWithValue("@SurchargeData_ID", surchargedataId);
+                Command.Parameters.AddWithValue("@ACTIVE", true);
+
+                SqlDataReader reader = Command.ExecuteReader();
+                List<SurchargeData> result = new List<SurchargeData>();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result.Add(new SurchargeData
+                        {
+                            FYAYID = Convert.ToInt32(reader["FYAYID"].ToString()),
+                            FinancialYear = reader["FinancialYear"] != DBNull.Value ? reader["FinancialYear"].ToString() : null,
+                            AssessmentYear = reader["AssessmentYear"] != DBNull.Value ? reader["AssessmentYear"].ToString() : null,
+                            surchargefromthreshold = reader["surchargefromthreshold"] != DBNull.Value ? Convert.ToDecimal(reader["surchargefromthreshold"].ToString()) : (decimal?)null,
+                            surchargetothreshold = reader["surchargetothreshold"] != DBNull.Value ? Convert.ToDecimal(reader["surchargetothreshold"].ToString()) : (decimal?)null,
+                            surchargerate = reader["surchargerate"] != DBNull.Value ? Convert.ToDecimal(reader["surchargerate"].ToString()) : (decimal?)null,
+                            entitycategorytypeid = reader["entitycategorytypeid"] != DBNull.Value ? Convert.ToInt32(reader["entitycategorytypeid"].ToString()) : (int?)null,
+                            Active = Convert.ToBoolean(reader["Active"].ToString()),
+                            Id = Convert.ToInt32(reader["Id"].ToString())
+                        });
+                    }
+                }
+                Log.Info("End call to SurchargeData:" + JsonConvert.SerializeObject(result));
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            finally
+            {
+                Connection.Close();
+            }
+        }
         #endregion
     }
 }
