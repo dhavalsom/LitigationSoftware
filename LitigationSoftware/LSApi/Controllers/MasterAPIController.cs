@@ -137,5 +137,23 @@ namespace LSApi.Controllers
             var objComplianceMasterResponse = objMaster.InsertUpdateComplianceMaster(objComplianceMaster);
             return objComplianceMasterResponse;
         }
+
+        [HttpGet]
+        [Route("GetStandardData")]
+        // GET: api/MasterAPI/GetComplianceMaster
+        public List<StandardData> GetStandardData(int? standarddataId)
+        {
+            var CompObj = _Kernel.Get<IMaster>();
+            return CompObj.GetStandardData(standarddataId);
+        }
+
+        [HttpGet]
+        [Route("GetSurchargeData")]
+        // GET: api/MasterAPI/GetComplianceMaster
+        public List<SurchargeData> GetSurchargeData(int? surchargedataId)
+        {
+            var CompObj = _Kernel.Get<IMaster>();
+            return CompObj.GetSurchargeData(surchargedataId);
+        }
     }
 }

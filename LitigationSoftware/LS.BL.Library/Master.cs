@@ -213,6 +213,39 @@ namespace LS.BL.Library
                 //Log
             }
         }
+
+        public List<StandardData> GetStandardData(int? standarddataId)
+        {
+            try
+            {
+                return this._masterDA.GetStandardData(standarddataId);
+            }
+            catch(Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+
+            }
+        }
+
+        public List<SurchargeData> GetSurchargeData(int? surchargedataId)
+        {
+            try
+            {
+                return this._masterDA.GetSurchargeData(surchargedataId);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+
+            }
+        }
+
         #endregion
 
         #region IDisposable

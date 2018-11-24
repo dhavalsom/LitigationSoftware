@@ -189,6 +189,7 @@
     <Compile Include="Models\ITReturnDocumentListModel.cs" />
     <Compile Include="Models\ITReturnDocumentsModel.cs" />
     <Compile Include="Models\LitigationDDModel.cs" />
+    <Compile Include="Models\StandardDataModel.cs" />
     <Compile Include="Models\ViewModelBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -304,6 +305,7 @@
     <Content Include="Views\TaxReturn\ITReturnDocumentList.cshtml" />
     <Content Include="Views\TaxReturn\ITReturnDocuments.cshtml" />
     <Content Include="Views\TaxReturn\ITReturnDetailsListItem.cshtml" />
+    <Content Include="Views\TaxReturn\GetStandardData.cshtml" />
     <Content Include="Views\TaxReturn\CreateCompany.cshtml" />
     <Content Include="Views\TaxReturn\CompanyDashboard.cshtml" />
     <Content Include="Views\TaxReturn\RDAnalysis.cshtml" />
