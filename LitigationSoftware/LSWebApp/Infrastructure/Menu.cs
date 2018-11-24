@@ -10,7 +10,7 @@ namespace LSWebApp.Infrastructure
     public enum Pages
     {
         None,
-        MainPage,
+        Dashboard,
         ITReturnDetailsPage
     }
 }

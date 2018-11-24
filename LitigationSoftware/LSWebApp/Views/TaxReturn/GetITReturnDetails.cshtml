@@ -1,7 +1,10 @@
 ﻿@using LSWebApp.Models;
 @using LS.Models;
 @model  LSWebApp.Models.ITReturnDetailsModel
-
+@{
+    ViewBag.Title = "Input Sheet";
+    Layout = "~/Views/Shared/_LayoutDynemicMenu.cshtml";
+}
 <h3>Original Return/Revised Return/Assessment Order</h3>
 
 @using (Html.BeginForm("InsertorUpdateITReturnDetails", "TaxReturn"))
@@ -795,10 +798,12 @@
                     $(data).each(function () {
                         var option = $('<option />');
                         option.attr('value', this.Id).html(this.Description);
-//                        debugger;
                         $('.ddLitigationDD').append(option);
                     });
-                    window.location = '/TaxReturn/GetITReturnDetails?companyId=' + $('#ITReturnDetailsObject_CompanyID').val() + '&companyname=' + $('#ITReturnDetailsObject_CompanyName').val() + '&fyayId=' + $('#ITReturnDetailsObject_FYAYID').val() + '&itsectionid=' + $('#ITReturnDetailsObject_ITSectionID').val() + '&itsectioncategoryid=' + $('#ITReturnDetailsObject_ITSectionCategoryID').val();
+                    window.location = '/TaxReturn/GetITReturnDetails?fyayId='
+                        + $('#ITReturnDetailsObject_FYAYID').val()
+                        + '&itsectionid=' + $('#ITReturnDetailsObject_ITSectionID').val()
+                        + '&itsectioncategoryid=' + $('#ITReturnDetailsObject_ITSectionCategoryID').val();
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown)
                 {

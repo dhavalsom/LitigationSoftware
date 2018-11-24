@@ -1,7 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using LS.Models;
+using LSWebApp.Models;
+using Newtonsoft.Json;
 using Ninject;
-using LS.Models;
-//using LSWebApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -10,10 +10,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using System.Net;
-using System.Net.Sockets;
 using System.Web.Security;
-using LSWebApp.Models;
 
 namespace LSWebApp.Controllers
 {
@@ -70,7 +67,7 @@ namespace LSWebApp.Controllers
                         if (Res.IsSuccessStatusCode)
                             {
                                 model.CompanyCategoriesList = JsonConvert.DeserializeObject<List<CompanyCategory>>(Res.Content.ReadAsStringAsync().Result);
-                                return View("~/Views/TaxReturn/Index.cshtml", model);
+                                return View("~/Views/TaxReturn/Index.cshtml", new DashboardModel());
                             }
                         else
                         {

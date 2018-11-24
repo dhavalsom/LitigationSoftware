@@ -1,8 +1,9 @@
 ﻿@model LSWebApp.Models.ITReturnDocumentsModel
 @{
-    ViewBag.Title = "Manage IT Return Documents";
+    ViewBag.Title = "IT Return Documents";
+    Layout = "~/Views/Shared/_LayoutDynemicMenu.cshtml";
 }
-<h2>Manage IT Return Documents</h2>
+<h2>IT Return Documents</h2>
 <div>
     <table>
         <tr>
@@ -12,8 +13,8 @@
             <td>
                 @Html.HiddenFor(m=>m.CompanyName, Model.CompanyName)
                 @Html.DropDownListFor(m => m.CompanyId
-                , new SelectList(Model.CompanyList, "Id", "CompanyName", Model.CompanyId)
-                , "All"
+                , new SelectList(Model.CompanyList.Where(c=>c.Id == Model.CompanyId)
+                , "Id", "CompanyName", Model.CompanyId)
                 , new { @name = "CompanyId", @id = "CompanyId", @class = "ddCompanyITRD", @style = "width:400px" })
             </td>
         </tr>

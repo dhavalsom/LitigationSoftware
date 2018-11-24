@@ -1,6 +1,9 @@
 ﻿@model  LSWebApp.Models.ITReturnDetailsModel
-
-<h3>Existing ITReturn Details</h3>
+@{
+    ViewBag.Title = "Computation Sheet";
+    Layout = "~/Views/Shared/_LayoutDynemicMenu.cshtml";
+}
+<h3>Computation Sheet</h3>
 
 @using (Html.BeginForm("SearchITReturnDetails", "TaxReturn"))
 {

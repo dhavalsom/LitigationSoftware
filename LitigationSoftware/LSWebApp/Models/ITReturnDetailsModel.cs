@@ -1,11 +1,12 @@
 ﻿using LS.Models;
+using LSWebApp.Infrastructure;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 
 namespace LSWebApp.Models
 {
-    public class ITReturnDetailsModel
+    public class ITReturnDetailsModel : ViewModelBase
     {
         #region Properties
         public ITReturnDetails ITReturnDetailsObject { get; set; }
@@ -21,7 +22,7 @@ namespace LSWebApp.Models
         #endregion
 
         #region Constructors
-        public ITReturnDetailsModel()
+        public ITReturnDetailsModel() : base(Pages.ITReturnDetailsPage)
         {
             ITReturnDetailsObject = new ITReturnDetails();
             ExtensionList = new List<ITReturnDetailsExtension>();
