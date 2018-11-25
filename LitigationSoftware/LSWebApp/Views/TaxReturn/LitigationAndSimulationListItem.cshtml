@@ -1,0 +1,86 @@
+﻿@model LSWebApp.Models.ITReturnDetailsListItemModel
+@using LSWebApp.Infrastructure;
+<style>    
+    .css-label {
+        cursor: pointer;
+    }
+    .css-checkbox {
+        display: none;
+    }
+    .fa {
+        color: white;
+        line-height: 16px;
+        border-radius: 4px;
+    }
+    .fa-plus {
+        padding-top: 2px;
+        padding-right: 2px;
+        padding-left: 2px;
+        background-color: #3AC5C9;
+    }
+    .fa-minus {
+        padding-top: 1px;
+        padding-right: 2px;
+        padding-left: 2px;
+        background-color: #E85764;
+        display: none;
+    }
+    .css-checkbox:checked + .css-label .fa-minus {
+        display: inline;
+    }
+    .css-checkbox:checked + .css-label .fa-plus {
+        display: none;
+    }
+</style>
+
+<tr class="table-success">
+    <td>        
+        @Model.CurrentItem.Description
+    </td>
+    @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+    {
+        <td>
+            
+        </td>
+    }
+    <td></td>
+    <td></td>
+</tr>
+
+@foreach (var subHead in @Model.CurrentItem.SubHeadList)
+{
+    if (subHead.IsAllowance.HasValue
+        && !subHead.IsAllowance.Value
+        && Model.ITReturnDetailExtensions
+        .Where(e=>e.ITSubHeadId == subHead.Id && e.ITSubHeadValue !=0).Any())
+    {
+        <tr class="table-active">
+            <td>@subHead.Description</td>
+            @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+            {                
+                <td>
+                    @Utilities.FormatNumber(itsectiondetail.Extensions
+                     .Where(e => e.ITSubHeadId == subHead.Id)
+                     .FirstOrDefault().ITSubHeadValue)
+                </td>
+            }
+            <td>
+                @Utilities.FormatNumber(Model.ITReturnDetailExtensions
+                     .Where(e => e.ITSubHeadId == subHead.Id)
+                     .Sum(e=>e.ITSubHeadValue))
+            </td>
+            <td>
+                @{
+                    var commentObject = Model.LAndSCommentsList.Where(c => c.ITSubHeadId == subHead.Id).FirstOrDefault();
+                    @Html.TextBox("txtComment_"+ subHead.Id + "_" + (commentObject != null ? commentObject.Id.ToString() : "0")
+                    , (commentObject != null ? commentObject.Comment : string.Empty)
+                    , new { @class = "litigation-comment"
+                            , @style= "width:300px;"
+                            , @id = "txtComment_" + subHead.Id + "_" + (commentObject != null ? commentObject.Id.ToString() : "0")
+                    })
+                }
+            </td>
+        </tr>
+    }
+}
+

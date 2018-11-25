@@ -80,6 +80,12 @@ namespace LSWebApp
             );
 
             routes.MapRoute(
+                name: "manageLAndSComments",
+                url: "manageLAndSComments",
+                defaults: new { controller = "TaxReturn", action = "InsertUpdateLAndSComments", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
                 name: "deletetITReturnDocument",
                 url: "deletetITReturnDocument",
                 defaults: new { controller = "TaxReturn", action = "DeleteITReturnDocuments", id = UrlParameter.Optional }
@@ -170,6 +176,18 @@ namespace LSWebApp
                 {
                     controller = "TaxReturn",
                     action = "BusinessLossAnalysis"
+                    ,
+                    id = UrlParameter.Optional
+                }
+            );
+
+            routes.MapRoute(
+                name: "lands",
+                url: "lands",
+                defaults: new
+                {
+                    controller = "TaxReturn",
+                    action = "LitigationAndSimulation"
                     ,
                     id = UrlParameter.Optional
                 }

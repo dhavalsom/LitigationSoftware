@@ -454,6 +454,167 @@ namespace LS.DAL.Library
                 Connection.Close();
             }
         }
+
+        public ITReturnDetailsListResponse GetLitigationAndSimulation(int companyId)
+        {
+            try
+            {
+                Log.Info("Started call to GetLitigationAndSimulation");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(new
+                {
+                    companyId = companyId
+                }));
+                Command.CommandText = "SP_GET_LITIGATION_AND_SIMULATION";
+                Command.CommandType = CommandType.StoredProcedure;
+                Command.Parameters.AddWithValue("@COMPANY_ID", companyId);
+                Connection.Open();
+
+                SqlDataReader reader = Command.ExecuteReader();
+                ITReturnDetailsListResponse result = new ITReturnDetailsListResponse();
+                result.ITReturnDetailsListObject = new List<ITReturnDetails>();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result.ITReturnDetailsListObject.Add(new ITReturnDetails
+                        {
+                            Id = int.Parse(reader["ITReturnDetailsId"].ToString()),
+                            FYAYID = Convert.ToInt32(reader["FYAYId"].ToString()),
+                            ITSectionID = reader["ITSectionID"] != DBNull.Value ? int.Parse(reader["ITSectionID"].ToString()) : 0,
+                            ITSectionDescription = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : null,
+                            ITSectionCategoryID = reader["SECTIONCATEGORYID"] != DBNull.Value ? int.Parse(reader["SECTIONCATEGORYID"].ToString()) : 0,
+                            ITSectionCategoryDesc = reader["CategoryDesc"] != DBNull.Value ? reader["CategoryDesc"].ToString() : null,
+                            ITReturnFillingDate = reader["ITReturnFillingDate"] != DBNull.Value ? Convert.ToDateTime(reader["ITReturnFillingDate"].ToString()) : (DateTime?)null,
+                            ITReturnDueDate = reader["ITReturnDueDate"] != DBNull.Value ? Convert.ToDateTime(reader["ITReturnDueDate"].ToString()) : (DateTime?)null,
+                            FinancialYear = reader["FinancialYear"] != DBNull.Value ? reader["FinancialYear"].ToString() : null,
+                            AssessmentYear = reader["AssessmentYear"] != DBNull.Value ? reader["AssessmentYear"].ToString() : null,
+                        });
+                    }
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            finally
+            {
+                Connection.Close();
+            }
+        }
+
+        public LAndSCommentsResponse GetLAndSCommentList(int? companyId, int? itSubHeadId)
+        {
+            try
+            {
+                Log.Info("Started call to GetLAndSCommentList");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(new
+                {
+                    companyId = companyId,
+                    itSubHeadId = itSubHeadId
+                }));
+                Command.CommandText = "SP_GET_L_AND_S_COMMENT_LIST";
+                Command.CommandType = CommandType.StoredProcedure;
+                if (companyId.HasValue && companyId > 0)
+                {
+                    Command.Parameters.AddWithValue("@COMPANY_ID", companyId);
+                }
+                if (itSubHeadId.HasValue && itSubHeadId > 0)
+                {
+                    Command.Parameters.AddWithValue("@IT_SUB_HEAD_ID", itSubHeadId);
+                }
+                Connection.Open();
+
+                SqlDataReader reader = Command.ExecuteReader();
+                LAndSCommentsResponse result = new LAndSCommentsResponse();
+                result.LAndSCommentsList = new List<LAndSComments>();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result.LAndSCommentsList.Add(new LAndSComments
+                        {
+                            Id = int.Parse(reader["Id"].ToString()),
+                            CompanyId = int.Parse(reader["CompanyId"].ToString()),
+                            CompanyName = reader["CompanyName"] != DBNull.Value ? reader["CompanyName"].ToString() : string.Empty,
+                            ITSubHeadId = int.Parse(reader["ITSubHeadId"].ToString()),
+                            ITSubHeadDescription = reader["ITSubHeadDescription"] != DBNull.Value ? reader["ITSubHeadDescription"].ToString() : string.Empty,
+                            Comment = reader["Comment"] != DBNull.Value ? reader["Comment"].ToString() : string.Empty,
+                            Active = bool.Parse(reader["Active"].ToString())
+                        });
+                    }
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            finally
+            {
+                Connection.Close();
+            }
+        }
+
+        public LAndSCommentsResponse InsertUpdateLAndSComments(LAndSComments landsComments
+           , string operation)
+        {
+            try
+            {
+                Log.Info("Started call to InsertUpdateLAndSComments");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(
+                    new { landsComments = landsComments, operation = operation }));
+                Command.CommandText = "SP_L_AND_S_COMMENT_MANAGER";
+                Command.CommandType = CommandType.StoredProcedure;
+                Command.Parameters.Clear();
+
+                Command.Parameters.AddWithValue("@L_AND_S_COMMENT_XML", GetXMLFromObject(landsComments));
+                if (!string.IsNullOrEmpty(operation))
+                {
+                    Command.Parameters.AddWithValue("@OPERATION", operation);
+                }
+                if (landsComments.AddedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", landsComments.AddedBy.Value);
+                }
+                else if (landsComments.ModifiedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", landsComments.ModifiedBy.Value);
+                }
+                else if (landsComments.DeletedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", landsComments.DeletedBy.Value);
+                }
+                Connection.Open();
+                SqlDataReader reader = Command.ExecuteReader();
+
+                LAndSCommentsResponse result = new LAndSCommentsResponse();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result = new LAndSCommentsResponse
+                        {
+                            Message = reader["ReturnMessage"] != DBNull.Value ? reader["ReturnMessage"].ToString() : null,
+                            IsSuccess = Convert.ToBoolean(reader["Result"].ToString())
+                        };
+                    }
+                }
+                Log.Info("End call to InsertUpdateITReturnDocuments");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                Connection.Close();
+            }
+        }
         #endregion
     }
 }

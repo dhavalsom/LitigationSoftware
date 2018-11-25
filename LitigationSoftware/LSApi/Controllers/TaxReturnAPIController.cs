@@ -118,6 +118,34 @@ namespace LSApi.Controllers
             return ItReturnObj.GetExistingITReturnDetailsExtension(itreturnid);
         }
 
+        [HttpGet]
+        [Route("GetLitigationAndSimulation")]
+        // GET: api/TaxReturnAPI/GetLitigationAndSimulation
+        public ITReturnDetailsListResponse GetLitigationAndSimulation(int companyId)
+        {
+            var ItReturnObj = _Kernel.Get<IITReturnDetailsBL>();
+            return ItReturnObj.GetLitigationAndSimulation(companyId);
+        }
+
+        [HttpGet]
+        [Route("GetLAndSCommentList")]
+        // GET: api/TaxReturnAPI/GetLAndSCommentList
+        public LAndSCommentsResponse GetLAndSCommentList(int? companyId, int? itSubHeadId)
+        {
+            var ItReturnObj = _Kernel.Get<IITReturnDetailsBL>();
+            return ItReturnObj.GetLAndSCommentList(companyId, itSubHeadId);
+        }
+
+        // POST: api/InsertUpdateLAndSComments
+        [HttpPost]
+        [Route("InsertUpdateLAndSComments")]
+        public LAndSCommentsResponse InsertUpdateLAndSComments
+            ([FromBody]LAndSComments landsComments)
+        {
+            var ItReturnObj = _Kernel.Get<IITReturnDetailsBL>();
+            var landsCommentsResult = ItReturnObj.InsertUpdateLAndSComments(landsComments, null);
+            return landsCommentsResult;
+        }
         #endregion
     }
 }

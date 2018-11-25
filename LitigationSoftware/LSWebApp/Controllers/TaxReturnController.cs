@@ -407,6 +407,7 @@ namespace LSWebApp.Controllers
                 CompanyObject = HttpContext.Session["SelectedCompany"] as Company
             });
         }
+
         [HttpGet]
         public async Task<ActionResult> ExistingITReturnDetails()
         {
@@ -436,6 +437,53 @@ namespace LSWebApp.Controllers
                 }
             }
             return View(itrdetails);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> LitigationAndSimulation()
+        {
+            var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+            LitigationAndSimulationModel lAndSModel = new LitigationAndSimulationModel()
+            {
+                CompanyObject = HttpContext.Session["SelectedCompany"] as Company
+            };
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.GetAsync("api/TaxReturnAPI/GetLitigationAndSimulation?companyId="+ selectedCompany.Id);
+                if (Res.IsSuccessStatusCode)
+                {
+                    lAndSModel.ITReturnDetailsListObject = JsonConvert.DeserializeObject<ITReturnDetailsListResponse>
+                        (Res.Content.ReadAsStringAsync().Result).ITReturnDetailsListObject;
+                    foreach (var itReturn in lAndSModel.ITReturnDetailsListObject)
+                    {
+                        itReturn.Extensions = new List<ITReturnDetailsExtension>();
+                        Res = await client.GetAsync("api/TaxReturnAPI/GetExistingITReturnDetailsExtension?itreturnid=" + itReturn.Id);
+                        if (Res.IsSuccessStatusCode)
+                        {
+                            itReturn.Extensions = JsonConvert.DeserializeObject<List<ITReturnDetailsExtension>>(Res.Content.ReadAsStringAsync().Result);
+                            lAndSModel.ITReturnDetailExtensions.AddRange(itReturn.Extensions);
+                        }
+                    }
+                    Res = await client.GetAsync("api/TaxReturnAPI/GetLAndSCommentList?itSubHeadId=&companyId=" + selectedCompany.Id);
+                    if (Res.IsSuccessStatusCode)
+                    {
+                        lAndSModel.LAndSCommentList = (JsonConvert.DeserializeObject<LAndSCommentsResponse>(Res.Content.ReadAsStringAsync().Result)).LAndSCommentsList;
+                    }
+                    Res = await client.GetAsync("api/MasterAPI/GetITSubHeadMaster?itHeadId=");
+                    var itSubHeads = JsonConvert.DeserializeObject<List<ITSubHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
+                    Res = await client.GetAsync("api/MasterAPI/GetITHeadMaster");
+                    var itHeads = JsonConvert.DeserializeObject<List<ITHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
+                    lAndSModel.PopulateITHeadMasters(itHeads, itSubHeads);
+                }
+            }
+            return View(lAndSModel);
         }
 
         [HttpGet]
@@ -874,7 +922,7 @@ namespace LSWebApp.Controllers
                 }
             }
             return Json(model, JsonRequestBehavior.AllowGet);
-        }
+        }        
 
         [HttpGet]
         public async Task<ActionResult> GetStandardData()
@@ -894,6 +942,30 @@ namespace LSWebApp.Controllers
             }
             //return Json(model, JsonRequestBehavior.AllowGet);
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> InsertUpdateLAndSComments(List<LAndSComments> landsComments)
+        {
+            var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                foreach (var landsComment in landsComments)
+                {
+                    landsComment.CompanyId = selectedCompany.Id;
+                    landsComment.Active = true;
+                    var json = JsonConvert.SerializeObject(landsComment);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+                    HttpResponseMessage Res = await client.PostAsync
+                        ("api/TaxReturnAPI/InsertUpdateLAndSComments", content);
+                }
+                return Json(null, JsonRequestBehavior.AllowGet);
+            }
         }
 
         #endregion

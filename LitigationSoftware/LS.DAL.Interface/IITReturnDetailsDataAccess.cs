@@ -14,5 +14,9 @@ namespace LS.DAL.Interface
         , string operation);
         ITReturnDocumentsResponse GetITReturnDocumentsList(int? companyId,
             int? fyayId, int? itReturnDetailsId, int? itHeadId, int? itReturnDocumentId);
+        ITReturnDetailsListResponse GetLitigationAndSimulation(int companyId);
+        LAndSCommentsResponse GetLAndSCommentList(int? companyId, int? itSubHeadId);
+        LAndSCommentsResponse InsertUpdateLAndSComments(LAndSComments landsComments
+           , string operation);
     }
 }

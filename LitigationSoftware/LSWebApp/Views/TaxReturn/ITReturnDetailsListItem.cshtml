@@ -98,7 +98,7 @@
 }
 @foreach (var subHead in @Model.CurrentItem.SubHeadList)
                 {
-    <tr class="@(subHead.IsAllowance.Value && subHead.IsAllowance.Value 
+    <tr class="@(subHead.IsAllowance.HasValue && subHead.IsAllowance.Value 
             ? "table-success" : "table-danger") @(Model.CurrentItem.PropertyName)" style="display:none;">
         <td>@subHead.Description</td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)

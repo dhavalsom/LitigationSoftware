@@ -1,0 +1,71 @@
+USE [LitigationApp]
+GO
+
+/****** Object:  StoredProcedure [dbo].[SP_GET_LITIGATION_AND_SIMULATION]    Script Date: 11/25/2018 11:21:34 AM ******/
+DROP PROCEDURE [dbo].[SP_GET_LITIGATION_AND_SIMULATION]
+GO
+
+/****** Object:  StoredProcedure [dbo].[SP_GET_LITIGATION_AND_SIMULATION]    Script Date: 11/25/2018 11:21:34 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+CREATE PROCEDURE [dbo].[SP_GET_LITIGATION_AND_SIMULATION]
+(
+	@COMPANY_ID AS BIGINT,
+	@USER_ID BIGINT = 1 --SET THE DEFAULT VALUE TO 1 IF NOT PASSED,
+)
+AS
+
+BEGIN
+
+--EXEC [SP_GET_LITIGATION_AND_SIMULATION] 1
+/*BLOCK TO GET THE ITReturnDetails Ids*/
+
+DECLARE @ITReturnDetailsIds TABLE
+(
+	Id BIGINT NOT NULL
+)
+
+INSERT INTO @ITReturnDetailsIds
+SELECT A.Id FROM
+(
+	SELECT Id, CompanyID, FYAYID, ITReturnFillingDate, ROW_NUMBER() OVER (PARTITION BY CompanyID, FYAYID
+	ORDER BY ITReturnFillingDate desc) RN 
+	FROM ITReturnDetails
+	WHERE CompanyID = @COMPANY_ID
+) AS A
+WHERE A.RN=1
+
+SELECT ITR.Id AS ITReturnDetailsId
+	, ITR.FYAYID
+	, FYAY.FinancialYear
+	, FYAY.AssessmentYear
+	, ITR.ITSectionID
+	, ITSM.[Description]
+	, ITSM.SECTIONCATEGORYID
+	, ITSM.Description AS CategoryDesc
+	, ITR.ITReturnFillingDate
+	, ITR.ITReturnDueDate
+	FROM ITReturnDetails ITR
+	LEFT OUTER JOIN FYAYMaster FYAY ON FYAY.Id = ITR.FYAYID
+	LEFT OUTER JOIN ITSectionMaster ITSM ON ITSM.Id = ITR.ITSectionID
+	LEFT OUTER JOIN ITSectionCategory ITSC ON ITSC.Id = ITSM.SECTIONCATEGORYID
+	INNER JOIN @ITReturnDetailsIds Ids ON Ids.Id = ITR.Id
+
+
+
+END
+
+
+
+
+
+
+GO
+
+

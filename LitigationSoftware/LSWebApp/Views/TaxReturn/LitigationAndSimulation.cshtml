@@ -1,0 +1,128 @@
+﻿@model  LSWebApp.Models.LitigationAndSimulationModel
+@using LSWebApp.Models;
+@using LSWebApp.Infrastructure;
+
+<style>
+    table, th, td {
+        border: 1px solid black;
+    }
+</style>
+@{
+    ViewBag.Title = "Litigation And Simulation";
+    Layout = "~/Views/Shared/_LayoutDynemicMenu.cshtml";
+}
+<br/>
+<h3>
+    Litigation And Simulation
+    <button type="button" 
+            class="btn btn-primary btn-save-comment" 
+            style="float:right;">
+        Save Comment
+    </button>
+</h3>
+
+@using (Html.BeginForm("SearchITReturnDetails", "TaxReturn"))
+{
+    @Html.AntiForgeryToken()    
+    <table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Particulars</th>
+            @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+            {
+                <th>@itsectiondetail.FinancialYear</th>
+            }
+            <th>Total Quantum</th>
+            <th rowspan="3" style="vertical-align:middle;text-align:center">
+                Commants
+            </th>
+        </tr>
+        
+        <tr>
+            <th>Assessment Year ></th>
+            @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+            {
+                <th>@itsectiondetail.AssessmentYear</th>
+            }
+            <th></th>
+        </tr>
+
+        <tr>
+            <th>Assessment/Appeal type</th>
+            @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+            {
+                <th>
+                    @itsectiondetail.ITSectionDescription
+                </th>
+            }
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.ITHeadMasterList)
+        {
+            if (item.Value.CanAddSubHead)
+            {
+                @Html.Partial("LitigationAndSimulationListItem"
+                     , new ITReturnDetailsListItemModel(item.Value
+                     , Model.ITReturnDetailsListObject
+                     , Model.ITHeadMasterList
+                     , Model.ITReturnDetailExtensions
+                     , Model.LAndSCommentList))
+            }
+        }
+        <tr class="table-info">
+            <td>
+                Total Disallowance
+            </td>
+            @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+            {
+                <td>
+                    @Utilities.FormatNumber(itsectiondetail.Extensions
+                         .Where(e=>!e.IsAllowance)
+                         .Sum(e => e.ITSubHeadValue))
+                </td>
+            }
+            <td></td>
+            <td></td>
+        </tr>
+
+    </tbody>
+    </table>
+}
+
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).on('change', '.collapsible', function (event) {
+            var sender = event.target;
+            var trClass = sender.getAttribute("title");
+            $('.' + trClass).toggle();
+        });
+
+        $(".btn-save-comment").click(function () {
+            var comments = [];
+            $(".litigation-comment").each(function () {
+                var comment = {};
+                comment.Comment = $(this).val();
+                comment.ITSubHeadId = $(this).attr('id').split('_')[1];
+                if ($(this).attr('id').split('_').length > 2){
+                    comment.Id = $(this).attr('id').split('_')[2];
+                }
+                if (comment.Comment){
+                    comments.push(comment);
+                }
+            });
+            $.ajax({
+                type: 'POST',
+                url: '/manageLAndSComments/',
+                data: JSON.stringify(comments),
+                success: function (data) {
+                    alert('data saved');
+                },
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json'
+            });
+        });
+    </script>
+}
