@@ -154,6 +154,39 @@ namespace LS.BL.Library
                 //Log
             }
         }
+
+        public LAndSCommentsResponse GetLAndSCommentList(int? companyId, int? itSubHeadId)
+        {
+            try
+            {
+                return this._itReturnDA.GetLAndSCommentList(companyId, itSubHeadId);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                //Log
+            }
+        }
+
+        public LAndSCommentsResponse InsertUpdateLAndSComments(LAndSComments landsComments
+           , string operation)
+        {
+            try
+            {
+                return this._itReturnDA.InsertUpdateLAndSComments(landsComments, operation);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                //Log
+            }
+        }
         #endregion
 
 

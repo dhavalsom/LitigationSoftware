@@ -11,7 +11,15 @@
     ViewBag.Title = "Litigation And Simulation";
     Layout = "~/Views/Shared/_LayoutDynemicMenu.cshtml";
 }
-<h3>Litigation And Simulation</h3>
+<br/>
+<h3>
+    Litigation And Simulation
+    <button type="button" 
+            class="btn btn-primary btn-save-comment" 
+            style="float:right;">
+        Save Comment
+    </button>
+</h3>
 
 @using (Html.BeginForm("SearchITReturnDetails", "TaxReturn"))
 {
@@ -59,7 +67,8 @@
                      , new ITReturnDetailsListItemModel(item.Value
                      , Model.ITReturnDetailsListObject
                      , Model.ITHeadMasterList
-                     , Model.ITReturnDetailExtensions))
+                     , Model.ITReturnDetailExtensions
+                     , Model.LAndSCommentList))
             }
         }
         <tr class="table-info">
@@ -89,6 +98,31 @@
             var sender = event.target;
             var trClass = sender.getAttribute("title");
             $('.' + trClass).toggle();
+        });
+
+        $(".btn-save-comment").click(function () {
+            var comments = [];
+            $(".litigation-comment").each(function () {
+                var comment = {};
+                comment.Comment = $(this).val();
+                comment.ITSubHeadId = $(this).attr('id').split('_')[1];
+                if ($(this).attr('id').split('_').length > 2){
+                    comment.Id = $(this).attr('id').split('_')[2];
+                }
+                if (comment.Comment){
+                    comments.push(comment);
+                }
+            });
+            $.ajax({
+                type: 'POST',
+                url: '/manageLAndSComments/',
+                data: JSON.stringify(comments),
+                success: function (data) {
+                    alert('data saved');
+                },
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json'
+            });
         });
     </script>
 }

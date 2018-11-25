@@ -70,16 +70,28 @@ namespace LSWebApp.Models
         public List<ITReturnDetails> ITReturnDetailsListObject { get; set; }
         public Dictionary<string, ITHeadMaster> ITHeadMasterList { get; set; }
         public List<ITReturnDetailsExtension> ITReturnDetailExtensions { get; set; }
+        public List<LAndSComments> LAndSCommentsList { get; set; }
 
         public ITReturnDetailsListItemModel(ITHeadMaster currentItem,
             List<ITReturnDetails> itReturnDetailsListObject,
-            Dictionary<string, ITHeadMaster> itHeadMasterList,
-            List<ITReturnDetailsExtension> itReturnDetailExtensions)
+            Dictionary<string, ITHeadMaster> itHeadMasterList)
+        {
+            this.CurrentItem = currentItem;
+            this.ITReturnDetailsListObject = itReturnDetailsListObject;
+            this.ITHeadMasterList = itHeadMasterList;
+        }
+
+        public ITReturnDetailsListItemModel(ITHeadMaster currentItem,
+           List<ITReturnDetails> itReturnDetailsListObject,
+           Dictionary<string, ITHeadMaster> itHeadMasterList,
+           List<ITReturnDetailsExtension> itReturnDetailExtensions,
+           List<LAndSComments> landsCommentsList)
         {
             this.CurrentItem = currentItem;
             this.ITReturnDetailsListObject = itReturnDetailsListObject;
             this.ITHeadMasterList = itHeadMasterList;
             this.ITReturnDetailExtensions = itReturnDetailExtensions;
+            this.LAndSCommentsList = landsCommentsList;
         }
     }
 }

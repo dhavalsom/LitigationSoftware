@@ -80,6 +80,12 @@ namespace LSWebApp
             );
 
             routes.MapRoute(
+                name: "manageLAndSComments",
+                url: "manageLAndSComments",
+                defaults: new { controller = "TaxReturn", action = "InsertUpdateLAndSComments", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
                 name: "deletetITReturnDocument",
                 url: "deletetITReturnDocument",
                 defaults: new { controller = "TaxReturn", action = "DeleteITReturnDocuments", id = UrlParameter.Optional }

@@ -471,6 +471,11 @@ namespace LSWebApp.Controllers
                             lAndSModel.ITReturnDetailExtensions.AddRange(itReturn.Extensions);
                         }
                     }
+                    Res = await client.GetAsync("api/TaxReturnAPI/GetLAndSCommentList?itSubHeadId=&companyId=" + selectedCompany.Id);
+                    if (Res.IsSuccessStatusCode)
+                    {
+                        lAndSModel.LAndSCommentList = (JsonConvert.DeserializeObject<LAndSCommentsResponse>(Res.Content.ReadAsStringAsync().Result)).LAndSCommentsList;
+                    }
                     Res = await client.GetAsync("api/MasterAPI/GetITSubHeadMaster?itHeadId=");
                     var itSubHeads = JsonConvert.DeserializeObject<List<ITSubHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
                     Res = await client.GetAsync("api/MasterAPI/GetITHeadMaster");
@@ -917,6 +922,30 @@ namespace LSWebApp.Controllers
                 }
             }
             return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> InsertUpdateLAndSComments(List<LAndSComments> landsComments)
+        {
+            var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                foreach (var landsComment in landsComments)
+                {
+                    landsComment.CompanyId = selectedCompany.Id;
+                    landsComment.Active = true;
+                    var json = JsonConvert.SerializeObject(landsComment);
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+                    HttpResponseMessage Res = await client.PostAsync
+                        ("api/TaxReturnAPI/InsertUpdateLAndSComments", content);
+                }
+                return Json(null, JsonRequestBehavior.AllowGet);
+            }
         }
 
         #endregion

@@ -70,7 +70,15 @@
                      .Sum(e=>e.ITSubHeadValue))
             </td>
             <td>
-                @Html.TextBox("txtComment_"+ subHead.Id, "Commants textbox")
+                @{
+                    var commentObject = Model.LAndSCommentsList.Where(c => c.ITSubHeadId == subHead.Id).FirstOrDefault();
+                    @Html.TextBox("txtComment_"+ subHead.Id + "_" + (commentObject != null ? commentObject.Id.ToString() : "0")
+                    , (commentObject != null ? commentObject.Comment : string.Empty)
+                    , new { @class = "litigation-comment"
+                            , @style= "width:300px;"
+                            , @id = "txtComment_" + subHead.Id + "_" + (commentObject != null ? commentObject.Id.ToString() : "0")
+                    })
+                }
             </td>
         </tr>
     }

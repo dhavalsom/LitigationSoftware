@@ -12,6 +12,7 @@ namespace LSWebApp.Models
         public Company CompanyObject { get; set; }
         public List<ITReturnDetails> ITReturnDetailsListObject { get; set; }
         public List<ITReturnDetailsExtension> ITReturnDetailExtensions { get; set; }
+        public List<LAndSComments> LAndSCommentList { get; set; }
         public List<string> ItemsWithAmounts { get; set; }
         #endregion
 
