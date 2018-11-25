@@ -454,6 +454,56 @@ namespace LS.DAL.Library
                 Connection.Close();
             }
         }
+
+        public ITReturnDetailsListResponse GetLitigationAndSimulation(int companyId)
+        {
+            try
+            {
+                Log.Info("Started call to GetLitigationAndSimulation");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(new
+                {
+                    companyId = companyId
+                }));
+                Command.CommandText = "SP_GET_LITIGATION_AND_SIMULATION";
+                Command.CommandType = CommandType.StoredProcedure;
+                Command.Parameters.AddWithValue("@COMPANY_ID", companyId);
+                Connection.Open();
+
+                SqlDataReader reader = Command.ExecuteReader();
+                ITReturnDetailsListResponse result = new ITReturnDetailsListResponse();
+                result.ITReturnDetailsListObject = new List<ITReturnDetails>();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result.ITReturnDetailsListObject.Add(new ITReturnDetails
+                        {
+                            Id = int.Parse(reader["ITReturnDetailsId"].ToString()),
+                            FYAYID = Convert.ToInt32(reader["FYAYId"].ToString()),
+                            ITSectionID = reader["ITSectionID"] != DBNull.Value ? int.Parse(reader["ITSectionID"].ToString()) : 0,
+                            ITSectionDescription = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : null,
+                            ITSectionCategoryID = reader["SECTIONCATEGORYID"] != DBNull.Value ? int.Parse(reader["SECTIONCATEGORYID"].ToString()) : 0,
+                            ITSectionCategoryDesc = reader["CategoryDesc"] != DBNull.Value ? reader["CategoryDesc"].ToString() : null,
+                            ITReturnFillingDate = reader["ITReturnFillingDate"] != DBNull.Value ? Convert.ToDateTime(reader["ITReturnFillingDate"].ToString()) : (DateTime?)null,
+                            ITReturnDueDate = reader["ITReturnDueDate"] != DBNull.Value ? Convert.ToDateTime(reader["ITReturnDueDate"].ToString()) : (DateTime?)null,
+                            FinancialYear = reader["FinancialYear"] != DBNull.Value ? reader["FinancialYear"].ToString() : null,
+                            AssessmentYear = reader["AssessmentYear"] != DBNull.Value ? reader["AssessmentYear"].ToString() : null,
+                        });
+                    }
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            finally
+            {
+                Connection.Close();
+            }
+        }
+
         #endregion
     }
 }

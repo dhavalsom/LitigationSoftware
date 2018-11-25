@@ -118,6 +118,14 @@ namespace LSApi.Controllers
             return ItReturnObj.GetExistingITReturnDetailsExtension(itreturnid);
         }
 
+        [HttpGet]
+        [Route("GetLitigationAndSimulation")]
+        // GET: api/TaxReturnAPI/GetLitigationAndSimulation
+        public ITReturnDetailsListResponse GetLitigationAndSimulation(int companyId)
+        {
+            var ItReturnObj = _Kernel.Get<IITReturnDetailsBL>();
+            return ItReturnObj.GetLitigationAndSimulation(companyId);
+        }
         #endregion
     }
 }

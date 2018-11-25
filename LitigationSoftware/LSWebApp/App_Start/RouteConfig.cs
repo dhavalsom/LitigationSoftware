@@ -176,6 +176,18 @@ namespace LSWebApp
             );
 
             routes.MapRoute(
+                name: "lands",
+                url: "lands",
+                defaults: new
+                {
+                    controller = "TaxReturn",
+                    action = "LitigationAndSimulation"
+                    ,
+                    id = UrlParameter.Optional
+                }
+            );
+
+            routes.MapRoute(
                 name: "matcredit",
                 url: "matcredit",
                 defaults: new

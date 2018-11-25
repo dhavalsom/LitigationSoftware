@@ -19,46 +19,52 @@
       Id="3">
     </MenuItem>
     <MenuItem
-      DisplayText="Refund/Demand Analysis"
+      DisplayText="L and S"
+      ControllerName="TaxReturn"
+      ActionName="LitigationAndSimulation"
+      Id="4">
+    </MenuItem>
+    <MenuItem
+      DisplayText="R/D Analysis"
       ControllerName="TaxReturn"
       ActionName="RDAnalysis"
-      Id="4">
+      Id="5">
     </MenuItem>
     <MenuItem
       DisplayText="Mat Credit Status"
       ControllerName="TaxReturn"
       ActionName="MatCreditStatus"
-      Id="5">
+      Id="6">
     </MenuItem>
     <MenuItem
-      DisplayText="Business/Loss Analysis"
+      DisplayText="B/L Analysis"
       ControllerName="TaxReturn"
       ActionName="BusinessLossAnalysis"
-      Id="6">
+      Id="7">
     </MenuItem>
     <MenuItem
       DisplayText="Compliances"
       ControllerName="TaxReturn"
       ActionName="GetComplianceList"
-      Id="7">
+      Id="8">
     </MenuItem>
     <MenuItem
       DisplayText="Documents"
       ControllerName="TaxReturn"
       ActionName="GetITReturnDocuments"
-      Id="8">
+      Id="9">
     </MenuItem>
     <MenuItem
       DisplayText="Flow Chart"
       ControllerName="TaxReturn"
       ActionName="FlowChart"
-      Id="9">
+      Id="10">
     </MenuItem>
     <MenuItem
       DisplayText="Summary Report"
       ControllerName="TaxReturn"
       ActionName="SummaryReport"
-      Id="10">
+      Id="11">
     </MenuItem>
   </PageId>
   <PageId Value="1">

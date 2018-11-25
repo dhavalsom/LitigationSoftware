@@ -138,6 +138,22 @@ namespace LS.BL.Library
                 //Log
             }
         }
+
+        public ITReturnDetailsListResponse GetLitigationAndSimulation(int companyId)
+        {
+            try
+            {
+                return this._itReturnDA.GetLitigationAndSimulation(companyId);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                //Log
+            }
+        }
         #endregion
 
 

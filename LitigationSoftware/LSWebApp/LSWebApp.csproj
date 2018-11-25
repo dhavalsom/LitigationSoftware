@@ -172,6 +172,7 @@
     <Compile Include="Infrastructure\Utilities.cs" />
     <Compile Include="Models\BusinessLossAnalysisModel.cs" />
     <Compile Include="Models\FlowChartModel.cs" />
+    <Compile Include="Models\LitigationAndSimulationModel.cs" />
     <Compile Include="Models\MatCreditStatusModel.cs" />
     <Compile Include="Models\SummaryReportModel.cs" />
     <Compile Include="Models\RDAnalysisModel.cs" />
@@ -311,6 +312,8 @@
     <Content Include="Views\TaxReturn\MatCreditStatus.cshtml" />
     <Content Include="Views\TaxReturn\BusinessLossAnalysis.cshtml" />
     <Content Include="Views\TaxReturn\FlowChart.cshtml" />
+    <Content Include="Views\TaxReturn\LitigationAndSimulation.cshtml" />
+    <Content Include="Views\TaxReturn\LitigationAndSimulationListItem.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
