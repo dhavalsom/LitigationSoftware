@@ -33,20 +33,6 @@
     }
 </style>
 
-<tr class="table-success">
-    <td>        
-        @Model.CurrentItem.Description
-    </td>
-    @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
-    {
-        <td>
-            
-        </td>
-    }
-    <td></td>
-    <td></td>
-</tr>
-
 @foreach (var subHead in @Model.CurrentItem.SubHeadList)
 {
     if (subHead.IsAllowance.HasValue
@@ -55,7 +41,11 @@
         .Where(e=>e.ITSubHeadId == subHead.Id && e.ITSubHeadValue !=0).Any())
     {
         <tr class="table-active">
-            <td>@subHead.Description</td>
+            <td>
+                @Model.CurrentItem.Description 
+                <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <font color="lightyellow"><b>@subHead.Description</b></font>
+            </td>
             @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
             {                
                 <td>
@@ -75,7 +65,7 @@
                     @Html.TextBox("txtComment_"+ subHead.Id + "_" + (commentObject != null ? commentObject.Id.ToString() : "0")
                     , (commentObject != null ? commentObject.Comment : string.Empty)
                     , new { @class = "litigation-comment"
-                            , @style= "width:300px;"
+                            , @style= "width:250px;height:40px;"
                             , @id = "txtComment_" + subHead.Id + "_" + (commentObject != null ? commentObject.Id.ToString() : "0")
                     })
                 }
