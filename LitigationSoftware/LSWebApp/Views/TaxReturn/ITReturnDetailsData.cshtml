@@ -1,0 +1,688 @@
+﻿@model  LSWebApp.Models.ITReturnDetailsDataModel
+@using LS.Models;
+@using LSWebApp.Models
+
+@using (Html.BeginForm("UpsertITReturnDetails", "TaxReturn"))
+{
+<table class="table table-hover tblITRetDetails">
+    <thead>
+        <tr>
+            <th colspan="2">SNo.</th>
+            <th>Questions</th>
+            <th>Response</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td></td>
+            <td>The information is being updated for:-</td>
+            <td>
+                @Html.HiddenFor(m => m.ITReturnDetailsObject.Id
+                    , Model.ITReturnDetailsObject.Id)
+                @Html.HiddenFor(m => m.ITReturnDetailsObject.ITSectionCategoryID
+                    , Model.ITReturnDetailsObject.ITSectionCategoryID)
+                @Html.HiddenFor(m => m.ITReturnDetailsObject.CompanyID
+                    , Model.ITReturnDetailsObject.CompanyID)
+                @Html.HiddenFor(m => m.ITReturnDetailsObject.FYAYID
+                    , Model.ITReturnDetailsObject.FYAYID)
+                @Model.ITReturnDetailsObject.ITSectionCategoryDesc
+                @*This is to fix/hook the wierd bug of missing the <form>
+                tag for first instance of file upload popup*@
+                @Html.Partial("_ITHeadDocumentsUploader", new ITHeadDocumentsUploaderModel(new List<ITReturnDocumentsDisplay>(), new ITHeadMaster()
+                                    , new ITReturnDetails()))
+
+</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td></td>
+            <td>Section number:-</td>
+            <td>
+                @Html.HiddenFor(m => m.ITReturnDetailsObject.ITSectionID
+                , Model.ITReturnDetailsObject.ITSectionID)
+                @Model.ITReturnDetailsObject.ITSectionDescription
+            </td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td></td>
+            <td>Date of filing the return/order:-</td>
+            <td>
+                <div class="input-group date form_datetime HLV_clacInput"
+                     data-date="" data-date-format="dd M yyyy" data-link-field="ITReturnDetailsObject_ITReturnFillingDate"
+                     data-link-format="dd/M/yyyy">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.ITReturnFillingDate
+                     , Model.ITReturnDetailsObject.ITReturnFillingDate.HasValue
+                     ? Model.ITReturnDetailsObject.ITReturnFillingDate.Value.ToShortDateString()
+                     : string.Empty
+                  , new
+                  {
+                      @class = "form-control",
+                      @size = "16",
+                      @value = ""
+                  })
+                    <span class="input-group-addon">
+                        &nbsp;&nbsp;<i class="fa fa-calendar fa-3x" aria-hidden="true">
+                        </i>
+                    </span>
+                </div>
+
+            </td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td></td>
+            <td>Due date of filing the return/order:-</td>
+            <td>
+                <div class="input-group date form_datetime HLV_clacInput"
+                     data-date="" data-date-format="dd M yyyy" data-link-field="ITReturnDetailsObject_ITReturnDueDate"
+                     data-link-format="dd/M/yyyy">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.ITReturnDueDate
+                      , Model.ITReturnDetailsObject.ITReturnDueDate.HasValue
+                         ? Model.ITReturnDetailsObject.ITReturnDueDate.Value.ToShortDateString()
+                         : string.Empty
+                      , new
+                      {
+                          @class = "form-control",
+                          @size = "16",
+                          @value = ""
+                      })
+                    <span class="input-group-addon">
+                        &nbsp;&nbsp;<i class="fa fa-calendar fa-3x" aria-hidden="true">
+                        </i>
+                    </span>
+                </div>
+            </td>
+        </tr>
+
+        <tr>
+            <td>@Model.ITHeadMasterList["IncomefromSalary"].ExcelSrNo</td>
+            <td></td>
+            <td>@Model.ITHeadMasterList["IncomefromSalary"].Description:-</td>
+            <td>
+                <div class="row col-12">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomefromSalary
+                 , string.Format("{0:f}", Model.ITReturnDetailsObject.IncomefromSalary)
+                 , new { @class = "numericOnly" })
+
+                    @if (Model.ITReturnDetailsObject.Id > 0
+                    && Model.ITHeadMasterList["IncomefromSalary"].CanAddDocuments)
+                    {
+                        @Html.Partial("_ITHeadDocumentsUploader"
+                     , Model.ITHeadDocumentsUploaderModels["IncomefromSalary"])
+                    }
+                </div>
+            </td>
+        </tr>
+        @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["IncomefromSalary"].CanAddSubHead)
+        {
+            @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                     .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomefromSalary"].Id)
+                     .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["IncomefromSalary"].Id))
+        }
+        <tr>
+            <td>@Model.ITHeadMasterList["HousePropIncome"].ExcelSrNo</td>
+            <td></td>
+            <td>@Model.ITHeadMasterList["HousePropIncome"].Description:-</td>
+            <td>
+                <div class="row col-12">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.HousePropIncome
+                 , string.Format("{0:f}", Model.ITReturnDetailsObject.HousePropIncome)
+                 , new { @class = "numericOnly" })
+                    @if (Model.ITReturnDetailsObject.Id > 0
+                    && Model.ITHeadMasterList["HousePropIncome"].CanAddDocuments)
+                    {
+                        @Html.Partial("_ITHeadDocumentsUploader"
+                     , Model.ITHeadDocumentsUploaderModels["HousePropIncome"])
+                    }
+                </div>
+            </td>
+        </tr>
+        @if (!Model.ITReturnDetailsObject.IsReturn
+                   && @Model.ITHeadMasterList["HousePropIncome"].CanAddSubHead)
+        {
+            @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                     .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["HousePropIncome"].Id)
+                     .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["HousePropIncome"].Id))
+        }
+
+        <tr>
+            <td>@Model.ITHeadMasterList["IncomefromCapGainsLTCG"].ExcelSrNo</td>
+            <td></td>
+            <td>@Model.ITHeadMasterList["IncomefromCapGainsLTCG"].Description:-</td>
+            <td>
+                <div class="row col-12">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomefromCapGainsLTCG
+                 , string.Format("{0:f}", Model.ITReturnDetailsObject.IncomefromCapGainsLTCG)
+                 , new { @class = "numericOnly" })
+                    @if (Model.ITReturnDetailsObject.Id > 0
+     && Model.ITHeadMasterList["IncomefromCapGainsLTCG"].CanAddDocuments)
+                    {
+                        @Html.Partial("_ITHeadDocumentsUploader"
+                     , Model.ITHeadDocumentsUploaderModels["IncomefromCapGainsLTCG"])
+                    }
+                </div>
+            </td>
+        </tr>
+        @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["IncomefromCapGainsLTCG"].CanAddSubHead)
+        {
+            @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                     .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomefromCapGainsLTCG"].Id)
+                     .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["IncomefromCapGainsLTCG"].Id))
+        }
+        <tr>
+            <td>@Model.ITHeadMasterList["IncomefromCapGainsSTCG"].ExcelSrNo</td>
+            <td></td>
+            <td>@Model.ITHeadMasterList["IncomefromCapGainsSTCG"].Description:-</td>
+            <td>
+                <div class="row col-12">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomefromCapGainsSTCG
+                 , string.Format("{0:f}", Model.ITReturnDetailsObject.IncomefromCapGainsSTCG)
+                 , new { @class = "numericOnly" })
+                    @if (Model.ITReturnDetailsObject.Id > 0
+     && Model.ITHeadMasterList["IncomefromCapGainsSTCG"].CanAddDocuments)
+                    {
+                        @Html.Partial("_ITHeadDocumentsUploader"
+                     , Model.ITHeadDocumentsUploaderModels["IncomefromCapGainsSTCG"])
+                    }
+                </div>
+            </td>
+        </tr>
+        @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["IncomefromCapGainsSTCG"].CanAddSubHead)
+        {
+            @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                     .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomefromCapGainsSTCG"].Id)
+                     .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["IncomefromCapGainsSTCG"].Id))
+        }
+        <tr>
+            <td>@Model.ITHeadMasterList["IncomefromBusinessProf"].ExcelSrNo</td>
+            <td></td>
+            <td>@Model.ITHeadMasterList["IncomefromBusinessProf"].Description:-</td>
+            <td>
+                <div class="row col-12">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomefromBusinessProf
+                 , string.Format("{0:f}", Model.ITReturnDetailsObject.IncomefromBusinessProf)
+                 , new { @class = "numericOnly" })
+                    @if (Model.ITReturnDetailsObject.Id > 0
+     && Model.ITHeadMasterList["IncomefromBusinessProf"].CanAddDocuments)
+                    {
+                        @Html.Partial("_ITHeadDocumentsUploader"
+                     , Model.ITHeadDocumentsUploaderModels["IncomefromBusinessProf"])
+                    }
+                </div>
+            </td>
+        </tr>
+        @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["IncomefromBusinessProf"].CanAddSubHead)
+        {
+            @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                     .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomefromBusinessProf"].Id)
+                     .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["IncomefromBusinessProf"].Id))
+        }
+        <tr>
+            <td>@Model.ITHeadMasterList["IncomefromSpeculativeBusiness"].ExcelSrNo</td>
+            <td></td>
+            <td>@Model.ITHeadMasterList["IncomefromSpeculativeBusiness"].Description:-</td>
+            <td>
+                <div class="row col-12">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomefromSpeculativeBusiness
+             , string.Format("{0:f}", Model.ITReturnDetailsObject.IncomefromSpeculativeBusiness)
+             , new { @class = "numericOnly" })
+                    @if (Model.ITReturnDetailsObject.Id > 0
+     && Model.ITHeadMasterList["IncomefromSpeculativeBusiness"].CanAddDocuments)
+                    {
+                        @Html.Partial("_ITHeadDocumentsUploader"
+                     , Model.ITHeadDocumentsUploaderModels["IncomefromSpeculativeBusiness"])
+                    }
+                </div>
+            </td>
+        </tr>
+        @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["IncomefromSpeculativeBusiness"].CanAddSubHead)
+        {
+            @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                     .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomefromSpeculativeBusiness"].Id)
+                     .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["IncomefromSpeculativeBusiness"].Id))
+        }
+
+        <tr>
+            <td>@Model.ITHeadMasterList["IncomeFromOtherSources"].ExcelSrNo</td>
+            <td></td>
+            <td>@Model.ITHeadMasterList["IncomeFromOtherSources"].Description:-</td>
+            <td>
+                <div class="row col-12">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomeFromOtherSources
+                 , string.Format("{0:f}", Model.ITReturnDetailsObject.IncomeFromOtherSources)
+                 , new { @class = "numericOnly" })
+                    @if (Model.ITReturnDetailsObject.Id > 0
+     && Model.ITHeadMasterList["IncomeFromOtherSources"].CanAddDocuments)
+                    {
+                        @Html.Partial("_ITHeadDocumentsUploader"
+                     , Model.ITHeadDocumentsUploaderModels["IncomeFromOtherSources"])
+                    }
+                </div>
+            </td>
+        </tr>
+        @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["IncomeFromOtherSources"].CanAddSubHead)
+        {
+            @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                     .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["IncomeFromOtherSources"].Id)
+                     .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["IncomeFromOtherSources"].Id))
+        }
+
+        <tr>
+            <td>@Model.ITHeadMasterList["Broughtforwardlosses"].ExcelSrNo</td>
+            <td></td>
+            <td>@Model.ITHeadMasterList["Broughtforwardlosses"].Description:-</td>
+            <td>
+                @Html.RadioButtonFor(m => m.ITReturnDetailsObject.Broughtforwardlosses, !Model.ITReturnDetailsObject.Broughtforwardlosses) Yes
+                @Html.RadioButtonFor(m => m.ITReturnDetailsObject.Broughtforwardlosses, Model.ITReturnDetailsObject.Broughtforwardlosses) No
+            </td>
+        </tr>
+        @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["Broughtforwardlosses"].CanAddSubHead)
+        {
+            @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                     .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["Broughtforwardlosses"].Id)
+                     .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["Broughtforwardlosses"].Id))
+        }
+
+        <tr>
+            <td>@Model.ITHeadMasterList["DeductChapterVIA"].ExcelSrNo</td>
+            <td></td>
+            <td>@Model.ITHeadMasterList["DeductChapterVIA"].Description:-</td>
+            <td>
+                <div class="row col-12">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.DeductChapterVIA
+              , string.Format("{0:f}", Model.ITReturnDetailsObject.DeductChapterVIA)
+              , new { @class = "numericOnly" })
+
+                    @if (Model.ITReturnDetailsObject.Id > 0
+     && Model.ITHeadMasterList["DeductChapterVIA"].CanAddDocuments)
+                    {
+                        @Html.Partial("_ITHeadDocumentsUploader"
+                     , Model.ITHeadDocumentsUploaderModels["DeductChapterVIA"])
+                    }
+                </div>
+            </td>
+        </tr>
+        @if (!Model.ITReturnDetailsObject.IsReturn
+                                           && @Model.ITHeadMasterList["DeductChapterVIA"].CanAddSubHead)
+        {
+            @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                     .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["DeductChapterVIA"].Id)
+                     .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["DeductChapterVIA"].Id))
+        }
+
+        <tr>
+            <td>@Model.ITHeadMasterList["ProfitUS115JB"].ExcelSrNo</td>
+            <td></td>
+            <td>@Model.ITHeadMasterList["ProfitUS115JB"].Description:-</td>
+            <td>
+                <div class="row col-12">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.ProfitUS115JB
+                 , string.Format("{0:f}", Model.ITReturnDetailsObject.ProfitUS115JB)
+                 , new { @class = "numericOnly" })
+
+                    @if (Model.ITReturnDetailsObject.Id > 0
+     && Model.ITHeadMasterList["ProfitUS115JB"].CanAddDocuments)
+                    {
+                        @Html.Partial("_ITHeadDocumentsUploader"
+                     , Model.ITHeadDocumentsUploaderModels["ProfitUS115JB"])
+                    }
+                </div>
+            </td>
+        </tr>
+        @if (!Model.ITReturnDetailsObject.IsReturn
+                  && @Model.ITHeadMasterList["ProfitUS115JB"].CanAddSubHead)
+        {
+            @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                     .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["ProfitUS115JB"].Id)
+                     .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["ProfitUS115JB"].Id))
+        }
+
+        <tr>
+            <td>@Model.ITHeadMasterList["AdvanceTax1installment"].ExcelSrNo</td>
+            <td></td>
+            <td>@Model.ITHeadMasterList["AdvanceTax1installment"].Description:-</td>
+            <td>
+                <div class="row col-12">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.AdvanceTax1installment
+                 , string.Format("{0:f}", Model.ITReturnDetailsObject.AdvanceTax1installment)
+                 , new { @class = "numericOnly" })
+                    @if (Model.ITReturnDetailsObject.Id > 0
+     && Model.ITHeadMasterList["AdvanceTax1installment"].CanAddDocuments)
+                    {
+                        @Html.Partial("_ITHeadDocumentsUploader"
+                     , Model.ITHeadDocumentsUploaderModels["AdvanceTax1installment"])
+                    }
+                </div>
+            </td>
+        </tr>
+        @if (!Model.ITReturnDetailsObject.IsReturn
+                   && @Model.ITHeadMasterList["AdvanceTax1installment"].CanAddSubHead)
+        {
+            @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                     .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["AdvanceTax1installment"].Id)
+                     .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["AdvanceTax1installment"].Id))
+        }
+
+        <tr>
+            <td>@Model.ITHeadMasterList["AdvanceTax2installment"].ExcelSrNo</td>
+            <td></td>
+            <td>@Model.ITHeadMasterList["AdvanceTax2installment"].Description:-</td>
+            <td>
+                <div class="row col-12">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.AdvanceTax2installment
+                 , string.Format("{0:f}", Model.ITReturnDetailsObject.AdvanceTax2installment)
+                 , new { @class = "numericOnly" })
+                    @if (Model.ITReturnDetailsObject.Id > 0
+     && Model.ITHeadMasterList["AdvanceTax2installment"].CanAddDocuments)
+                    {
+                        @Html.Partial("_ITHeadDocumentsUploader"
+                     , Model.ITHeadDocumentsUploaderModels["AdvanceTax2installment"])
+                    }
+                </div>
+            </td>
+        </tr>
+        @if (!Model.ITReturnDetailsObject.IsReturn
+                      && @Model.ITHeadMasterList["AdvanceTax2installment"].CanAddSubHead)
+        {
+            @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                     .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["AdvanceTax2installment"].Id)
+                     .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["AdvanceTax2installment"].Id))
+        }
+
+        <tr>
+            <td>@Model.ITHeadMasterList["AdvanceTax3installment"].ExcelSrNo</td>
+            <td></td>
+            <td>@Model.ITHeadMasterList["AdvanceTax3installment"].Description:-</td>
+            <td>
+                <div class="row col-12">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.AdvanceTax3installment
+                 , string.Format("{0:f}", Model.ITReturnDetailsObject.AdvanceTax3installment)
+                 , new { @class = "numericOnly" })
+                    @if (Model.ITReturnDetailsObject.Id > 0
+     && Model.ITHeadMasterList["AdvanceTax3installment"].CanAddDocuments)
+                    {
+                        @Html.Partial("_ITHeadDocumentsUploader"
+                     , Model.ITHeadDocumentsUploaderModels["AdvanceTax3installment"])
+                    }
+                </div>
+            </td>
+        </tr>
+        @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["AdvanceTax3installment"].CanAddSubHead)
+        {
+            @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                     .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["AdvanceTax3installment"].Id)
+                     .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["AdvanceTax3installment"].Id))
+        }
+
+        <tr>
+            <td>@Model.ITHeadMasterList["AdvanceTax4installment"].ExcelSrNo</td>
+            <td></td>
+            <td>@Model.ITHeadMasterList["AdvanceTax4installment"].Description:-</td>
+            <td>
+                <div class="row col-12">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.AdvanceTax4installment
+                 , string.Format("{0:f}", Model.ITReturnDetailsObject.AdvanceTax4installment)
+                 , new { @class = "numericOnly" })
+                    @if (Model.ITReturnDetailsObject.Id > 0
+     && Model.ITHeadMasterList["AdvanceTax4installment"].CanAddDocuments)
+                    {
+                        @Html.Partial("_ITHeadDocumentsUploader"
+                     , Model.ITHeadDocumentsUploaderModels["AdvanceTax4installment"])
+                    }
+                </div>
+            </td>
+        </tr>
+        @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["AdvanceTax4installment"].CanAddSubHead)
+        {
+            @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                     .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["AdvanceTax4installment"].Id)
+                     .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["AdvanceTax4installment"].Id))
+        }
+
+        <tr>
+            <td>@Model.ITHeadMasterList["TDS"].ExcelSrNo</td>
+            <td></td>
+            <td>@Model.ITHeadMasterList["TDS"].Description:-</td>
+            <td>
+                <div class="row col-12">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.TDS
+                 , string.Format("{0:f}", Model.ITReturnDetailsObject.TDS)
+                 , new { @class = "numericOnly" })
+                    @if (Model.ITReturnDetailsObject.Id > 0
+     && Model.ITHeadMasterList["TDS"].CanAddDocuments)
+                    {
+                        @Html.Partial("_ITHeadDocumentsUploader"
+                     , Model.ITHeadDocumentsUploaderModels["TDS"])
+                    }
+                </div>
+            </td>
+        </tr>
+        @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["TDS"].CanAddSubHead)
+        {
+            @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                     .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["TDS"].Id)
+                     .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["TDS"].Id))
+        }
+
+        <tr>
+            <td>@Model.ITHeadMasterList["TDS26AS"].ExcelSrNo</td>
+            <td></td>
+            <td>@Model.ITHeadMasterList["TDS26AS"].Description:-</td>
+            <td>
+                <div class="row col-12">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.TDS26AS
+                  , string.Format("{0:f}", Model.ITReturnDetailsObject.TDS26AS)
+                  , new { @class = "numericOnly" })
+
+                    @if (Model.ITReturnDetailsObject.Id > 0
+     && Model.ITHeadMasterList["TDS26AS"].CanAddDocuments)
+                    {
+                        @Html.Partial("_ITHeadDocumentsUploader"
+                     , Model.ITHeadDocumentsUploaderModels["TDS26AS"])
+                    }
+                </div>
+            </td>
+        </tr>
+        @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["TDS26AS"].CanAddSubHead)
+        {
+            @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                     .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["TDS26AS"].Id)
+                     .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["TDS26AS"].Id))
+        }
+
+        <tr>
+            <td>@Model.ITHeadMasterList["TDSasperBooks"].ExcelSrNo</td>
+            <td></td>
+            <td>@Model.ITHeadMasterList["TDSasperBooks"].Description:-</td>
+            <td>
+                <div class="row col-12">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.TDSasperBooks
+                 , string.Format("{0:f}", Model.ITReturnDetailsObject.TDSasperBooks)
+                 , new { @class = "numericOnly" })
+                    @if (Model.ITReturnDetailsObject.Id > 0
+     && Model.ITHeadMasterList["TDSasperBooks"].CanAddDocuments)
+                    {
+                        @Html.Partial("_ITHeadDocumentsUploader"
+                     , Model.ITHeadDocumentsUploaderModels["TDSasperBooks"])
+                    }
+                </div>
+            </td>
+        </tr>
+        @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["TDSasperBooks"].CanAddSubHead)
+        {
+            @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                     .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["TDSasperBooks"].Id)
+                     .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["TDSasperBooks"].Id))
+        }
+
+        <tr>
+            <td>@Model.ITHeadMasterList["TCSPaidbyCompany"].ExcelSrNo</td>
+            <td></td>
+            <td>@Model.ITHeadMasterList["TCSPaidbyCompany"].Description:-</td>
+            <td>
+                <div class="row col-12">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.TCSPaidbyCompany
+              , string.Format("{0:f}", Model.ITReturnDetailsObject.TCSPaidbyCompany)
+             , new { @class = "numericOnly" })
+                    @if (Model.ITReturnDetailsObject.Id > 0
+     && Model.ITHeadMasterList["TCSPaidbyCompany"].CanAddDocuments)
+                    {
+                        @Html.Partial("_ITHeadDocumentsUploader"
+                     , Model.ITHeadDocumentsUploaderModels["TCSPaidbyCompany"])
+                    }
+                </div>
+            </td>
+        </tr>
+        @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["TCSPaidbyCompany"].CanAddSubHead)
+        {
+            @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                     .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["TCSPaidbyCompany"].Id)
+                     .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["TCSPaidbyCompany"].Id))
+        }
+
+        <tr>
+            <td>@Model.ITHeadMasterList["SelfAssessmentTax"].ExcelSrNo</td>
+            <td></td>
+            <td>@Model.ITHeadMasterList["SelfAssessmentTax"].Description:-</td>
+            <td>
+                <div class="row col-12">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.SelfAssessmentTax
+              , string.Format("{0:f}", Model.ITReturnDetailsObject.SelfAssessmentTax)
+             , new { @class = "numericOnly" })
+                    @if (Model.ITReturnDetailsObject.Id > 0
+     && Model.ITHeadMasterList["SelfAssessmentTax"].CanAddDocuments)
+                    {
+                        @Html.Partial("_ITHeadDocumentsUploader"
+                     , Model.ITHeadDocumentsUploaderModels["SelfAssessmentTax"])
+                    }
+                </div>
+            </td>
+        </tr>
+        @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["SelfAssessmentTax"].CanAddSubHead)
+        {
+            @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                     .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["SelfAssessmentTax"].Id)
+                     .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["SelfAssessmentTax"].Id))
+        }
+
+        <tr>
+            <td colspan="2"></td>
+            <td>@Model.ITHeadMasterList["MATCredit"].Description:-</td>
+            <td>
+                <div class="row col-12">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.MATCredit
+                 , string.Format("{0:f}", Model.ITReturnDetailsObject.MATCredit)
+                 , new { @class = "numericOnly" })
+                    @if (Model.ITReturnDetailsObject.Id > 0
+     && Model.ITHeadMasterList["MATCredit"].CanAddDocuments)
+                    {
+                        @Html.Partial("_ITHeadDocumentsUploader"
+                     , Model.ITHeadDocumentsUploaderModels["MATCredit"])
+                    }
+                </div>
+            </td>
+        </tr>
+        @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["MATCredit"].CanAddSubHead)
+        {
+            @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                     .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["MATCredit"].Id)
+                     .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["MATCredit"].Id))
+        }
+
+        <tr>
+            <td colspan="2"></td>
+            <td>@Model.ITHeadMasterList["InterestUS234A"].Description:-</td>
+            <td>
+                <div class="row col-12">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.InterestUS234A
+                 , string.Format("{0:f}", Model.ITReturnDetailsObject.InterestUS234A)
+                 , new { @class = "numericOnly" })
+                    @if (Model.ITReturnDetailsObject.Id > 0
+     && Model.ITHeadMasterList["InterestUS234A"].CanAddDocuments)
+                    {
+                        @Html.Partial("_ITHeadDocumentsUploader"
+                     , Model.ITHeadDocumentsUploaderModels["InterestUS234A"])
+                    }
+                </div>
+            </td>
+        </tr>
+        @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["InterestUS234A"].CanAddSubHead)
+        {
+            @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                     .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["InterestUS234A"].Id)
+                     .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["InterestUS234A"].Id))
+        }
+
+        <tr>
+            <td colspan="2"></td>
+            <td>@Model.ITHeadMasterList["InterestUS234B"].Description:-</td>
+            <td>
+                <div class="row col-12">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.InterestUS234B
+              , string.Format("{0:f}", Model.ITReturnDetailsObject.InterestUS234B)
+             , new { @class = "numericOnly" })
+                    @if (Model.ITReturnDetailsObject.Id > 0
+     && Model.ITHeadMasterList["InterestUS234B"].CanAddDocuments)
+                    {
+                        @Html.Partial("_ITHeadDocumentsUploader"
+                     , Model.ITHeadDocumentsUploaderModels["InterestUS234B"])
+                    }
+                </div>
+            </td>
+        </tr>
+        @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["InterestUS234B"].CanAddSubHead)
+        {
+            @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                     .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["InterestUS234B"].Id)
+                     .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["InterestUS234B"].Id))
+        }
+
+        <tr>
+            <td colspan="2"></td>
+            <td>@Model.ITHeadMasterList["InterestUS234C"].Description:-</td>
+            <td>
+                <div class="row col-12">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.InterestUS234C
+                    , string.Format("{0:f}", Model.ITReturnDetailsObject.InterestUS234C)
+                    , new { @class = "numericOnly" })
+                    @if (Model.ITReturnDetailsObject.Id > 0
+                    && Model.ITHeadMasterList["InterestUS234C"].CanAddDocuments)
+                    {
+                        @Html.Partial("_ITHeadDocumentsUploader"
+                     , Model.ITHeadDocumentsUploaderModels["InterestUS234C"])
+                    }
+                </div>
+            </td>
+        </tr>
+        @if (!Model.ITReturnDetailsObject.IsReturn
+                && @Model.ITHeadMasterList["InterestUS234C"].CanAddSubHead)
+        {
+            @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+                     .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList["InterestUS234C"].Id)
+                     .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList["InterestUS234C"].Id))
+        }
+        <tr>
+            <td colspan="4" align="center"><button type="submit" class="btn btn-primary">Save</button></td>
+        </tr>
+    </tbody>
+</table>
+}

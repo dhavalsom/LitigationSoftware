@@ -34,7 +34,9 @@
             <td></td>
             <td>@extensionItem.SubHeadMasterObject.Description:-</td>
             <td>
-                @Html.TextBox("txtITSubHead_" + extensionItem.ITSubHeadId.ToString(), extensionItem.ITSubHeadValue)
+                @Html.TextBox("txtITSubHead_" + extensionItem.ITSubHeadId.ToString()
+               , string.Format("{0:f}", extensionItem.ITSubHeadValue)
+               , new { @class = "numericOnly" })
             </td>
         </tr>
     }
