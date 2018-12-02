@@ -46,6 +46,21 @@ namespace LS.Models
         public decimal? RefundReceived { get; set; }
         public bool? RevisedReturnFile { get; set; }
         public bool IsReturn { get; set; }
+
+        public decimal? TaxCollectedAtSource { get; set; }
+        public decimal? ForeignTaxCredit { get; set; }
+        public decimal? InterestUS234D { get; set; }
+        public decimal? InterestUS220 { get; set; }
+        public decimal? RefundAdjusted { get; set; }
+        public decimal? RegularAssessment { get; set; }
+        public DateTime? SelfAssessmentTaxDate { get; set; }
+        public DateTime? AdvanceTax1installmentDate { get; set; }
+        public DateTime? AdvanceTax2installmentDate { get; set; }
+        public DateTime? AdvanceTax3installmentDate { get; set; }
+        public DateTime? AdvanceTax4installmentDate { get; set; }
+        public DateTime? RefundAdjustedDate { get; set; }
+        public DateTime? RegularAssessmentDate { get; set; }
+
         public List<ITReturnDetailsExtension> Extensions { get; set; }
         #endregion
 
@@ -130,7 +145,6 @@ namespace LS.Models
             return TDS.HasValue;
         }
 
-
         public bool ShouldSerializeTCSPaidbyCompany()
         {
             return TCSPaidbyCompany.HasValue;
@@ -191,6 +205,70 @@ namespace LS.Models
             return TDSasperBooks.HasValue;
         }
 
+        public bool ShouldSerializeTaxCollectedAtSource()
+        {
+            return TaxCollectedAtSource.HasValue;
+        }
+
+        public bool ShouldSerializeForeignTaxCredit()
+        {
+            return ForeignTaxCredit.HasValue;
+        }
+
+        public bool ShouldSerializeInterestUS234D()
+        {
+            return InterestUS234D.HasValue;
+        }
+
+        public bool ShouldSerializeInterestUS220()
+        {
+            return InterestUS220.HasValue;
+        }
+
+        public bool ShouldSerializeRefundAdjusted()
+        {
+            return RefundAdjusted.HasValue;
+        }
+
+        public bool ShouldSerializeRegularAssessment()
+        {
+            return RegularAssessment.HasValue;
+        }
+
+        public bool ShouldSerializeSelfAssessmentTaxDate()
+        {
+            return SelfAssessmentTaxDate.HasValue;
+        }
+
+        public bool ShouldSerializeAdvanceTax1installmentDate()
+        {
+            return AdvanceTax1installmentDate.HasValue;
+        }
+
+        public bool ShouldSerializeAdvanceTax2installmentDate()
+        {
+            return AdvanceTax2installmentDate.HasValue;
+        }
+
+        public bool ShouldSerializeAdvanceTax3installmentDate()
+        {
+            return AdvanceTax3installmentDate.HasValue;
+        }
+
+        public bool ShouldSerializeAdvanceTax4installmentDate()
+        {
+            return AdvanceTax4installmentDate.HasValue;
+        }
+
+        public bool ShouldSerializeRefundAdjustedDate()
+        {
+            return RefundAdjustedDate.HasValue;
+        }
+
+        public bool ShouldSerializeRegularAssessmentDate()
+        {
+            return RegularAssessmentDate.HasValue;
+        }
         #endregion
 
         #region Methods
