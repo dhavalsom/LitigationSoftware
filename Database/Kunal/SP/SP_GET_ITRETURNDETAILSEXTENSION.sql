@@ -1,16 +1,17 @@
 USE [LitigationApp]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_GET_ITRETURNDETAILSEXTENSION]    Script Date: 12/2/2018 3:47:06 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_GET_ITRETURNDETAILSEXTENSION]    Script Date: 12/3/2018 10:17:01 PM ******/
 DROP PROCEDURE [dbo].[SP_GET_ITRETURNDETAILSEXTENSION]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_GET_ITRETURNDETAILSEXTENSION]    Script Date: 12/2/2018 3:47:06 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_GET_ITRETURNDETAILSEXTENSION]    Script Date: 12/3/2018 10:17:01 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 CREATE PROCEDURE [dbo].[SP_GET_ITRETURNDETAILSEXTENSION]
 (
@@ -48,7 +49,7 @@ BEGIN
 		  ,SH.ITHeadId
 		  ,SH.Id AS ITSubHeadId
 		  ,ISNULL(ITRDE.ITSubHeadValue,0) AS ITSubHeadValue
-		  ,ITRDE.ITSubHeadValue
+		  ,ITRDE.ITSubHeadDate
 		  ,SH.IsAllowance
 		  ,ISNULL(ITRDE.Active, CONVERT(BIT, 1)) AS Active
 		FROM ITSubHeadMaster SH
@@ -56,6 +57,7 @@ BEGIN
 		ORDER BY ITRDE.[Id]
 	END
 END
+
 
 
 

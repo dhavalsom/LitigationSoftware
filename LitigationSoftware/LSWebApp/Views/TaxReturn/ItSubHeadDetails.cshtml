@@ -17,6 +17,7 @@
              class="imgSubHeadSave"
              style="width:20px;height:20px;display:none;" />
     </td>
+    <td></td>
 </tr>
 <tr class="trDisallowance@(Model.ITHeadId.ToString())">
     <td></td>
@@ -24,6 +25,7 @@
     <td>
         Are there any disallowances made in the Assessment Order?
     </td>
+    <td></td>
 </tr>
 @if (Model.DisAllowancesExtensionList != null && Model.DisAllowancesExtensionList.Count() != 0)
 {   
@@ -34,9 +36,13 @@
             <td></td>
             <td>@extensionItem.SubHeadMasterObject.Description:-</td>
             <td>
-                @Html.TextBox("txtITSubHead_" + extensionItem.ITSubHeadId.ToString()
-               , string.Format("{0:f}", extensionItem.ITSubHeadValue)
-               , new { @class = "numericOnly" })
+                <div class="row col-12">
+                    <div class="col-md-6">
+                        @Html.TextBox("txtITSubHead_" + extensionItem.ITSubHeadId.ToString()
+                        , string.Format("{0:f}", extensionItem.ITSubHeadValue)
+                        , new { @class = "numericOnly" })
+                    </div>
+                </div>
             </td>
         </tr>
     }
@@ -46,6 +52,7 @@
     <td></td>
     <td>b</td>
     <td>Are there any allowances made in the Assessment Order?</td>
+    <td></td>
 </tr>
 
 @if (Model.AllowancesExtensionList != null && Model.AllowancesExtensionList.Count() != 0)
@@ -57,9 +64,13 @@
             <td></td>
             <td>@extensionItem.SubHeadMasterObject.Description:-</td>
             <td>
-                @Html.TextBox("txtITSubHead_" + extensionItem.ITSubHeadId.ToString()
-               , string.Format("{0:f}", extensionItem.ITSubHeadValue)
-               , new { @class = "numericOnly" })
+                <div class="row col-12">
+                    <div class="col-md-6">
+                        @Html.TextBox("txtITSubHead_" + extensionItem.ITSubHeadId.ToString()
+                        , string.Format("{0:f}", extensionItem.ITSubHeadValue)
+                        , new { @class = "numericOnly" })
+                    </div>
+                </div>
             </td>
         </tr>
     }

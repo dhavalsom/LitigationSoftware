@@ -312,7 +312,7 @@ namespace LS.DAL.Library
                             ITHeadId = int.Parse(reader["ITHeadId"].ToString()),
                             ITSubHeadId = int.Parse(reader["ITSubHeadId"].ToString()),
                             ITSubHeadValue = decimal.Parse(reader["ITSubHeadValue"].ToString()),
-                            ITSubHeadDate = reader["ITSubHeadValue"] != DBNull.Value ? DateTime.Parse(reader["ITSubHeadDate"].ToString()) : (DateTime?)null,
+                            ITSubHeadDate = reader["ITSubHeadDate"] != DBNull.Value ? DateTime.Parse(reader["ITSubHeadDate"].ToString()) : (DateTime?)null,
                             IsAllowance = bool.Parse(reader["IsAllowance"].ToString()),
                             Active = bool.Parse(reader["Active"].ToString()) 
                         });
