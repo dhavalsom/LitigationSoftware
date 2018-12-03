@@ -1,0 +1,166 @@
+﻿@model  LSWebApp.Models.ITReturnDetailsDataModel
+@using LS.Models;
+@using LSWebApp.Models
+
+@using (Html.BeginForm("UpsertITReturnDetails", "TaxReturn"))
+{
+<table class="table table-hover tblITRetDetails">
+    <thead>
+        <tr>
+            <th colspan="2">SNo.</th>
+            <th>Questions</th>
+            <th>Response</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td></td>
+            <td>The information is being updated for:-</td>
+            <td>
+                <div class="row col-12">
+                    <div class="col-md-6">
+                        @Html.HiddenFor(m => m.ITReturnDetailsObject.Id
+                    , Model.ITReturnDetailsObject.Id)
+                        @Html.HiddenFor(m => m.ITReturnDetailsObject.ITSectionCategoryID
+                    , Model.ITReturnDetailsObject.ITSectionCategoryID)
+                        @Html.HiddenFor(m => m.ITReturnDetailsObject.CompanyID
+                    , Model.ITReturnDetailsObject.CompanyID)
+                        @Html.HiddenFor(m => m.ITReturnDetailsObject.FYAYID
+                    , Model.ITReturnDetailsObject.FYAYID)
+                        @Model.ITReturnDetailsObject.ITSectionCategoryDesc
+                        @*This is to fix/hook the wierd bug of missing the <form>
+                    tag for first instance of file upload popup*@
+                        @Html.Partial("_ITHeadDocumentsUploader",
+                                new ITHeadDocumentsUploaderModel(
+                                    new List<ITReturnDocumentsDisplay>(), new ITHeadMaster()
+                                    , new ITReturnDetails()))
+
+            </div></div>
+            </td>
+
+        </tr>
+
+        <tr>
+            <td>2</td>
+            <td></td>
+            <td>Section number:-</td>
+            <td>
+                <div class="row col-12">
+                    <div class="col-md-6">
+                        @Html.HiddenFor(m => m.ITReturnDetailsObject.ITSectionID
+                        , Model.ITReturnDetailsObject.ITSectionID)
+                        @Model.ITReturnDetailsObject.ITSectionDescription
+                    </div>
+                </div>
+            </td>
+        </tr>
+        
+        <tr>
+            <td>3</td>
+            <td></td>
+            <td>Date of filing the return/order:-</td>
+            <td>
+                <div class="row col-12">
+                    <div class="col-md-6">
+                        <div class="input-group date form_datetime HLV_clacInput"
+                             data-date="" data-date-format="dd M yyyy" data-link-field="ITReturnDetailsObject_ITReturnFillingDate"
+                             data-link-format="dd/M/yyyy">
+                            @Html.TextBoxFor(m => m.ITReturnDetailsObject.ITReturnFillingDate
+                             , Model.ITReturnDetailsObject.ITReturnFillingDate.HasValue
+                             ? Model.ITReturnDetailsObject.ITReturnFillingDate.Value.ToShortDateString()
+                             : string.Empty
+                          , new
+                          {
+                              @class = "form-control",
+                              @size = "16",
+                              @value = ""
+                          })
+                            <span class="input-group-addon">
+                                &nbsp;&nbsp;<i class="fa fa-calendar fa-2x" aria-hidden="true">
+                                </i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        
+        <tr>
+            <td>4</td>
+            <td></td>
+            <td>Due date of filing the return/order:-</td>
+            <td>
+                <div class="row col-12">
+                    <div class="col-md-6">
+                        <div class="input-group date form_datetime HLV_clacInput"
+                             data-date="" data-date-format="dd M yyyy" data-link-field="ITReturnDetailsObject_ITReturnDueDate"
+                             data-link-format="dd/M/yyyy">
+                            @Html.TextBoxFor(m => m.ITReturnDetailsObject.ITReturnDueDate
+                      , Model.ITReturnDetailsObject.ITReturnDueDate.HasValue
+                         ? Model.ITReturnDetailsObject.ITReturnDueDate.Value.ToShortDateString()
+                         : string.Empty
+                      , new
+                      {
+                          @class = "form-control",
+                          @size = "16",
+                          @value = ""
+                      })
+                            <span class="input-group-addon">
+                                &nbsp;&nbsp;<i class="fa fa-calendar fa-2x" aria-hidden="true">
+                                </i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+
+        @foreach (var itHead in Model.ItemsWithAmounts)
+        {
+            if (
+               (Model.ITReturnDetailsObject.ITSectionCategoryID == 1
+               && Model.ITHeadMasterList[itHead].IsROI)
+                ||
+                (Model.ITReturnDetailsObject.ITSectionCategoryID != 1)
+               )
+            {
+                @Html.Partial("ITHeadDetails", new ITHeadDetailsModel(itHead,
+                    Model.ITHeadMasterList,
+                    Model.ITReturnDetailsObject,
+                    Model.ExtensionList,
+                    Model.ITHeadDocumentsUploaderModels))
+            }
+            if (itHead == "IncomeFromOtherSources")
+            {
+                <tr>
+                    <td>
+                        @Model.ITHeadMasterList["Broughtforwardlosses"].ExcelSrNo
+                    </td>
+                    <td></td>
+                    <td>
+                        @Model.ITHeadMasterList["Broughtforwardlosses"].Description:-
+                    </td>
+                    <td>
+                        <div class="row col-12">
+                            <div class="col-md-6">
+                                @Html.RadioButtonFor(m => m.ITReturnDetailsObject.Broughtforwardlosses
+                                , !Model.ITReturnDetailsObject.Broughtforwardlosses) Yes
+                                @Html.RadioButtonFor(m => m.ITReturnDetailsObject.Broughtforwardlosses
+                                , Model.ITReturnDetailsObject.Broughtforwardlosses) No
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+        }       
+        <tr>
+            <td colspan="4" align="center">
+                <button type="submit" class="btn btn-primary">
+                    Save
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+}

@@ -1,0 +1,342 @@
+﻿@model LSWebApp.Models.ITHeadDetailsModel
+@using LS.Models;
+@using LSWebApp.Models
+<tr>
+    <td>@Model.ITHeadMasterList[Model.ITHead].ExcelSrNo</td>
+    <td></td>
+    <td>@Model.ITHeadMasterList[Model.ITHead].Description:-</td>
+    <td>
+        <div class="row col-12">
+            @switch (Model.ITHead)
+            {
+                case "IncomefromSalary":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomefromSalary
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.IncomefromSalary)
+                        , new { @class = "numericOnly" })
+                    </div>
+                    break;
+                case "HousePropIncome":
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(m => m.ITReturnDetailsObject.HousePropIncome
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.HousePropIncome)
+                        , new { @class = "numericOnly" })
+                        </div>
+                    break;
+                case "IncomefromCapGainsLTCG":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomefromCapGainsLTCG
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.IncomefromCapGainsLTCG)
+                        , new { @class = "numericOnly" })
+                    </div>
+                    break;
+                case "IncomefromCapGainsSTCG":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomefromCapGainsSTCG
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.IncomefromCapGainsSTCG)
+                        , new { @class = "numericOnly" })
+                    </div>
+                    break;
+                case "IncomefromBusinessProf":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomefromBusinessProf
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.IncomefromBusinessProf)
+                        , new { @class = "numericOnly" })
+                    </div>
+                    break;
+                case "IncomefromSpeculativeBusiness":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomefromSpeculativeBusiness
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.IncomefromSpeculativeBusiness)
+                        , new { @class = "numericOnly" })
+                    </div>
+                    break;
+                case "IncomeFromOtherSources":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomeFromOtherSources
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.IncomeFromOtherSources)
+                        , new { @class = "numericOnly" })
+                    </div>
+                    break;
+                case "DeductChapterVIA":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.DeductChapterVIA
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.DeductChapterVIA)
+                        , new { @class = "numericOnly" })
+                    </div>
+                    break;
+                case "ProfitUS115JB":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.ProfitUS115JB
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.ProfitUS115JB)
+                        , new { @class = "numericOnly" })
+                    </div>
+                    break;
+                case "AdvanceTax1installment":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.AdvanceTax1installment
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.AdvanceTax1installment)
+                        , new { @class = "numericOnly"})
+                    </div>
+                    <div class="input-group date form_datetime HLV_clacInput col-md-6"
+                            data-date="" data-date-format="dd M yyyy"
+                            data-link-field="ITReturnDetailsObject_AdvanceTax1installmentDate"
+                            data-link-format="dd/M/yyyy">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.AdvanceTax1installmentDate
+                        , Model.ITReturnDetailsObject.AdvanceTax1installmentDate.HasValue
+                        ? Model.ITReturnDetailsObject.AdvanceTax1installmentDate.Value.ToShortDateString()
+                        : string.Empty
+                        , new
+                        {
+                            @class = "form-control",
+                            @size = "16",
+                            @value = ""
+                        })
+                        <span class="input-group-addon">
+                            &nbsp;&nbsp;<i class="fa fa-calendar fa-2x" aria-hidden="true">
+                            </i>
+                        </span>
+                    </div>
+                    break;
+                case "AdvanceTax2installment":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.AdvanceTax2installment
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.AdvanceTax2installment)
+                        , new { @class = "numericOnly" })
+                    </div>
+                    <div class="input-group date form_datetime HLV_clacInput col-md-6"
+                         data-date="" data-date-format="dd M yyyy"
+                         data-link-field="ITReturnDetailsObject_AdvanceTax2installmentDate"
+                         data-link-format="dd/M/yyyy">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.AdvanceTax2installmentDate
+                        , Model.ITReturnDetailsObject.AdvanceTax2installmentDate.HasValue
+                        ? Model.ITReturnDetailsObject.AdvanceTax2installmentDate.Value.ToShortDateString()
+                        : string.Empty
+                        , new
+                        {
+                            @class = "form-control",
+                            @size = "16",
+                            @value = ""
+                        })
+                        <span class="input-group-addon">
+                            &nbsp;&nbsp;<i class="fa fa-calendar fa-2x" aria-hidden="true">
+                            </i>
+                        </span>
+                    </div>
+                    break;
+                case "AdvanceTax3installment":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.AdvanceTax3installment
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.AdvanceTax3installment)
+                        , new { @class = "numericOnly" })
+                    </div>
+                    <div class="input-group date form_datetime HLV_clacInput col-md-6"
+                         data-date="" data-date-format="dd M yyyy"
+                         data-link-field="ITReturnDetailsObject_AdvanceTax3installmentDate"
+                         data-link-format="dd/M/yyyy">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.AdvanceTax3installmentDate
+                        , Model.ITReturnDetailsObject.AdvanceTax3installmentDate.HasValue
+                        ? Model.ITReturnDetailsObject.AdvanceTax3installmentDate.Value.ToShortDateString()
+                        : string.Empty
+                        , new
+                        {
+                            @class = "form-control",
+                            @size = "16",
+                            @value = ""
+                        })
+                        <span class="input-group-addon">
+                            &nbsp;&nbsp;<i class="fa fa-calendar fa-2x" aria-hidden="true">
+                            </i>
+                        </span>
+                    </div>
+                    break;
+                case "AdvanceTax4installment":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.AdvanceTax4installment
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.AdvanceTax4installment)
+                        , new { @class = "numericOnly" })
+                    </div>
+                    <div class="input-group date form_datetime HLV_clacInput col-md-6"
+                         data-date="" data-date-format="dd M yyyy"
+                         data-link-field="ITReturnDetailsObject_AdvanceTax4installmentDate"
+                         data-link-format="dd/M/yyyy">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.AdvanceTax4installmentDate
+                        , Model.ITReturnDetailsObject.AdvanceTax4installmentDate.HasValue
+                        ? Model.ITReturnDetailsObject.AdvanceTax4installmentDate.Value.ToShortDateString()
+                        : string.Empty
+                        , new
+                        {
+                            @class = "form-control",
+                            @size = "16",
+                            @value = ""
+                        })
+                        <span class="input-group-addon">
+                            &nbsp;&nbsp;<i class="fa fa-calendar fa-2x" aria-hidden="true">
+                            </i>
+                        </span>
+                    </div>
+                    break;
+                case "TDS":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.TDS
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.TDS)
+                        , new { @class = "numericOnly" })
+                    </div>
+                    break;
+                case "TDS26AS":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.TDS26AS
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.TDS26AS)
+                        , new { @class = "numericOnly" })
+                    </div>
+                    break;
+                case "TDSasperBooks":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.TDSasperBooks
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.TDSasperBooks)
+                        , new { @class = "numericOnly" })
+                    </div>
+                    break;
+                case "TCSPaidbyCompany":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.TCSPaidbyCompany
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.TCSPaidbyCompany)
+                        , new { @class = "numericOnly" })
+                    </div>
+                    break;
+                case "TaxCollectedAtSource":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.TaxCollectedAtSource
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.TaxCollectedAtSource)
+                        , new { @class = "numericOnly" })
+                    </div>
+                    break;
+                case "SelfAssessmentTax":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.SelfAssessmentTax
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.SelfAssessmentTax)
+                        , new { @class = "numericOnly" })
+                    </div>
+                    break;
+                case "ForeignTaxCredit":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.ForeignTaxCredit
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.ForeignTaxCredit)
+                        , new { @class = "numericOnly" })
+                    </div>
+                break;
+                case "MATCredit":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.MATCredit
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.MATCredit)
+                        , new { @class = "numericOnly" })
+                    </div>
+                break;
+                case "InterestUS234A":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.InterestUS234A
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.InterestUS234A)
+                        , new { @class = "numericOnly" })
+                    </div>
+                break;
+                case "InterestUS234B":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.InterestUS234B
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.InterestUS234B)
+                        , new { @class = "numericOnly" })
+                    </div>
+                    break;
+                case "InterestUS234C":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.InterestUS234C
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.InterestUS234C)    
+                        , new { @class = "numericOnly" })
+                    </div>
+                    break;
+                case "InterestUS234D":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.InterestUS234D
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.InterestUS234D)
+                        , new { @class = "numericOnly" })
+                    </div>
+                    break;
+                case "InterestUS220":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.InterestUS220
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.InterestUS220)
+                        , new { @class = "numericOnly" })
+                    </div>
+                break;
+                case "RefundAdjusted":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.RefundAdjusted
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.RefundAdjusted)
+                        , new { @class = "numericOnly" })
+                    </div>
+                    <div class="input-group date form_datetime HLV_clacInput col-md-6"
+                         data-date="" data-date-format="dd M yyyy"
+                         data-link-field="ITReturnDetailsObject_RefundAdjustedDate"
+                         data-link-format="dd/M/yyyy">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.RefundAdjustedDate
+                        , Model.ITReturnDetailsObject.RefundAdjustedDate.HasValue
+                        ? Model.ITReturnDetailsObject.RefundAdjustedDate.Value.ToShortDateString()
+                        : string.Empty
+                        , new
+                        {
+                            @class = "form-control",
+                            @size = "16",
+                            @value = ""
+                        })
+                        <span class="input-group-addon">
+                            &nbsp;&nbsp;<i class="fa fa-calendar fa-2x" aria-hidden="true">
+                            </i>
+                        </span>
+                    </div>
+                    break;
+                case "RegularAssessment":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.RegularAssessment
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.RegularAssessment)
+                        , new { @class = "numericOnly" })
+                    </div>
+                    <div class="input-group date form_datetime HLV_clacInput col-md-6"
+                         data-date="" data-date-format="dd M yyyy"
+                         data-link-field="ITReturnDetailsObject_RegularAssessmentDate"
+                         data-link-format="dd/M/yyyy">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.RegularAssessmentDate
+                        , Model.ITReturnDetailsObject.RegularAssessmentDate.HasValue
+                        ? Model.ITReturnDetailsObject.RegularAssessmentDate.Value.ToShortDateString()
+                        : string.Empty
+                        , new
+                        {
+                            @class = "form-control",
+                            @size = "16",
+                            @value = ""
+                        })
+                        <span class="input-group-addon">
+                            &nbsp;&nbsp;<i class="fa fa-calendar fa-2x" aria-hidden="true">
+                            </i>
+                        </span>
+                    </div>
+                    break;
+                default:
+                    break;
+            }
+
+                @if (Model.ITReturnDetailsObject.Id > 0
+                    && Model.ITHeadMasterList[Model.ITHead].CanAddDocuments)
+                {
+                    @Html.Partial("_ITHeadDocumentsUploader"
+                    , Model.ITHeadDocumentsUploaderModels[Model.ITHead])
+                }
+                </div>
+    </td>
+</tr>
+
+@if (!Model.ITReturnDetailsObject.IsReturn
+    && @Model.ITHeadMasterList[Model.ITHead].CanAddSubHead)
+{
+    @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+    .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList[Model.ITHead].Id)
+    .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList[Model.ITHead].Id))
+}

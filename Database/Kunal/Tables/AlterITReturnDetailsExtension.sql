@@ -1,0 +1,3 @@
+ALTER TABLE ITReturnDetailsExtension
+ADD [ITSubHeadDate] DATETIME NULL
+GO

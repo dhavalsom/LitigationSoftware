@@ -313,6 +313,8 @@ namespace LS.DAL.Library
                             PropertyName = reader["PropertyName"] != DBNull.Value ? reader["PropertyName"].ToString() : null,
                             CanAddSubHead = reader["CanAddSubHead"] != DBNull.Value ? Convert.ToBoolean(reader["CanAddSubHead"].ToString()) : false,
                             CanAddDocuments = reader["CanAddDocuments"] != DBNull.Value ? Convert.ToBoolean(reader["CanAddDocuments"].ToString()) : false,
+                            HasDate = reader["HasDate"] != DBNull.Value ? Convert.ToBoolean(reader["HasDate"].ToString()) : false,
+                            IsROI = reader["IsROI"] != DBNull.Value ? Convert.ToBoolean(reader["IsROI"].ToString()) : false,
                             Active = Convert.ToBoolean(reader["Active"].ToString()),
                             Id = Convert.ToInt32(reader["Id"].ToString())
                         });
@@ -352,7 +354,8 @@ namespace LS.DAL.Library
                             ITHeadId = Convert.ToInt32(reader["ITHeadId"].ToString()),
                             Description = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : null,
                             ITHeadName = reader["ITHeadName"] != DBNull.Value ? reader["ITHeadName"].ToString() : null,
-                            IsAllowance = Convert.ToBoolean(reader["IsAllowance"].ToString()),
+                            IsAllowance = reader["IsAllowance"] != DBNull.Value ? Convert.ToBoolean(reader["IsAllowance"].ToString()) : false,
+                            HasDate = reader["HasDate"] != DBNull.Value ? Convert.ToBoolean(reader["HasDate"].ToString()) : false,
                             Active = Convert.ToBoolean(reader["Active"].ToString()),
                             Id = Convert.ToInt32(reader["Id"].ToString())
                         });

@@ -32,4 +32,26 @@ namespace LSWebApp.Models
             this.ITHeadId = itHeadId;
         }
     }
+
+    public class ITHeadDetailsModel
+    {
+        public string ITHead { get; set; }
+        public Dictionary<string, ITHeadMaster> ITHeadMasterList { get; set; }
+        public ITReturnDetails ITReturnDetailsObject { get; set; }
+        public List<ITReturnDetailsExtension> ExtensionList { get; set; }
+        public Dictionary<string, ITHeadDocumentsUploaderModel> ITHeadDocumentsUploaderModels { get; set; }
+
+        public ITHeadDetailsModel(string itHead,
+            Dictionary<string, ITHeadMaster> itHeadMasterList,
+            ITReturnDetails itReturnDetailsObject,
+            List<ITReturnDetailsExtension> extensionList,
+            Dictionary<string, ITHeadDocumentsUploaderModel> itHeadDocumentsUploaderModels)
+        {
+            this.ITHead = itHead;
+            this.ITHeadMasterList = itHeadMasterList;
+            this.ITReturnDetailsObject = itReturnDetailsObject;
+            this.ExtensionList = extensionList;
+            this.ITHeadDocumentsUploaderModels = itHeadDocumentsUploaderModels;
+        }
+    }
 }
