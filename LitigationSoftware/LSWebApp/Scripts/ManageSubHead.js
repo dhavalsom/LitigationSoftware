@@ -6,64 +6,15 @@
         <td></td>
         <td>{Description}:-</td>
         <td>
-            <input id="txtITSubHead_{ITSubHeadId}" name="txtITSubHead_{ITSubHeadId}" type="text" value="">
+            <div class="row col-12">
+                <div class="col-md-6">
+                    <input id="txtITSubHead_{ITSubHeadId}" name="txtITSubHead_{ITSubHeadId}" type="text" value="">
+                </div>
+            </div>
         </td>
     </tr>
 	*/}.toString().slice(14, -3)
 }
-
-$(".imgSubHead").click(function (e) {
-    showHideSubHeadControls($(this));
-});
-
-$(".imgSubHeadSave").click(function (e) {
-    var txtControl = null;
-    var chkControl = null;
-    var saveButton = $(this);
-    var itHeadId = 0;
-    $(e.target).closest(".custom-sub-head").find('.chkSubHead').each(function () {
-        chkControl = $(this);
-    });
-    $(e.target).closest(".custom-sub-head").find('.txtSubHead').each(function () {
-        txtControl = $(this);
-    });
-    $(e.target).closest(".custom-sub-head").find('.hdIIHeadIdSubHead').each(function () {
-        itHeadId = $(this).val();
-    });
-    if (txtControl.val() == "") {
-        txtControl.addClass("validationError");
-        return;
-    }
-    else {
-        txtControl.removeClass("validationError");
-    }
-
-    var item = {};
-    item.Description = txtControl.val();
-    item.IsAllowance = chkControl.prop("checked");
-    item.Active = true;
-    item.ITHeadId = itHeadId;
-    
-    $.ajax({
-        type: 'POST',
-        url: '/manageITSubHead/',
-        data: JSON.stringify(item),
-        success: function (data) {
-            var trHtml = templates.trSubHeadItem
-                .replace("{ITHeadId}", itHeadId)
-                .replace("{ITSubHeadId}", data.Id)
-                .replace("{ITSubHeadId}", data.Id)
-                .replace("{Description}", item.Description);
-            $.each($('.tblITRetDetails tr.' + (item.IsAllowance ? 'trAllowance' : 'trDisallowance') + itHeadId),
-                function (val, obj) {
-                    $(this).after(trHtml);
-                }); 
-            showHideSubHeadControls(saveButton);
-        },
-        contentType: "application/json",
-        dataType: 'json'
-    });
-});
 
 function showHideSubHeadControls(control) {
     control.css("display", "none");
