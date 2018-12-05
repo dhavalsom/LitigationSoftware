@@ -66,6 +66,12 @@
       ActionName="SummaryReport"
       Id="11">
     </MenuItem>
+  <MenuItem
+      DisplayText="Standard Data"
+      ControllerName="TaxReturn"
+      ActionName="GetStandardData"
+      Id="11">
+    </MenuItem>
   </PageId>
   <PageId Value="1">
     <MenuItem

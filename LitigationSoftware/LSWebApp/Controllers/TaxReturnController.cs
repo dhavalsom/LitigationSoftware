@@ -927,21 +927,30 @@ namespace LSWebApp.Controllers
         [HttpGet]
         public async Task<ActionResult> GetStandardData()
         {
+            StandardDataModel standardDataModelObject = new StandardDataModel();
             var model = new List<StandardData>();
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetStandardData?surchargedataId=");
+                HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetFYAYList");
+                if (Res.IsSuccessStatusCode)
+                {
+                    standardDataModelObject.FYAYList = JsonConvert.DeserializeObject<List<FYAY>>(Res.Content.ReadAsStringAsync().Result);
+                }
+
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                Res = await client.GetAsync("api/MasterAPI/GetStandardData?surchargedataId=");
 
                 if (Res.IsSuccessStatusCode)
                 {
-                    model = JsonConvert.DeserializeObject<List<StandardData>>(Res.Content.ReadAsStringAsync().Result);
+                    standardDataModelObject.StandardDataObjectList = JsonConvert.DeserializeObject<List<StandardData>>(Res.Content.ReadAsStringAsync().Result);
                 }
             }
             //return Json(model, JsonRequestBehavior.AllowGet);
-            return View(model);
+            return View(standardDataModelObject);
         }
 
         [HttpPost]
