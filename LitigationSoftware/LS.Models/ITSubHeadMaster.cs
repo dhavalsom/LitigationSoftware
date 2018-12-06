@@ -5,6 +5,7 @@
         public int ITHeadId { get; set; }
         public string Description { get; set; }
         public bool? IsAllowance { get; set; }
+        public bool HasDate { get; set; }
 
         #region Display Properties
         public string ITHeadName { get; set; }

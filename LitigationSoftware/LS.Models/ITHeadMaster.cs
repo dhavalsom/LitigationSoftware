@@ -9,6 +9,8 @@ namespace LS.Models
         public string PropertyName { get; set; }
         public bool CanAddSubHead { get; set; }
         public bool CanAddDocuments { get; set; }
+        public bool IsROI { get; set; }
+        public bool HasDate { get; set; }       
 
         #region Display Properties
         public List<ITSubHeadMaster> SubHeadList { get; set; }

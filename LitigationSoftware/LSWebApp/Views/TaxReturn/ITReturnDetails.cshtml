@@ -1,0 +1,216 @@
+﻿@model  LSWebApp.Models.ITReturnDetailsHeaderModel
+@{
+    ViewBag.Title = "Input Sheet";
+    Layout = "~/Views/Shared/_LayoutDynemicMenu.cshtml";
+}
+<style type="text/css">
+    .table-condensed {
+        width: 200px;
+        height: 10px;
+        font-size: 10px;
+    }
+</style>
+
+<h3>Input Sheet</h3>
+
+<div class="container">
+    <div class="bs-component">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th colspan="2">Company Name</th>
+                    <th>Financial Year</th>
+                    <th>Assesment Year</th>
+                    <th>Section Category</th>
+                    <th>IT Section</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="table-active">
+                    <td colspan="2">
+                        @Html.LabelFor(m => m.CompanyObject.CompanyName
+                                , Model.CompanyObject.CompanyName)
+                        @Html.HiddenFor(m => m.CompanyObject.Id
+                                , Model.CompanyObject.Id)
+                    </td>
+                    <td>
+                        <select id="FYAYId"
+                                name="@Html.NameFor(m=>m.FYAYId)">
+                            @foreach (var item in Model.FYAYList)
+                            {
+                                <option value="@item.Id.ToString()"
+                                        data-year="@item.AssessmentYear">
+                                    @item.FinancialYear
+                                    </option>
+                            }
+                        </select>
+                    </td>
+                    <td class="tdAssessmentYear"></td>
+                    <td>
+                        @Html.DropDownListFor(m => m.ITSectionCategoryId
+                                , new SelectList(Model.ITSectionCategories
+                                , "Id", "Description", Model.ITSectionCategoryId)
+                                , new { @class = "ddITSectionCategory" })
+                    </td>
+                    <td>
+                        @Html.Partial("_LitigationDD", Model.ITSectionListSource)
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-primary btn-sm btn-search"
+                                id="btnsrch">
+                            Search
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br />
+    </div>
+</div>
+
+<div class="container">
+    <div class="bs-component" id="sectionDiv">
+
+    </div>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+
+        $(document).ready(function () {            
+            $("#FYAYId").change(function () {
+                loadAssessmentYear();
+            });                  
+            $("#FYAYId").val('@(Model.FYAYId.HasValue ? Model.FYAYId.Value.ToString() :"1")');
+            loadAssessmentYear();
+            loadITReturnDetailsData();
+        });
+
+        function loadAssessmentYear() {
+            $(".tdAssessmentYear").html($("#FYAYId").find(':selected').data('year'));
+            $("#sectionDiv").html('');
+        }
+
+        $(".ddLitigationDD").change(function () {
+            $("#sectionDiv").html('');
+        });
+
+        $(".ddITSectionCategory").change(function () {
+            $("#sectionDiv").html('');
+            $.ajax({
+                url: '/getITSections?categoryId=' + $(this).find("option:selected").val(),
+                error: function () {
+                },
+                dataType: 'json',
+                success: function (data) {
+                    $('.ddLitigationDD').html('');
+                    $(data).each(function () {
+                        var option = $('<option />');
+                        option.attr('value', this.Id).html(this.Description);
+                        $('.ddLitigationDD').append(option);
+                    });
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown)
+                {
+                },
+                type: 'GET'
+            });
+        });
+
+        function loadITReturnDetailsData() {
+            $.ajax({
+                url: '/TaxReturn/ITReturnDetailsData?fyayId=' + $('#FYAYId').val()
+                + '&itSectionId=' + $('#ITReturnDetailsObject_ITSectionID').val()
+                + '&itSectionCategoryId=' + $('#ITSectionCategoryId').val(),
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                type: 'GET',
+                error: function (xhr, status, error) {
+                    alert("inside error " + xhr.responseText);
+                },
+                dataType: 'html',
+                success: function (data) {
+                    $("#sectionDiv").html(data);
+                    $('.form_datetime').datetimepicker({
+                        weekStart: 1,
+                        todayBtn: 1,
+                        autoclose: 1,
+                        todayHighlight: 1,
+                        startView: 2,
+                        minView: 2,
+                        forceParse: 0
+                    });
+                    $(".numericOnly").keypress(function (e) {
+                        return isANumber(e);
+                    });
+                    $(".numericOnly").change(function (e) {
+                        if ($.isNumeric($(this).val())) {
+                            $(this).val(parseFloat($(this).val()).toFixed(2));
+                        }
+                        else {
+                            $(this).val("0.00");
+                        }
+                    });
+
+                    $(".imgSubHead").click(function (e) {
+                        showHideSubHeadControls($(this));
+                    });
+
+                    $(".imgSubHeadSave").click(function (e) {
+                        var txtControl = null;
+                        var chkControl = null;
+                        var saveButton = $(this);
+                        var itHeadId = 0;
+                        $(e.target).closest(".custom-sub-head").find('.chkSubHead').each(function () {
+                            chkControl = $(this);
+                        });
+                        $(e.target).closest(".custom-sub-head").find('.txtSubHead').each(function () {
+                            txtControl = $(this);
+                        });
+                        $(e.target).closest(".custom-sub-head").find('.hdIIHeadIdSubHead').each(function () {
+                            itHeadId = $(this).val();
+                        });
+                        if (txtControl.val() == "") {
+                            txtControl.addClass("validationError");
+                            return;
+                        }
+                        else {
+                            txtControl.removeClass("validationError");
+                        }
+
+                        var item = {};
+                        item.Description = txtControl.val();
+                        item.IsAllowance = chkControl.prop("checked");
+                        item.Active = true;
+                        item.ITHeadId = itHeadId;
+
+                        $.ajax({
+                            type: 'POST',
+                            url: '/manageITSubHead/',
+                            data: JSON.stringify(item),
+                            success: function (data) {
+                                var trHtml = templates.trSubHeadItem
+                                    .replace("{ITHeadId}", itHeadId)
+                                    .replace("{ITSubHeadId}", data.Id)
+                                    .replace("{ITSubHeadId}", data.Id)
+                                    .replace("{Description}", item.Description);
+                                $.each($('.tblITRetDetails tr.' + (item.IsAllowance ? 'trAllowance' : 'trDisallowance') + itHeadId),
+                                    function (val, obj) {
+                                        $(this).after(trHtml);
+                                    });
+                                showHideSubHeadControls(saveButton);
+                            },
+                            contentType: "application/json",
+                            dataType: 'json'
+                        });
+                    });
+                }
+            });
+        }
+
+        $(".btn-search").click(function () {
+            loadITReturnDetailsData();
+        });
+    </script>
+}

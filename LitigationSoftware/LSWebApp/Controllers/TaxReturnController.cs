@@ -409,6 +409,209 @@ namespace LSWebApp.Controllers
         }
 
         [HttpGet]
+        public async Task<ActionResult> ITReturnDetails()
+        {
+            Company selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+            ITReturnDetailsHeaderModel itrdetails = new ITReturnDetailsHeaderModel
+            {
+                CompanyObject = selectedCompany
+            };
+            if (Session["CurrentITReturnDetails"] != null)
+            {
+                var currentITReturnDetails = Session["CurrentITReturnDetails"] as ITReturnDetails;
+                itrdetails.FYAYId = currentITReturnDetails.FYAYID;
+                itrdetails.ITSectionCategoryId = currentITReturnDetails.ITSectionCategoryID;
+                itrdetails.ITSectionId = currentITReturnDetails.ITSectionID;
+                Session["CurrentITReturnDetails"] = null;
+            }
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetFYAYList");
+                itrdetails.FYAYList = JsonConvert.DeserializeObject<List<FYAY>>
+                    (Res.Content.ReadAsStringAsync().Result);
+                Res = await client.GetAsync("api/MasterAPI/GetITSectionCategoryList");
+                itrdetails.ITSectionCategories = JsonConvert.DeserializeObject<List<ITSectionCategory>>
+                    (Res.Content.ReadAsStringAsync().Result)
+                    .OrderBy(its=>its.Id).ToList<ITSectionCategory>();
+                Res = await client.GetAsync("api/MasterAPI/GetITSectionList?categoryId="                     
+                    + (itrdetails.ITSectionCategoryId.HasValue 
+                        ? itrdetails.ITSectionCategoryId.Value 
+                        : itrdetails.ITSectionCategories.First().Id
+                       )
+                     );
+                itrdetails.ITSectionList = JsonConvert.DeserializeObject<List<ITSection>>
+                    (Res.Content.ReadAsStringAsync().Result);
+                itrdetails.ITSectionListSource = new LitigationDDModel(
+                   itrdetails.ITSectionList.Select(x =>
+                    new SelectListItem()
+                    {
+                        Value = x.Id.ToString(),
+                        Text = x.Description,
+                        Selected = itrdetails.ITSectionId.HasValue && 
+                        x.Id == itrdetails.ITSectionId.Value,
+                    }).ToList()
+                   , "ITReturnDetailsObject.ITSectionID"
+                   , "manageITSection"
+                   , "getITSections"
+                );
+            }
+            return View(itrdetails);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ITReturnDetailsData(int fyayId
+            , int? itSectionId, int? itReturnId, int? itSectionCategoryId)
+        {
+            var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+            ITReturnDetailsDataModel model = new ITReturnDetailsDataModel()
+            {
+                ITReturnDetailsObject = new ITReturnDetails
+                {
+                    CompanyID = selectedCompany.Id,
+                    AddedBy = Session[SESSION_LOGON_USER] != null ? (Session[SESSION_LOGON_USER] as UserLogin).Id : 1,
+                    Broughtforwardlosses = false,
+                    FYAYID = fyayId,
+                    ITSectionID = itSectionId.HasValue ? itSectionId.Value : 0,
+                    ITSectionCategoryID = itSectionCategoryId.HasValue ? itSectionCategoryId.Value : 0,
+                    IsReturn = true
+                }
+            };
+
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                    client.DefaultRequestHeaders.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetITSubHeadMaster?itHeadId=");
+                    var itSubHeads = JsonConvert.DeserializeObject<List<ITSubHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
+                    Res = await client.GetAsync("api/MasterAPI/GetITHeadMaster");
+                    var itHeads = JsonConvert.DeserializeObject<List<ITHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
+
+                    if (itSectionId.HasValue)
+                    {
+                        Res = await client.GetAsync("api/TaxReturnAPI/GetExistingITReturnDetailsList?companyId=" 
+                            + selectedCompany.Id 
+                            + "&fyayId=" + fyayId 
+                            + "&itsectionid=" + itSectionId 
+                            + "&itreturnid=" + itReturnId);
+                        if (Res.IsSuccessStatusCode)
+                        {
+                            var response = JsonConvert.DeserializeObject<ITReturnDetailsListResponse>
+                                (Res.Content.ReadAsStringAsync().Result);
+                            if (response.ITReturnDetailsListObject.Count > 0)
+                            {
+                                model.ITReturnDetailsObject = response.ITReturnDetailsListObject.First();
+                                Res = await client.GetAsync("api/TaxReturnAPI/GetITReturnDocumentsList?companyId=&fyayId=&itReturnDetailsId="
+                                    + model.ITReturnDetailsObject.Id + "&itHeadId=&itReturnDocumentId=");
+                                if (Res.IsSuccessStatusCode)
+                                {
+                                    var objITReturnDocumentsResponse = JsonConvert.DeserializeObject<ITReturnDocumentsResponse>
+                                        (Res.Content.ReadAsStringAsync().Result);
+                                    model.ITReturnDocumentList = new Dictionary<string, List<ITReturnDocumentsDisplay>>();
+                                    foreach (var item in objITReturnDocumentsResponse.ITReturnDocumentsList)
+                                    {
+                                        if (model.ITReturnDocumentList.ContainsKey(item.PropertyName))
+                                        {
+                                            model.ITReturnDocumentList[item.PropertyName].Add(item);
+                                        }
+                                        else
+                                        {
+                                            model.ITReturnDocumentList.Add(item.PropertyName,
+                                                new List<ITReturnDocumentsDisplay> { item });
+                                        }
+                                    }
+                                    model.ITHeadDocumentsUploaderModels = new Dictionary<string, ITHeadDocumentsUploaderModel>();
+                                    foreach (var itHead in itHeads)
+                                    {
+                                        if (itHead.CanAddDocuments)
+                                        {
+                                            if (model.ITReturnDocumentList.ContainsKey(itHead.PropertyName))
+                                            {
+                                                model.ITHeadDocumentsUploaderModels.Add(itHead.PropertyName
+                                                    , new ITHeadDocumentsUploaderModel(model.ITReturnDocumentList[itHead.PropertyName]
+                                                    , itHead, model.ITReturnDetailsObject));
+                                            }
+                                            else
+                                            {
+                                                model.ITHeadDocumentsUploaderModels.Add(itHead.PropertyName
+                                                    , new ITHeadDocumentsUploaderModel(new List<ITReturnDocumentsDisplay>()
+                                                    , itHead, model.ITReturnDetailsObject));
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                Res = await client.GetAsync("api/MasterAPI/GetITSectionCategoryList");
+                                model.ITReturnDetailsObject.ITSectionCategoryDesc = JsonConvert.DeserializeObject<List<ITSectionCategory>>
+                                    (Res.Content.ReadAsStringAsync().Result)
+                                    .Where(l=>l.Id == model.ITReturnDetailsObject.ITSectionCategoryID)
+                                    .First().Description;
+                                Res = await client.GetAsync("api/MasterAPI/GetITSectionList?categoryId="
+                                    + model.ITReturnDetailsObject.ITSectionCategoryID);
+                                model.ITReturnDetailsObject.ITSectionDescription = 
+                                    JsonConvert.DeserializeObject<List<ITSection>>
+                                    (Res.Content.ReadAsStringAsync().Result)
+                                    .Where(l => l.Id == model.ITReturnDetailsObject.ITSectionID)
+                                    .First().Description; ;
+                            }
+                        }
+                    }
+
+                    model.PopulateITHeadMasters(itHeads, itSubHeads
+                        , model.ITReturnDetailsObject != null 
+                            ? model.ITReturnDetailsObject.Id 
+                            : (int?)null);
+
+                    if (!model.ITReturnDetailsObject.IsReturn)
+                    {
+                        List<ITReturnDetailsExtension> itSubHeadValues = new List<ITReturnDetailsExtension>();
+
+                        Res = await client.GetAsync("api/TaxReturnAPI/GetExistingITReturnDetailsExtension?itreturnid=" + model.ITReturnDetailsObject.Id);
+                        if (Res.IsSuccessStatusCode)
+                        {
+                            if (JsonConvert.DeserializeObject<List<ITReturnDetailsExtension>>(Res.Content.ReadAsStringAsync().Result).Count > 0)
+                            {
+                                itSubHeadValues = JsonConvert.DeserializeObject<List<ITReturnDetailsExtension>>(Res.Content.ReadAsStringAsync().Result);
+                            }
+                        }
+
+                        if (itSubHeadValues.Count > 0)
+                        {
+                            foreach (var item in model.ExtensionList)
+                            {
+                                foreach (var subvalue in itSubHeadValues)
+                                {
+                                    if (subvalue.ITReturnDetailsId == item.ITReturnDetailsId && subvalue.ITSubHeadId == item.ITSubHeadId)
+                                        item.ITSubHeadValue = subvalue.ITSubHeadValue;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return PartialView(model);
+        }
+
+        [HttpGet]
         public async Task<ActionResult> ExistingITReturnDetails()
         {
             var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
@@ -575,14 +778,59 @@ namespace LSWebApp.Controllers
                 HttpResponseMessage Res = await client.PostAsync("api/TaxReturnAPI/InsertUpdateITReturnDocuments", content);
                 ITReturnDocumentsResponse result = JsonConvert.DeserializeObject<ITReturnDocumentsResponse>(Res.Content.ReadAsStringAsync().Result);
 
-                return RedirectToAction("GetITReturnDetails"
-                    , new RouteValueDictionary(new
+                Session["CurrentITReturnDetails"] = objITHeadDocumentsUploaderModel.ObjITReturnDetails;
+                return RedirectToAction("ITReturnDetails");
+            }
+        }
+
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<ActionResult> UpsertITReturnDetails(ITReturnDetailsDataModel itReturn
+            , FormCollection form)
+        {
+            foreach (var control in form.Keys)
+            {
+                if (control.ToString().StartsWith("txtITSubHead_"))
+                {
+                    decimal value;
+                    if (decimal.TryParse(form[control.ToString()].ToString(), out value))
                     {
-                        userId = objITHeadDocumentsUploaderModel.ObjITReturnDocuments.AddedBy,
-                        FYAYID = objITHeadDocumentsUploaderModel.ObjITReturnDetails.FYAYID,
-                        itsectionid = objITHeadDocumentsUploaderModel.ObjITReturnDetails.ITSectionID,
-                        itreturnid = objITHeadDocumentsUploaderModel.ObjITReturnDocuments.ITReturnDetailsId
-                    }));
+                        if (value != 0)
+                        {
+                            itReturn.ExtensionList.Add(new ITReturnDetailsExtension
+                            {
+                                Id = itReturn.ITReturnDetailsObject.Id,
+                                ITSubHeadValue = value,
+                                ITSubHeadId = int.Parse(control.ToString().Replace("txtITSubHead_", ""))
+                            });
+                        }
+                    }
+                }
+            }
+            using (var client = new HttpClient())
+            {
+                ITReturnComplexModel itrcomplexmodel = new ITReturnComplexModel();
+                itrcomplexmodel.ITReturnDetailsObject = itReturn.ITReturnDetailsObject;
+                itrcomplexmodel.ExtensionList = itReturn.ExtensionList;
+                var json = JsonConvert.SerializeObject(itrcomplexmodel);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.PostAsync("api/TaxReturnAPI/InsertorUpdateITReturnDetails", content);
+                ITReturnComplexAPIModelResponse result = new ITReturnComplexAPIModelResponse();
+                if (Res.IsSuccessStatusCode)
+                {
+                    result = JsonConvert.DeserializeObject<ITReturnComplexAPIModelResponse>(Res.Content.ReadAsStringAsync().Result);
+                    Session["CurrentITReturnDetails"] = itReturn.ITReturnDetailsObject;
+                    return RedirectToAction("ITReturnDetails");
+                }
+                else
+                {
+                    result.IsSuccess = false;
+                    result.Message = Res.Content.ReadAsStringAsync().Result;
+                }
+                return RedirectToAction("ITReturnDetails");
             }
         }
 

@@ -1,16 +1,17 @@
 USE [LitigationApp]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_GET_ITReturnDetails]    Script Date: 10/22/2018 12:06:34 AM ******/
+/****** Object:  StoredProcedure [dbo].[SP_GET_ITReturnDetails]    Script Date: 12/2/2018 5:58:15 PM ******/
 DROP PROCEDURE [dbo].[SP_GET_ITReturnDetails]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_GET_ITReturnDetails]    Script Date: 10/22/2018 12:06:34 AM ******/
+/****** Object:  StoredProcedure [dbo].[SP_GET_ITReturnDetails]    Script Date: 12/2/2018 5:58:15 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 
@@ -78,14 +79,20 @@ BEGIN
 	  ,CompanyName
       ,[FYAYID]
       ,CASE @GET_DEFAULT_DATA WHEN 0 THEN [ITSectionID] ELSE @ITSectionID END as [ITSectionID]
-	  ,ITSM.Description
+	  ,CASE @GET_DEFAULT_DATA WHEN 0 THEN ITSM.[Description] 
+		ELSE (SELECT ITSM_INNER.[Description] FROM ITSectionMaster ITSM_INNER WHERE ITSM_INNER.Id = @ITSectionID) 
+		END AS [Description]
 	  ,CASE @GET_DEFAULT_DATA WHEN 0 THEN ITSM.[SECTIONCATEGORYID] ELSE 
 		(SELECT SECTIONCATEGORYID FROM ITSectionMaster WHERE Id = @ITSectionID)
 		END as [SECTIONCATEGORYID]
-	  ,ITSC.[CategoryDesc]
-	  ,CASE @GET_DEFAULT_DATA WHEN 0 THEN ITSM.IsReturn ELSE 
-		(SELECT IsReturn FROM ITSectionMaster WHERE Id = @ITSectionID)
-		END as IsReturn
+
+	  ,CASE @GET_DEFAULT_DATA WHEN 0 THEN ITSC.[CategoryDesc] ELSE 
+		(SELECT ITSC_INNER.[CategoryDesc] 
+			FROM ITSectionCategory ITSC_INNER 
+			INNER JOIN ITSectionMaster ITSM_INNER ON ITSM_INNER.SECTIONCATEGORYID = ITSC_INNER.Id
+			WHERE ITSM_INNER.Id = @ITSectionID)
+		END as [CategoryDesc]
+	  ,isnull(ITSM.IsReturn,0) as IsReturn
       ,[ITReturnFillingDate]
       ,[ITReturnDueDate]
       ,[HousePropIncome]
@@ -115,13 +122,29 @@ BEGIN
       ,[RefundReceived]
       ,[RevisedReturnFile]
       ,ITRD.[IsDefault]
-  FROM ITReturnDetails ITRD
+	  ,[TaxCollectedAtSource]
+	  ,[ForeignTaxCredit]
+	  ,[InterestUS234D]
+	  ,[InterestUS220]
+	  ,[RefundAdjusted]
+	  ,[RegularAssessment]
+	  ,[SelfAssessmentTaxDate]
+	  ,[AdvanceTax1installmentDate]
+	  ,[AdvanceTax2installmentDate]
+	  ,[AdvanceTax3installmentDate]
+	  ,[AdvanceTax4installmentDate]
+	  ,[RefundAdjustedDate]
+	  ,[RegularAssessmentDate]
+		FROM ITReturnDetails ITRD
   INNER JOIN ITSectionMaster ITSM ON ITRD.ITSectionID = ITSM.Id
   INNER JOIN CompanyMaster cm ON cm.id = itrd.CompanyID
   INNER JOIN ITSectionCategory ITSC ON ITSC.ID = ITSM.SECTIONCATEGORYID  
-	WHERE (@GET_COMPUTATION_DATA = 1 OR ITRD.Id = @ITReturnID)
-	ORDER BY [ITReturnFillingDate],[ITReturnDueDate]
+  WHERE (@GET_COMPUTATION_DATA = 1 OR ITRD.Id = @ITReturnID) AND
+  (@COMPANY_ID IS NULL OR ITRD.CompanyID = @COMPANY_ID) AND
+  (@FYAYID IS NULL OR ITRD.FYAYID = @FYAYID)
+  ORDER BY [ITReturnFillingDate],[ITReturnDueDate]
 END
+
 
 
 GO

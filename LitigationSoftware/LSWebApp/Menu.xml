@@ -9,7 +9,7 @@
     <MenuItem
       DisplayText="Input Sheet"
       ControllerName="TaxReturn"
-      ActionName="GetITReturnDetails"
+      ActionName="ITReturnDetails"
       Id="2">
     </MenuItem>
     <MenuItem

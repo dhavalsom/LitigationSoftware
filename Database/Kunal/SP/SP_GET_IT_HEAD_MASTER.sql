@@ -1,16 +1,17 @@
 USE [LitigationApp]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_GET_IT_HEAD_MASTER]    Script Date: 9/9/2018 10:54:28 AM ******/
+/****** Object:  StoredProcedure [dbo].[SP_GET_IT_HEAD_MASTER]    Script Date: 12/2/2018 12:50:54 AM ******/
 DROP PROCEDURE [dbo].[SP_GET_IT_HEAD_MASTER]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_GET_IT_HEAD_MASTER]    Script Date: 9/9/2018 10:54:28 AM ******/
+/****** Object:  StoredProcedure [dbo].[SP_GET_IT_HEAD_MASTER]    Script Date: 12/2/2018 12:50:54 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 
@@ -31,12 +32,15 @@ BEGIN
       ,[PropertyName]
 	  ,[CanAddSubHead]
 	  ,[CanAddDocuments]
+	  ,[IsROI]
+	  ,[HasDate]
       ,[Active]
 	FROM [ITHeadMaster]
 	WHERE (@ACTIVE IS NULL OR [Active] = @ACTIVE)
 	AND (@PROPERTY_NAME IS NULL OR [PropertyName] = @PROPERTY_NAME) 
 	ORDER BY [Id]
 END
+
 
 
 
