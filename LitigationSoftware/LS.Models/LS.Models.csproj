@@ -49,6 +49,7 @@
     <Compile Include="FYAY.cs" />
     <Compile Include="ITHeadMaster.cs" />
     <Compile Include="ITReturnComplexAPIModel.cs" />
+    <Compile Include="SPIncomeDetails.cs" />
     <Compile Include="ITReturnDetails.cs" />
     <Compile Include="ITReturnDetailsExtension.cs" />
     <Compile Include="ITReturnDocuments.cs" />

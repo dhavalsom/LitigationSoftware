@@ -257,6 +257,7 @@ namespace LS.DAL.Library
                             InterestUS220 = reader["InterestUS220"] != DBNull.Value ? Convert.ToDecimal(reader["InterestUS220"].ToString()) : (decimal?)null,
                             RefundAdjusted = reader["RefundAdjusted"] != DBNull.Value ? Convert.ToDecimal(reader["RefundAdjusted"].ToString()) : (decimal?)null,
                             RegularAssessment = reader["RegularAssessment"] != DBNull.Value ? Convert.ToDecimal(reader["RegularAssessment"].ToString()) : (decimal?)null,
+                            RefundAlreadyReceived = reader["RefundAlreadyReceived"] != DBNull.Value ? Convert.ToDecimal(reader["RefundAlreadyReceived"].ToString()) : (decimal?)null,
                             SelfAssessmentTaxDate = reader["SelfAssessmentTaxDate"] != DBNull.Value ? Convert.ToDateTime(reader["SelfAssessmentTaxDate"].ToString()) : (DateTime?)null,
                             AdvanceTax1installmentDate = reader["AdvanceTax1installmentDate"] != DBNull.Value ? Convert.ToDateTime(reader["AdvanceTax1installmentDate"].ToString()) : (DateTime?)null,
                             AdvanceTax2installmentDate = reader["AdvanceTax2installmentDate"] != DBNull.Value ? Convert.ToDateTime(reader["AdvanceTax2installmentDate"].ToString()) : (DateTime?)null,
@@ -264,7 +265,7 @@ namespace LS.DAL.Library
                             AdvanceTax4installmentDate = reader["AdvanceTax4installmentDate"] != DBNull.Value ? Convert.ToDateTime(reader["AdvanceTax4installmentDate"].ToString()) : (DateTime?)null,
                             RefundAdjustedDate = reader["RefundAdjustedDate"] != DBNull.Value ? Convert.ToDateTime(reader["RefundAdjustedDate"].ToString()) : (DateTime?)null,
                             RegularAssessmentDate = reader["RegularAssessmentDate"] != DBNull.Value ? Convert.ToDateTime(reader["RegularAssessmentDate"].ToString()) : (DateTime?)null,
-
+                            RefundAlreadyReceivedDate = reader["RefundAlreadyReceivedDate"] != DBNull.Value ? Convert.ToDateTime(reader["RefundAlreadyReceivedDate"].ToString()) : (DateTime?)null,
                         });
                     }
                 }
@@ -615,6 +616,120 @@ namespace LS.DAL.Library
                     }
                 }
                 Log.Info("End call to InsertUpdateITReturnDocuments");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                Connection.Close();
+            }
+        }
+
+        public SPIncomeDetailsResponse GetSPIncomeDetailsList(int? itReturnDetailsId, int? itHeadId)
+        {
+            try
+            {
+                Log.Info("Started call to GetSPIncomeDetailsList");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(new
+                {
+                    itReturnDetailsId = itReturnDetailsId,
+                    itHeadId = itHeadId
+                }));
+                Command.CommandText = "SP_GET_SP_INCOME_DETAILS";
+                Command.CommandType = CommandType.StoredProcedure;
+                if (itReturnDetailsId.HasValue && itReturnDetailsId > 0)
+                {
+                    Command.Parameters.AddWithValue("@IT_RETURN_DETAILS_ID", itReturnDetailsId);
+                }
+                if (itHeadId.HasValue && itHeadId > 0)
+                {
+                    Command.Parameters.AddWithValue("@IT_HEAD_ID", itHeadId);
+                }
+                Connection.Open();
+
+                SqlDataReader reader = Command.ExecuteReader();
+                SPIncomeDetailsResponse result = new SPIncomeDetailsResponse();
+                result.SPIncomeDetailsList = new List<SPIncomeDetails>();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result.SPIncomeDetailsList.Add(new SPIncomeDetails
+                        {
+                            Id = int.Parse(reader["Id"].ToString()),
+                            ITHeadId = int.Parse(reader["ITHeadId"].ToString()),
+                            ITHeadDescription = reader["ITHeadDescription"] != DBNull.Value ? reader["ITHeadDescription"].ToString() : string.Empty,
+                            ITReturnDetailsId = int.Parse(reader["ITReturnDetailsId"].ToString()),
+                            SPIncomeDescription = reader["SPIncomeDescription"] != DBNull.Value ? reader["SPIncomeDescription"].ToString() : string.Empty,
+                            SPIncomeDate = reader["SPIncomeDate"] != DBNull.Value ? DateTime.Parse(reader["SPIncomeDate"].ToString()) : (DateTime?)null,
+                            SPIncomeValue = reader["SPIncomeDate"] != DBNull.Value ? decimal.Parse(reader["SPIncomeDate"].ToString()) : (decimal?)null,
+                            TaxRate = reader["TaxRate"] != DBNull.Value ? decimal.Parse(reader["TaxRate"].ToString()) : (decimal?)null,
+                            Active = bool.Parse(reader["Active"].ToString()),                            
+                        });
+                    }
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            finally
+            {
+                Connection.Close();
+            }
+        }
+
+        public SPIncomeDetailsResponse InsertUpdateSPIncomeDetails(SPIncomeDetails spIncomeDetails
+           , string operation)
+        {
+            try
+            {
+                Log.Info("Started call to InsertUpdateSPIncomeDetails");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(
+                    new { spIncomeDetails = spIncomeDetails, operation = operation }));
+                Command.CommandText = "SP_INCOME_DETAILS_MANAGER";
+                Command.CommandType = CommandType.StoredProcedure;
+                Command.Parameters.Clear();
+
+                Command.Parameters.AddWithValue("@SP_INCOME_DETAILS_XML", GetXMLFromObject(spIncomeDetails));
+                if (!string.IsNullOrEmpty(operation))
+                {
+                    Command.Parameters.AddWithValue("@OPERATION", operation);
+                }
+                if (spIncomeDetails.AddedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", spIncomeDetails.AddedBy.Value);
+                }
+                else if (spIncomeDetails.ModifiedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", spIncomeDetails.ModifiedBy.Value);
+                }
+                else if (spIncomeDetails.DeletedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", spIncomeDetails.DeletedBy.Value);
+                }
+                Connection.Open();
+                SqlDataReader reader = Command.ExecuteReader();
+
+                SPIncomeDetailsResponse result = new SPIncomeDetailsResponse();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result = new SPIncomeDetailsResponse
+                        {
+                            Message = reader["ReturnMessage"] != DBNull.Value ? reader["ReturnMessage"].ToString() : null,
+                            IsSuccess = Convert.ToBoolean(reader["Result"].ToString())
+                        };
+                    }
+                }
+                Log.Info("End call to InsertUpdateSPIncomeDetails");
 
                 return result;
             }

@@ -319,6 +319,33 @@
                         </span>
                     </div>
                     break;
+
+                case "RefundAlreadyReceived":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.RefundAlreadyReceived
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.RefundAlreadyReceived)
+                        , new { @class = "numericOnly" })
+                    </div>
+                    <div class="input-group date form_datetime HLV_clacInput col-md-6"
+                         data-date="" data-date-format="dd M yyyy"
+                         data-link-field="ITReturnDetailsObject_RefundAlreadyReceivedDate"
+                         data-link-format="dd/M/yyyy">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.RefundAlreadyReceivedDate
+                        , Model.ITReturnDetailsObject.RefundAlreadyReceivedDate.HasValue
+                        ? Model.ITReturnDetailsObject.RefundAlreadyReceivedDate.Value.ToShortDateString()
+                        : string.Empty
+                        , new
+                        {
+                            @class = "form-control",
+                            @size = "16",
+                            @value = ""
+                        })
+                        <span class="input-group-addon">
+                            &nbsp;&nbsp;<i class="fa fa-calendar fa-2x" aria-hidden="true">
+                            </i>
+                        </span>
+                    </div>
+                    break;
                 default:
                     break;
             }
@@ -329,6 +356,7 @@
                     @Html.Partial("_ITHeadDocumentsUploader"
                     , Model.ITHeadDocumentsUploaderModels[Model.ITHead])
                 }
+
                 </div>
     </td>
 </tr>

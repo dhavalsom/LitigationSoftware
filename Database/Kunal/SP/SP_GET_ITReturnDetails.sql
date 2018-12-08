@@ -1,16 +1,17 @@
 USE [LitigationApp]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_GET_ITReturnDetails]    Script Date: 12/2/2018 5:58:15 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_GET_ITReturnDetails]    Script Date: 12/8/2018 1:21:05 PM ******/
 DROP PROCEDURE [dbo].[SP_GET_ITReturnDetails]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_GET_ITReturnDetails]    Script Date: 12/2/2018 5:58:15 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_GET_ITReturnDetails]    Script Date: 12/8/2018 1:21:05 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 
@@ -128,6 +129,7 @@ BEGIN
 	  ,[InterestUS220]
 	  ,[RefundAdjusted]
 	  ,[RegularAssessment]
+	  ,[RefundAlreadyReceived]
 	  ,[SelfAssessmentTaxDate]
 	  ,[AdvanceTax1installmentDate]
 	  ,[AdvanceTax2installmentDate]
@@ -135,6 +137,7 @@ BEGIN
 	  ,[AdvanceTax4installmentDate]
 	  ,[RefundAdjustedDate]
 	  ,[RegularAssessmentDate]
+	  ,[RefundAlreadyReceivedDate]
 		FROM ITReturnDetails ITRD
   INNER JOIN ITSectionMaster ITSM ON ITRD.ITSectionID = ITSM.Id
   INNER JOIN CompanyMaster cm ON cm.id = itrd.CompanyID
@@ -144,6 +147,7 @@ BEGIN
   (@FYAYID IS NULL OR ITRD.FYAYID = @FYAYID)
   ORDER BY [ITReturnFillingDate],[ITReturnDueDate]
 END
+
 
 
 

@@ -50,7 +50,8 @@ namespace LSWebApp.Models
                 "InterestUS234D",
                 "InterestUS220",
                 "RefundAdjusted",
-                "RegularAssessment"
+                "RegularAssessment",
+                "RefundAlreadyReceived"
             };
         }
         #endregion

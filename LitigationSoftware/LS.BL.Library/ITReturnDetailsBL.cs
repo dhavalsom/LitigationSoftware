@@ -187,6 +187,39 @@ namespace LS.BL.Library
                 //Log
             }
         }
+
+        public SPIncomeDetailsResponse GetSPIncomeDetailsList(int? itReturnDetailsId, int? itHeadId)
+        {
+            try
+            {
+                return this._itReturnDA.GetSPIncomeDetailsList(itReturnDetailsId, itHeadId);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                //Log
+            }
+        }
+
+        public SPIncomeDetailsResponse InsertUpdateSPIncomeDetails(SPIncomeDetails spIncomeDetails
+           , string operation)
+        {
+            try
+            {
+                return this._itReturnDA.InsertUpdateSPIncomeDetails(spIncomeDetails, operation);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                //Log
+            }
+        }
         #endregion
 
 

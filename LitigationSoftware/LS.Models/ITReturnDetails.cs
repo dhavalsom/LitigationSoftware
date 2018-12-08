@@ -53,6 +53,7 @@ namespace LS.Models
         public decimal? InterestUS220 { get; set; }
         public decimal? RefundAdjusted { get; set; }
         public decimal? RegularAssessment { get; set; }
+        public decimal? RefundAlreadyReceived { get; set; }
         public DateTime? SelfAssessmentTaxDate { get; set; }
         public DateTime? AdvanceTax1installmentDate { get; set; }
         public DateTime? AdvanceTax2installmentDate { get; set; }
@@ -60,6 +61,7 @@ namespace LS.Models
         public DateTime? AdvanceTax4installmentDate { get; set; }
         public DateTime? RefundAdjustedDate { get; set; }
         public DateTime? RegularAssessmentDate { get; set; }
+        public DateTime? RefundAlreadyReceivedDate { get; set; }
 
         public List<ITReturnDetailsExtension> Extensions { get; set; }
         #endregion
@@ -235,6 +237,11 @@ namespace LS.Models
             return RegularAssessment.HasValue;
         }
 
+        public bool ShouldSerializeRefundAlreadyReceived()
+        {
+            return RefundAlreadyReceived.HasValue;
+        }
+
         public bool ShouldSerializeSelfAssessmentTaxDate()
         {
             return SelfAssessmentTaxDate.HasValue;
@@ -268,6 +275,11 @@ namespace LS.Models
         public bool ShouldSerializeRegularAssessmentDate()
         {
             return RegularAssessmentDate.HasValue;
+        }
+
+        public bool ShouldSerializeRefundAlreadyReceivedDate()
+        {
+            return RefundAlreadyReceivedDate.HasValue;
         }
         #endregion
 
