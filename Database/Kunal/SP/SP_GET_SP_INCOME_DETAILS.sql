@@ -1,0 +1,64 @@
+USE [LitigationApp]
+GO
+
+/****** Object:  StoredProcedure [dbo].[SP_GET_SP_INCOME_DETAILS]    Script Date: 12/8/2018 4:34:05 PM ******/
+DROP PROCEDURE [dbo].[SP_GET_SP_INCOME_DETAILS]
+GO
+
+/****** Object:  StoredProcedure [dbo].[SP_GET_SP_INCOME_DETAILS]    Script Date: 12/8/2018 4:34:05 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+CREATE PROCEDURE [dbo].[SP_GET_SP_INCOME_DETAILS]
+(
+	@ACTIVE BIT = NULL,
+	@IT_RETURN_DETAILS_ID BIGINT = NULL,
+	@IT_HEAD_ID BIGINT = NULL
+)
+AS
+
+BEGIN
+
+--EXEC [SP_GET_SP_INCOME_DETAILS]
+--EXEC [SP_GET_SP_INCOME_DETAILS] 1, 20009 
+--EXEC [SP_GET_SP_INCOME_DETAILS] 1, 30009 
+SELECT 
+	SPID.Id,
+	SPID.ITHeadId,
+	ITH.[Description] AS ITHeadDescription,
+	ITH.PropertyName,
+	SPID.ITReturnDetailsId,
+	SPID.SPIncomeDescription,
+	SPID.SPIncomeValue,
+	SPID.SPIncomeDate,
+	SPID.TaxRate,
+	SPID.Active 
+FROM SPIncomeDetails SPID
+INNER JOIN ITHeadMaster ITH ON ITH.Id = SPID.ITHeadId
+INNER JOIN ITReturnDetails ITRD ON ITRD.Id = SPID.ITReturnDetailsId
+INNER JOIN FYAYMaster FYAY ON FYAY.Id = ITRD.FYAYID
+INNER JOIN CompanyMaster CM ON CM.Id = ITRD.CompanyID
+INNER JOIN ITSectionMaster ITSM ON ITSM.Id = ITRD.ITSectionID
+WHERE (@ACTIVE IS NULL OR SPID.Active = @ACTIVE)
+AND (@IT_RETURN_DETAILS_ID IS NULL OR SPID.ITReturnDetailsId = @IT_RETURN_DETAILS_ID)
+AND (@IT_HEAD_ID IS NULL OR SPID.ITHeadId = @IT_HEAD_ID)
+END
+
+
+
+
+
+
+
+
+
+
+
+
+GO
+
+

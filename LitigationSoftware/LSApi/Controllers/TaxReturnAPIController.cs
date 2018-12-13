@@ -146,6 +146,26 @@ namespace LSApi.Controllers
             var landsCommentsResult = ItReturnObj.InsertUpdateLAndSComments(landsComments, null);
             return landsCommentsResult;
         }
+
+        [HttpGet]
+        [Route("GetSPIncomeDetailsList")]
+        // GET: api/TaxReturnAPI/GetSPIncomeDetailsList
+        public SPIncomeDetailsResponse GetSPIncomeDetailsList(int? itReturnDetailsId, int? itHeadId)
+        {
+            var ItReturnObj = _Kernel.Get<IITReturnDetailsBL>();
+            return ItReturnObj.GetSPIncomeDetailsList(itReturnDetailsId, itHeadId);
+        }
+
+        // POST: api/InsertUpdateSPIncomeDetails
+        [HttpPost]
+        [Route("InsertUpdateSPIncomeDetails")]
+        public SPIncomeDetailsResponse InsertUpdateSPIncomeDetails
+            ([FromBody]SPIncomeDetails spIncomeDetails)
+        {
+            var ItReturnObj = _Kernel.Get<IITReturnDetailsBL>();
+            var spIncomeDetailsResult = ItReturnObj.InsertUpdateSPIncomeDetails(spIncomeDetails, null);
+            return spIncomeDetailsResult;
+        }
         #endregion
     }
 }

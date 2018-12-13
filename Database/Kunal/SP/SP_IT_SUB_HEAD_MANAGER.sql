@@ -1,16 +1,17 @@
 USE [LitigationApp]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_IT_SUB_HEAD_MANAGER]    Script Date: 12/2/2018 12:54:02 AM ******/
+/****** Object:  StoredProcedure [dbo].[SP_IT_SUB_HEAD_MANAGER]    Script Date: 12/8/2018 11:54:20 AM ******/
 DROP PROCEDURE [dbo].[SP_IT_SUB_HEAD_MANAGER]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_IT_SUB_HEAD_MANAGER]    Script Date: 12/2/2018 12:54:02 AM ******/
+/****** Object:  StoredProcedure [dbo].[SP_IT_SUB_HEAD_MANAGER]    Script Date: 12/8/2018 11:54:20 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 CREATE PROCEDURE [dbo].[SP_IT_SUB_HEAD_MANAGER]
@@ -44,6 +45,9 @@ BEGIN
 
 	IF @Id IS NULL OR @Id = 0 
 	BEGIN
+	
+	SELECT @HasDate = HasDate FROM ITHeadMaster
+	WHERE Id = @ITHeadId
 
 	INSERT INTO [dbo].[ITSubHeadMaster]
            ([ITHeadId]
@@ -83,6 +87,7 @@ END
 
 SELECT @Id AS Id, @Result AS Result, @ReturnMessage AS ReturnMessage
 END
+
 
 
 

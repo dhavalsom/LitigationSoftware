@@ -11,7 +11,9 @@ namespace LSWebApp.Models
         public ITReturnDetails ITReturnDetailsObject { get; set; }
         public Dictionary<string, ITHeadMaster> ITHeadMasterList { get; set; }
         public Dictionary<string, List<ITReturnDocumentsDisplay>> ITReturnDocumentList { get; set; }
+        public Dictionary<string, List<SPIncomeDetails>> SPIncomeDetailsList { get; set; }
         public Dictionary<string, ITHeadDocumentsUploaderModel> ITHeadDocumentsUploaderModels { get; set; }
+        public Dictionary<string, ITHeadSpecialIncomeModel> ITHeadSpecialIncomeModels { get; set; }
         public List<ITReturnDetailsExtension> ExtensionList { get; set; }
         public List<string> ItemsWithAmounts { get; set; }
         #endregion
@@ -50,7 +52,8 @@ namespace LSWebApp.Models
                 "InterestUS234D",
                 "InterestUS220",
                 "RefundAdjusted",
-                "RegularAssessment"
+                "RegularAssessment",
+                "RefundAlreadyReceived"
             };
         }
         #endregion

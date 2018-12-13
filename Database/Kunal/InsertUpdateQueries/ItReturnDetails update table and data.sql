@@ -55,3 +55,8 @@ INSERT INTO [dbo].[ITHeadMaster]
            ([Description],[PropertyName],[CanAddSubHead],[Active],[AddedBy],[AddedDate],[CanAddDocuments],[IsROI],[HasDate])
      VALUES ('Regular Assessment','RegularAssessment',0,1,1,GETDATE(),0,1,1)
 GO
+
+INSERT INTO [dbo].[ITHeadMaster]
+           ([Description],[PropertyName],[CanAddSubHead],[Active],[AddedBy],[AddedDate],[CanAddDocuments],[IsROI],[HasDate])
+     VALUES ('Refund Already Received','RefundAlreadyReceived',0,1,1,GETDATE(),0,1,1)
+GO
