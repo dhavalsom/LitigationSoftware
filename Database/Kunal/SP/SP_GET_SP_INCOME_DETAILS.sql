@@ -30,6 +30,7 @@ SELECT
 	SPID.Id,
 	SPID.ITHeadId,
 	ITH.[Description] AS ITHeadDescription,
+	ITH.PropertyName,
 	SPID.ITReturnDetailsId,
 	SPID.SPIncomeDescription,
 	SPID.SPIncomeValue,

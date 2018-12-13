@@ -663,10 +663,11 @@ namespace LS.DAL.Library
                             Id = int.Parse(reader["Id"].ToString()),
                             ITHeadId = int.Parse(reader["ITHeadId"].ToString()),
                             ITHeadDescription = reader["ITHeadDescription"] != DBNull.Value ? reader["ITHeadDescription"].ToString() : string.Empty,
+                            PropertyName = reader["PropertyName"] != DBNull.Value ? reader["PropertyName"].ToString() : string.Empty,
                             ITReturnDetailsId = int.Parse(reader["ITReturnDetailsId"].ToString()),
                             SPIncomeDescription = reader["SPIncomeDescription"] != DBNull.Value ? reader["SPIncomeDescription"].ToString() : string.Empty,
                             SPIncomeDate = reader["SPIncomeDate"] != DBNull.Value ? DateTime.Parse(reader["SPIncomeDate"].ToString()) : (DateTime?)null,
-                            SPIncomeValue = reader["SPIncomeDate"] != DBNull.Value ? decimal.Parse(reader["SPIncomeDate"].ToString()) : (decimal?)null,
+                            SPIncomeValue = reader["SPIncomeValue"] != DBNull.Value ? decimal.Parse(reader["SPIncomeValue"].ToString()) : (decimal?)null,
                             TaxRate = reader["TaxRate"] != DBNull.Value ? decimal.Parse(reader["TaxRate"].ToString()) : (decimal?)null,
                             Active = bool.Parse(reader["Active"].ToString()),                            
                         });

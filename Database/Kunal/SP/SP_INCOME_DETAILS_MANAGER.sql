@@ -37,7 +37,7 @@ SELECT	 @Id = SPIncomeDetailsList.Columns.value('Id[1]', 'BIGINT')
 	   , @SPIncomeDescription = SPIncomeDetailsList.Columns.value('SPIncomeDescription[1]', 'NVARCHAR(MAX)')
 	   , @SPIncomeValue = SPIncomeDetailsList.Columns.value('SPIncomeValue[1]', 'DECIMAL(18,2)')
 	   , @TaxRate = SPIncomeDetailsList.Columns.value('TaxRate[1]', 'DECIMAL(18,2)')
-	   , @SPIncomeDate = SPIncomeDetailsList.Columns.value('SPIncomeDate[1]', 'DECIMAL(18,2)')
+	   , @SPIncomeDate = SPIncomeDetailsList.Columns.value('SPIncomeDate[1]', 'DATETIME')
 	   , @Active = SPIncomeDetailsList.Columns.value('Active[1]', 'bit')
 FROM   @SP_INCOME_DETAILS_XML.nodes('SPIncomeDetails') AS SPIncomeDetailsList(Columns)
 

@@ -4,7 +4,18 @@
 <tr>
     <td>@Model.ITHeadMasterList[Model.ITHead].ExcelSrNo</td>
     <td></td>
-    <td>@Model.ITHeadMasterList[Model.ITHead].Description:-</td>
+    <td>
+        <div class="row col-12">
+            @Model.ITHeadMasterList[Model.ITHead].Description:-
+            @if (Model.ITReturnDetailsObject.Id > 0
+            && Model.ITHeadMasterList[Model.ITHead].IsSpecialIncomeEnabled)
+            {
+                @Html.Partial("_ITHeadSpecialIncome"
+                    , Model.ITHeadSpecialIncomeModels[Model.ITHead])
+            }
+
+        </div>
+    </td>
     <td>
         <div class="row col-12">
             @switch (Model.ITHead)
@@ -350,14 +361,14 @@
                     break;
             }
 
-                @if (Model.ITReturnDetailsObject.Id > 0
-                    && Model.ITHeadMasterList[Model.ITHead].CanAddDocuments)
-                {
-                    @Html.Partial("_ITHeadDocumentsUploader"
-                    , Model.ITHeadDocumentsUploaderModels[Model.ITHead])
-                }
+            @if (Model.ITReturnDetailsObject.Id > 0
+                && Model.ITHeadMasterList[Model.ITHead].CanAddDocuments)
+            {
+                @Html.Partial("_ITHeadDocumentsUploader"
+                , Model.ITHeadDocumentsUploaderModels[Model.ITHead])
+            }
 
-                </div>
+            </div>
     </td>
 </tr>
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace LS.Models
 {
@@ -17,6 +16,7 @@ namespace LS.Models
 
         #region Display Properties
         public string ITHeadDescription { get; set; }
+        public string PropertyName { get; set; }
         #endregion
 
         #region Serialization
