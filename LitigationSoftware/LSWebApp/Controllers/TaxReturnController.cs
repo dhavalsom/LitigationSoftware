@@ -587,7 +587,7 @@ namespace LSWebApp.Controllers
                                             else
                                             {
                                                 model.ITHeadSpecialIncomeModels.Add(itHead.PropertyName
-                                                    , new ITHeadSpecialIncomeModel(new List<SPIncomeDetails>()
+                                                    , new ITHeadSpecialIncomeModel(new List<SPIncomeDetails>() { new SPIncomeDetails()}
                                                     , itHead, model.ITReturnDetailsObject));
                                             }
                                         }
@@ -1289,6 +1289,7 @@ namespace LSWebApp.Controllers
                     }
                 }
             }
+            Session["CurrentITReturnDetails"] = objITHeadSpecialIncomeModel.ObjITReturnDetails;
             return RedirectToAction("ITReturnDetails");
         }
         #endregion
