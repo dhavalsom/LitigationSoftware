@@ -38,14 +38,14 @@
             <td>Filling Date</td>
             @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
             {
-                <td>@itsectiondetail.ITReturnFillingDate.Value.ToShortDateString()</td>
+                <td>@itsectiondetail.ITReturnFillingDate.Value.ToString("dd MMM yyyy")</td>
             }
         </tr>
         <tr class="table-active">
             <td>Due Date</td>
             @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
             {
-                <td>@itsectiondetail.ITReturnDueDate.Value.ToShortDateString()</td>
+                <td>@itsectiondetail.ITReturnDueDate.Value.ToString("dd MMM yyyy")</td>
             }
         </tr>
 

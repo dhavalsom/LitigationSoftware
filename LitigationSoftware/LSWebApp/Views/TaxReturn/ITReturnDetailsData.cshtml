@@ -65,10 +65,10 @@
                     <div class="col-md-6">
                         <div class="input-group date form_datetime HLV_clacInput"
                              data-date="" data-date-format="dd M yyyy" data-link-field="ITReturnDetailsObject_ITReturnFillingDate"
-                             data-link-format="dd/M/yyyy">
+                             data-link-format="dd M yyyy">
                             @Html.TextBoxFor(m => m.ITReturnDetailsObject.ITReturnFillingDate
                              , Model.ITReturnDetailsObject.ITReturnFillingDate.HasValue
-                             ? Model.ITReturnDetailsObject.ITReturnFillingDate.Value.ToShortDateString()
+                             ? Model.ITReturnDetailsObject.ITReturnFillingDate.Value.ToString("dd MMM yyyy")
                              : string.Empty
                           , new
                           {
@@ -95,10 +95,10 @@
                     <div class="col-md-6">
                         <div class="input-group date form_datetime HLV_clacInput"
                              data-date="" data-date-format="dd M yyyy" data-link-field="ITReturnDetailsObject_ITReturnDueDate"
-                             data-link-format="dd/M/yyyy">
+                             data-link-format="dd M yyyy">
                             @Html.TextBoxFor(m => m.ITReturnDetailsObject.ITReturnDueDate
                       , Model.ITReturnDetailsObject.ITReturnDueDate.HasValue
-                         ? Model.ITReturnDetailsObject.ITReturnDueDate.Value.ToShortDateString()
+                         ? Model.ITReturnDetailsObject.ITReturnDueDate.Value.ToString("dd MMM yyyy")
                          : string.Empty
                       , new
                       {

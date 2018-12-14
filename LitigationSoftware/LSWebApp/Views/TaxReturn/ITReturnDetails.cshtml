@@ -81,7 +81,7 @@
         var sptemplates =
         {
             trSpIncomeRow: function () {/*
-               <tr>
+               <tr class="trSpIncomeDetails">
                     <td>
                         <input id="SPIncomeDescription_{0}" name="SPIncomeDescription_{0}" style="width:300px;" type="text">
                     </td>
@@ -92,7 +92,7 @@
                         <input class="numericOnly" id="TaxRate_{0}" name="TaxRate_{0}" type="text">
                     </td>
                     <td>
-                        <div class="input-group date form_datetime HLV_clacInput" data-date="" data-date-format="dd M yyyy" data-link-field="SPIncomeDate_{0}" data-link-format="dd/M/yyyy">
+                        <div class="input-group date form_datetime HLV_clacInput" data-date="" data-date-format="dd M yyyy" data-link-field="SPIncomeDate_{0}" data-link-format="dd M yyyy">
                             <input class="form-control" id="SPIncomeDate_{0}" name="SPIncomeDate_{0}" size="16" type="text" >
                             <span class="input-group-addon">
                                 &nbsp;&nbsp;<i class="fa fa-calendar fa-2x" aria-hidden="true">
@@ -233,10 +233,10 @@
                     });
 
                     $(".btn-add-row").click(function (event) {
-                        console.log($("#hdNewSpIncomeRecordCount").val());
                         $("#hdNewSpIncomeRecordCount").val(parseInt($("#hdNewSpIncomeRecordCount").val()) - 1);
-                        console.log($("#hdNewSpIncomeRecordCount").val());
-                        $("tr.trSpIncomeDetails:last").after(sptemplates.trSpIncomeRow.split('{0}')
+                        console.log($(this).parent().parent().find("tr.trSpIncomeDetails:last").html());
+                        $(this).parent().parent().find("tr.trSpIncomeDetails:last")
+                            .after(sptemplates.trSpIncomeRow.split('{0}')
                             .join($("#hdNewSpIncomeRecordCount").val()));
                         $('.form_datetime').datetimepicker({
                             weekStart: 1,
@@ -246,6 +246,17 @@
                             startView: 2,
                             minView: 2,
                             forceParse: 0
+                        });
+                        $(".numericOnly").keypress(function (e) {
+                            return isANumber(e);
+                        });
+                        $(".numericOnly").change(function (e) {
+                            if ($.isNumeric($(this).val())) {
+                                $(this).val(parseFloat($(this).val()).toFixed(2));
+                            }
+                            else {
+                                $(this).val("0.00");
+                            }
                         });
                     });
                 }
