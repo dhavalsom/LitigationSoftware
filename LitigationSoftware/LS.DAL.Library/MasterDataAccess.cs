@@ -314,6 +314,7 @@ namespace LS.DAL.Library
                             CanAddSubHead = reader["CanAddSubHead"] != DBNull.Value ? Convert.ToBoolean(reader["CanAddSubHead"].ToString()) : false,
                             CanAddDocuments = reader["CanAddDocuments"] != DBNull.Value ? Convert.ToBoolean(reader["CanAddDocuments"].ToString()) : false,
                             HasDate = reader["HasDate"] != DBNull.Value ? Convert.ToBoolean(reader["HasDate"].ToString()) : false,
+                            IsSpecialIncomeEnabled = reader["IsSpecialIncomeEnabled"] != DBNull.Value ? Convert.ToBoolean(reader["IsSpecialIncomeEnabled"].ToString()) : false,
                             IsROI = reader["IsROI"] != DBNull.Value ? Convert.ToBoolean(reader["IsROI"].ToString()) : false,
                             Active = Convert.ToBoolean(reader["Active"].ToString()),
                             Id = Convert.ToInt32(reader["Id"].ToString())

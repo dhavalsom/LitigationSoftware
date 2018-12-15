@@ -1,0 +1,104 @@
+﻿@model  LSWebApp.Models.ITHeadSpecialIncomeModel
+@using(Html.BeginForm("InsertUpdateITHeadSpecialIncome", "TaxReturn", FormMethod.Post))
+{
+    if(Model.ITHeadObject.Id > 0)
+    {    
+        <div style="margin-left:5px;">
+            @Html.HiddenFor(m => m.ObjSPIncomeDetails.ITHeadId, Model.ObjSPIncomeDetails.ITHeadId)      
+            @Html.HiddenFor(m => m.ObjSPIncomeDetails.ITReturnDetailsId
+            , Model.ObjSPIncomeDetails.ITReturnDetailsId)
+            @Html.HiddenFor(m => m.ObjITReturnDetails.Id, Model.ObjITReturnDetails.Id)  
+            @Html.HiddenFor(m => m.ObjITReturnDetails.FYAYID, Model.ObjITReturnDetails.FYAYID)
+            @Html.HiddenFor(m => m.ObjITReturnDetails.ITSectionCategoryID, Model.ObjITReturnDetails.ITSectionCategoryID)  
+            @Html.HiddenFor(m => m.ObjITReturnDetails.ITSectionID, Model.ObjITReturnDetails.ITSectionID)
+            <div>
+                <a href="#spIncomeModal_@(Model.ITHeadObject.Id.ToString())" 
+                   role="button" class="btn" data-toggle="modal">
+                    <img src="~/images/income.png"
+                         class="imgSpecialIncomeDetails"
+                         title="Click to add special income details"
+                         style="width:20px;height:20px;" />
+                </a>
+            </div>
+            <div class="modal" id="spIncomeModal_@(Model.ITHeadObject.Id.ToString())">
+                <div class="modal-dialog" role="document" style="max-width: 1000px;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Break up  for @Model.ITHeadObject.Description</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <table class="table table-hover tblSPIncomeDetails">
+                                <thead class="thSPIncomeDetails">
+                                    <tr>
+                                        <th>Description</th>
+                                        <th>Value</th>
+                                        <th>Tax Rate (%)</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.SPIncomeDetailsList)
+                                    {
+                                        <tr class="trSpIncomeDetails">
+                                            <td>
+                                                @Html.TextBox("SPIncomeDescription_" + item.Id.ToString()
+                                                , item.SPIncomeDescription
+                                                , new { @style = "width:300px;"
+                                                , @id = "SPIncomeDescription_" + item.Id.ToString()
+                                                })
+                                            </td>
+                                            <td>
+                                                @Html.TextBox("SPIncomeValue_" + item.Id.ToString()
+                                                ,item.SPIncomeValue.HasValue ? item.SPIncomeValue.Value.ToString() :string.Empty
+                                                , new { @class = "numericOnly"
+                                                , @id = "SPIncomeValue_" + item.Id.ToString()})
+                                            </td>
+                                            <td>
+                                               @Html.TextBox("TaxRate_" + item.Id.ToString()
+                                                , item.TaxRate.HasValue ? item.TaxRate.Value.ToString() : string.Empty
+                                                , new { @class = "numericOnly"
+                                                , @id = "TaxRate_" + item.Id.ToString()
+                                                })
+                                            </td>
+                                            <td>
+                                                <div class="input-group date form_datetime HLV_clacInput"
+                                                     data-date="" data-date-format="dd M yyyy" 
+                                                     data-link-field= @("SPIncomeDate_"+ item.Id.ToString())
+                                                     data-link-format="dd M yyyy">
+                                                    @Html.TextBox("SPIncomeDate_" + item.Id.ToString()
+                                                         , item.SPIncomeDate.HasValue
+                                                         ? item.SPIncomeDate.Value.ToString("dd MMM yyyy")
+                                                         : string.Empty
+                                                      , new
+                                                      {
+                                                          @class = "form-control",
+                                                          @size = "16",
+                                                          @value = "",
+                                                          @id = "SPIncomeDate_" + item.Id.ToString()
+                                                      })
+                                                    <span class="input-group-addon">
+                                                        &nbsp;&nbsp;<i class="fa fa-calendar fa-2x" aria-hidden="true">
+                                                        </i>
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>                            
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary btn-sm btn-add-row">Add Row</button>
+                            <button type="submit" class="btn btn-primary btn-sm">Save</button>
+                            <button type="button" class="btn btn-secondary" 
+                                    data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}

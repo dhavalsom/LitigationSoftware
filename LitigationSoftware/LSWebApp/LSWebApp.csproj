@@ -172,6 +172,7 @@
     <Compile Include="Infrastructure\Utilities.cs" />
     <Compile Include="Models\BusinessLossAnalysisModel.cs" />
     <Compile Include="Models\FlowChartModel.cs" />
+    <Compile Include="Models\ITHeadSpecialIncomeModel.cs" />
     <Compile Include="Models\ITReturnDetailsDataModel.cs" />
     <Compile Include="Models\ITReturnDetailsHeaderModel.cs" />
     <Compile Include="Models\LitigationAndSimulationModel.cs" />
@@ -246,6 +247,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="images\close.png" />
+    <Content Include="images\income.png" />
     <Content Include="images\plus.png" />
     <Content Include="images\save.png" />
     <Content Include="images\upload.png" />
@@ -321,6 +323,7 @@
     <Content Include="Views\TaxReturn\ITReturnDetails.cshtml" />
     <Content Include="Views\TaxReturn\ITReturnDetailsData.cshtml" />
     <Content Include="Views\TaxReturn\ITHeadDetails.cshtml" />
+    <Content Include="Views\Shared\_ITHeadSpecialIncome.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

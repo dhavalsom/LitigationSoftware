@@ -553,6 +553,46 @@ namespace LSWebApp.Controllers
                                         }
                                     }
                                 }
+                                
+                                Res = await client.GetAsync("api/TaxReturnAPI/GetSPIncomeDetailsList?itReturnDetailsId="
+                                    + model.ITReturnDetailsObject.Id + "&itHeadId=");
+                                if (Res.IsSuccessStatusCode)
+                                {
+                                    var objSPIncomeDetailsResponse = JsonConvert.DeserializeObject<SPIncomeDetailsResponse>
+                                        (Res.Content.ReadAsStringAsync().Result);
+                                    model.SPIncomeDetailsList = new Dictionary<string, List<SPIncomeDetails>>();
+                                    foreach (var item in objSPIncomeDetailsResponse.SPIncomeDetailsList)
+                                    {
+                                        if (model.SPIncomeDetailsList.ContainsKey(item.PropertyName))
+                                        {
+                                            model.SPIncomeDetailsList[item.PropertyName].Add(item);
+                                        }
+                                        else
+                                        {
+                                            model.SPIncomeDetailsList.Add(item.PropertyName,
+                                                new List<SPIncomeDetails> { item });
+                                        }
+                                    }
+                                    model.ITHeadSpecialIncomeModels = new Dictionary<string, ITHeadSpecialIncomeModel>();
+                                    foreach (var itHead in itHeads)
+                                    {
+                                        if (itHead.IsSpecialIncomeEnabled)
+                                        {
+                                            if (model.SPIncomeDetailsList.ContainsKey(itHead.PropertyName))
+                                            {
+                                                model.ITHeadSpecialIncomeModels.Add(itHead.PropertyName
+                                                    , new ITHeadSpecialIncomeModel(model.SPIncomeDetailsList[itHead.PropertyName]
+                                                    , itHead, model.ITReturnDetailsObject));
+                                            }
+                                            else
+                                            {
+                                                model.ITHeadSpecialIncomeModels.Add(itHead.PropertyName
+                                                    , new ITHeadSpecialIncomeModel(new List<SPIncomeDetails>() { new SPIncomeDetails()}
+                                                    , itHead, model.ITReturnDetailsObject));
+                                            }
+                                        }
+                                    }
+                                }
                             }
                             else
                             {
@@ -1225,6 +1265,42 @@ namespace LSWebApp.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<ActionResult> InsertUpdateITHeadSpecialIncome
+           (ITHeadSpecialIncomeModel objITHeadSpecialIncomeModel, FormCollection form)
+        {
+            foreach (var control in form.Keys)
+            {
+                if (control.ToString().StartsWith("SPIncomeDescription_"))
+                {
+                    var id = int.Parse(control.ToString().Split('_')[1]);
+                    decimal value;
+                    DateTime date;
+                    var spIncome = new SPIncomeDetails
+                    {
+                        Id = id > 0 ? id : 0,
+                        ITHeadId = objITHeadSpecialIncomeModel.ObjSPIncomeDetails.ITHeadId,
+                        ITReturnDetailsId = objITHeadSpecialIncomeModel.ObjSPIncomeDetails.ITReturnDetailsId,
+                        SPIncomeValue = decimal.TryParse(form["SPIncomeValue_" + id.ToString()].ToString(), out value) ? value : (decimal?)null,
+                        TaxRate = decimal.TryParse(form["TaxRate_" + id.ToString()].ToString(), out value) ? value : (decimal?)null,
+                        SPIncomeDescription = form["SPIncomeDescription_" + id.ToString()].ToString(),
+                        SPIncomeDate = DateTime.TryParse(form["SPIncomeDate_" + id.ToString()].ToString(), out date) ? date : (DateTime?)null                        
+                    };
+                    using (var client = new HttpClient())
+                    {
+                        var json = JsonConvert.SerializeObject(spIncome);
+                        var content = new StringContent(json, Encoding.UTF8, "application/json");
+                        client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                        client.DefaultRequestHeaders.Clear();
+                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                        HttpResponseMessage Res = await client.PostAsync("api/TaxReturnAPI/InsertUpdateSPIncomeDetails", content);
+                        ITReturnDocumentsResponse result = JsonConvert.DeserializeObject<ITReturnDocumentsResponse>(Res.Content.ReadAsStringAsync().Result);
+                    }
+                }
+            }
+            Session["CurrentITReturnDetails"] = objITHeadSpecialIncomeModel.ObjITReturnDetails;
+            return RedirectToAction("ITReturnDetails");
+        }
         #endregion
     }
 }

@@ -29,4 +29,15 @@ AdvanceTax3installmentDate
 AdvanceTax4installmentDate
 RefundAdjustedDate
 RegularAssessmentDate
+RefundAlreadyReceived
 */
+
+ALTER TABLE ITReturnDetails  
+ADD
+RefundAlreadyReceived [decimal](18, 2) NULL
+GO
+
+ALTER TABLE ITReturnDetails  
+ADD
+RefundAlreadyReceivedDate [datetime] NULL
+GO

@@ -19,5 +19,8 @@ namespace LS.BL.Interface
         LAndSCommentsResponse GetLAndSCommentList(int? companyId, int? itSubHeadId);
         LAndSCommentsResponse InsertUpdateLAndSComments(LAndSComments landsComments
            , string operation);
+        SPIncomeDetailsResponse GetSPIncomeDetailsList(int? itReturnDetailsId, int? itHeadId);
+        SPIncomeDetailsResponse InsertUpdateSPIncomeDetails(SPIncomeDetails spIncomeDetails
+           , string operation);
     }
 }

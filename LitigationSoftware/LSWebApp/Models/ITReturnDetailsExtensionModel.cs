@@ -40,18 +40,21 @@ namespace LSWebApp.Models
         public ITReturnDetails ITReturnDetailsObject { get; set; }
         public List<ITReturnDetailsExtension> ExtensionList { get; set; }
         public Dictionary<string, ITHeadDocumentsUploaderModel> ITHeadDocumentsUploaderModels { get; set; }
+        public Dictionary<string, ITHeadSpecialIncomeModel> ITHeadSpecialIncomeModels { get; set; }
 
         public ITHeadDetailsModel(string itHead,
             Dictionary<string, ITHeadMaster> itHeadMasterList,
             ITReturnDetails itReturnDetailsObject,
             List<ITReturnDetailsExtension> extensionList,
-            Dictionary<string, ITHeadDocumentsUploaderModel> itHeadDocumentsUploaderModels)
+            Dictionary<string, ITHeadDocumentsUploaderModel> itHeadDocumentsUploaderModels,
+            Dictionary<string, ITHeadSpecialIncomeModel> itHeadSpecialIncomeModels)
         {
             this.ITHead = itHead;
             this.ITHeadMasterList = itHeadMasterList;
             this.ITReturnDetailsObject = itReturnDetailsObject;
             this.ExtensionList = extensionList;
             this.ITHeadDocumentsUploaderModels = itHeadDocumentsUploaderModels;
+            this.ITHeadSpecialIncomeModels = itHeadSpecialIncomeModels;
         }
     }
 }

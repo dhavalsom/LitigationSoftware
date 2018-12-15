@@ -1,25 +1,16 @@
 USE [LitigationApp]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_ITRETURNDETAILS_MANAGER]    Script Date: 12/2/2018 4:25:00 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_ITRETURNDETAILS_MANAGER]    Script Date: 12/8/2018 1:03:56 PM ******/
 DROP PROCEDURE [dbo].[SP_ITRETURNDETAILS_MANAGER]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_ITRETURNDETAILS_MANAGER]    Script Date: 12/2/2018 4:25:00 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_ITRETURNDETAILS_MANAGER]    Script Date: 12/8/2018 1:03:56 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
-
-
-
-
-
-
-
-
-
 
 CREATE PROCEDURE [dbo].[SP_ITRETURNDETAILS_MANAGER]
 (
@@ -30,6 +21,7 @@ CREATE PROCEDURE [dbo].[SP_ITRETURNDETAILS_MANAGER]
 AS
 
 BEGIN
+
 
 
 /*BLOCK TO READ THE VARIABLES*/
@@ -47,9 +39,9 @@ DECLARE @Id AS BIGINT, @CompanyID AS BIGINT, @FYAYID AS BIGINT,@ITSectionID AS B
 		@ExtId AS BIGINT, @ITSubHeadId AS DECIMAL (18, 2), @ITSubHeadValue AS DECIMAL (18, 2),@TDS26AS AS DECIMAL (18, 2),@TDSasperBooks AS DECIMAL (18, 2),
 		@IncomefromSalary AS DECIMAL (18, 2), @TaxCollectedAtSource  AS DECIMAL (18, 2), @ForeignTaxCredit  AS DECIMAL (18, 2),
 		@InterestUS234D  AS DECIMAL (18, 2), @InterestUS220  AS DECIMAL (18, 2), @RefundAdjusted  AS DECIMAL (18, 2),
-		@RegularAssessment  AS DECIMAL (18, 2), @SelfAssessmentTaxDate  AS DATETIME, @AdvanceTax1installmentDate  AS DATETIME,
+		@RegularAssessment  AS DECIMAL (18, 2), @RefundAlreadyReceived AS DECIMAL (18, 2), @SelfAssessmentTaxDate  AS DATETIME, @AdvanceTax1installmentDate  AS DATETIME,
 		@AdvanceTax2installmentDate AS DATETIME, @AdvanceTax3installmentDate AS DATETIME, @AdvanceTax4installmentDate  AS DATETIME,
-		@RefundAdjustedDate AS DATETIME, @RegularAssessmentDate AS DATETIME
+		@RefundAdjustedDate AS DATETIME, @RegularAssessmentDate AS DATETIME, @RefundAlreadyReceivedDate AS DATETIME
 
 
 SELECT	 @Id = ITReturnDetailsList.Columns.value('Id[1]', 'BIGINT')
@@ -91,6 +83,7 @@ SELECT	 @Id = ITReturnDetailsList.Columns.value('Id[1]', 'BIGINT')
 	   , @InterestUS220 = ITReturnDetailsList.Columns.value('InterestUS220[1]', 'DECIMAL (18, 2)')
 	   , @RefundAdjusted = ITReturnDetailsList.Columns.value('RefundAdjusted[1]', 'DECIMAL (18, 2)')
 	   , @RegularAssessment = ITReturnDetailsList.Columns.value('RegularAssessment[1]', 'DECIMAL (18, 2)')
+	   , @RefundAlreadyReceived = ITReturnDetailsList.Columns.value('RefundAlreadyReceived[1]', 'DECIMAL (18, 2)')
 	   , @SelfAssessmentTaxDate = ITReturnDetailsList.Columns.value('SelfAssessmentTaxDate[1]', 'DATETIME')
 	   , @AdvanceTax1installmentDate = ITReturnDetailsList.Columns.value('AdvanceTax1installmentDate[1]', 'DATETIME')
 	   , @AdvanceTax2installmentDate = ITReturnDetailsList.Columns.value('AdvanceTax2installmentDate[1]', 'DATETIME')
@@ -98,6 +91,7 @@ SELECT	 @Id = ITReturnDetailsList.Columns.value('Id[1]', 'BIGINT')
 	   , @AdvanceTax4installmentDate = ITReturnDetailsList.Columns.value('AdvanceTax4installmentDate[1]', 'DATETIME')
 	   , @RefundAdjustedDate = ITReturnDetailsList.Columns.value('RefundAdjustedDate[1]', 'DATETIME')
 	   , @RegularAssessmentDate = ITReturnDetailsList.Columns.value('RegularAssessmentDate[1]', 'DATETIME')
+	   , @RefundAlreadyReceivedDate = ITReturnDetailsList.Columns.value('RefundAlreadyReceivedDate[1]', 'DATETIME')
 FROM   @ITRETURNDETAILS_XML.nodes('ITReturnDetails') AS ITReturnDetailsList(Columns)
 
 SELECT 
@@ -155,13 +149,15 @@ FROM @EXTENSIONDETAILS_XML.nodes('/ArrayOfITReturnDetailsExtension/ITReturnDetai
 	  ,[InterestUS220]
 	  ,[RefundAdjusted]
 	  ,[RegularAssessment]
+	  ,[RefundAlreadyReceived]
 	  ,[SelfAssessmentTaxDate]
 	  ,[AdvanceTax1installmentDate]
 	  ,[AdvanceTax2installmentDate]
 	  ,[AdvanceTax3installmentDate]
 	  ,[AdvanceTax4installmentDate]
 	  ,[RefundAdjustedDate]
-	  ,[RegularAssessmentDate])
+	  ,[RegularAssessmentDate]
+	  ,[RefundAlreadyReceivedDate])
      VALUES
 	(@CompanyID
      ,@FYAYID 
@@ -204,13 +200,15 @@ FROM @EXTENSIONDETAILS_XML.nodes('/ArrayOfITReturnDetailsExtension/ITReturnDetai
 	,@InterestUS220
 	,@RefundAdjusted
 	,@RegularAssessment
+	,@RefundAlreadyReceived
 	,@SelfAssessmentTaxDate
 	,@AdvanceTax1installmentDate
 	,@AdvanceTax2installmentDate
 	,@AdvanceTax3installmentDate
 	,@AdvanceTax4installmentDate
 	,@RefundAdjustedDate
-	,@RegularAssessmentDate)
+	,@RegularAssessmentDate
+	,@RefundAlreadyReceivedDate)
 
 	set @Id = @@IDENTITY
 	
@@ -286,6 +284,7 @@ FROM @EXTENSIONDETAILS_XML.nodes('/ArrayOfITReturnDetailsExtension/ITReturnDetai
 		  ,[InterestUS220] = @InterestUS220
 		  ,[RefundAdjusted] = @RefundAdjusted
 		  ,[RegularAssessment] = @RegularAssessment
+		  ,[RefundAlreadyReceived] = @RefundAlreadyReceived
 		  ,[SelfAssessmentTaxDate] = @SelfAssessmentTaxDate
 		  ,[AdvanceTax1installmentDate] = @AdvanceTax1installmentDate
 		  ,[AdvanceTax2installmentDate] = @AdvanceTax2installmentDate
@@ -293,6 +292,7 @@ FROM @EXTENSIONDETAILS_XML.nodes('/ArrayOfITReturnDetailsExtension/ITReturnDetai
 		  ,[AdvanceTax4installmentDate] = @AdvanceTax4installmentDate
 		  ,[RefundAdjustedDate] = @RefundAdjustedDate
 		  ,[RegularAssessmentDate] = @RegularAssessmentDate
+		  ,[RefundAlreadyReceivedDate] = @RefundAlreadyReceivedDate
 		WHERE Id = @Id
 		
 
@@ -346,6 +346,7 @@ FROM @EXTENSIONDETAILS_XML.nodes('/ArrayOfITReturnDetailsExtension/ITReturnDetai
 SELECT @Id as ITReturDetailsId, @Result AS Result, @ReturnMessage AS ReturnMessage
 
 END
+
 
 
 
