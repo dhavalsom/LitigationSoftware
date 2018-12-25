@@ -122,6 +122,16 @@ namespace LSWebApp
            );
 
             routes.MapRoute(
+               name: "bldetails",
+               url: "bldetails",
+               defaults: new
+               {
+                   controller = "TaxReturn",
+                   action = "BusinessLossDetails"
+               }
+           );
+
+            routes.MapRoute(
                 name: "computationsheet",
                 url: "computationsheet",
                 defaults: new

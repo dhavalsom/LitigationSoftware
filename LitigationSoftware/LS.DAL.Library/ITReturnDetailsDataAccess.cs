@@ -743,6 +743,160 @@ namespace LS.DAL.Library
                 Connection.Close();
             }
         }
+
+        public BusinessLossDetailsResponse InsertUpdateBusinessLossDetails
+            (BusinessLossDetails businessLossDetails, string operation)
+        {
+            try
+            {
+                Log.Info("Started call to InsertUpdateBusinessLossDetails");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(
+                    new { businessLossDetails = businessLossDetails, operation = operation }));
+                Command.CommandText = "SP_BUSINESS_LOSS_DETAILS_MANAGER";
+                Command.CommandType = CommandType.StoredProcedure;
+                Command.Parameters.Clear();
+
+                Command.Parameters.AddWithValue("@BUSINESS_LOSS_DETAILS_XML", GetXMLFromObject(businessLossDetails));
+                if (!string.IsNullOrEmpty(operation))
+                {
+                    Command.Parameters.AddWithValue("@OPERATION", operation);
+                }
+                if (businessLossDetails.AddedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", businessLossDetails.AddedBy.Value);
+                }
+                else if (businessLossDetails.ModifiedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", businessLossDetails.ModifiedBy.Value);
+                }
+                else if (businessLossDetails.DeletedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", businessLossDetails.DeletedBy.Value);
+                }
+                Connection.Open();
+                SqlDataReader reader = Command.ExecuteReader();
+
+                BusinessLossDetailsResponse result = new BusinessLossDetailsResponse();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result = new BusinessLossDetailsResponse
+                        {
+                            Message = reader["ReturnMessage"] != DBNull.Value ? reader["ReturnMessage"].ToString() : null,
+                            IsSuccess = Convert.ToBoolean(reader["Result"].ToString())
+                        };
+                    }
+                }
+                Log.Info("End call to InsertUpdateBusinessLossDetails");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                Connection.Close();
+            }
+        }
+
+        public BusinessLossDetailsResponse GetBusinessLossDetailsList(int? companyId, int? fyayId
+            , int? itSectionCategoryId, int? businessLossDetailsId)
+        {
+            try
+            {
+                Log.Info("Started call to GetBusinessLossDetailsList");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(new
+                {
+                    companyId = companyId,
+                    fyayId = fyayId,
+                    itSectionCategoryId = itSectionCategoryId,
+                    businessLossDetailsId = businessLossDetailsId,
+                }));
+                Command.CommandText = "SP_GET_BUSINESS_LOSS_DETAILS_LIST";
+                Command.CommandType = CommandType.StoredProcedure;
+                if (companyId.HasValue && companyId > 0)
+                {
+                    Command.Parameters.AddWithValue("@COMPANY_ID", companyId);
+                }
+                if (fyayId.HasValue && fyayId > 0)
+                {
+                    Command.Parameters.AddWithValue("@FYAY_ID", fyayId);
+                }
+                if (itSectionCategoryId.HasValue && itSectionCategoryId > 0)
+                {
+                    Command.Parameters.AddWithValue("@IT_SECTION_CATEGORY_ID", itSectionCategoryId);
+                }
+                if (businessLossDetailsId.HasValue && businessLossDetailsId > 0)
+                {
+                    Command.Parameters.AddWithValue("@BUSINESS_LOSS_DETAILS_ID", businessLossDetailsId);
+                }
+                Connection.Open();
+
+                SqlDataReader reader = Command.ExecuteReader();
+                BusinessLossDetailsResponse result = new BusinessLossDetailsResponse();
+                result.BusinessLossDetailsList = new List<BusinessLossDetails>();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result.BusinessLossDetailsList.Add(new BusinessLossDetails
+                        {
+                            Id = int.Parse(reader["Id"].ToString()),
+                            CompanyId = int.Parse(reader["CompanyId"].ToString()),
+                            FYAYId = int.Parse(reader["FYAYId"].ToString()),
+                            ITSectionCategoryId = int.Parse(reader["ITSectionCategoryId"].ToString()),
+
+                            IncomeCapGainsLTCG_BF = reader["IncomeCapGainsLTCG_BF"] != DBNull.Value ? decimal.Parse(reader["IncomeCapGainsLTCG_BF"].ToString()) : (decimal?)null,
+                            IncomeCapGainsSTCG_BF = reader["IncomeCapGainsSTCG_BF"] != DBNull.Value ? decimal.Parse(reader["IncomeCapGainsSTCG_BF"].ToString()) : (decimal?)null,
+                            IncomeBusinessProf_BF = reader["IncomeBusinessProf_BF"] != DBNull.Value ? decimal.Parse(reader["IncomeBusinessProf_BF"].ToString()) : (decimal?)null,
+                            IncomeSpeculativeBusiness_BF = reader["IncomeSpeculativeBusiness_BF"] != DBNull.Value ? decimal.Parse(reader["IncomeSpeculativeBusiness_BF"].ToString()) : (decimal?)null,
+                            UnabsorbedDepreciation_BF = reader["UnabsorbedDepreciation_BF"] != DBNull.Value ? decimal.Parse(reader["UnabsorbedDepreciation_BF"].ToString()) : (decimal?)null,
+                            HousePropIncome_BF = reader["HousePropIncome_BF"] != DBNull.Value ? decimal.Parse(reader["HousePropIncome_BF"].ToString()) : (decimal?)null,
+                            IncomeOtherSources_BF = reader["IncomeOtherSources_BF"] != DBNull.Value ? decimal.Parse(reader["IncomeOtherSources_BF"].ToString()) : (decimal?)null,
+
+                            IncomeCapGainsLTCG_CY = reader["IncomeCapGainsLTCG_CY"] != DBNull.Value ? decimal.Parse(reader["IncomeCapGainsLTCG_CY"].ToString()) : (decimal?)null,
+                            IncomeCapGainsSTCG_CY = reader["IncomeCapGainsSTCG_CY"] != DBNull.Value ? decimal.Parse(reader["IncomeCapGainsSTCG_CY"].ToString()) : (decimal?)null,
+                            IncomeBusinessProf_CY = reader["IncomeBusinessProf_CY"] != DBNull.Value ? decimal.Parse(reader["IncomeBusinessProf_CY"].ToString()) : (decimal?)null,
+                            IncomeSpeculativeBusiness_CY = reader["IncomeSpeculativeBusiness_CY"] != DBNull.Value ? decimal.Parse(reader["IncomeSpeculativeBusiness_CY"].ToString()) : (decimal?)null,
+                            UnabsorbedDepreciation_CY = reader["UnabsorbedDepreciation_CY"] != DBNull.Value ? decimal.Parse(reader["UnabsorbedDepreciation_CY"].ToString()) : (decimal?)null,
+                            HousePropIncome_CY = reader["HousePropIncome_CY"] != DBNull.Value ? decimal.Parse(reader["HousePropIncome_CY"].ToString()) : (decimal?)null,
+                            IncomeOtherSources_CY = reader["IncomeOtherSources_CY"] != DBNull.Value ? decimal.Parse(reader["IncomeOtherSources_CY"].ToString()) : (decimal?)null,
+
+                            IncomeCapGainsLTCG_UL = reader["IncomeCapGainsLTCG_UL"] != DBNull.Value ? decimal.Parse(reader["IncomeCapGainsLTCG_UL"].ToString()) : (decimal?)null,
+                            IncomeCapGainsSTCG_UL = reader["IncomeCapGainsSTCG_UL"] != DBNull.Value ? decimal.Parse(reader["IncomeCapGainsSTCG_UL"].ToString()) : (decimal?)null,
+                            IncomeBusinessProf_UL = reader["IncomeBusinessProf_UL"] != DBNull.Value ? decimal.Parse(reader["IncomeBusinessProf_UL"].ToString()) : (decimal?)null,
+                            IncomeSpeculativeBusiness_UL = reader["IncomeSpeculativeBusiness_UL"] != DBNull.Value ? decimal.Parse(reader["IncomeSpeculativeBusiness_UL"].ToString()) : (decimal?)null,
+                            UnabsorbedDepreciation_UL = reader["UnabsorbedDepreciation_UL"] != DBNull.Value ? decimal.Parse(reader["UnabsorbedDepreciation_UL"].ToString()) : (decimal?)null,
+                            HousePropIncome_UL = reader["HousePropIncome_UL"] != DBNull.Value ? decimal.Parse(reader["HousePropIncome_UL"].ToString()) : (decimal?)null,
+                            IncomeOtherSources_UL = reader["IncomeOtherSources_UL"] != DBNull.Value ? decimal.Parse(reader["IncomeOtherSources_UL"].ToString()) : (decimal?)null,
+
+                            IncomeCapGainsLTCG_UALL = reader["IncomeCapGainsLTCG_UALL"] != DBNull.Value ? decimal.Parse(reader["IncomeCapGainsLTCG_UALL"].ToString()) : (decimal?)null,
+                            IncomeCapGainsSTCG_UALL = reader["IncomeCapGainsSTCG_UALL"] != DBNull.Value ? decimal.Parse(reader["IncomeCapGainsSTCG_UALL"].ToString()) : (decimal?)null,
+                            IncomeBusinessProf_UALL = reader["IncomeBusinessProf_UALL"] != DBNull.Value ? decimal.Parse(reader["IncomeBusinessProf_UALL"].ToString()) : (decimal?)null,
+                            IncomeSpeculativeBusiness_UALL = reader["IncomeSpeculativeBusiness_UALL"] != DBNull.Value ? decimal.Parse(reader["IncomeSpeculativeBusiness_UALL"].ToString()) : (decimal?)null,
+                            UnabsorbedDepreciation_UALL = reader["UnabsorbedDepreciation_UALL"] != DBNull.Value ? decimal.Parse(reader["UnabsorbedDepreciation_UALL"].ToString()) : (decimal?)null,
+                            HousePropIncome_UALL = reader["HousePropIncome_UALL"] != DBNull.Value ? decimal.Parse(reader["HousePropIncome_UALL"].ToString()) : (decimal?)null,
+                            IncomeOtherSources_UALL = reader["IncomeOtherSources_UALL"] != DBNull.Value ? decimal.Parse(reader["IncomeOtherSources_UALL"].ToString()) : (decimal?)null,
+
+                            Active = bool.Parse(reader["Active"].ToString()),
+                        });
+                    }
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            finally
+            {
+                Connection.Close();
+            }
+        }
         #endregion
     }
 }
