@@ -22,5 +22,9 @@ namespace LS.BL.Interface
         SPIncomeDetailsResponse GetSPIncomeDetailsList(int? itReturnDetailsId, int? itHeadId);
         SPIncomeDetailsResponse InsertUpdateSPIncomeDetails(SPIncomeDetails spIncomeDetails
            , string operation);
+        BusinessLossDetailsResponse InsertUpdateBusinessLossDetails
+            (BusinessLossDetails businessLossDetails, string operation);
+        BusinessLossDetailsResponse GetBusinessLossDetailsList(int? companyId, int? fyayId
+            , int? itSectionCategoryId, int? businessLossDetailsId);
     }
 }

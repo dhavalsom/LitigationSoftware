@@ -166,6 +166,29 @@ namespace LSApi.Controllers
             var spIncomeDetailsResult = ItReturnObj.InsertUpdateSPIncomeDetails(spIncomeDetails, null);
             return spIncomeDetailsResult;
         }
+
+
+        [HttpGet]
+        [Route("GetBusinessLossDetailsList")]
+        // GET: api/TaxReturnAPI/GetBusinessLossDetailsList
+        public BusinessLossDetailsResponse GetBusinessLossDetailsList(int? companyId, int? fyayId
+            , int? itSectionCategoryId, int? businessLossDetailsId)
+        {
+            var ItReturnObj = _Kernel.Get<IITReturnDetailsBL>();
+            return ItReturnObj.GetBusinessLossDetailsList(companyId, fyayId
+            , itSectionCategoryId, businessLossDetailsId);
+        }
+
+        // POST: api/InsertUpdateBusinessLossDetails
+        [HttpPost]
+        [Route("InsertUpdateBusinessLossDetails")]
+        public BusinessLossDetailsResponse InsertUpdateBusinessLossDetails
+            ([FromBody]BusinessLossDetails businessLossDetails)
+        {
+            var ItReturnObj = _Kernel.Get<IITReturnDetailsBL>();
+            var businessLossDetailsResult = ItReturnObj.InsertUpdateBusinessLossDetails(businessLossDetails, null);
+            return businessLossDetailsResult;
+        }
         #endregion
     }
 }

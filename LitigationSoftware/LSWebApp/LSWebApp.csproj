@@ -173,7 +173,9 @@
     <Compile Include="Models\BusinessLossAnalysisModel.cs" />
     <Compile Include="Models\FlowChartModel.cs" />
     <Compile Include="Models\ITHeadSpecialIncomeModel.cs" />
+    <Compile Include="Models\BusinessLossDetailsDataModel.cs" />
     <Compile Include="Models\ITReturnDetailsDataModel.cs" />
+    <Compile Include="Models\BusinessLossDetailsHeaderModel.cs" />
     <Compile Include="Models\ITReturnDetailsHeaderModel.cs" />
     <Compile Include="Models\LitigationAndSimulationModel.cs" />
     <Compile Include="Models\MatCreditStatusModel.cs" />
@@ -324,6 +326,8 @@
     <Content Include="Views\TaxReturn\ITReturnDetailsData.cshtml" />
     <Content Include="Views\TaxReturn\ITHeadDetails.cshtml" />
     <Content Include="Views\Shared\_ITHeadSpecialIncome.cshtml" />
+    <Content Include="Views\TaxReturn\BusinessLossDetails.cshtml" />
+    <Content Include="Views\TaxReturn\BusinessLossDetailsData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

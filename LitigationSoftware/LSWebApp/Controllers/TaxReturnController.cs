@@ -514,6 +514,7 @@ namespace LSWebApp.Controllers
                             if (response.ITReturnDetailsListObject.Count > 0)
                             {
                                 model.ITReturnDetailsObject = response.ITReturnDetailsListObject.First();
+                                Session["CurrentBusinessLossDetails"] = model.ITReturnDetailsObject;
                                 Res = await client.GetAsync("api/TaxReturnAPI/GetITReturnDocumentsList?companyId=&fyayId=&itReturnDetailsId="
                                     + model.ITReturnDetailsObject.Id + "&itHeadId=&itReturnDocumentId=");
                                 if (Res.IsSuccessStatusCode)
@@ -824,7 +825,6 @@ namespace LSWebApp.Controllers
         }
 
         [HttpPost]
-        //[ValidateAntiForgeryToken]
         public async Task<ActionResult> UpsertITReturnDetails(ITReturnDetailsDataModel itReturn
             , FormCollection form)
         {
@@ -1291,6 +1291,118 @@ namespace LSWebApp.Controllers
             }
             Session["CurrentITReturnDetails"] = objITHeadSpecialIncomeModel.ObjITReturnDetails;
             return RedirectToAction("ITReturnDetails");
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> BusinessLossDetails()
+        {
+            Company selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            ITReturnDetails itReturnDetails = Session["CurrentBusinessLossDetails"] as ITReturnDetails;
+            if (selectedCompany == null
+                || itReturnDetails == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+            BusinessLossDetailsHeaderModel businessLossDetails = new BusinessLossDetailsHeaderModel
+            {
+                CompanyObject = selectedCompany,
+                FYAYObject = new FYAY { Id = itReturnDetails.FYAYID },
+                ITSectionCategoryObject = new ITSectionCategory { Id = itReturnDetails.ITSectionCategoryID }
+            };
+            //Session["CurrentBusinessLossDetails"] = null;
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetFYAYList");
+                businessLossDetails.FYAYObject = JsonConvert.DeserializeObject<List<FYAY>>
+                    (Res.Content.ReadAsStringAsync().Result)
+                    .Where(f => f.Id == businessLossDetails.FYAYObject.Id).FirstOrDefault();
+                Res = await client.GetAsync("api/MasterAPI/GetITSectionCategoryList");
+                businessLossDetails.ITSectionCategoryObject = JsonConvert.DeserializeObject<List<ITSectionCategory>>
+                    (Res.Content.ReadAsStringAsync().Result)
+                    .Where(bl => bl.Id == businessLossDetails.ITSectionCategoryObject.Id)
+                    .FirstOrDefault();
+            }
+            return View(businessLossDetails);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> BusinessLossDetailsData(int? fyayId
+            , int? itSectionCategoryId, int? businessLossDetailsId)
+        {
+            var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+            BusinessLossDetailsDataModel model = new BusinessLossDetailsDataModel()
+            {
+                BusinessLossDetailsObject = new BusinessLossDetails
+                {
+                    CompanyId = selectedCompany.Id,
+                    AddedBy = Session[SESSION_LOGON_USER] != null ? (Session[SESSION_LOGON_USER] as UserLogin).Id : 1,
+                    Id = businessLossDetailsId.HasValue ? businessLossDetailsId.Value : 0,
+                    FYAYId = fyayId.HasValue ? fyayId.Value : 0 ,
+                    ITSectionCategoryId = itSectionCategoryId.HasValue ? itSectionCategoryId.Value : 0,
+                }
+            };
+
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                    client.DefaultRequestHeaders.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpResponseMessage Res = await client.GetAsync("api/TaxReturnAPI/GetBusinessLossDetailsList?companyId="
+                        + selectedCompany.Id + "&fyayId=" + (fyayId.HasValue ? fyayId.Value.ToString() : "")
+                        + "&itSectionCategoryId=" + (itSectionCategoryId.HasValue ? itSectionCategoryId.Value.ToString() : "")
+                        + "&businessLossDetailsId=" + (businessLossDetailsId.HasValue ? businessLossDetailsId.Value.ToString() : ""));
+                    var result = JsonConvert.DeserializeObject<BusinessLossDetailsResponse>(Res.Content.ReadAsStringAsync().Result);
+                    if(result != null 
+                        && result.BusinessLossDetailsList != null
+                        && result.BusinessLossDetailsList.Count != 0)
+                    {
+                        model.BusinessLossDetailsObject = result.BusinessLossDetailsList.First();
+                        model.BusinessLossDetailsObject.ModifiedBy = Session[SESSION_LOGON_USER] != null ? (Session[SESSION_LOGON_USER] as UserLogin).Id : 1;
+                    }
+                    
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return PartialView(model);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> InsertUpdateBusinessLossDetails
+            (BusinessLossDetailsDataModel businessLossDetails)
+        {
+            using (var client = new HttpClient())
+            {
+                var json = JsonConvert.SerializeObject(businessLossDetails.BusinessLossDetailsObject);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.PostAsync("api/TaxReturnAPI/InsertUpdateBusinessLossDetails", content);
+                BusinessLossDetailsResponse result = new BusinessLossDetailsResponse();
+                if (Res.IsSuccessStatusCode)
+                {
+                    result = JsonConvert.DeserializeObject<BusinessLossDetailsResponse>(Res.Content.ReadAsStringAsync().Result);
+                }
+                else
+                {
+                    result.IsSuccess = false;
+                    result.Message = Res.Content.ReadAsStringAsync().Result;
+                }
+                return RedirectToAction("BusinessLossDetails");
+            }
         }
         #endregion
     }
