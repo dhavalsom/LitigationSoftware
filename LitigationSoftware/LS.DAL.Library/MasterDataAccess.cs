@@ -514,7 +514,7 @@ namespace LS.DAL.Library
             }
         }
 
-        public List<StandardData> GetStandardData(int? standarddataId)
+        public List<StandardData> GetStandardData(int? FYAYID, int? standarddataId)
         {
             try
             {
@@ -526,6 +526,7 @@ namespace LS.DAL.Library
 
                 Command.Parameters.Clear();
 
+                Command.Parameters.AddWithValue("@FYAY_ID", FYAYID);
                 Command.Parameters.AddWithValue("@StandardData_ID", standarddataId);
                 Command.Parameters.AddWithValue("@ACTIVE", true);
 
@@ -562,7 +563,7 @@ namespace LS.DAL.Library
             }
         }
 
-        public List<SurchargeData> GetSurchargeData(int? surchargedataId)
+        public List<SurchargeData> GetSurchargeData(int? FYAYID, int? surchargedataId)
         {
             try
             {
@@ -574,6 +575,7 @@ namespace LS.DAL.Library
 
                 Command.Parameters.Clear();
 
+                Command.Parameters.AddWithValue("@FYAY_ID", FYAYID);
                 Command.Parameters.AddWithValue("@SurchargeData_ID", surchargedataId);
                 Command.Parameters.AddWithValue("@ACTIVE", true);
 

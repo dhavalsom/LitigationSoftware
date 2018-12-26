@@ -324,6 +324,7 @@
     <Content Include="Views\TaxReturn\ITReturnDetailsData.cshtml" />
     <Content Include="Views\TaxReturn\ITHeadDetails.cshtml" />
     <Content Include="Views\Shared\_ITHeadSpecialIncome.cshtml" />
+    <Content Include="Views\TaxReturn\TaxCalculationSheet.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

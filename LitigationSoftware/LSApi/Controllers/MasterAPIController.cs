@@ -141,19 +141,19 @@ namespace LSApi.Controllers
         [HttpGet]
         [Route("GetStandardData")]
         // GET: api/MasterAPI/GetComplianceMaster
-        public List<StandardData> GetStandardData(int? standarddataId)
+        public List<StandardData> GetStandardData(int? FYAYID,int? standarddataId)
         {
             var CompObj = _Kernel.Get<IMaster>();
-            return CompObj.GetStandardData(standarddataId);
+            return CompObj.GetStandardData(FYAYID, standarddataId);
         }
 
         [HttpGet]
         [Route("GetSurchargeData")]
         // GET: api/MasterAPI/GetComplianceMaster
-        public List<SurchargeData> GetSurchargeData(int? surchargedataId)
+        public List<SurchargeData> GetSurchargeData(int? FYAYID, int? surchargedataId)
         {
             var CompObj = _Kernel.Get<IMaster>();
-            return CompObj.GetSurchargeData(surchargedataId);
+            return CompObj.GetSurchargeData(FYAYID, surchargedataId);
         }
     }
 }

@@ -767,6 +767,104 @@ namespace LSWebApp.Controllers
             return PartialView("ExistingSectionWiseDetails", itrdetail);
         }
 
+        [HttpGet]
+        public async Task<ActionResult> TaxCalculationSheet(int companyId, int fyayId)
+        {
+            ITReturnDetailsListModel itrdetail = new ITReturnDetailsListModel()
+            {
+                CompanyId = companyId,
+                FYAYId = fyayId,
+            };
+            decimal? foreignDividend = 0;
+            StandardDataModel standardDataModelObject = new StandardDataModel();
+            StandardData standardrefData = new StandardData();
+            decimal? STCGSpecialIncome = 0;
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.GetAsync("api/TaxReturnAPI/GetExistingITReturnDetailsList?companyId=" + companyId + "&fyayId=" + fyayId + "&itsectionid=0&itreturnid=0");
+                if (Res.IsSuccessStatusCode)
+                {
+                    itrdetail.ITReturnDetailsListObject = JsonConvert.DeserializeObject<ITReturnDetailsListResponse>(Res.Content.ReadAsStringAsync().Result).ITReturnDetailsListObject;
+                    foreach (var itReturn in itrdetail.ITReturnDetailsListObject)
+                    {
+                        itReturn.Extensions = new List<ITReturnDetailsExtension>();
+                        Res = await client.GetAsync("api/TaxReturnAPI/GetExistingITReturnDetailsExtension?itreturnid=" + itReturn.Id);
+                        if (Res.IsSuccessStatusCode)
+                        {
+                            itReturn.Extensions = JsonConvert.DeserializeObject<List<ITReturnDetailsExtension>>(Res.Content.ReadAsStringAsync().Result);
+                        }
+
+                        
+                    }
+                    Res = await client.GetAsync("api/MasterAPI/GetITSubHeadMaster?itHeadId=");
+                    var itSubHeads = JsonConvert.DeserializeObject<List<ITSubHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
+                    Res = await client.GetAsync("api/MasterAPI/GetITHeadMaster");
+                    var itHeads = JsonConvert.DeserializeObject<List<ITHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
+                    itrdetail.PopulateITHeadMasters(itHeads, itSubHeads);
+
+                    Res = await client.GetAsync("api/MasterAPI/GetStandardData?FYAYID="+fyayId+"&standarddataId=");
+
+                    if (Res.IsSuccessStatusCode)
+                    {
+                        standardDataModelObject.StandardDataObjectList = JsonConvert.DeserializeObject<List<StandardData>>(Res.Content.ReadAsStringAsync().Result);
+                        standardrefData = standardDataModelObject.StandardDataObjectList.FirstOrDefault();
+                    }
+
+                    foreach (var itReturn in itrdetail.ITReturnDetailsListObject)
+                    {
+                        //Statement of Taxes
+
+                        Res = await client.GetAsync("api/TaxReturnAPI/GetSPIncomeDetailsList?itReturnDetailsId="
+                                    + itReturn.Id + "&itHeadId="+ itHeads.Where(x => x.PropertyName == "IncomeFromOtherSources").FirstOrDefault().Id);
+                        if (Res.IsSuccessStatusCode)
+                        {
+                            var objSPIncomeDetailsResponse = JsonConvert.DeserializeObject<SPIncomeDetailsResponse>
+                                        (Res.Content.ReadAsStringAsync().Result);
+
+                            foreach (var item in objSPIncomeDetailsResponse.SPIncomeDetailsList)
+                            {
+                                foreignDividend = item.SPIncomeDescription.ToUpper().Trim().Replace(" ", "") == "FOREIGNDIVIDEND" ? item.SPIncomeValue : 0;
+                            }
+                        }
+
+                        Res = await client.GetAsync("api/TaxReturnAPI/GetSPIncomeDetailsList?itReturnDetailsId="
+                                    + itReturn.Id + "&itHeadId=" + itHeads.Where(x => x.PropertyName == "IncomefromCapGainsSTCG").FirstOrDefault().Id);
+                        if (Res.IsSuccessStatusCode)
+                        {
+                            var objSPIncomeDetailsResponse = JsonConvert.DeserializeObject<SPIncomeDetailsResponse>
+                                        (Res.Content.ReadAsStringAsync().Result);
+
+                            foreach (var item in objSPIncomeDetailsResponse.SPIncomeDetailsList)
+                            {
+                                STCGSpecialIncome = STCGSpecialIncome + (item.SPIncomeValue * (item.TaxRate/100));
+                            }
+                        }
+
+                        itReturn.TotalIncomeasperRegProvisions = itReturn.GetTotalComputedValue(itHeads.Where(x => x.PropertyName == "IncomefromSalary").FirstOrDefault())
+                            + itReturn.GetTotalComputedValue(itHeads.Where(x => x.PropertyName == "HousePropIncome").FirstOrDefault())
+                            + itReturn.GetTotalComputedValue(itHeads.Where(x => x.PropertyName == "IncomefromCapGainsLTCG").FirstOrDefault())
+                            + itReturn.GetTotalComputedValue(itHeads.Where(x => x.PropertyName == "IncomefromCapGainsSTCG").FirstOrDefault())
+                            + itReturn.GetTotalComputedValue(itHeads.Where(x => x.PropertyName == "IncomefromBusinessProf").FirstOrDefault())
+                            + itReturn.GetTotalComputedValue(itHeads.Where(x => x.PropertyName == "IncomefromSpeculativeBusiness").FirstOrDefault())
+                            + itReturn.GetTotalComputedValue(itHeads.Where(x => x.PropertyName == "IncomeFromOtherSources").FirstOrDefault())
+                            - itReturn.GetTotalComputedValue(itHeads.Where(x => x.PropertyName == "DeductChapterVIA").FirstOrDefault());
+
+                        itReturn.TaxOnTotalIncome = ((itReturn.TotalIncomeasperRegProvisions- foreignDividend)*(standardrefData.BasicTaxRate/100))+ STCGSpecialIncome;
+
+
+                    }
+
+
+                }
+                
+            }
+
+            return PartialView("TaxCalculationSheet", itrdetail);
+        }
+
         [HttpPost]
         public async Task<ActionResult> DeleteITReturnDocuments(ITReturnDocuments itReturnDocuments)
         {

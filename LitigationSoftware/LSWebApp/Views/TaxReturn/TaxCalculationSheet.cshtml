@@ -1,0 +1,74 @@
+﻿@model LSWebApp.Models.ITReturnDetailsListModel
+@using LSWebApp.Infrastructure;
+<style>
+    table, th, td {
+        border: 1px solid black;
+    }
+    .css-label {
+        cursor: pointer;
+    }
+
+    .css-checkbox {
+        display: none;
+    }
+
+    .fa {
+        color: white;
+        line-height: 16px;
+        border-radius: 4px;
+    }
+
+    .fa-plus {
+        padding-top: 2px;
+        padding-right: 2px;
+        padding-left: 2px;
+        background-color: #3AC5C9;
+    }
+
+    .fa-minus {
+        padding-top: 1px;
+        padding-right: 2px;
+        padding-left: 2px;
+        background-color: #E85764;
+        display: none;
+    }
+
+    .css-checkbox:checked + .css-label .fa-minus {
+        display: inline;
+    }
+
+    .css-checkbox:checked + .css-label .fa-plus {
+        display: none;
+    }
+</style>
+<div  class="table-info">
+    Statement of Taxes
+</div>
+<table class="table table-hover">
+    @*<tr>
+        <td>
+            Total Income as per Regular Provisions
+        </td>
+    </tr>*@
+    <tr>
+        <td><b><u>A)Tax on Regular Income</u></b></td>
+    </tr>
+    <tr>
+        <td>Tax on Total Income</td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.TotalIncomeasperRegProvisions)
+            </td>
+        }
+    </tr>
+    <tr>
+        <td>Add: Surcharge</td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.TotalIncomeasperRegProvisions)
+            </td>
+        }
+    </tr>
+</table>

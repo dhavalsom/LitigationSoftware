@@ -1,11 +1,11 @@
 USE [LitigationApp]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_GET_SURCHARGEDATA_LIST]    Script Date: 8/27/2018 2:28:02 AM ******/
+/****** Object:  StoredProcedure [dbo].[SP_GET_SURCHARGEDATA_LIST]    Script Date: 12/19/2018 11:35:46 PM ******/
 DROP PROCEDURE [dbo].[SP_GET_SURCHARGEDATA_LIST]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_GET_SURCHARGEDATA_LIST]    Script Date: 8/27/2018 2:28:02 AM ******/
+/****** Object:  StoredProcedure [dbo].[SP_GET_SURCHARGEDATA_LIST]    Script Date: 12/19/2018 11:35:46 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -14,8 +14,10 @@ GO
 
 
 
+
 CREATE PROCEDURE [dbo].[SP_GET_SURCHARGEDATA_LIST]
 (	
+	@FYAY_ID bigint = NULL,
 	@SurchargeData_ID bigint = NULL,
 	@ACTIVE BIT = 1
 )
@@ -36,9 +38,11 @@ BEGIN
 	WHERE 
 	(@ACTIVE IS NULL OR SD.[Active] = @ACTIVE) AND
 	(@SurchargeData_ID IS NULL OR SD.Id = @SurchargeData_ID) AND
+	(@FYAY_ID IS NULL OR SD.[FYAYID] = @FYAY_ID) AND
 	FAM.ID = SD.FYAYID
-	ORDER BY FAM.[FinancialYear]
+	ORDER BY SD.[FYAYID]
 END
+
 
 
 

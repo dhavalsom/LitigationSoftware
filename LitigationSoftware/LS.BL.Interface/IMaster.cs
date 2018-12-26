@@ -18,7 +18,7 @@ namespace LS.BL.Interface
         ITSubHeadMasterResponse InsertUpdateITSubHeadMaster(ITSubHeadMaster objITSubHeadMaster);
         List<ComplianceMaster> GetComplianceMaster(int? complianceId);
         ComplianceMasterResponse InsertUpdateComplianceMaster(ComplianceMaster objComplianceMaster);
-        List<StandardData> GetStandardData(int? standarddataId);
-        List<SurchargeData> GetSurchargeData(int? surchargedataId);
+        List<StandardData> GetStandardData(int? FYAYID, int? standarddataId);
+        List<SurchargeData> GetSurchargeData(int? FYAYID, int? surchargedataId);
     }
 }
