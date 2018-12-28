@@ -862,8 +862,16 @@ namespace LSWebApp.Controllers
                 if (Res.IsSuccessStatusCode)
                 {
                     result = JsonConvert.DeserializeObject<ITReturnComplexAPIModelResponse>(Res.Content.ReadAsStringAsync().Result);
-                    Session["CurrentITReturnDetails"] = itReturn.ITReturnDetailsObject;
-                    return RedirectToAction("ITReturnDetails");
+                    if (itReturn.ITReturnDetailsObject.Broughtforwardlosses.HasValue
+                        && itReturn.ITReturnDetailsObject.Broughtforwardlosses.Value)
+                    {
+                        return RedirectToAction("BusinessLossDetails");
+                    }
+                    else
+                    {
+                        Session["CurrentITReturnDetails"] = itReturn.ITReturnDetailsObject;
+                        return RedirectToAction("ITReturnDetails");
+                    }
                 }
                 else
                 {
