@@ -318,7 +318,11 @@
     <thead>
         <tr>
             <th>4</th>
-            <th colspan="2">Undisputed adjustment to losses during litigation</th>
+            <th colspan="2">
+                @(Model.BusinessLossDetailsObject.ITSectionCategoryId == 1 ?
+                "Undisputed adjustment to losses during litigation"
+                : "Disputed adjustment to losses during litigation")
+            </th>
         </tr>
     </thead>
 

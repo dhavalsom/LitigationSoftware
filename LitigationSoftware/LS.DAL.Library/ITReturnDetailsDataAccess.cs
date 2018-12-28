@@ -835,54 +835,75 @@ namespace LS.DAL.Library
                 }
                 Connection.Open();
 
-                SqlDataReader reader = Command.ExecuteReader();
+                SqlDataAdapter da = new SqlDataAdapter(Command);
+                DataSet ds = new DataSet();
+                da.Fill(ds);
                 BusinessLossDetailsResponse result = new BusinessLossDetailsResponse();
                 result.BusinessLossDetailsList = new List<BusinessLossDetails>();
-                if (reader.HasRows)
+
+                if (ds != null && ds.Tables.Count > 0)
                 {
-                    while (reader.Read())
+                    foreach(DataRow drBLDetails in ds.Tables[0].Rows)
                     {
                         result.BusinessLossDetailsList.Add(new BusinessLossDetails
                         {
-                            Id = int.Parse(reader["Id"].ToString()),
-                            CompanyId = int.Parse(reader["CompanyId"].ToString()),
-                            FYAYId = int.Parse(reader["FYAYId"].ToString()),
-                            ITSectionCategoryId = int.Parse(reader["ITSectionCategoryId"].ToString()),
+                            IsCurrentYear = bool.Parse(drBLDetails["IsCurrentYear"].ToString()),
+                            Id = int.Parse(drBLDetails["Id"].ToString()),
+                            CompanyId = int.Parse(drBLDetails["CompanyId"].ToString()),
+                            FYAYId = int.Parse(drBLDetails["FYAYId"].ToString()),
+                            ITSectionCategoryId = int.Parse(drBLDetails["ITSectionCategoryId"].ToString()),
 
-                            IncomeCapGainsLTCG_BF = reader["IncomeCapGainsLTCG_BF"] != DBNull.Value ? decimal.Parse(reader["IncomeCapGainsLTCG_BF"].ToString()) : (decimal?)null,
-                            IncomeCapGainsSTCG_BF = reader["IncomeCapGainsSTCG_BF"] != DBNull.Value ? decimal.Parse(reader["IncomeCapGainsSTCG_BF"].ToString()) : (decimal?)null,
-                            IncomeBusinessProf_BF = reader["IncomeBusinessProf_BF"] != DBNull.Value ? decimal.Parse(reader["IncomeBusinessProf_BF"].ToString()) : (decimal?)null,
-                            IncomeSpeculativeBusiness_BF = reader["IncomeSpeculativeBusiness_BF"] != DBNull.Value ? decimal.Parse(reader["IncomeSpeculativeBusiness_BF"].ToString()) : (decimal?)null,
-                            UnabsorbedDepreciation_BF = reader["UnabsorbedDepreciation_BF"] != DBNull.Value ? decimal.Parse(reader["UnabsorbedDepreciation_BF"].ToString()) : (decimal?)null,
-                            HousePropIncome_BF = reader["HousePropIncome_BF"] != DBNull.Value ? decimal.Parse(reader["HousePropIncome_BF"].ToString()) : (decimal?)null,
-                            IncomeOtherSources_BF = reader["IncomeOtherSources_BF"] != DBNull.Value ? decimal.Parse(reader["IncomeOtherSources_BF"].ToString()) : (decimal?)null,
+                            IncomeCapGainsLTCG_BF = drBLDetails["IncomeCapGainsLTCG_BF"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeCapGainsLTCG_BF"].ToString()) : (decimal?)null,
+                            IncomeCapGainsSTCG_BF = drBLDetails["IncomeCapGainsSTCG_BF"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeCapGainsSTCG_BF"].ToString()) : (decimal?)null,
+                            IncomeBusinessProf_BF = drBLDetails["IncomeBusinessProf_BF"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeBusinessProf_BF"].ToString()) : (decimal?)null,
+                            IncomeSpeculativeBusiness_BF = drBLDetails["IncomeSpeculativeBusiness_BF"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeSpeculativeBusiness_BF"].ToString()) : (decimal?)null,
+                            UnabsorbedDepreciation_BF = drBLDetails["UnabsorbedDepreciation_BF"] != DBNull.Value ? decimal.Parse(drBLDetails["UnabsorbedDepreciation_BF"].ToString()) : (decimal?)null,
+                            HousePropIncome_BF = drBLDetails["HousePropIncome_BF"] != DBNull.Value ? decimal.Parse(drBLDetails["HousePropIncome_BF"].ToString()) : (decimal?)null,
+                            IncomeOtherSources_BF = drBLDetails["IncomeOtherSources_BF"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeOtherSources_BF"].ToString()) : (decimal?)null,
 
-                            IncomeCapGainsLTCG_CY = reader["IncomeCapGainsLTCG_CY"] != DBNull.Value ? decimal.Parse(reader["IncomeCapGainsLTCG_CY"].ToString()) : (decimal?)null,
-                            IncomeCapGainsSTCG_CY = reader["IncomeCapGainsSTCG_CY"] != DBNull.Value ? decimal.Parse(reader["IncomeCapGainsSTCG_CY"].ToString()) : (decimal?)null,
-                            IncomeBusinessProf_CY = reader["IncomeBusinessProf_CY"] != DBNull.Value ? decimal.Parse(reader["IncomeBusinessProf_CY"].ToString()) : (decimal?)null,
-                            IncomeSpeculativeBusiness_CY = reader["IncomeSpeculativeBusiness_CY"] != DBNull.Value ? decimal.Parse(reader["IncomeSpeculativeBusiness_CY"].ToString()) : (decimal?)null,
-                            UnabsorbedDepreciation_CY = reader["UnabsorbedDepreciation_CY"] != DBNull.Value ? decimal.Parse(reader["UnabsorbedDepreciation_CY"].ToString()) : (decimal?)null,
-                            HousePropIncome_CY = reader["HousePropIncome_CY"] != DBNull.Value ? decimal.Parse(reader["HousePropIncome_CY"].ToString()) : (decimal?)null,
-                            IncomeOtherSources_CY = reader["IncomeOtherSources_CY"] != DBNull.Value ? decimal.Parse(reader["IncomeOtherSources_CY"].ToString()) : (decimal?)null,
+                            IncomeCapGainsLTCG_CY = drBLDetails["IncomeCapGainsLTCG_CY"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeCapGainsLTCG_CY"].ToString()) : (decimal?)null,
+                            IncomeCapGainsSTCG_CY = drBLDetails["IncomeCapGainsSTCG_CY"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeCapGainsSTCG_CY"].ToString()) : (decimal?)null,
+                            IncomeBusinessProf_CY = drBLDetails["IncomeBusinessProf_CY"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeBusinessProf_CY"].ToString()) : (decimal?)null,
+                            IncomeSpeculativeBusiness_CY = drBLDetails["IncomeSpeculativeBusiness_CY"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeSpeculativeBusiness_CY"].ToString()) : (decimal?)null,
+                            UnabsorbedDepreciation_CY = drBLDetails["UnabsorbedDepreciation_CY"] != DBNull.Value ? decimal.Parse(drBLDetails["UnabsorbedDepreciation_CY"].ToString()) : (decimal?)null,
+                            HousePropIncome_CY = drBLDetails["HousePropIncome_CY"] != DBNull.Value ? decimal.Parse(drBLDetails["HousePropIncome_CY"].ToString()) : (decimal?)null,
+                            IncomeOtherSources_CY = drBLDetails["IncomeOtherSources_CY"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeOtherSources_CY"].ToString()) : (decimal?)null,
 
-                            IncomeCapGainsLTCG_UL = reader["IncomeCapGainsLTCG_UL"] != DBNull.Value ? decimal.Parse(reader["IncomeCapGainsLTCG_UL"].ToString()) : (decimal?)null,
-                            IncomeCapGainsSTCG_UL = reader["IncomeCapGainsSTCG_UL"] != DBNull.Value ? decimal.Parse(reader["IncomeCapGainsSTCG_UL"].ToString()) : (decimal?)null,
-                            IncomeBusinessProf_UL = reader["IncomeBusinessProf_UL"] != DBNull.Value ? decimal.Parse(reader["IncomeBusinessProf_UL"].ToString()) : (decimal?)null,
-                            IncomeSpeculativeBusiness_UL = reader["IncomeSpeculativeBusiness_UL"] != DBNull.Value ? decimal.Parse(reader["IncomeSpeculativeBusiness_UL"].ToString()) : (decimal?)null,
-                            UnabsorbedDepreciation_UL = reader["UnabsorbedDepreciation_UL"] != DBNull.Value ? decimal.Parse(reader["UnabsorbedDepreciation_UL"].ToString()) : (decimal?)null,
-                            HousePropIncome_UL = reader["HousePropIncome_UL"] != DBNull.Value ? decimal.Parse(reader["HousePropIncome_UL"].ToString()) : (decimal?)null,
-                            IncomeOtherSources_UL = reader["IncomeOtherSources_UL"] != DBNull.Value ? decimal.Parse(reader["IncomeOtherSources_UL"].ToString()) : (decimal?)null,
+                            IncomeCapGainsLTCG_UL = drBLDetails["IncomeCapGainsLTCG_UL"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeCapGainsLTCG_UL"].ToString()) : (decimal?)null,
+                            IncomeCapGainsSTCG_UL = drBLDetails["IncomeCapGainsSTCG_UL"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeCapGainsSTCG_UL"].ToString()) : (decimal?)null,
+                            IncomeBusinessProf_UL = drBLDetails["IncomeBusinessProf_UL"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeBusinessProf_UL"].ToString()) : (decimal?)null,
+                            IncomeSpeculativeBusiness_UL = drBLDetails["IncomeSpeculativeBusiness_UL"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeSpeculativeBusiness_UL"].ToString()) : (decimal?)null,
+                            UnabsorbedDepreciation_UL = drBLDetails["UnabsorbedDepreciation_UL"] != DBNull.Value ? decimal.Parse(drBLDetails["UnabsorbedDepreciation_UL"].ToString()) : (decimal?)null,
+                            HousePropIncome_UL = drBLDetails["HousePropIncome_UL"] != DBNull.Value ? decimal.Parse(drBLDetails["HousePropIncome_UL"].ToString()) : (decimal?)null,
+                            IncomeOtherSources_UL = drBLDetails["IncomeOtherSources_UL"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeOtherSources_UL"].ToString()) : (decimal?)null,
 
-                            IncomeCapGainsLTCG_UALL = reader["IncomeCapGainsLTCG_UALL"] != DBNull.Value ? decimal.Parse(reader["IncomeCapGainsLTCG_UALL"].ToString()) : (decimal?)null,
-                            IncomeCapGainsSTCG_UALL = reader["IncomeCapGainsSTCG_UALL"] != DBNull.Value ? decimal.Parse(reader["IncomeCapGainsSTCG_UALL"].ToString()) : (decimal?)null,
-                            IncomeBusinessProf_UALL = reader["IncomeBusinessProf_UALL"] != DBNull.Value ? decimal.Parse(reader["IncomeBusinessProf_UALL"].ToString()) : (decimal?)null,
-                            IncomeSpeculativeBusiness_UALL = reader["IncomeSpeculativeBusiness_UALL"] != DBNull.Value ? decimal.Parse(reader["IncomeSpeculativeBusiness_UALL"].ToString()) : (decimal?)null,
-                            UnabsorbedDepreciation_UALL = reader["UnabsorbedDepreciation_UALL"] != DBNull.Value ? decimal.Parse(reader["UnabsorbedDepreciation_UALL"].ToString()) : (decimal?)null,
-                            HousePropIncome_UALL = reader["HousePropIncome_UALL"] != DBNull.Value ? decimal.Parse(reader["HousePropIncome_UALL"].ToString()) : (decimal?)null,
-                            IncomeOtherSources_UALL = reader["IncomeOtherSources_UALL"] != DBNull.Value ? decimal.Parse(reader["IncomeOtherSources_UALL"].ToString()) : (decimal?)null,
+                            IncomeCapGainsLTCG_UALL = drBLDetails["IncomeCapGainsLTCG_UALL"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeCapGainsLTCG_UALL"].ToString()) : (decimal?)null,
+                            IncomeCapGainsSTCG_UALL = drBLDetails["IncomeCapGainsSTCG_UALL"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeCapGainsSTCG_UALL"].ToString()) : (decimal?)null,
+                            IncomeBusinessProf_UALL = drBLDetails["IncomeBusinessProf_UALL"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeBusinessProf_UALL"].ToString()) : (decimal?)null,
+                            IncomeSpeculativeBusiness_UALL = drBLDetails["IncomeSpeculativeBusiness_UALL"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeSpeculativeBusiness_UALL"].ToString()) : (decimal?)null,
+                            UnabsorbedDepreciation_UALL = drBLDetails["UnabsorbedDepreciation_UALL"] != DBNull.Value ? decimal.Parse(drBLDetails["UnabsorbedDepreciation_UALL"].ToString()) : (decimal?)null,
+                            HousePropIncome_UALL = drBLDetails["HousePropIncome_UALL"] != DBNull.Value ? decimal.Parse(drBLDetails["HousePropIncome_UALL"].ToString()) : (decimal?)null,
+                            IncomeOtherSources_UALL = drBLDetails["IncomeOtherSources_UALL"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeOtherSources_UALL"].ToString()) : (decimal?)null,
 
-                            Active = bool.Parse(reader["Active"].ToString()),
+                            Active = bool.Parse(drBLDetails["Active"].ToString()),
                         });
+                    }
+
+                    if(ds.Tables.Count > 1)
+                    {
+                        foreach (DataRow drITReturnDetails in ds.Tables[1].Rows)
+                        {
+                            result.ITReturnDetailsObject = new ITReturnDetails
+                            {
+                                Id = int.Parse(drITReturnDetails["Id"].ToString()),
+                                IncomefromCapGainsLTCG = drITReturnDetails["IncomefromCapGainsLTCG"] != DBNull.Value ? decimal.Parse(drITReturnDetails["IncomefromCapGainsLTCG"].ToString()) : (decimal?)null,
+                                IncomefromCapGainsSTCG = drITReturnDetails["IncomefromCapGainsSTCG"] != DBNull.Value ? decimal.Parse(drITReturnDetails["IncomefromCapGainsSTCG"].ToString()) : (decimal?)null,
+                                IncomefromBusinessProf = drITReturnDetails["IncomefromBusinessProf"] != DBNull.Value ? decimal.Parse(drITReturnDetails["IncomefromBusinessProf"].ToString()) : (decimal?)null,
+                                IncomefromSpeculativeBusiness = drITReturnDetails["IncomefromSpeculativeBusiness"] != DBNull.Value ? decimal.Parse(drITReturnDetails["IncomefromSpeculativeBusiness"].ToString()) : (decimal?)null,
+                                HousePropIncome = drITReturnDetails["HousePropIncome"] != DBNull.Value ? decimal.Parse(drITReturnDetails["HousePropIncome"].ToString()) : (decimal?)null,
+                                IncomeFromOtherSources = drITReturnDetails["IncomeFromOtherSources"] != DBNull.Value ? decimal.Parse(drITReturnDetails["IncomeFromOtherSources"].ToString()) : (decimal?)null,
+                            };
+                        }
                     }
                 }
                 return result;

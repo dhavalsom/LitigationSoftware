@@ -862,8 +862,16 @@ namespace LSWebApp.Controllers
                 if (Res.IsSuccessStatusCode)
                 {
                     result = JsonConvert.DeserializeObject<ITReturnComplexAPIModelResponse>(Res.Content.ReadAsStringAsync().Result);
-                    Session["CurrentITReturnDetails"] = itReturn.ITReturnDetailsObject;
-                    return RedirectToAction("ITReturnDetails");
+                    if (itReturn.ITReturnDetailsObject.Broughtforwardlosses.HasValue
+                        && itReturn.ITReturnDetailsObject.Broughtforwardlosses.Value)
+                    {
+                        return RedirectToAction("BusinessLossDetails");
+                    }
+                    else
+                    {
+                        Session["CurrentITReturnDetails"] = itReturn.ITReturnDetailsObject;
+                        return RedirectToAction("ITReturnDetails");
+                    }
                 }
                 else
                 {
@@ -1362,12 +1370,54 @@ namespace LSWebApp.Controllers
                         + "&itSectionCategoryId=" + (itSectionCategoryId.HasValue ? itSectionCategoryId.Value.ToString() : "")
                         + "&businessLossDetailsId=" + (businessLossDetailsId.HasValue ? businessLossDetailsId.Value.ToString() : ""));
                     var result = JsonConvert.DeserializeObject<BusinessLossDetailsResponse>(Res.Content.ReadAsStringAsync().Result);
-                    if(result != null 
-                        && result.BusinessLossDetailsList != null
-                        && result.BusinessLossDetailsList.Count != 0)
+                    if(result != null )
                     {
-                        model.BusinessLossDetailsObject = result.BusinessLossDetailsList.First();
-                        model.BusinessLossDetailsObject.ModifiedBy = Session[SESSION_LOGON_USER] != null ? (Session[SESSION_LOGON_USER] as UserLogin).Id : 1;
+                        if (result.BusinessLossDetailsList != null 
+                            && result.BusinessLossDetailsList.Where(bl => bl.IsCurrentYear).Any())
+                        {
+                            model.BusinessLossDetailsObject = result.BusinessLossDetailsList.Where(bl => bl.IsCurrentYear).First();
+                            model.BusinessLossDetailsObject.ModifiedBy = Session[SESSION_LOGON_USER] != null ? (Session[SESSION_LOGON_USER] as UserLogin).Id : 1;
+                        }
+                        if (result.BusinessLossDetailsList != null
+                            && model.BusinessLossDetailsObject.Id == 0
+                            && result.BusinessLossDetailsList.Where(bl => !bl.IsCurrentYear).Any())
+                        {
+                            var prevYearBLObject = result.BusinessLossDetailsList.Where(bl => !bl.IsCurrentYear).First();
+                            model.BusinessLossDetailsObject.IncomeCapGainsLTCG_BF = prevYearBLObject.IncomeCapGainsLTCG_Total;
+                            model.BusinessLossDetailsObject.IncomeCapGainsSTCG_BF = prevYearBLObject.IncomeCapGainsSTCG_Total;
+                            model.BusinessLossDetailsObject.IncomeBusinessProf_BF = prevYearBLObject.IncomeBusinessProf_Total;
+                            model.BusinessLossDetailsObject.IncomeSpeculativeBusiness_BF = prevYearBLObject.IncomeSpeculativeBusiness_Total;
+                            model.BusinessLossDetailsObject.UnabsorbedDepreciation_BF = prevYearBLObject.UnabsorbedDepreciation_Total;
+                            model.BusinessLossDetailsObject.HousePropIncome_BF = prevYearBLObject.HousePropIncome_Total;
+                            model.BusinessLossDetailsObject.IncomeOtherSources_BF = prevYearBLObject.IncomeOtherSources_Total;
+                        }
+                        if (result.ITReturnDetailsObject != null)
+                        {
+                            if (result.ITReturnDetailsObject.IncomefromCapGainsLTCG < 0)
+                            {
+                                model.BusinessLossDetailsObject.IncomeCapGainsLTCG_CY = result.ITReturnDetailsObject.IncomefromCapGainsLTCG * -1;
+                            }
+                            if (result.ITReturnDetailsObject.IncomefromCapGainsSTCG < 0)
+                            {
+                                model.BusinessLossDetailsObject.IncomeCapGainsSTCG_CY = result.ITReturnDetailsObject.IncomefromCapGainsSTCG * -1;
+                            }
+                            if (result.ITReturnDetailsObject.IncomefromBusinessProf < 0)
+                            {
+                                model.BusinessLossDetailsObject.IncomeBusinessProf_CY = result.ITReturnDetailsObject.IncomefromBusinessProf * -1;
+                            }
+                            if (result.ITReturnDetailsObject.IncomefromSpeculativeBusiness < 0)
+                            {
+                                model.BusinessLossDetailsObject.IncomeSpeculativeBusiness_CY = result.ITReturnDetailsObject.IncomefromSpeculativeBusiness * -1;
+                            }
+                            if (result.ITReturnDetailsObject.HousePropIncome < 0)
+                            {
+                                model.BusinessLossDetailsObject.HousePropIncome_CY = result.ITReturnDetailsObject.HousePropIncome * -1;
+                            }
+                            if (result.ITReturnDetailsObject.IncomeFromOtherSources < 0)
+                            {
+                                model.BusinessLossDetailsObject.IncomeOtherSources_CY = result.ITReturnDetailsObject.IncomeFromOtherSources * -1;
+                            }
+                        }
                     }
                     
                 }

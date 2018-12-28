@@ -42,6 +42,7 @@ namespace LS.Models
         public decimal? IncomeOtherSources_UALL { get; set; }
 
         #region Display Properties
+        public bool IsCurrentYear { get; set; }
         public string CompanyName { get; set; }
         public string AssessmentYear { get; set; }
         public string FinancialYear { get; set; }
@@ -53,8 +54,8 @@ namespace LS.Models
             {
                 return (IncomeCapGainsLTCG_BF.HasValue ? IncomeCapGainsLTCG_BF.Value : 0)
                     + (IncomeCapGainsLTCG_CY.HasValue ? IncomeCapGainsLTCG_CY.Value : 0)
-                    + (IncomeCapGainsLTCG_UL.HasValue ? IncomeCapGainsLTCG_UL.Value : 0)
-                    + (IncomeCapGainsLTCG_UALL.HasValue ? IncomeCapGainsLTCG_UALL.Value : 0);
+                    - (IncomeCapGainsLTCG_UL.HasValue ? IncomeCapGainsLTCG_UL.Value : 0)
+                    - (IncomeCapGainsLTCG_UALL.HasValue ? IncomeCapGainsLTCG_UALL.Value : 0);
             }
         }
 
@@ -64,8 +65,8 @@ namespace LS.Models
             {
                 return (IncomeCapGainsSTCG_BF.HasValue ? IncomeCapGainsSTCG_BF.Value : 0)
                     + (IncomeCapGainsSTCG_CY.HasValue ? IncomeCapGainsSTCG_CY.Value : 0)
-                    + (IncomeCapGainsSTCG_UL.HasValue ? IncomeCapGainsSTCG_UL.Value : 0)
-                    + (IncomeCapGainsSTCG_UALL.HasValue ? IncomeCapGainsSTCG_UALL.Value : 0);
+                    - (IncomeCapGainsSTCG_UL.HasValue ? IncomeCapGainsSTCG_UL.Value : 0)
+                    - (IncomeCapGainsSTCG_UALL.HasValue ? IncomeCapGainsSTCG_UALL.Value : 0);
             }
         }
 
@@ -75,8 +76,8 @@ namespace LS.Models
             {
                 return (IncomeBusinessProf_BF.HasValue ? IncomeBusinessProf_BF.Value : 0)
                     + (IncomeBusinessProf_CY.HasValue ? IncomeBusinessProf_CY.Value : 0)
-                    + (IncomeBusinessProf_UL.HasValue ? IncomeBusinessProf_UL.Value : 0)
-                    + (IncomeBusinessProf_UALL.HasValue ? IncomeBusinessProf_UALL.Value : 0);
+                    - (IncomeBusinessProf_UL.HasValue ? IncomeBusinessProf_UL.Value : 0)
+                    - (IncomeBusinessProf_UALL.HasValue ? IncomeBusinessProf_UALL.Value : 0);
             }
         }
 
@@ -86,8 +87,8 @@ namespace LS.Models
             {
                 return (IncomeSpeculativeBusiness_BF.HasValue ? IncomeSpeculativeBusiness_BF.Value : 0)
                     + (IncomeSpeculativeBusiness_CY.HasValue ? IncomeSpeculativeBusiness_CY.Value : 0)
-                    + (IncomeSpeculativeBusiness_UL.HasValue ? IncomeSpeculativeBusiness_UL.Value : 0)
-                    + (IncomeSpeculativeBusiness_UALL.HasValue ? IncomeSpeculativeBusiness_UALL.Value : 0);
+                    - (IncomeSpeculativeBusiness_UL.HasValue ? IncomeSpeculativeBusiness_UL.Value : 0)
+                    - (IncomeSpeculativeBusiness_UALL.HasValue ? IncomeSpeculativeBusiness_UALL.Value : 0);
             }
         }
 
@@ -97,8 +98,8 @@ namespace LS.Models
             {
                 return (UnabsorbedDepreciation_BF.HasValue ? UnabsorbedDepreciation_BF.Value : 0)
                     + (UnabsorbedDepreciation_CY.HasValue ? UnabsorbedDepreciation_CY.Value : 0)
-                    + (UnabsorbedDepreciation_UL.HasValue ? UnabsorbedDepreciation_UL.Value : 0)
-                    + (UnabsorbedDepreciation_UALL.HasValue ? UnabsorbedDepreciation_UALL.Value : 0);
+                    - (UnabsorbedDepreciation_UL.HasValue ? UnabsorbedDepreciation_UL.Value : 0)
+                    - (UnabsorbedDepreciation_UALL.HasValue ? UnabsorbedDepreciation_UALL.Value : 0);
             }
         }
 
@@ -108,8 +109,8 @@ namespace LS.Models
             {
                 return (HousePropIncome_BF.HasValue ? HousePropIncome_BF.Value : 0)
                     + (HousePropIncome_CY.HasValue ? HousePropIncome_CY.Value : 0)
-                    + (HousePropIncome_UL.HasValue ? HousePropIncome_UL.Value : 0)
-                    + (HousePropIncome_UALL.HasValue ? HousePropIncome_UALL.Value : 0);
+                    - (HousePropIncome_UL.HasValue ? HousePropIncome_UL.Value : 0)
+                    - (HousePropIncome_UALL.HasValue ? HousePropIncome_UALL.Value : 0);
             }
         }
 
@@ -119,8 +120,8 @@ namespace LS.Models
             {
                 return (IncomeOtherSources_BF.HasValue ? IncomeOtherSources_BF.Value : 0)
                     + (IncomeOtherSources_CY.HasValue ? IncomeOtherSources_CY.Value : 0)
-                    + (IncomeOtherSources_UL.HasValue ? IncomeOtherSources_UL.Value : 0)
-                    + (IncomeOtherSources_UALL.HasValue ? IncomeOtherSources_UALL.Value : 0);
+                    - (IncomeOtherSources_UL.HasValue ? IncomeOtherSources_UL.Value : 0)
+                    - (IncomeOtherSources_UALL.HasValue ? IncomeOtherSources_UALL.Value : 0);
             }
         }
         #endregion
@@ -277,6 +278,7 @@ namespace LS.Models
         public string Message { get; set; }
         public bool IsSuccess { get; set; }
         public List<BusinessLossDetails> BusinessLossDetailsList { get; set; }
+        public ITReturnDetails ITReturnDetailsObject { get; set; }
         public BusinessLossDetailsResponse()
         {
             BusinessLossDetailsList = new List<BusinessLossDetails>();
