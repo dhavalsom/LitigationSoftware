@@ -46,19 +46,19 @@
 </div>
 <table class="table table-hover">
     @*<tr>
-        <td>
-            Total Income as per Regular Provisions
-        </td>
-    </tr>*@
+            <td>
+                Total Income as per Regular Provisions
+            </td>
+        </tr>*@
     <tr>
-        <td><b><u>A)Tax on Regular Income</u></b></td>
+        <td colspan="3"><b><u>A)Tax on Regular Income</u></b></td>
     </tr>
     <tr>
         <td>Tax on Total Income</td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
             <td>
-                @Utilities.FormatNumber(itsectiondetail.TotalIncomeasperRegProvisions)
+                @Utilities.FormatNumber(itsectiondetail.TaxOnTotalIncome)
             </td>
         }
     </tr>
@@ -67,8 +67,84 @@
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
             <td>
-                @Utilities.FormatNumber(itsectiondetail.TotalIncomeasperRegProvisions)
+                @Utilities.FormatNumber(itsectiondetail.SurchargeTax)
             </td>
         }
     </tr>
+    <tr>
+        <td>Add: Education Cess</td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.EducationCess)
+            </td>
+        }
+    </tr>
+    <tr class="table-info">
+        <td>Tax liability on Regular Income(A)</td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.TaxOnTotalIncome + itsectiondetail.SurchargeTax + itsectiondetail.EducationCess)
+            </td>
+        }
+    </tr>
+    <tr>
+        <td colspan="3"><b><u>B)Tax on income computed under MAT provisions</u></b></td>
+    </tr>
+    <tr>
+        <td>Tax on Total Income</td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.MATTaxOnTotalIncome)
+            </td>
+        }
+    </tr>
+    <tr>
+        <td>Add: Surcharge</td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.MATSurchargeTax)
+            </td>
+        }
+    </tr>
+    <tr>
+        <td>Add: Education Cess</td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.MATEducationCess)
+            </td>
+        }
+    </tr>
+    <tr class="table-info">
+        <td>Tax liability under MAT(B)</td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.MATTaxOnTotalIncome + itsectiondetail.MATSurchargeTax + itsectiondetail.MATEducationCess)
+            </td>
+        }
+    </tr>
+    <tr>
+        <td colspan="3"></td>
+    </tr>
+    <tr class="table-info">
+        <td>Tax Liability(being higher of Above A or B)</td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+        <td>
+            @if ((itsectiondetail.TaxOnTotalIncome + itsectiondetail.SurchargeTax + itsectiondetail.EducationCess) > (itsectiondetail.MATTaxOnTotalIncome + itsectiondetail.MATSurchargeTax + itsectiondetail.MATEducationCess))
+            {
+                @Utilities.FormatNumber(itsectiondetail.TaxOnTotalIncome + itsectiondetail.SurchargeTax + itsectiondetail.EducationCess)
+            }
+            else
+            {
+                @Utilities.FormatNumber(itsectiondetail.MATTaxOnTotalIncome + itsectiondetail.MATSurchargeTax + itsectiondetail.MATEducationCess)
+            }
+        </td>
+        }
+     </tr>
 </table>

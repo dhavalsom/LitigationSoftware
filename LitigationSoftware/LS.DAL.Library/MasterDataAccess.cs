@@ -31,7 +31,8 @@ namespace LS.DAL.Library
                         {
                             CompanyName = reader["CompanyName"] != DBNull.Value ? reader["CompanyName"].ToString() : null,
                             PANNumber = reader["PANNumber"] != DBNull.Value ? reader["PANNumber"].ToString() : null,
-                            Id = Convert.ToInt32(reader["ID"].ToString())
+                            Id = Convert.ToInt32(reader["ID"].ToString()),
+                            CategoryID = reader["CategoryID"] != DBNull.Value ? Convert.ToInt32(reader["CategoryID"].ToString()) : 0
                         });
                     }
                 }
@@ -563,7 +564,7 @@ namespace LS.DAL.Library
             }
         }
 
-        public List<SurchargeData> GetSurchargeData(int? FYAYID, int? surchargedataId)
+        public List<SurchargeData> GetSurchargeData(int? FYAYID, int? surchargedataId, int? entitycategorytypeid)
         {
             try
             {
@@ -577,6 +578,7 @@ namespace LS.DAL.Library
 
                 Command.Parameters.AddWithValue("@FYAY_ID", FYAYID);
                 Command.Parameters.AddWithValue("@SurchargeData_ID", surchargedataId);
+                Command.Parameters.AddWithValue("@entitycategorytypeid", entitycategorytypeid);
                 Command.Parameters.AddWithValue("@ACTIVE", true);
 
                 SqlDataReader reader = Command.ExecuteReader();

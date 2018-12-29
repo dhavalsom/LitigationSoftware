@@ -194,6 +194,7 @@
     <Compile Include="Models\ITReturnDocumentsModel.cs" />
     <Compile Include="Models\LitigationDDModel.cs" />
     <Compile Include="Models\StandardDataModel.cs" />
+    <Compile Include="Models\SurchargeDataModel.cs" />
     <Compile Include="Models\ViewModelBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

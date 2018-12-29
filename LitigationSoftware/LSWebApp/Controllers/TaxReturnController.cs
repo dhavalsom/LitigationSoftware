@@ -770,6 +770,12 @@ namespace LSWebApp.Controllers
         [HttpGet]
         public async Task<ActionResult> TaxCalculationSheet(int companyId, int fyayId)
         {
+            var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+
             ITReturnDetailsListModel itrdetail = new ITReturnDetailsListModel()
             {
                 CompanyId = companyId,
@@ -778,7 +784,11 @@ namespace LSWebApp.Controllers
             decimal? foreignDividend = 0;
             StandardDataModel standardDataModelObject = new StandardDataModel();
             StandardData standardrefData = new StandardData();
+            SurchargeDataModel surchargeDataModelObject = new SurchargeDataModel();
+            SurchargeData surchargerefData = new SurchargeData();
             decimal? STCGSpecialIncome = 0;
+            decimal? Surchargerate = 0;
+
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
@@ -811,6 +821,14 @@ namespace LSWebApp.Controllers
                     {
                         standardDataModelObject.StandardDataObjectList = JsonConvert.DeserializeObject<List<StandardData>>(Res.Content.ReadAsStringAsync().Result);
                         standardrefData = standardDataModelObject.StandardDataObjectList.FirstOrDefault();
+                    }
+
+                    Res = await client.GetAsync("api/MasterAPI/GetSurchargeData?FYAYID=" + fyayId + "&surchargedataId=&entitycategorytypeid="+ selectedCompany.CategoryID);
+
+                    if (Res.IsSuccessStatusCode)
+                    {
+                        surchargeDataModelObject.SurchargeDataObjectList = JsonConvert.DeserializeObject<List<SurchargeData>>(Res.Content.ReadAsStringAsync().Result);
+                        //surchargerefData = surchargeDataModelObject.SurchargeDataObjectList.FirstOrDefault();
                     }
 
                     foreach (var itReturn in itrdetail.ITReturnDetailsListObject)
@@ -853,8 +871,53 @@ namespace LSWebApp.Controllers
                             - itReturn.GetTotalComputedValue(itHeads.Where(x => x.PropertyName == "DeductChapterVIA").FirstOrDefault());
 
                         itReturn.TaxOnTotalIncome = ((itReturn.TotalIncomeasperRegProvisions- foreignDividend)*(standardrefData.BasicTaxRate/100))+ STCGSpecialIncome;
+                        //itReturn.SurchargeTax = ()
 
+                    foreach(var item in surchargeDataModelObject.SurchargeDataObjectList)
+                        {
+                            if (itReturn.TaxOnTotalIncome >= item.surchargefromthreshold && itReturn.TaxOnTotalIncome <= item.surchargetothreshold)
+                            {
+                                Surchargerate = item.surchargerate;
+                                break;
+                            }
+                        }
 
+                        if (Surchargerate > 0)
+                            itReturn.SurchargeTax = itReturn.TaxOnTotalIncome * (Surchargerate / 100);
+                        else
+                            itReturn.SurchargeTax = 0;
+
+                        if (itReturn.SurchargeTax > 0)
+                            itReturn.EducationCess = (itReturn.TaxOnTotalIncome + itReturn.SurchargeTax) * (standardrefData.EducationCess / 100);
+                        else
+                            itReturn.EducationCess = 0;
+
+                       
+                        if (itReturn.ProfitUS115JB < 0)
+                            itReturn.MATTaxOnTotalIncome = 0;
+                        else
+                            itReturn.MATTaxOnTotalIncome = itReturn.ProfitUS115JB * (standardrefData.MATRate / 100);
+
+                        Surchargerate = 0;//reset surchargerate to calculate surcharge for MAT
+
+                        foreach (var item in surchargeDataModelObject.SurchargeDataObjectList)
+                        {
+                            if (itReturn.MATTaxOnTotalIncome >= item.surchargefromthreshold && itReturn.MATTaxOnTotalIncome <= item.surchargetothreshold)
+                            {
+                                Surchargerate = item.surchargerate;
+                                break;
+                            }
+                        }
+
+                        if (Surchargerate > 0)
+                            itReturn.MATSurchargeTax = itReturn.MATTaxOnTotalIncome * (Surchargerate / 100);
+                        else
+                            itReturn.MATSurchargeTax = 0;
+
+                        if (itReturn.SurchargeTax > 0)
+                            itReturn.MATEducationCess = (itReturn.MATTaxOnTotalIncome + itReturn.MATSurchargeTax) * (standardrefData.EducationCess / 100);
+                        else
+                            itReturn.MATEducationCess = 0;
                     }
 
 

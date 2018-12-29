@@ -69,6 +69,10 @@ namespace LS.Models
         public decimal? TotalIncomeasperRegProvisions { get; set; }
         public decimal? TaxOnTotalIncome { get; set; }
         public decimal? SurchargeTax { get; set; }
+        public decimal? EducationCess { get; set; }
+        public decimal? MATTaxOnTotalIncome { get; set; }
+        public decimal? MATSurchargeTax { get; set; }
+        public decimal? MATEducationCess { get; set; }
         #endregion
 
         #endregion

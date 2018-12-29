@@ -230,11 +230,11 @@ namespace LS.BL.Library
             }
         }
 
-        public List<SurchargeData> GetSurchargeData(int? FYAYID, int? surchargedataId)
+        public List<SurchargeData> GetSurchargeData(int? FYAYID, int? surchargedataId,int? entitycategorytypeid)
         {
             try
             {
-                return this._masterDA.GetSurchargeData(FYAYID, surchargedataId);
+                return this._masterDA.GetSurchargeData(FYAYID, surchargedataId, entitycategorytypeid);
             }
             catch (Exception ex)
             {
