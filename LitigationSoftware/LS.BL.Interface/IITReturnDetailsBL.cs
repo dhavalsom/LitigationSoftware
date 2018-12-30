@@ -26,5 +26,9 @@ namespace LS.BL.Interface
             (BusinessLossDetails businessLossDetails, string operation);
         BusinessLossDetailsResponse GetBusinessLossDetailsList(int? companyId, int? fyayId
             , int? itSectionCategoryId, int? businessLossDetailsId);
+        MATCreditDetailsResponse InsertUpdateMATCreditDetails
+            (MATCreditDetails matCreditDetails, string operation);
+        MATCreditDetailsResponse GetMATCreditDetailsList(int? companyId, int? fyayId
+            , int? itSectionCategoryId, int? matCreditDetailsId);
     }
 }

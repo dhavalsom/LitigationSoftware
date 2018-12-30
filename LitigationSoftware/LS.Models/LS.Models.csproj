@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseEntity.cs" />
+    <Compile Include="MATCreditDetails.cs" />
     <Compile Include="BusinessLossDetails.cs" />
     <Compile Include="Company.cs" />
     <Compile Include="ComplianceDocuments.cs" />

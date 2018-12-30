@@ -918,6 +918,140 @@ namespace LS.DAL.Library
                 Connection.Close();
             }
         }
+
+        public MATCreditDetailsResponse InsertUpdateMATCreditDetails
+            (MATCreditDetails matCreditDetails, string operation)
+        {
+            try
+            {
+                Log.Info("Started call to InsertUpdateMATCreditDetails");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(
+                    new { matCreditDetails = matCreditDetails, operation = operation }));
+                Command.CommandText = "SP_MAT_CREDIT_DETAILS_MANAGER";
+                Command.CommandType = CommandType.StoredProcedure;
+                Command.Parameters.Clear();
+
+                Command.Parameters.AddWithValue("@MAT_CREDIT_DETAILS_XML", GetXMLFromObject(matCreditDetails));
+                if (!string.IsNullOrEmpty(operation))
+                {
+                    Command.Parameters.AddWithValue("@OPERATION", operation);
+                }
+                if (matCreditDetails.AddedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", matCreditDetails.AddedBy.Value);
+                }
+                else if (matCreditDetails.ModifiedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", matCreditDetails.ModifiedBy.Value);
+                }
+                else if (matCreditDetails.DeletedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", matCreditDetails.DeletedBy.Value);
+                }
+                Connection.Open();
+                SqlDataReader reader = Command.ExecuteReader();
+
+                MATCreditDetailsResponse result = new MATCreditDetailsResponse();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result = new MATCreditDetailsResponse
+                        {
+                            Message = reader["ReturnMessage"] != DBNull.Value ? reader["ReturnMessage"].ToString() : null,
+                            IsSuccess = Convert.ToBoolean(reader["Result"].ToString())
+                        };
+                    }
+                }
+                Log.Info("End call to InsertUpdateMATCreditDetails");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                Connection.Close();
+            }
+        }
+
+        public MATCreditDetailsResponse GetMATCreditDetailsList(int? companyId, int? fyayId
+            , int? itSectionCategoryId, int? matCreditDetailsId)
+        {
+            try
+            {
+                Log.Info("Started call to GetMATCreditDetailsList");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(new
+                {
+                    companyId = companyId,
+                    fyayId = fyayId,
+                    itSectionCategoryId = itSectionCategoryId,
+                    matCreditDetailsId = matCreditDetailsId,
+                }));
+                Command.CommandText = "SP_GET_MAT_CREDIT_DETAILS_LIST";
+                Command.CommandType = CommandType.StoredProcedure;
+                if (companyId.HasValue && companyId > 0)
+                {
+                    Command.Parameters.AddWithValue("@COMPANY_ID", companyId);
+                }
+                if (fyayId.HasValue && fyayId > 0)
+                {
+                    Command.Parameters.AddWithValue("@FYAY_ID", fyayId);
+                }
+                if (itSectionCategoryId.HasValue && itSectionCategoryId > 0)
+                {
+                    Command.Parameters.AddWithValue("@IT_SECTION_CATEGORY_ID", itSectionCategoryId);
+                }
+                if (matCreditDetailsId.HasValue && matCreditDetailsId > 0)
+                {
+                    Command.Parameters.AddWithValue("@MAT_CREDIT_DETAILS_ID", matCreditDetailsId);
+                }
+                Connection.Open();
+
+                SqlDataAdapter da = new SqlDataAdapter(Command);
+                DataSet ds = new DataSet();
+                da.Fill(ds);
+                MATCreditDetailsResponse result = new MATCreditDetailsResponse();
+                result.MATCreditDetailsList = new List<MATCreditDetails>();
+
+                if (ds != null && ds.Tables.Count > 0)
+                {
+                    foreach (DataRow drBLDetails in ds.Tables[0].Rows)
+                    {
+                        result.MATCreditDetailsList.Add(new MATCreditDetails
+                        {
+                            Id = int.Parse(drBLDetails["Id"].ToString()),
+                            CompanyId = int.Parse(drBLDetails["CompanyId"].ToString()),
+                            FYAYId = int.Parse(drBLDetails["FYAYId"].ToString()),
+                            ITSectionCategoryId = int.Parse(drBLDetails["ITSectionCategoryId"].ToString()),
+
+                            BusinessLosses_BF = drBLDetails["BusinessLosses_BF"] != DBNull.Value ? decimal.Parse(drBLDetails["BusinessLosses_BF"].ToString()) : (decimal?)null,
+                            UnabsorbedDepreciation_BF = drBLDetails["UnabsorbedDepreciation_BF"] != DBNull.Value ? decimal.Parse(drBLDetails["UnabsorbedDepreciation_BF"].ToString()) : (decimal?)null,
+
+                            BusinessLosses_CY = drBLDetails["BusinessLosses_CY"] != DBNull.Value ? decimal.Parse(drBLDetails["BusinessLosses_CY"].ToString()) : (decimal?)null,
+                            UnabsorbedDepreciation_CY = drBLDetails["UnabsorbedDepreciation_CY"] != DBNull.Value ? decimal.Parse(drBLDetails["UnabsorbedDepreciation_CY"].ToString()) : (decimal?)null,
+
+                            BusinessLosses_UL = drBLDetails["BusinessLosses_UL"] != DBNull.Value ? decimal.Parse(drBLDetails["BusinessLosses_UL"].ToString()) : (decimal?)null,
+                            UnabsorbedDepreciation_UL = drBLDetails["UnabsorbedDepreciation_UL"] != DBNull.Value ? decimal.Parse(drBLDetails["UnabsorbedDepreciation_UL"].ToString()) : (decimal?)null,
+
+                            Active = bool.Parse(drBLDetails["Active"].ToString()),
+                        });
+                    }
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            finally
+            {
+                Connection.Close();
+            }
+        }
         #endregion
     }
 }

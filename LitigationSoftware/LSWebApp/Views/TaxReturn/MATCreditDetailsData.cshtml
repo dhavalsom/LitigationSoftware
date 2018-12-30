@@ -1,0 +1,124 @@
+﻿@model  LSWebApp.Models.MATCreditDetailsDataModel
+
+@using (Html.BeginForm("InsertUpdateMATCreditDetails", "TaxReturn"))
+{
+<table class="table table-hover tblITRetDetails">
+
+    <thead>
+        <tr>
+            <th>1</th>
+            <th colspan="2">Brought Forward</th>            
+        </tr>
+    </thead>
+    
+    <tbody>
+        <tr>
+            <td>A</td>
+            <td>
+                Business Losses:
+            </td>
+            <td>
+                @Html.HiddenFor(m => m.MATCreditDetailsObject.Id
+                    , Model.MATCreditDetailsObject.Id)
+                @Html.HiddenFor(m=>m.MATCreditDetailsObject.CompanyId
+                    , Model.MATCreditDetailsObject.CompanyId)
+                @Html.HiddenFor(m => m.MATCreditDetailsObject.FYAYId
+                    , Model.MATCreditDetailsObject.FYAYId)
+                @Html.HiddenFor(m => m.MATCreditDetailsObject.ITSectionCategoryId
+                    , Model.MATCreditDetailsObject.ITSectionCategoryId)
+                @Html.TextBoxFor(m => m.MATCreditDetailsObject.BusinessLosses_BF
+                        , string.Format("{0:f}", Model.MATCreditDetailsObject.BusinessLosses_BF)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+
+        <tr>
+            <td>B</td>
+            <td>
+                Unabsorbed Depreciation:
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.MATCreditDetailsObject.UnabsorbedDepreciation_BF
+                        , string.Format("{0:f}", Model.MATCreditDetailsObject.UnabsorbedDepreciation_BF)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+    </tbody>
+
+    <thead>
+        <tr>
+            <th>2</th>
+            <th colspan="2">Current Year</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <td>A</td>
+            <td>
+                Business Losses:
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.MATCreditDetailsObject.BusinessLosses_CY
+                        , string.Format("{0:f}", Model.MATCreditDetailsObject.BusinessLosses_CY)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+
+        <tr>
+            <td>B</td>
+            <td>
+                Unabsorbed Depreciation:
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.MATCreditDetailsObject.UnabsorbedDepreciation_CY
+                        , string.Format("{0:f}", Model.MATCreditDetailsObject.UnabsorbedDepreciation_CY)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+    </tbody>
+
+    <thead>
+        <tr>
+            <th>3</th>
+            <th colspan="2">Utilisation</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <td>A</td>
+            <td>
+                Business Losses:
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.MATCreditDetailsObject.BusinessLosses_UL
+                        , string.Format("{0:f}", Model.MATCreditDetailsObject.BusinessLosses_UL)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+
+        <tr>
+            <td>B</td>
+            <td>
+                Unabsorbed Depreciation:
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.MATCreditDetailsObject.UnabsorbedDepreciation_UL
+                        , string.Format("{0:f}", Model.MATCreditDetailsObject.UnabsorbedDepreciation_UL)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+    </tbody>
+
+    <tbody>
+        <tr>
+            <td colspan="4" align="center">
+                <button type="submit" class="btn btn-primary">
+                    Save
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+}

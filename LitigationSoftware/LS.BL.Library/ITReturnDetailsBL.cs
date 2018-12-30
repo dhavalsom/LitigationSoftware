@@ -256,6 +256,42 @@ namespace LS.BL.Library
                 //Log
             }
         }
+
+        public MATCreditDetailsResponse InsertUpdateMATCreditDetails
+           (MATCreditDetails matCreditDetails, string operation)
+        {
+            try
+            {
+                matCreditDetails.Active = true;
+                return this._itReturnDA.InsertUpdateMATCreditDetails(matCreditDetails, operation);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                //Log
+            }
+        }
+
+        public MATCreditDetailsResponse GetMATCreditDetailsList(int? companyId, int? fyayId
+            , int? itSectionCategoryId, int? matCreditDetailsId)
+        {
+            try
+            {
+                return this._itReturnDA.GetMATCreditDetailsList(companyId, fyayId
+                    , itSectionCategoryId, matCreditDetailsId);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                //Log
+            }
+        }
         #endregion
 
 
