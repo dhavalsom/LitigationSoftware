@@ -1454,6 +1454,119 @@ namespace LSWebApp.Controllers
                 return RedirectToAction("BusinessLossDetails");
             }
         }
+
+        [HttpGet]
+        public async Task<ActionResult> MATCreditDetails()
+        {
+            Company selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            MATCreditDetails matCreditDetails = Session["CurrentMATCreditDetails"] as MATCreditDetails;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+            MATCreditDetailsHeaderModel model = new MATCreditDetailsHeaderModel
+            {
+                CompanyObject = selectedCompany,
+                FYAYId = matCreditDetails != null ? matCreditDetails.FYAYId : (int?) null,
+                ITSectionCategoryId = matCreditDetails != null ? matCreditDetails.ITSectionCategoryId : (int?)null,
+            };
+            Session["CurrentMATCreditDetails"] = null;
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetFYAYList");
+                model.FYAYList = JsonConvert.DeserializeObject<List<FYAY>>
+                    (Res.Content.ReadAsStringAsync().Result);
+                Res = await client.GetAsync("api/MasterAPI/GetITSectionCategoryList");
+                model.ITSectionCategories = JsonConvert.DeserializeObject<List<ITSectionCategory>>
+                    (Res.Content.ReadAsStringAsync().Result).OrderBy(its=>its.Id).ToList<ITSectionCategory>();
+            }
+            return View(model);
+        }
+
+        
+        [HttpGet]
+        public async Task<ActionResult> MATCreditDetailsData(int? fyayId
+            , int? itSectionCategoryId, int? matCreditDetailsId)
+        {
+            var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+            MATCreditDetailsDataModel model = new MATCreditDetailsDataModel()
+            {
+                MATCreditDetailsObject = new MATCreditDetails
+                {
+                    CompanyId = selectedCompany.Id,
+                    AddedBy = Session[SESSION_LOGON_USER] != null ? (Session[SESSION_LOGON_USER] as UserLogin).Id : 1,
+                    Id = matCreditDetailsId.HasValue ? matCreditDetailsId.Value : 0,
+                    FYAYId = fyayId.HasValue ? fyayId.Value : 0,
+                    ITSectionCategoryId = itSectionCategoryId.HasValue ? itSectionCategoryId.Value : 0,
+                }
+            };
+
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                    client.DefaultRequestHeaders.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpResponseMessage Res = await client.GetAsync("api/TaxReturnAPI/GetMATCreditDetailsList?companyId="
+                        + selectedCompany.Id + "&fyayId=" + (fyayId.HasValue ? fyayId.Value.ToString() : "")
+                        + "&itSectionCategoryId=" + (itSectionCategoryId.HasValue ? itSectionCategoryId.Value.ToString() : "")
+                        + "&matCreditDetailsId=" + (matCreditDetailsId.HasValue ? matCreditDetailsId.Value.ToString() : ""));
+                    var result = JsonConvert.DeserializeObject<MATCreditDetailsResponse>(Res.Content.ReadAsStringAsync().Result);
+                    if (result != null)
+                    {
+                        if (result.MATCreditDetailsList != null
+                            && result.MATCreditDetailsList.Any())
+                        {
+                            model.MATCreditDetailsObject = result.MATCreditDetailsList.First();
+                            model.MATCreditDetailsObject.ModifiedBy = Session[SESSION_LOGON_USER] != null 
+                                                      ? (Session[SESSION_LOGON_USER] as UserLogin).Id : 1;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return PartialView(model);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> InsertUpdateMATCreditDetails
+            (MATCreditDetailsDataModel matCreditDetails)
+        {
+            using (var client = new HttpClient())
+            {
+                var json = JsonConvert.SerializeObject(matCreditDetails.MATCreditDetailsObject);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.PostAsync("api/TaxReturnAPI/InsertUpdateMATCreditDetails", content);
+                MATCreditDetailsResponse result = new MATCreditDetailsResponse();
+                if (Res.IsSuccessStatusCode)
+                {
+                    Session["CurrentMATCreditDetails"] = matCreditDetails.MATCreditDetailsObject;
+                    result = JsonConvert.DeserializeObject<MATCreditDetailsResponse>
+                            (Res.Content.ReadAsStringAsync().Result);
+                }
+                else
+                {
+                    result.IsSuccess = false;
+                    result.Message = Res.Content.ReadAsStringAsync().Result;
+                }
+                return RedirectToAction("MATCreditDetails");
+            }
+        }
         #endregion
     }
 }
