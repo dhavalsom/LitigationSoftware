@@ -12,7 +12,7 @@ namespace LS.DAL.Interface
         List<ITSection> GetITSection(int categoryId);
         List<ITSectionCategory> GetITSectionCategory();
         ITSectionResponse InsertUpdateITSection(ITSection objITSection);
-        List<ITHeadMaster> GetITHeadMaster();
+        List<ITHeadMaster> GetITHeadMaster(bool? IsTaxComputed);
         List<ITSubHeadMaster> GetITSubHeadMaster(int? itHeadId);
         ITSubHeadMasterResponse InsertUpdateITSubHeadMaster(ITSubHeadMaster objITSubHeadMaster);
         List<ComplianceMaster> GetComplianceMaster(int? complianceId);

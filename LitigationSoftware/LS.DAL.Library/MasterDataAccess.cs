@@ -293,13 +293,19 @@ namespace LS.DAL.Library
             }
         }
 
-        public List<ITHeadMaster> GetITHeadMaster()
+        public List<ITHeadMaster> GetITHeadMaster(bool? IsTaxComputed)
         {
             try
             {
                 Log.Info("Started call to GetITHeadMaster");
                 Command.CommandText = "SP_GET_IT_HEAD_MASTER";
                 Command.CommandType = CommandType.StoredProcedure;
+                Command.Parameters.Clear();
+
+                if (IsTaxComputed.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@IsTaxComputed", IsTaxComputed.Value);
+                }
                 Connection.Open();
                 SqlDataReader reader = Command.ExecuteReader();
                 List<ITHeadMaster> result = new List<ITHeadMaster>();
@@ -318,7 +324,8 @@ namespace LS.DAL.Library
                             IsSpecialIncomeEnabled = reader["IsSpecialIncomeEnabled"] != DBNull.Value ? Convert.ToBoolean(reader["IsSpecialIncomeEnabled"].ToString()) : false,
                             IsROI = reader["IsROI"] != DBNull.Value ? Convert.ToBoolean(reader["IsROI"].ToString()) : false,
                             Active = Convert.ToBoolean(reader["Active"].ToString()),
-                            Id = Convert.ToInt32(reader["Id"].ToString())
+                            Id = Convert.ToInt32(reader["Id"].ToString()),
+                            IsTaxComputed = Convert.ToBoolean(reader["IsTaxComputed"].ToString())
                         });
                     }
                 }

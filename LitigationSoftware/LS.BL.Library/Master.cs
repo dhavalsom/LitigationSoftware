@@ -134,11 +134,11 @@ namespace LS.BL.Library
             }
         }
 
-        public List<ITHeadMaster> GetITHeadMaster()
+        public List<ITHeadMaster> GetITHeadMaster(bool? IsTaxComputed)
         {
             try
             {
-                return this._masterDA.GetITHeadMaster();
+                return this._masterDA.GetITHeadMaster(IsTaxComputed);
             }
             catch (Exception ex)
             {

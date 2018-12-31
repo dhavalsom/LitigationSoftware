@@ -12,6 +12,7 @@ namespace LS.Models
         public bool IsROI { get; set; }
         public bool HasDate { get; set; }       
         public bool IsSpecialIncomeEnabled { get; set; }
+        public bool IsTaxComputed { get; set; }
 
         #region Display Properties
         public List<ITSubHeadMaster> SubHeadList { get; set; }

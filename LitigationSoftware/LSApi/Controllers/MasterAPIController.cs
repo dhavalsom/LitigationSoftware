@@ -94,10 +94,10 @@ namespace LSApi.Controllers
         [HttpGet]
         [Route("GetITHeadMaster")]
         // GET: api/MasterAPI/GetITHeadMaster
-        public List<ITHeadMaster> GetITHeadMaster()
+        public List<ITHeadMaster> GetITHeadMaster(bool? IsTaxComputed)
         {
             var CompObj = _Kernel.Get<IMaster>();
-            return CompObj.GetITHeadMaster();
+            return CompObj.GetITHeadMaster(IsTaxComputed);
         }
 
         [HttpGet]

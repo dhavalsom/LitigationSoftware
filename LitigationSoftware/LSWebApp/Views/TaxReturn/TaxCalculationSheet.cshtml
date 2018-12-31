@@ -135,16 +135,224 @@
         <td>Tax Liability(being higher of Above A or B)</td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
-        <td>
-            @if ((itsectiondetail.TaxOnTotalIncome + itsectiondetail.SurchargeTax + itsectiondetail.EducationCess) > (itsectiondetail.MATTaxOnTotalIncome + itsectiondetail.MATSurchargeTax + itsectiondetail.MATEducationCess))
-            {
-                @Utilities.FormatNumber(itsectiondetail.TaxOnTotalIncome + itsectiondetail.SurchargeTax + itsectiondetail.EducationCess)
-            }
-            else
-            {
-                @Utilities.FormatNumber(itsectiondetail.MATTaxOnTotalIncome + itsectiondetail.MATSurchargeTax + itsectiondetail.MATEducationCess)
-            }
-        </td>
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.Taxliability)
+            </td>
         }
-     </tr>
+    </tr>
+    <tr>
+        <td><b><u>Less : Advance Tax,  TDS and MAT Credit</u></b></td>
+    </tr>
+    <tr>
+        <td><b>Advance Tax</b></td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.AdvanceTax1installment + itsectiondetail.AdvanceTax2installment + itsectiondetail.AdvanceTax3installment + itsectiondetail.AdvanceTax4installment)
+            </td>
+        }
+    </tr>
+    <tr>
+        <td>First Installment</td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.AdvanceTax1installment)
+            </td>
+        }
+    </tr>
+    <tr>
+        <td>Second Installment</td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.AdvanceTax2installment)
+            </td>
+        }
+    </tr>
+    <tr>
+        <td>Third Installment</td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.AdvanceTax3installment)
+            </td>
+        }
+    </tr>
+    <tr>
+        <td>Fourth Installment</td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.AdvanceTax4installment)
+            </td>
+        }
+    </tr>
+    <tr>
+        <td><b><u>TDS</u></b></td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.TCSPaidbyCompany)
+            </td>
+        }
+    </tr>
+    <tr>
+        <td><b><u>TDS</u></b></td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.TCSPaidbyCompany)
+            </td>
+        }
+    </tr>
+    <tr>
+        <td><b><u>TCS</u></b></td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.TaxCollectedAtSource)
+            </td>
+        }
+    </tr>
+    <tr>
+        <td><b><u>MAT Credit</u></b></td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.MATCredit)
+            </td>
+        }
+    </tr>
+    <tr class="table-info">
+        <td>Total Tax Paid</td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.TotalTaxPaid)
+            </td>
+        }
+    </tr>
+    <tr>
+        <td>Interest u/s 234A</td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.InterestUS234A)
+            </td>
+        }
+    </tr>
+    <tr>
+        <td>Interest u/s 234B</td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.InterestUS234B)
+            </td>
+        }
+    </tr>
+    <tr>
+        <td>Interest u/s 234C</td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.InterestUS234C)
+            </td>
+        }
+    </tr>
+    <tr>
+        <td>Interest u/s 234D</td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.InterestUS234D)
+            </td>
+        }
+    </tr>
+    <tr>
+        <td>Interest u/s 244A</td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.InterestUS244A)
+            </td>
+        }
+    </tr>
+    <tr>
+        <td>Interest u/s 220</td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.InterestUS220)
+            </td>
+        }
+    </tr>
+    <tr>
+        <td>Total Interest</td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.TotalInterest)
+            </td>
+        }
+    </tr>
+    <tr class="table-info">
+        <td>Tax Payable</td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.TaxPayable)
+            </td>
+        }
+    </tr>
+    @foreach (var selfassmt in Model.SelfAssessmentList)
+      {
+            
+    <tr>
+        <td>@selfassmt.SPIncomeDescription</td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+        <td>@selfassmt.SPIncomeValue</td>
+        }
+    </tr>
+            
+      }
+    <tr>
+        <td>Refund Adjusted</td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.RefundAdjusted)
+            </td>
+        }
+    </tr>
+   
+    @foreach (var selfassmt in Model.RegularAssessmentList)
+    {
+        <tr>
+            <td>@selfassmt.SPIncomeDescription</td>
+            @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+            {
+                <td>@selfassmt.SPIncomeValue</td>
+            }
+        </tr>
+    }
+    <tr>
+        <td>Refund Already Received</td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.RefundAlreadyReceived)
+            </td>
+        }
+    </tr>
+    <tr class="table-info">
+        <td>Net Demand (Refund Due)</td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(itsectiondetail.NetDemand)
+            </td>
+        }
+    </tr>
 </table>

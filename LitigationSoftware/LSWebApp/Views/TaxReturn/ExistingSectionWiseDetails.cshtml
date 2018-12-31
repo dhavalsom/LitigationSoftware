@@ -49,7 +49,7 @@
             }
         </tr>
 
-        @foreach (var itemWithAmount in Model.ItemsWithAmounts)
+        @foreach (var itemWithAmount in Model.ItemsWithAmounts_ROI)
         {
             @Html.Partial("ITReturnDetailsListItem"
             , new ITReturnDetailsListItemModel(Model.ITHeadMasterList[itemWithAmount]
