@@ -1,0 +1,100 @@
+﻿@model  LSWebApp.Models.BusinessLossDetailsHeaderModel
+@{
+    ViewBag.Title = "Business Loss Details";
+    Layout = "~/Views/Shared/_LayoutDynemicMenu.cshtml";
+}
+<style type="text/css">
+    .table-condensed {
+        width: 200px;
+        height: 10px;
+        font-size: 10px;
+    }
+</style>
+
+<h3>Business Loss Details</h3>
+
+<div class="container">
+    <div class="bs-component">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th colspan="2">Company Name</th>
+                    <th>Financial Year</th>
+                    <th>Assesment Year</th>
+                    <th>Section Category</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="table-active">
+                    <td colspan="2">
+                        @Html.LabelFor(m => m.CompanyObject.CompanyName
+                                , Model.CompanyObject.CompanyName)
+                        @Html.HiddenFor(m => m.CompanyObject.Id
+                                , Model.CompanyObject.Id)
+                    </td>
+                    <td>
+                        @Html.LabelFor(m => m.FYAYObject.FinancialYear
+                                , Model.FYAYObject.FinancialYear)
+                        @Html.HiddenFor(m => m.FYAYObject.Id
+                                , Model.FYAYObject.Id)
+                    </td>
+                    <td>
+                        @Html.LabelFor(m => m.FYAYObject.AssessmentYear
+                                , Model.FYAYObject.AssessmentYear)
+                    </td>
+                    <td>
+                        @Html.LabelFor(m => m.ITSectionCategoryObject.Description
+                                , Model.ITSectionCategoryObject.Description)
+                        @Html.HiddenFor(m => m.ITSectionCategoryObject.Id
+                                , Model.ITSectionCategoryObject.Id)
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br />
+    </div>
+</div>
+
+<div class="container">
+    <div class="bs-component" id="sectionDiv">
+
+    </div>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+
+        $(document).ready(function () {   
+            loadBusinessLossDetailsData();
+        });
+
+        function loadBusinessLossDetailsData() {
+            $.ajax({
+                url: '/TaxReturn/BusinessLossDetailsData?fyayId=' + $('#FYAYObject_Id').val()
+                + '&businessLossDetailsId='
+                + '&itSectionCategoryId=' + $('#ITSectionCategoryObject_Id').val(),
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                type: 'GET',
+                error: function (xhr, status, error) {
+                    alert("inside error " + xhr.responseText);
+                },
+                dataType: 'html',
+                success: function (data) {
+                    $("#sectionDiv").html(data);                    
+                    $(".numericOnly").keypress(function (e) {
+                        return isANumber(e);
+                    });
+                    $(".numericOnly").change(function (e) {
+                        if ($.isNumeric($(this).val())) {
+                            $(this).val(parseFloat($(this).val()).toFixed(2));
+                        }
+                        else {
+                            $(this).val("0.00");
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}

@@ -514,6 +514,7 @@ namespace LSWebApp.Controllers
                             if (response.ITReturnDetailsListObject.Count > 0)
                             {
                                 model.ITReturnDetailsObject = response.ITReturnDetailsListObject.First();
+                                Session["CurrentBusinessLossDetails"] = model.ITReturnDetailsObject;
                                 Res = await client.GetAsync("api/TaxReturnAPI/GetITReturnDocumentsList?companyId=&fyayId=&itReturnDetailsId="
                                     + model.ITReturnDetailsObject.Id + "&itHeadId=&itReturnDocumentId=");
                                 if (Res.IsSuccessStatusCode)
@@ -1045,7 +1046,6 @@ namespace LSWebApp.Controllers
         }
 
         [HttpPost]
-        //[ValidateAntiForgeryToken]
         public async Task<ActionResult> UpsertITReturnDetails(ITReturnDetailsDataModel itReturn
             , FormCollection form)
         {
@@ -1083,8 +1083,16 @@ namespace LSWebApp.Controllers
                 if (Res.IsSuccessStatusCode)
                 {
                     result = JsonConvert.DeserializeObject<ITReturnComplexAPIModelResponse>(Res.Content.ReadAsStringAsync().Result);
-                    Session["CurrentITReturnDetails"] = itReturn.ITReturnDetailsObject;
-                    return RedirectToAction("ITReturnDetails");
+                    if (itReturn.ITReturnDetailsObject.Broughtforwardlosses.HasValue
+                        && itReturn.ITReturnDetailsObject.Broughtforwardlosses.Value)
+                    {
+                        return RedirectToAction("BusinessLossDetails");
+                    }
+                    else
+                    {
+                        Session["CurrentITReturnDetails"] = itReturn.ITReturnDetailsObject;
+                        return RedirectToAction("ITReturnDetails");
+                    }
                 }
                 else
                 {
@@ -1521,6 +1529,273 @@ namespace LSWebApp.Controllers
             }
             Session["CurrentITReturnDetails"] = objITHeadSpecialIncomeModel.ObjITReturnDetails;
             return RedirectToAction("ITReturnDetails");
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> BusinessLossDetails()
+        {
+            Company selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            ITReturnDetails itReturnDetails = Session["CurrentBusinessLossDetails"] as ITReturnDetails;
+            if (selectedCompany == null
+                || itReturnDetails == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+            BusinessLossDetailsHeaderModel businessLossDetails = new BusinessLossDetailsHeaderModel
+            {
+                CompanyObject = selectedCompany,
+                FYAYObject = new FYAY { Id = itReturnDetails.FYAYID },
+                ITSectionCategoryObject = new ITSectionCategory { Id = itReturnDetails.ITSectionCategoryID }
+            };
+            //Session["CurrentBusinessLossDetails"] = null;
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetFYAYList");
+                businessLossDetails.FYAYObject = JsonConvert.DeserializeObject<List<FYAY>>
+                    (Res.Content.ReadAsStringAsync().Result)
+                    .Where(f => f.Id == businessLossDetails.FYAYObject.Id).FirstOrDefault();
+                Res = await client.GetAsync("api/MasterAPI/GetITSectionCategoryList");
+                businessLossDetails.ITSectionCategoryObject = JsonConvert.DeserializeObject<List<ITSectionCategory>>
+                    (Res.Content.ReadAsStringAsync().Result)
+                    .Where(bl => bl.Id == businessLossDetails.ITSectionCategoryObject.Id)
+                    .FirstOrDefault();
+            }
+            return View(businessLossDetails);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> BusinessLossDetailsData(int? fyayId
+            , int? itSectionCategoryId, int? businessLossDetailsId)
+        {
+            var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+            BusinessLossDetailsDataModel model = new BusinessLossDetailsDataModel()
+            {
+                BusinessLossDetailsObject = new BusinessLossDetails
+                {
+                    CompanyId = selectedCompany.Id,
+                    AddedBy = Session[SESSION_LOGON_USER] != null ? (Session[SESSION_LOGON_USER] as UserLogin).Id : 1,
+                    Id = businessLossDetailsId.HasValue ? businessLossDetailsId.Value : 0,
+                    FYAYId = fyayId.HasValue ? fyayId.Value : 0 ,
+                    ITSectionCategoryId = itSectionCategoryId.HasValue ? itSectionCategoryId.Value : 0,
+                }
+            };
+
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                    client.DefaultRequestHeaders.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpResponseMessage Res = await client.GetAsync("api/TaxReturnAPI/GetBusinessLossDetailsList?companyId="
+                        + selectedCompany.Id + "&fyayId=" + (fyayId.HasValue ? fyayId.Value.ToString() : "")
+                        + "&itSectionCategoryId=" + (itSectionCategoryId.HasValue ? itSectionCategoryId.Value.ToString() : "")
+                        + "&businessLossDetailsId=" + (businessLossDetailsId.HasValue ? businessLossDetailsId.Value.ToString() : ""));
+                    var result = JsonConvert.DeserializeObject<BusinessLossDetailsResponse>(Res.Content.ReadAsStringAsync().Result);
+                    if(result != null )
+                    {
+                        if (result.BusinessLossDetailsList != null 
+                            && result.BusinessLossDetailsList.Where(bl => bl.IsCurrentYear).Any())
+                        {
+                            model.BusinessLossDetailsObject = result.BusinessLossDetailsList.Where(bl => bl.IsCurrentYear).First();
+                            model.BusinessLossDetailsObject.ModifiedBy = Session[SESSION_LOGON_USER] != null ? (Session[SESSION_LOGON_USER] as UserLogin).Id : 1;
+                        }
+                        if (result.BusinessLossDetailsList != null
+                            && model.BusinessLossDetailsObject.Id == 0
+                            && result.BusinessLossDetailsList.Where(bl => !bl.IsCurrentYear).Any())
+                        {
+                            var prevYearBLObject = result.BusinessLossDetailsList.Where(bl => !bl.IsCurrentYear).First();
+                            model.BusinessLossDetailsObject.IncomeCapGainsLTCG_BF = prevYearBLObject.IncomeCapGainsLTCG_Total;
+                            model.BusinessLossDetailsObject.IncomeCapGainsSTCG_BF = prevYearBLObject.IncomeCapGainsSTCG_Total;
+                            model.BusinessLossDetailsObject.IncomeBusinessProf_BF = prevYearBLObject.IncomeBusinessProf_Total;
+                            model.BusinessLossDetailsObject.IncomeSpeculativeBusiness_BF = prevYearBLObject.IncomeSpeculativeBusiness_Total;
+                            model.BusinessLossDetailsObject.UnabsorbedDepreciation_BF = prevYearBLObject.UnabsorbedDepreciation_Total;
+                            model.BusinessLossDetailsObject.HousePropIncome_BF = prevYearBLObject.HousePropIncome_Total;
+                            model.BusinessLossDetailsObject.IncomeOtherSources_BF = prevYearBLObject.IncomeOtherSources_Total;
+                        }
+                        if (result.ITReturnDetailsObject != null)
+                        {
+                            if (result.ITReturnDetailsObject.IncomefromCapGainsLTCG < 0)
+                            {
+                                model.BusinessLossDetailsObject.IncomeCapGainsLTCG_CY = result.ITReturnDetailsObject.IncomefromCapGainsLTCG * -1;
+                            }
+                            if (result.ITReturnDetailsObject.IncomefromCapGainsSTCG < 0)
+                            {
+                                model.BusinessLossDetailsObject.IncomeCapGainsSTCG_CY = result.ITReturnDetailsObject.IncomefromCapGainsSTCG * -1;
+                            }
+                            if (result.ITReturnDetailsObject.IncomefromBusinessProf < 0)
+                            {
+                                model.BusinessLossDetailsObject.IncomeBusinessProf_CY = result.ITReturnDetailsObject.IncomefromBusinessProf * -1;
+                            }
+                            if (result.ITReturnDetailsObject.IncomefromSpeculativeBusiness < 0)
+                            {
+                                model.BusinessLossDetailsObject.IncomeSpeculativeBusiness_CY = result.ITReturnDetailsObject.IncomefromSpeculativeBusiness * -1;
+                            }
+                            if (result.ITReturnDetailsObject.HousePropIncome < 0)
+                            {
+                                model.BusinessLossDetailsObject.HousePropIncome_CY = result.ITReturnDetailsObject.HousePropIncome * -1;
+                            }
+                            if (result.ITReturnDetailsObject.IncomeFromOtherSources < 0)
+                            {
+                                model.BusinessLossDetailsObject.IncomeOtherSources_CY = result.ITReturnDetailsObject.IncomeFromOtherSources * -1;
+                            }
+                        }
+                    }
+                    
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return PartialView(model);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> InsertUpdateBusinessLossDetails
+            (BusinessLossDetailsDataModel businessLossDetails)
+        {
+            using (var client = new HttpClient())
+            {
+                var json = JsonConvert.SerializeObject(businessLossDetails.BusinessLossDetailsObject);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.PostAsync("api/TaxReturnAPI/InsertUpdateBusinessLossDetails", content);
+                BusinessLossDetailsResponse result = new BusinessLossDetailsResponse();
+                if (Res.IsSuccessStatusCode)
+                {
+                    result = JsonConvert.DeserializeObject<BusinessLossDetailsResponse>(Res.Content.ReadAsStringAsync().Result);
+                }
+                else
+                {
+                    result.IsSuccess = false;
+                    result.Message = Res.Content.ReadAsStringAsync().Result;
+                }
+                return RedirectToAction("BusinessLossDetails");
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> MATCreditDetails()
+        {
+            Company selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            MATCreditDetails matCreditDetails = Session["CurrentMATCreditDetails"] as MATCreditDetails;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+            MATCreditDetailsHeaderModel model = new MATCreditDetailsHeaderModel
+            {
+                CompanyObject = selectedCompany,
+                FYAYId = matCreditDetails != null ? matCreditDetails.FYAYId : (int?) null,
+                ITSectionCategoryId = matCreditDetails != null ? matCreditDetails.ITSectionCategoryId : (int?)null,
+            };
+            Session["CurrentMATCreditDetails"] = null;
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetFYAYList");
+                model.FYAYList = JsonConvert.DeserializeObject<List<FYAY>>
+                    (Res.Content.ReadAsStringAsync().Result);
+                Res = await client.GetAsync("api/MasterAPI/GetITSectionCategoryList");
+                model.ITSectionCategories = JsonConvert.DeserializeObject<List<ITSectionCategory>>
+                    (Res.Content.ReadAsStringAsync().Result).OrderBy(its=>its.Id).ToList<ITSectionCategory>();
+            }
+            return View(model);
+        }
+
+        
+        [HttpGet]
+        public async Task<ActionResult> MATCreditDetailsData(int? fyayId
+            , int? itSectionCategoryId, int? matCreditDetailsId)
+        {
+            var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+            MATCreditDetailsDataModel model = new MATCreditDetailsDataModel()
+            {
+                MATCreditDetailsObject = new MATCreditDetails
+                {
+                    CompanyId = selectedCompany.Id,
+                    AddedBy = Session[SESSION_LOGON_USER] != null ? (Session[SESSION_LOGON_USER] as UserLogin).Id : 1,
+                    Id = matCreditDetailsId.HasValue ? matCreditDetailsId.Value : 0,
+                    FYAYId = fyayId.HasValue ? fyayId.Value : 0,
+                    ITSectionCategoryId = itSectionCategoryId.HasValue ? itSectionCategoryId.Value : 0,
+                }
+            };
+
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                    client.DefaultRequestHeaders.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpResponseMessage Res = await client.GetAsync("api/TaxReturnAPI/GetMATCreditDetailsList?companyId="
+                        + selectedCompany.Id + "&fyayId=" + (fyayId.HasValue ? fyayId.Value.ToString() : "")
+                        + "&itSectionCategoryId=" + (itSectionCategoryId.HasValue ? itSectionCategoryId.Value.ToString() : "")
+                        + "&matCreditDetailsId=" + (matCreditDetailsId.HasValue ? matCreditDetailsId.Value.ToString() : ""));
+                    var result = JsonConvert.DeserializeObject<MATCreditDetailsResponse>(Res.Content.ReadAsStringAsync().Result);
+                    if (result != null)
+                    {
+                        if (result.MATCreditDetailsList != null
+                            && result.MATCreditDetailsList.Any())
+                        {
+                            model.MATCreditDetailsObject = result.MATCreditDetailsList.First();
+                            model.MATCreditDetailsObject.ModifiedBy = Session[SESSION_LOGON_USER] != null 
+                                                      ? (Session[SESSION_LOGON_USER] as UserLogin).Id : 1;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return PartialView(model);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> InsertUpdateMATCreditDetails
+            (MATCreditDetailsDataModel matCreditDetails)
+        {
+            using (var client = new HttpClient())
+            {
+                var json = JsonConvert.SerializeObject(matCreditDetails.MATCreditDetailsObject);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.PostAsync("api/TaxReturnAPI/InsertUpdateMATCreditDetails", content);
+                MATCreditDetailsResponse result = new MATCreditDetailsResponse();
+                if (Res.IsSuccessStatusCode)
+                {
+                    Session["CurrentMATCreditDetails"] = matCreditDetails.MATCreditDetailsObject;
+                    result = JsonConvert.DeserializeObject<MATCreditDetailsResponse>
+                            (Res.Content.ReadAsStringAsync().Result);
+                }
+                else
+                {
+                    result.IsSuccess = false;
+                    result.Message = Res.Content.ReadAsStringAsync().Result;
+                }
+                return RedirectToAction("MATCreditDetails");
+            }
         }
         #endregion
     }

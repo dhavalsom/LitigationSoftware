@@ -7,10 +7,23 @@
       Id="1">
     </MenuItem>
     <MenuItem
-      DisplayText="Input Sheet"
-      ControllerName="TaxReturn"
-      ActionName="ITReturnDetails"
+      DisplayText="Input Sheets"
+      ControllerName="#"
+      ActionName="#"
       Id="2">
+      <MenuItem
+          DisplayText="Input Sheet"
+          ControllerName="TaxReturn"
+          ActionName="ITReturnDetails"
+          Id="2">
+      </MenuItem>
+      <MenuItem
+          DisplayText="MAT Credit"
+          ControllerName="TaxReturn"
+          ActionName="MATCreditDetails"
+          Id="11">
+        </MenuItem>
+    
     </MenuItem>
     <MenuItem
       DisplayText="Computation Sheet"

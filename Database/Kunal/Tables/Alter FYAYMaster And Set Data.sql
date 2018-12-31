@@ -1,0 +1,7 @@
+ALTER TABLE FYAYMaster
+ADD SortOrder INT NULL
+GO
+
+UPDATE FYAYMaster
+SET SortOrder = CONVERT(INT,SUBSTRING(FinancialYear,8,2))
+GO

@@ -743,6 +743,315 @@ namespace LS.DAL.Library
                 Connection.Close();
             }
         }
+
+        public BusinessLossDetailsResponse InsertUpdateBusinessLossDetails
+            (BusinessLossDetails businessLossDetails, string operation)
+        {
+            try
+            {
+                Log.Info("Started call to InsertUpdateBusinessLossDetails");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(
+                    new { businessLossDetails = businessLossDetails, operation = operation }));
+                Command.CommandText = "SP_BUSINESS_LOSS_DETAILS_MANAGER";
+                Command.CommandType = CommandType.StoredProcedure;
+                Command.Parameters.Clear();
+
+                Command.Parameters.AddWithValue("@BUSINESS_LOSS_DETAILS_XML", GetXMLFromObject(businessLossDetails));
+                if (!string.IsNullOrEmpty(operation))
+                {
+                    Command.Parameters.AddWithValue("@OPERATION", operation);
+                }
+                if (businessLossDetails.AddedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", businessLossDetails.AddedBy.Value);
+                }
+                else if (businessLossDetails.ModifiedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", businessLossDetails.ModifiedBy.Value);
+                }
+                else if (businessLossDetails.DeletedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", businessLossDetails.DeletedBy.Value);
+                }
+                Connection.Open();
+                SqlDataReader reader = Command.ExecuteReader();
+
+                BusinessLossDetailsResponse result = new BusinessLossDetailsResponse();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result = new BusinessLossDetailsResponse
+                        {
+                            Message = reader["ReturnMessage"] != DBNull.Value ? reader["ReturnMessage"].ToString() : null,
+                            IsSuccess = Convert.ToBoolean(reader["Result"].ToString())
+                        };
+                    }
+                }
+                Log.Info("End call to InsertUpdateBusinessLossDetails");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                Connection.Close();
+            }
+        }
+
+        public BusinessLossDetailsResponse GetBusinessLossDetailsList(int? companyId, int? fyayId
+            , int? itSectionCategoryId, int? businessLossDetailsId)
+        {
+            try
+            {
+                Log.Info("Started call to GetBusinessLossDetailsList");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(new
+                {
+                    companyId = companyId,
+                    fyayId = fyayId,
+                    itSectionCategoryId = itSectionCategoryId,
+                    businessLossDetailsId = businessLossDetailsId,
+                }));
+                Command.CommandText = "SP_GET_BUSINESS_LOSS_DETAILS_LIST";
+                Command.CommandType = CommandType.StoredProcedure;
+                if (companyId.HasValue && companyId > 0)
+                {
+                    Command.Parameters.AddWithValue("@COMPANY_ID", companyId);
+                }
+                if (fyayId.HasValue && fyayId > 0)
+                {
+                    Command.Parameters.AddWithValue("@FYAY_ID", fyayId);
+                }
+                if (itSectionCategoryId.HasValue && itSectionCategoryId > 0)
+                {
+                    Command.Parameters.AddWithValue("@IT_SECTION_CATEGORY_ID", itSectionCategoryId);
+                }
+                if (businessLossDetailsId.HasValue && businessLossDetailsId > 0)
+                {
+                    Command.Parameters.AddWithValue("@BUSINESS_LOSS_DETAILS_ID", businessLossDetailsId);
+                }
+                Connection.Open();
+
+                SqlDataAdapter da = new SqlDataAdapter(Command);
+                DataSet ds = new DataSet();
+                da.Fill(ds);
+                BusinessLossDetailsResponse result = new BusinessLossDetailsResponse();
+                result.BusinessLossDetailsList = new List<BusinessLossDetails>();
+
+                if (ds != null && ds.Tables.Count > 0)
+                {
+                    foreach(DataRow drBLDetails in ds.Tables[0].Rows)
+                    {
+                        result.BusinessLossDetailsList.Add(new BusinessLossDetails
+                        {
+                            IsCurrentYear = bool.Parse(drBLDetails["IsCurrentYear"].ToString()),
+                            Id = int.Parse(drBLDetails["Id"].ToString()),
+                            CompanyId = int.Parse(drBLDetails["CompanyId"].ToString()),
+                            FYAYId = int.Parse(drBLDetails["FYAYId"].ToString()),
+                            ITSectionCategoryId = int.Parse(drBLDetails["ITSectionCategoryId"].ToString()),
+
+                            IncomeCapGainsLTCG_BF = drBLDetails["IncomeCapGainsLTCG_BF"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeCapGainsLTCG_BF"].ToString()) : (decimal?)null,
+                            IncomeCapGainsSTCG_BF = drBLDetails["IncomeCapGainsSTCG_BF"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeCapGainsSTCG_BF"].ToString()) : (decimal?)null,
+                            IncomeBusinessProf_BF = drBLDetails["IncomeBusinessProf_BF"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeBusinessProf_BF"].ToString()) : (decimal?)null,
+                            IncomeSpeculativeBusiness_BF = drBLDetails["IncomeSpeculativeBusiness_BF"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeSpeculativeBusiness_BF"].ToString()) : (decimal?)null,
+                            UnabsorbedDepreciation_BF = drBLDetails["UnabsorbedDepreciation_BF"] != DBNull.Value ? decimal.Parse(drBLDetails["UnabsorbedDepreciation_BF"].ToString()) : (decimal?)null,
+                            HousePropIncome_BF = drBLDetails["HousePropIncome_BF"] != DBNull.Value ? decimal.Parse(drBLDetails["HousePropIncome_BF"].ToString()) : (decimal?)null,
+                            IncomeOtherSources_BF = drBLDetails["IncomeOtherSources_BF"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeOtherSources_BF"].ToString()) : (decimal?)null,
+
+                            IncomeCapGainsLTCG_CY = drBLDetails["IncomeCapGainsLTCG_CY"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeCapGainsLTCG_CY"].ToString()) : (decimal?)null,
+                            IncomeCapGainsSTCG_CY = drBLDetails["IncomeCapGainsSTCG_CY"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeCapGainsSTCG_CY"].ToString()) : (decimal?)null,
+                            IncomeBusinessProf_CY = drBLDetails["IncomeBusinessProf_CY"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeBusinessProf_CY"].ToString()) : (decimal?)null,
+                            IncomeSpeculativeBusiness_CY = drBLDetails["IncomeSpeculativeBusiness_CY"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeSpeculativeBusiness_CY"].ToString()) : (decimal?)null,
+                            UnabsorbedDepreciation_CY = drBLDetails["UnabsorbedDepreciation_CY"] != DBNull.Value ? decimal.Parse(drBLDetails["UnabsorbedDepreciation_CY"].ToString()) : (decimal?)null,
+                            HousePropIncome_CY = drBLDetails["HousePropIncome_CY"] != DBNull.Value ? decimal.Parse(drBLDetails["HousePropIncome_CY"].ToString()) : (decimal?)null,
+                            IncomeOtherSources_CY = drBLDetails["IncomeOtherSources_CY"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeOtherSources_CY"].ToString()) : (decimal?)null,
+
+                            IncomeCapGainsLTCG_UL = drBLDetails["IncomeCapGainsLTCG_UL"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeCapGainsLTCG_UL"].ToString()) : (decimal?)null,
+                            IncomeCapGainsSTCG_UL = drBLDetails["IncomeCapGainsSTCG_UL"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeCapGainsSTCG_UL"].ToString()) : (decimal?)null,
+                            IncomeBusinessProf_UL = drBLDetails["IncomeBusinessProf_UL"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeBusinessProf_UL"].ToString()) : (decimal?)null,
+                            IncomeSpeculativeBusiness_UL = drBLDetails["IncomeSpeculativeBusiness_UL"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeSpeculativeBusiness_UL"].ToString()) : (decimal?)null,
+                            UnabsorbedDepreciation_UL = drBLDetails["UnabsorbedDepreciation_UL"] != DBNull.Value ? decimal.Parse(drBLDetails["UnabsorbedDepreciation_UL"].ToString()) : (decimal?)null,
+                            HousePropIncome_UL = drBLDetails["HousePropIncome_UL"] != DBNull.Value ? decimal.Parse(drBLDetails["HousePropIncome_UL"].ToString()) : (decimal?)null,
+                            IncomeOtherSources_UL = drBLDetails["IncomeOtherSources_UL"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeOtherSources_UL"].ToString()) : (decimal?)null,
+
+                            IncomeCapGainsLTCG_UALL = drBLDetails["IncomeCapGainsLTCG_UALL"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeCapGainsLTCG_UALL"].ToString()) : (decimal?)null,
+                            IncomeCapGainsSTCG_UALL = drBLDetails["IncomeCapGainsSTCG_UALL"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeCapGainsSTCG_UALL"].ToString()) : (decimal?)null,
+                            IncomeBusinessProf_UALL = drBLDetails["IncomeBusinessProf_UALL"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeBusinessProf_UALL"].ToString()) : (decimal?)null,
+                            IncomeSpeculativeBusiness_UALL = drBLDetails["IncomeSpeculativeBusiness_UALL"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeSpeculativeBusiness_UALL"].ToString()) : (decimal?)null,
+                            UnabsorbedDepreciation_UALL = drBLDetails["UnabsorbedDepreciation_UALL"] != DBNull.Value ? decimal.Parse(drBLDetails["UnabsorbedDepreciation_UALL"].ToString()) : (decimal?)null,
+                            HousePropIncome_UALL = drBLDetails["HousePropIncome_UALL"] != DBNull.Value ? decimal.Parse(drBLDetails["HousePropIncome_UALL"].ToString()) : (decimal?)null,
+                            IncomeOtherSources_UALL = drBLDetails["IncomeOtherSources_UALL"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeOtherSources_UALL"].ToString()) : (decimal?)null,
+
+                            Active = bool.Parse(drBLDetails["Active"].ToString()),
+                        });
+                    }
+
+                    if(ds.Tables.Count > 1)
+                    {
+                        foreach (DataRow drITReturnDetails in ds.Tables[1].Rows)
+                        {
+                            result.ITReturnDetailsObject = new ITReturnDetails
+                            {
+                                Id = int.Parse(drITReturnDetails["Id"].ToString()),
+                                IncomefromCapGainsLTCG = drITReturnDetails["IncomefromCapGainsLTCG"] != DBNull.Value ? decimal.Parse(drITReturnDetails["IncomefromCapGainsLTCG"].ToString()) : (decimal?)null,
+                                IncomefromCapGainsSTCG = drITReturnDetails["IncomefromCapGainsSTCG"] != DBNull.Value ? decimal.Parse(drITReturnDetails["IncomefromCapGainsSTCG"].ToString()) : (decimal?)null,
+                                IncomefromBusinessProf = drITReturnDetails["IncomefromBusinessProf"] != DBNull.Value ? decimal.Parse(drITReturnDetails["IncomefromBusinessProf"].ToString()) : (decimal?)null,
+                                IncomefromSpeculativeBusiness = drITReturnDetails["IncomefromSpeculativeBusiness"] != DBNull.Value ? decimal.Parse(drITReturnDetails["IncomefromSpeculativeBusiness"].ToString()) : (decimal?)null,
+                                HousePropIncome = drITReturnDetails["HousePropIncome"] != DBNull.Value ? decimal.Parse(drITReturnDetails["HousePropIncome"].ToString()) : (decimal?)null,
+                                IncomeFromOtherSources = drITReturnDetails["IncomeFromOtherSources"] != DBNull.Value ? decimal.Parse(drITReturnDetails["IncomeFromOtherSources"].ToString()) : (decimal?)null,
+                            };
+                        }
+                    }
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            finally
+            {
+                Connection.Close();
+            }
+        }
+
+        public MATCreditDetailsResponse InsertUpdateMATCreditDetails
+            (MATCreditDetails matCreditDetails, string operation)
+        {
+            try
+            {
+                Log.Info("Started call to InsertUpdateMATCreditDetails");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(
+                    new { matCreditDetails = matCreditDetails, operation = operation }));
+                Command.CommandText = "SP_MAT_CREDIT_DETAILS_MANAGER";
+                Command.CommandType = CommandType.StoredProcedure;
+                Command.Parameters.Clear();
+
+                Command.Parameters.AddWithValue("@MAT_CREDIT_DETAILS_XML", GetXMLFromObject(matCreditDetails));
+                if (!string.IsNullOrEmpty(operation))
+                {
+                    Command.Parameters.AddWithValue("@OPERATION", operation);
+                }
+                if (matCreditDetails.AddedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", matCreditDetails.AddedBy.Value);
+                }
+                else if (matCreditDetails.ModifiedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", matCreditDetails.ModifiedBy.Value);
+                }
+                else if (matCreditDetails.DeletedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", matCreditDetails.DeletedBy.Value);
+                }
+                Connection.Open();
+                SqlDataReader reader = Command.ExecuteReader();
+
+                MATCreditDetailsResponse result = new MATCreditDetailsResponse();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result = new MATCreditDetailsResponse
+                        {
+                            Message = reader["ReturnMessage"] != DBNull.Value ? reader["ReturnMessage"].ToString() : null,
+                            IsSuccess = Convert.ToBoolean(reader["Result"].ToString())
+                        };
+                    }
+                }
+                Log.Info("End call to InsertUpdateMATCreditDetails");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                Connection.Close();
+            }
+        }
+
+        public MATCreditDetailsResponse GetMATCreditDetailsList(int? companyId, int? fyayId
+            , int? itSectionCategoryId, int? matCreditDetailsId)
+        {
+            try
+            {
+                Log.Info("Started call to GetMATCreditDetailsList");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(new
+                {
+                    companyId = companyId,
+                    fyayId = fyayId,
+                    itSectionCategoryId = itSectionCategoryId,
+                    matCreditDetailsId = matCreditDetailsId,
+                }));
+                Command.CommandText = "SP_GET_MAT_CREDIT_DETAILS_LIST";
+                Command.CommandType = CommandType.StoredProcedure;
+                if (companyId.HasValue && companyId > 0)
+                {
+                    Command.Parameters.AddWithValue("@COMPANY_ID", companyId);
+                }
+                if (fyayId.HasValue && fyayId > 0)
+                {
+                    Command.Parameters.AddWithValue("@FYAY_ID", fyayId);
+                }
+                if (itSectionCategoryId.HasValue && itSectionCategoryId > 0)
+                {
+                    Command.Parameters.AddWithValue("@IT_SECTION_CATEGORY_ID", itSectionCategoryId);
+                }
+                if (matCreditDetailsId.HasValue && matCreditDetailsId > 0)
+                {
+                    Command.Parameters.AddWithValue("@MAT_CREDIT_DETAILS_ID", matCreditDetailsId);
+                }
+                Connection.Open();
+
+                SqlDataAdapter da = new SqlDataAdapter(Command);
+                DataSet ds = new DataSet();
+                da.Fill(ds);
+                MATCreditDetailsResponse result = new MATCreditDetailsResponse();
+                result.MATCreditDetailsList = new List<MATCreditDetails>();
+
+                if (ds != null && ds.Tables.Count > 0)
+                {
+                    foreach (DataRow drBLDetails in ds.Tables[0].Rows)
+                    {
+                        result.MATCreditDetailsList.Add(new MATCreditDetails
+                        {
+                            Id = int.Parse(drBLDetails["Id"].ToString()),
+                            CompanyId = int.Parse(drBLDetails["CompanyId"].ToString()),
+                            FYAYId = int.Parse(drBLDetails["FYAYId"].ToString()),
+                            ITSectionCategoryId = int.Parse(drBLDetails["ITSectionCategoryId"].ToString()),
+
+                            BusinessLosses_BF = drBLDetails["BusinessLosses_BF"] != DBNull.Value ? decimal.Parse(drBLDetails["BusinessLosses_BF"].ToString()) : (decimal?)null,
+                            UnabsorbedDepreciation_BF = drBLDetails["UnabsorbedDepreciation_BF"] != DBNull.Value ? decimal.Parse(drBLDetails["UnabsorbedDepreciation_BF"].ToString()) : (decimal?)null,
+
+                            BusinessLosses_CY = drBLDetails["BusinessLosses_CY"] != DBNull.Value ? decimal.Parse(drBLDetails["BusinessLosses_CY"].ToString()) : (decimal?)null,
+                            UnabsorbedDepreciation_CY = drBLDetails["UnabsorbedDepreciation_CY"] != DBNull.Value ? decimal.Parse(drBLDetails["UnabsorbedDepreciation_CY"].ToString()) : (decimal?)null,
+
+                            BusinessLosses_UL = drBLDetails["BusinessLosses_UL"] != DBNull.Value ? decimal.Parse(drBLDetails["BusinessLosses_UL"].ToString()) : (decimal?)null,
+                            UnabsorbedDepreciation_UL = drBLDetails["UnabsorbedDepreciation_UL"] != DBNull.Value ? decimal.Parse(drBLDetails["UnabsorbedDepreciation_UL"].ToString()) : (decimal?)null,
+
+                            Active = bool.Parse(drBLDetails["Active"].ToString()),
+                        });
+                    }
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            finally
+            {
+                Connection.Close();
+            }
+        }
         #endregion
     }
 }

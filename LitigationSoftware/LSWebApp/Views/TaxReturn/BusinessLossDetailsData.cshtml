@@ -1,0 +1,433 @@
+﻿@model  LSWebApp.Models.BusinessLossDetailsDataModel
+@using LS.Models;
+@using LSWebApp.Models
+
+@using (Html.BeginForm("InsertUpdateBusinessLossDetails", "TaxReturn"))
+{
+<table class="table table-hover tblITRetDetails">
+    <thead>
+        <tr>
+            <th>1</th>
+            <th colspan="2">Brought Forward</th>            
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>A</td>
+            <td colspan="2">
+                Capital Gains Losses:
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                Income from capital gains(LTCG):
+            </td>
+            <td>
+                @Html.HiddenFor(m => m.BusinessLossDetailsObject.Id
+                    , Model.BusinessLossDetailsObject.Id)
+                @Html.HiddenFor(m=>m.BusinessLossDetailsObject.CompanyId
+                    , Model.BusinessLossDetailsObject.CompanyId)
+                @Html.HiddenFor(m => m.BusinessLossDetailsObject.FYAYId
+                    , Model.BusinessLossDetailsObject.FYAYId)
+                @Html.HiddenFor(m => m.BusinessLossDetailsObject.ITSectionCategoryId
+                    , Model.BusinessLossDetailsObject.ITSectionCategoryId)
+                @Html.TextBoxFor(m => m.BusinessLossDetailsObject.IncomeCapGainsLTCG_BF
+                        , string.Format("{0:f}", Model.BusinessLossDetailsObject.IncomeCapGainsLTCG_BF)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                Income from capital gains(STCG):
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.BusinessLossDetailsObject.IncomeCapGainsSTCG_BF
+                        , string.Format("{0:f}", Model.BusinessLossDetailsObject.IncomeCapGainsSTCG_BF)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+
+        <tr>
+            <td>B</td>
+            <td>
+                Business Losses:
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                Income from Business & Profession (Non Speculative):
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.BusinessLossDetailsObject.IncomeBusinessProf_BF 
+                        , string.Format("{0:f}", Model.BusinessLossDetailsObject.IncomeBusinessProf_BF)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                Income from Speculative Business:
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.BusinessLossDetailsObject.IncomeSpeculativeBusiness_BF
+                        , string.Format("{0:f}", Model.BusinessLossDetailsObject.IncomeSpeculativeBusiness_BF)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                Unabsorbed Depreciation:
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.BusinessLossDetailsObject.UnabsorbedDepreciation_BF
+                        , string.Format("{0:f}", Model.BusinessLossDetailsObject.UnabsorbedDepreciation_BF)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+
+        <tr>
+            <td>C</td>
+            <td>
+                Income from house property:
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.BusinessLossDetailsObject.HousePropIncome_BF
+                        , string.Format("{0:f}", Model.BusinessLossDetailsObject.HousePropIncome_BF)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+        <tr>
+            <td>D</td>
+            <td>
+                Income from other sources:
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.BusinessLossDetailsObject.IncomeOtherSources_BF
+                        , string.Format("{0:f}", Model.BusinessLossDetailsObject.IncomeOtherSources_BF)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+    </tbody>
+
+    <thead>
+        <tr>
+            <th>2</th>
+            <th colspan="2">Current Year Losses</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <td>A</td>
+            <td colspan="2">
+                Capital Gains Losses:
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                Income from capital gains(LTCG):
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.BusinessLossDetailsObject.IncomeCapGainsLTCG_CY
+                        , string.Format("{0:f}", Model.BusinessLossDetailsObject.IncomeCapGainsLTCG_CY)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                Income from capital gains(STCG):
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.BusinessLossDetailsObject.IncomeCapGainsSTCG_CY
+                        , string.Format("{0:f}", Model.BusinessLossDetailsObject.IncomeCapGainsSTCG_CY)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+
+        <tr>
+            <td>B</td>
+            <td>
+                Business Losses:
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                Income from Business & Profession (Non Speculative):
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.BusinessLossDetailsObject.IncomeBusinessProf_CY
+                        , string.Format("{0:f}", Model.BusinessLossDetailsObject.IncomeBusinessProf_CY)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                Income from Speculative Business:
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.BusinessLossDetailsObject.IncomeSpeculativeBusiness_CY
+                        , string.Format("{0:f}", Model.BusinessLossDetailsObject.IncomeSpeculativeBusiness_CY)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                Unabsorbed Depreciation:
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.BusinessLossDetailsObject.UnabsorbedDepreciation_CY
+                        , string.Format("{0:f}", Model.BusinessLossDetailsObject.UnabsorbedDepreciation_CY)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+
+        <tr>
+            <td>C</td>
+            <td>
+                Income from house property:
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.BusinessLossDetailsObject.HousePropIncome_CY
+                        , string.Format("{0:f}", Model.BusinessLossDetailsObject.HousePropIncome_CY)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+        <tr>
+            <td>D</td>
+            <td>
+                Income from other sources:
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.BusinessLossDetailsObject.IncomeOtherSources_CY
+                        , string.Format("{0:f}", Model.BusinessLossDetailsObject.IncomeOtherSources_CY)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+    </tbody>
+
+    <thead>
+        <tr>
+            <th>3</th>
+            <th colspan="2">Utilisation of Losses</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <td>A</td>
+            <td colspan="2">
+                Capital Gains Losses:
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                Income from capital gains(LTCG):
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.BusinessLossDetailsObject.IncomeCapGainsLTCG_UL
+                        , string.Format("{0:f}", Model.BusinessLossDetailsObject.IncomeCapGainsLTCG_UL)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                Income from capital gains(STCG):
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.BusinessLossDetailsObject.IncomeCapGainsSTCG_UL
+                        , string.Format("{0:f}", Model.BusinessLossDetailsObject.IncomeCapGainsSTCG_UL)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+
+        <tr>
+            <td>B</td>
+            <td>
+                Business Losses:
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                Income from Business & Profession (Non Speculative):
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.BusinessLossDetailsObject.IncomeBusinessProf_UL
+                        , string.Format("{0:f}", Model.BusinessLossDetailsObject.IncomeBusinessProf_UL)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                Income from Speculative Business:
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.BusinessLossDetailsObject.IncomeSpeculativeBusiness_UL
+                        , string.Format("{0:f}", Model.BusinessLossDetailsObject.IncomeSpeculativeBusiness_UL)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                Unabsorbed Depreciation:
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.BusinessLossDetailsObject.UnabsorbedDepreciation_UL
+                        , string.Format("{0:f}", Model.BusinessLossDetailsObject.UnabsorbedDepreciation_UL)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+
+        <tr>
+            <td>C</td>
+            <td>
+                Income from house property:
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.BusinessLossDetailsObject.HousePropIncome_UL
+                        , string.Format("{0:f}", Model.BusinessLossDetailsObject.HousePropIncome_UL)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+        <tr>
+            <td>D</td>
+            <td>
+                Income from other sources:
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.BusinessLossDetailsObject.IncomeOtherSources_UL
+                        , string.Format("{0:f}", Model.BusinessLossDetailsObject.IncomeOtherSources_UL)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+    </tbody>
+
+    <thead>
+        <tr>
+            <th>4</th>
+            <th colspan="2">
+                @(Model.BusinessLossDetailsObject.ITSectionCategoryId == 1 ?
+                "Undisputed adjustment to losses during litigation"
+                : "Disputed adjustment to losses during litigation")
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <td>A</td>
+            <td colspan="2">
+                Capital Gains Losses:
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                Income from capital gains(LTCG):
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.BusinessLossDetailsObject.IncomeCapGainsLTCG_UALL
+                        , string.Format("{0:f}", Model.BusinessLossDetailsObject.IncomeCapGainsLTCG_UALL)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                Income from capital gains(STCG):
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.BusinessLossDetailsObject.IncomeCapGainsSTCG_UALL
+                        , string.Format("{0:f}", Model.BusinessLossDetailsObject.IncomeCapGainsSTCG_UALL)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+
+        <tr>
+            <td>B</td>
+            <td>
+                Business Losses:
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                Income from Business & Profession (Non Speculative):
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.BusinessLossDetailsObject.IncomeBusinessProf_UALL
+                        , string.Format("{0:f}", Model.BusinessLossDetailsObject.IncomeBusinessProf_UALL)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                Income from Speculative Business:
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.BusinessLossDetailsObject.IncomeSpeculativeBusiness_UALL
+                        , string.Format("{0:f}", Model.BusinessLossDetailsObject.IncomeSpeculativeBusiness_UALL)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                Unabsorbed Depreciation:
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.BusinessLossDetailsObject.UnabsorbedDepreciation_UALL
+                        , string.Format("{0:f}", Model.BusinessLossDetailsObject.UnabsorbedDepreciation_UALL)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+
+        <tr>
+            <td>C</td>
+            <td>
+                Income from house property:
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.BusinessLossDetailsObject.HousePropIncome_UALL
+                        , string.Format("{0:f}", Model.BusinessLossDetailsObject.HousePropIncome_UALL)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+        <tr>
+            <td>D</td>
+            <td>
+                Income from other sources:
+            </td>
+            <td>
+                @Html.TextBoxFor(m => m.BusinessLossDetailsObject.IncomeOtherSources_UALL
+                        , string.Format("{0:f}", Model.BusinessLossDetailsObject.IncomeOtherSources_UALL)
+                        , new { @class = "numericOnly" })
+            </td>
+        </tr>
+    </tbody>
+
+    <tbody>
+        <tr>
+            <td colspan="4" align="center">
+                <button type="submit" class="btn btn-primary">
+                    Save
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+}

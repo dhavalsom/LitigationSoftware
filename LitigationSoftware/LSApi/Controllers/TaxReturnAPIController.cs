@@ -166,6 +166,51 @@ namespace LSApi.Controllers
             var spIncomeDetailsResult = ItReturnObj.InsertUpdateSPIncomeDetails(spIncomeDetails, null);
             return spIncomeDetailsResult;
         }
+
+
+        [HttpGet]
+        [Route("GetBusinessLossDetailsList")]
+        // GET: api/TaxReturnAPI/GetBusinessLossDetailsList
+        public BusinessLossDetailsResponse GetBusinessLossDetailsList(int? companyId, int? fyayId
+            , int? itSectionCategoryId, int? businessLossDetailsId)
+        {
+            var ItReturnObj = _Kernel.Get<IITReturnDetailsBL>();
+            return ItReturnObj.GetBusinessLossDetailsList(companyId, fyayId
+            , itSectionCategoryId, businessLossDetailsId);
+        }
+
+        // POST: api/InsertUpdateBusinessLossDetails
+        [HttpPost]
+        [Route("InsertUpdateBusinessLossDetails")]
+        public BusinessLossDetailsResponse InsertUpdateBusinessLossDetails
+            ([FromBody]BusinessLossDetails businessLossDetails)
+        {
+            var ItReturnObj = _Kernel.Get<IITReturnDetailsBL>();
+            var businessLossDetailsResult = ItReturnObj.InsertUpdateBusinessLossDetails(businessLossDetails, null);
+            return businessLossDetailsResult;
+        }
+
+        [HttpGet]
+        [Route("GetMATCreditDetailsList")]
+        // GET: api/TaxReturnAPI/GetMATCreditDetailsList
+        public MATCreditDetailsResponse GetMATCreditDetailsList(int? companyId, int? fyayId
+            , int? itSectionCategoryId, int? matCreditDetailsId)
+        {
+            var ItReturnObj = _Kernel.Get<IITReturnDetailsBL>();
+            return ItReturnObj.GetMATCreditDetailsList(companyId, fyayId
+            , itSectionCategoryId, matCreditDetailsId);
+        }
+
+        // POST: api/InsertUpdateMATCreditDetails
+        [HttpPost]
+        [Route("InsertUpdateMATCreditDetails")]
+        public MATCreditDetailsResponse InsertUpdateMATCreditDetails
+            ([FromBody]MATCreditDetails matCreditDetails)
+        {
+            var ItReturnObj = _Kernel.Get<IITReturnDetailsBL>();
+            var matCreditDetailsResult = ItReturnObj.InsertUpdateMATCreditDetails(matCreditDetails, null);
+            return matCreditDetailsResult;
+        }
         #endregion
     }
 }
