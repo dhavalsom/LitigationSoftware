@@ -64,6 +64,24 @@ namespace LS.Models
         public DateTime? RefundAlreadyReceivedDate { get; set; }
 
         public List<ITReturnDetailsExtension> Extensions { get; set; }
+
+        #region TaxComputationSheet
+        public decimal? TotalIncomeasperRegProvisions { get; set; }
+        public decimal? TaxOnTotalIncome { get; set; }
+        public decimal? SurchargeTax { get; set; }
+        public decimal? EducationCess { get; set; }
+        public decimal? MATTaxOnTotalIncome { get; set; }
+        public decimal? MATSurchargeTax { get; set; }
+        public decimal? MATEducationCess { get; set; }
+        public decimal? Taxliability { get; set; }
+        public decimal? TotalTaxPaid { get; set; }
+        public decimal? TotalInterest { get; set; }
+        public decimal? TaxPayable { get; set; }
+        public decimal? NetDemand { get; set; }
+        //public List<SPIncomeDetails> SelfAssessmentList { get; set; }
+        //public List<SPIncomeDetails> RegularAssessmentList { get; set; }
+        #endregion
+
         #endregion
 
         #region Serialization

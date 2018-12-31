@@ -134,11 +134,11 @@ namespace LS.BL.Library
             }
         }
 
-        public List<ITHeadMaster> GetITHeadMaster()
+        public List<ITHeadMaster> GetITHeadMaster(bool? IsTaxComputed)
         {
             try
             {
-                return this._masterDA.GetITHeadMaster();
+                return this._masterDA.GetITHeadMaster(IsTaxComputed);
             }
             catch (Exception ex)
             {
@@ -214,11 +214,11 @@ namespace LS.BL.Library
             }
         }
 
-        public List<StandardData> GetStandardData(int? standarddataId)
+        public List<StandardData> GetStandardData(int? FYAYID, int? standarddataId)
         {
             try
             {
-                return this._masterDA.GetStandardData(standarddataId);
+                return this._masterDA.GetStandardData(FYAYID,standarddataId);
             }
             catch(Exception ex)
             {
@@ -230,11 +230,11 @@ namespace LS.BL.Library
             }
         }
 
-        public List<SurchargeData> GetSurchargeData(int? surchargedataId)
+        public List<SurchargeData> GetSurchargeData(int? FYAYID, int? surchargedataId,int? entitycategorytypeid)
         {
             try
             {
-                return this._masterDA.GetSurchargeData(surchargedataId);
+                return this._masterDA.GetSurchargeData(FYAYID, surchargedataId, entitycategorytypeid);
             }
             catch (Exception ex)
             {

@@ -12,14 +12,17 @@ namespace LSWebApp.Models
         public int? CompanyId { get; set; }
         public int? FYAYId { get; set; }
         public int? Id { get; set; }
-        public List<string> ItemsWithAmounts { get; set; }
+        public List<string> ItemsWithAmounts_ROI { get; set; }
+        public List<string> ItemsWithAmounts_TaxCalc { get; set; }
+        public List<SPIncomeDetails> SelfAssessmentList { get; set; }
+        public List<SPIncomeDetails> RegularAssessmentList { get; set; }
         #endregion
 
         #region Constructors
         public ITReturnDetailsListModel()
         {
             ITReturnDetailsListObject = new List<ITReturnDetails>();
-            ItemsWithAmounts = new List<string>
+            ItemsWithAmounts_ROI = new List<string>
             {
                 "IncomefromSalary",
                 "HousePropIncome",
@@ -29,7 +32,11 @@ namespace LSWebApp.Models
                 "IncomefromSpeculativeBusiness",
                 "IncomeFromOtherSources",
                 "DeductChapterVIA",
-                "ProfitUS115JB",
+                "ProfitUS115JB"                
+            };
+
+            ItemsWithAmounts_TaxCalc = new List<string>
+            {
                 "AdvanceTax1installment",
                 "AdvanceTax2installment",
                 "AdvanceTax3installment",

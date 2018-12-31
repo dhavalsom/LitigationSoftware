@@ -1,7 +1,109 @@
-﻿
+﻿@model LSWebApp.Models.StandardDataModel
 @{
-    ViewBag.Title = "GetStandardData";
+    ViewBag.Title = "Standard Data";
+    Layout = "~/Views/Shared/_LayoutDynemicMenu.cshtml";
 }
 
 <h2>GetStandardData</h2>
+<div>
+    <table>
+        <tr>
+            <td>
+                Select Financial Year:
+            </td>
+            <td>
+                @Html.HiddenFor(m => m.FinancialYear, Model.FinancialYear)
+                @Html.DropDownListFor(m => m.FYAYId
+                        , new SelectList(Model.FYAYList, "Id", "FinancialYear", Model.FYAYId)
+                        , "All"
+                        , new { @name = "FYAYId", @id = "FYAYId", @class = "ddFYAYITRD", @style = "width:400px" })
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Basic Tax Rate:
+            </td>
+            <td>
+                <div class="row col-12">
+                    @Html.TextBoxFor(m => m.StandardDataObject.BasicTaxRate
+                       , string.Format("{0:f}", Model.StandardDataObject.BasicTaxRate)
+                       , new { @class = "numericOnly" })
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                MAT Rate:
+            </td>
+            <td>
+                <div class="row col-12">
+                    @Html.TextBoxFor(m => m.StandardDataObject.MATRate
+                , string.Format("{0:f}", Model.StandardDataObject.MATRate)
+                , new { @class = "numericOnly" })
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Education cess:
+            </td>
+            <td>
+                <div class="row col-12">
+                    @Html.TextBoxFor(m => m.StandardDataObject.EducationCess
+                , string.Format("{0:f}", Model.StandardDataObject.EducationCess)
+                , new { @class = "numericOnly" })
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center"><button type="submit" class="btn btn-primary">Save</button></td>
+        </tr>
+    </table>
+</div>
+<br />
+<div id="itrStandardDataList">
+    <table class="table table-hover">
+        <thead>
+        <th>Financial Year</th>
+        <th>Assessment Year</th>
+        <th>Basic Tax Rate</th>
+        <th>MAT Rate</th>
+        <th>Education Cess</th>
+        <th></th>
+        </thead>
+        @foreach (var standardData in Model.StandardDataObjectList)
+        {
+            <tr>
+                <td>@standardData.FinancialYear</td>
+                <td>@standardData.AssessmentYear</td>
+                <td>@standardData.BasicTaxRate</td>
+                <td>@standardData.MATRate</td>
+                <td>@standardData.EducationCess</td>
+                <td>Edit</td>
+            </tr>
+        }
 
+    </table>
+</div>
+@*@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () { 
+            loadStandardDatadetails();
+        });
+
+        function loadStandardDatadetails() {
+            $.ajax({
+                url: '/getstandarddata',
+                error: function () {
+                },
+                dataType: 'html',
+                success: function (data) {
+                    $("#itrStandardDataList").html(data);
+                },
+                type: 'GET'
+            });
+        }
+
+    </script>
+}*@

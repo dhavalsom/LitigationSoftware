@@ -31,7 +31,8 @@ namespace LS.DAL.Library
                         {
                             CompanyName = reader["CompanyName"] != DBNull.Value ? reader["CompanyName"].ToString() : null,
                             PANNumber = reader["PANNumber"] != DBNull.Value ? reader["PANNumber"].ToString() : null,
-                            Id = Convert.ToInt32(reader["ID"].ToString())
+                            Id = Convert.ToInt32(reader["ID"].ToString()),
+                            CategoryID = reader["CategoryID"] != DBNull.Value ? Convert.ToInt32(reader["CategoryID"].ToString()) : 0
                         });
                     }
                 }
@@ -292,13 +293,19 @@ namespace LS.DAL.Library
             }
         }
 
-        public List<ITHeadMaster> GetITHeadMaster()
+        public List<ITHeadMaster> GetITHeadMaster(bool? IsTaxComputed)
         {
             try
             {
                 Log.Info("Started call to GetITHeadMaster");
                 Command.CommandText = "SP_GET_IT_HEAD_MASTER";
                 Command.CommandType = CommandType.StoredProcedure;
+                Command.Parameters.Clear();
+
+                if (IsTaxComputed.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@IsTaxComputed", IsTaxComputed.Value);
+                }
                 Connection.Open();
                 SqlDataReader reader = Command.ExecuteReader();
                 List<ITHeadMaster> result = new List<ITHeadMaster>();
@@ -317,7 +324,8 @@ namespace LS.DAL.Library
                             IsSpecialIncomeEnabled = reader["IsSpecialIncomeEnabled"] != DBNull.Value ? Convert.ToBoolean(reader["IsSpecialIncomeEnabled"].ToString()) : false,
                             IsROI = reader["IsROI"] != DBNull.Value ? Convert.ToBoolean(reader["IsROI"].ToString()) : false,
                             Active = Convert.ToBoolean(reader["Active"].ToString()),
-                            Id = Convert.ToInt32(reader["Id"].ToString())
+                            Id = Convert.ToInt32(reader["Id"].ToString()),
+                            IsTaxComputed = Convert.ToBoolean(reader["IsTaxComputed"].ToString())
                         });
                     }
                 }
@@ -514,7 +522,7 @@ namespace LS.DAL.Library
             }
         }
 
-        public List<StandardData> GetStandardData(int? standarddataId)
+        public List<StandardData> GetStandardData(int? FYAYID, int? standarddataId)
         {
             try
             {
@@ -526,6 +534,7 @@ namespace LS.DAL.Library
 
                 Command.Parameters.Clear();
 
+                Command.Parameters.AddWithValue("@FYAY_ID", FYAYID);
                 Command.Parameters.AddWithValue("@StandardData_ID", standarddataId);
                 Command.Parameters.AddWithValue("@ACTIVE", true);
 
@@ -562,7 +571,7 @@ namespace LS.DAL.Library
             }
         }
 
-        public List<SurchargeData> GetSurchargeData(int? surchargedataId)
+        public List<SurchargeData> GetSurchargeData(int? FYAYID, int? surchargedataId, int? entitycategorytypeid)
         {
             try
             {
@@ -574,7 +583,9 @@ namespace LS.DAL.Library
 
                 Command.Parameters.Clear();
 
+                Command.Parameters.AddWithValue("@FYAY_ID", FYAYID);
                 Command.Parameters.AddWithValue("@SurchargeData_ID", surchargedataId);
+                Command.Parameters.AddWithValue("@entitycategorytypeid", entitycategorytypeid);
                 Command.Parameters.AddWithValue("@ACTIVE", true);
 
                 SqlDataReader reader = Command.ExecuteReader();

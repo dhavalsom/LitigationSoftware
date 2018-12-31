@@ -94,10 +94,10 @@ namespace LSApi.Controllers
         [HttpGet]
         [Route("GetITHeadMaster")]
         // GET: api/MasterAPI/GetITHeadMaster
-        public List<ITHeadMaster> GetITHeadMaster()
+        public List<ITHeadMaster> GetITHeadMaster(bool? IsTaxComputed)
         {
             var CompObj = _Kernel.Get<IMaster>();
-            return CompObj.GetITHeadMaster();
+            return CompObj.GetITHeadMaster(IsTaxComputed);
         }
 
         [HttpGet]
@@ -140,20 +140,20 @@ namespace LSApi.Controllers
 
         [HttpGet]
         [Route("GetStandardData")]
-        // GET: api/MasterAPI/GetComplianceMaster
-        public List<StandardData> GetStandardData(int? standarddataId)
+        // GET: api/MasterAPI/GetStandardData
+        public List<StandardData> GetStandardData(int? FYAYID,int? standarddataId)
         {
             var CompObj = _Kernel.Get<IMaster>();
-            return CompObj.GetStandardData(standarddataId);
+            return CompObj.GetStandardData(FYAYID, standarddataId);
         }
 
         [HttpGet]
         [Route("GetSurchargeData")]
-        // GET: api/MasterAPI/GetComplianceMaster
-        public List<SurchargeData> GetSurchargeData(int? surchargedataId)
+        // GET: api/MasterAPI/GetSurchargeData
+        public List<SurchargeData> GetSurchargeData(int? FYAYID, int? surchargedataId,int? entitycategorytypeid)
         {
             var CompObj = _Kernel.Get<IMaster>();
-            return CompObj.GetSurchargeData(surchargedataId);
+            return CompObj.GetSurchargeData(FYAYID, surchargedataId, entitycategorytypeid);
         }
     }
 }

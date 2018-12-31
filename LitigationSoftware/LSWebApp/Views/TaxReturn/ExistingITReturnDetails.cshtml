@@ -54,6 +54,12 @@
 
     </div>
 </div>
+<br />
+<div class="container">
+    <div class="bs-component" id="taxcomputationDiv">
+
+    </div>
+</div>
 @section scripts
 {
 <script type="text/javascript">
@@ -66,6 +72,7 @@
     $(document).ready(function () {
         $("#btnsrch").click(function () {
             loadexistingitsections();
+            loadtaxcomputationsheet();
             return false;
         });
 
@@ -94,6 +101,23 @@
             dataType: 'html',
             success: function (data) {
                  $("#sectionDiv").html(data);
+            }
+            });
+    }
+    function loadtaxcomputationsheet() {
+        var url = "@Url.Action("TaxCalculationSheet", "TaxReturn")" + '?companyId=' + $('#ITReturnDetailsObject_CompanyID').val() + '&fyayId=' + $('#ITReturnDetailsObject_FYAYID').val();
+
+        $.ajax({
+            url: url ,
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            type: 'GET',
+            error: function (xhr,status,error) {
+                alert("inside error " + xhr.responseText);
+            },
+            dataType: 'html',
+            success: function (data) {
+                $("#taxcomputationDiv").html(data);
             }
             });
     }

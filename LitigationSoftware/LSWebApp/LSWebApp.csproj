@@ -198,6 +198,7 @@
     <Compile Include="Models\ITReturnDocumentsModel.cs" />
     <Compile Include="Models\LitigationDDModel.cs" />
     <Compile Include="Models\StandardDataModel.cs" />
+    <Compile Include="Models\SurchargeDataModel.cs" />
     <Compile Include="Models\ViewModelBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -328,6 +329,7 @@
     <Content Include="Views\TaxReturn\ITReturnDetailsData.cshtml" />
     <Content Include="Views\TaxReturn\ITHeadDetails.cshtml" />
     <Content Include="Views\Shared\_ITHeadSpecialIncome.cshtml" />
+    <Content Include="Views\TaxReturn\TaxCalculationSheet.cshtml" />
     <Content Include="Views\TaxReturn\BusinessLossDetails.cshtml" />
     <Content Include="Views\TaxReturn\BusinessLossDetailsData.cshtml" />
     <Content Include="Views\TaxReturn\MATCreditDetails.cshtml" />

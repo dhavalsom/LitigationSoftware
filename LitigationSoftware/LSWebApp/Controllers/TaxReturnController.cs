@@ -181,7 +181,7 @@ namespace LSWebApp.Controllers
 
                     Res = await client.GetAsync("api/MasterAPI/GetITSubHeadMaster?itHeadId=");
                     var itSubHeads = JsonConvert.DeserializeObject<List<ITSubHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
-                    Res = await client.GetAsync("api/MasterAPI/GetITHeadMaster");
+                    Res = await client.GetAsync("api/MasterAPI/GetITHeadMaster?IsTaxComputed=");
                     var itHeads = JsonConvert.DeserializeObject<List<ITHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
 
                     if (itsectionid.HasValue)
@@ -497,7 +497,7 @@ namespace LSWebApp.Controllers
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetITSubHeadMaster?itHeadId=");
                     var itSubHeads = JsonConvert.DeserializeObject<List<ITSubHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
-                    Res = await client.GetAsync("api/MasterAPI/GetITHeadMaster");
+                    Res = await client.GetAsync("api/MasterAPI/GetITHeadMaster?IsTaxComputed=");
                     var itHeads = JsonConvert.DeserializeObject<List<ITHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
 
                     if (itSectionId.HasValue)
@@ -722,7 +722,7 @@ namespace LSWebApp.Controllers
                     }
                     Res = await client.GetAsync("api/MasterAPI/GetITSubHeadMaster?itHeadId=");
                     var itSubHeads = JsonConvert.DeserializeObject<List<ITSubHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
-                    Res = await client.GetAsync("api/MasterAPI/GetITHeadMaster");
+                    Res = await client.GetAsync("api/MasterAPI/GetITHeadMaster?IsTaxComputed=");
                     var itHeads = JsonConvert.DeserializeObject<List<ITHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
                     lAndSModel.PopulateITHeadMasters(itHeads, itSubHeads);
                 }
@@ -759,13 +759,234 @@ namespace LSWebApp.Controllers
                     }
                     Res = await client.GetAsync("api/MasterAPI/GetITSubHeadMaster?itHeadId=");
                     var itSubHeads = JsonConvert.DeserializeObject<List<ITSubHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
-                    Res = await client.GetAsync("api/MasterAPI/GetITHeadMaster");
+                    Res = await client.GetAsync("api/MasterAPI/GetITHeadMaster?IsTaxComputed=false");
                     var itHeads = JsonConvert.DeserializeObject<List<ITHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
                     itrdetail.PopulateITHeadMasters(itHeads, itSubHeads);
                 }
             }
 
             return PartialView("ExistingSectionWiseDetails", itrdetail);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> TaxCalculationSheet(int companyId, int fyayId)
+        {
+            var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+
+            ITReturnDetailsListModel itrdetail = new ITReturnDetailsListModel()
+            {
+                CompanyId = companyId,
+                FYAYId = fyayId,
+            };
+            decimal? foreignDividend = 0;
+            StandardDataModel standardDataModelObject = new StandardDataModel();
+            StandardData standardrefData = new StandardData();
+            SurchargeDataModel surchargeDataModelObject = new SurchargeDataModel();
+            SurchargeData surchargerefData = new SurchargeData();
+            decimal? STCGSpecialIncome = 0;
+            decimal? Surchargerate = 0;
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.GetAsync("api/TaxReturnAPI/GetExistingITReturnDetailsList?companyId=" + companyId + "&fyayId=" + fyayId + "&itsectionid=0&itreturnid=0");
+                if (Res.IsSuccessStatusCode)
+                {
+                    itrdetail.ITReturnDetailsListObject = JsonConvert.DeserializeObject<ITReturnDetailsListResponse>(Res.Content.ReadAsStringAsync().Result).ITReturnDetailsListObject;
+                    foreach (var itReturn in itrdetail.ITReturnDetailsListObject)
+                    {
+                        itReturn.Extensions = new List<ITReturnDetailsExtension>();
+                        Res = await client.GetAsync("api/TaxReturnAPI/GetExistingITReturnDetailsExtension?itreturnid=" + itReturn.Id);
+                        if (Res.IsSuccessStatusCode)
+                        {
+                            itReturn.Extensions = JsonConvert.DeserializeObject<List<ITReturnDetailsExtension>>(Res.Content.ReadAsStringAsync().Result);
+                        }
+
+                        
+                    }
+                    Res = await client.GetAsync("api/MasterAPI/GetITSubHeadMaster?itHeadId=");
+                    var itSubHeads = JsonConvert.DeserializeObject<List<ITSubHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
+                    Res = await client.GetAsync("api/MasterAPI/GetITHeadMaster?IsTaxComputed=");
+                    var itHeads = JsonConvert.DeserializeObject<List<ITHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
+                    itrdetail.PopulateITHeadMasters(itHeads, itSubHeads);
+
+                    Res = await client.GetAsync("api/MasterAPI/GetStandardData?FYAYID="+fyayId+"&standarddataId=");
+
+                    if (Res.IsSuccessStatusCode)
+                    {
+                        standardDataModelObject.StandardDataObjectList = JsonConvert.DeserializeObject<List<StandardData>>(Res.Content.ReadAsStringAsync().Result);
+                        standardrefData = standardDataModelObject.StandardDataObjectList.FirstOrDefault();
+                    }
+
+                    Res = await client.GetAsync("api/MasterAPI/GetSurchargeData?FYAYID=" + fyayId + "&surchargedataId=&entitycategorytypeid="+ selectedCompany.CategoryID);
+
+                    if (Res.IsSuccessStatusCode)
+                    {
+                        surchargeDataModelObject.SurchargeDataObjectList = JsonConvert.DeserializeObject<List<SurchargeData>>(Res.Content.ReadAsStringAsync().Result);
+                        //surchargerefData = surchargeDataModelObject.SurchargeDataObjectList.FirstOrDefault();
+                    }
+
+                    foreach (var itReturn in itrdetail.ITReturnDetailsListObject)
+                    {
+                        //Statement of Taxes
+
+                        Res = await client.GetAsync("api/TaxReturnAPI/GetSPIncomeDetailsList?itReturnDetailsId="
+                                    + itReturn.Id + "&itHeadId="+ itHeads.Where(x => x.PropertyName == "IncomeFromOtherSources").FirstOrDefault().Id);
+                        if (Res.IsSuccessStatusCode)
+                        {
+                            var objSPIncomeDetailsResponse = JsonConvert.DeserializeObject<SPIncomeDetailsResponse>
+                                        (Res.Content.ReadAsStringAsync().Result);
+
+                            foreach (var item in objSPIncomeDetailsResponse.SPIncomeDetailsList)
+                            {
+                                foreignDividend = item.SPIncomeDescription.ToUpper().Trim().Replace(" ", "") == "FOREIGNDIVIDEND" ? (item.SPIncomeValue.HasValue?item.SPIncomeValue:0) : 0;
+                            }
+                        }
+
+                        Res = await client.GetAsync("api/TaxReturnAPI/GetSPIncomeDetailsList?itReturnDetailsId="
+                                    + itReturn.Id + "&itHeadId=" + itHeads.Where(x => x.PropertyName == "IncomefromCapGainsSTCG").FirstOrDefault().Id);
+                        if (Res.IsSuccessStatusCode)
+                        {
+                            var objSPIncomeDetailsResponse = JsonConvert.DeserializeObject<SPIncomeDetailsResponse>
+                                        (Res.Content.ReadAsStringAsync().Result);
+
+                            foreach (var item in objSPIncomeDetailsResponse.SPIncomeDetailsList)
+                            {
+                                STCGSpecialIncome = STCGSpecialIncome + ((item.SPIncomeValue.HasValue ? item.SPIncomeValue : 0) * (item.TaxRate/100));
+                            }
+                        }
+
+                        Res = await client.GetAsync("api/TaxReturnAPI/GetSPIncomeDetailsList?itReturnDetailsId="
+                                    + itReturn.Id + "&itHeadId=" + itHeads.Where(x => x.PropertyName == "SelfAssessmentTax").FirstOrDefault().Id);
+                        if (Res.IsSuccessStatusCode)
+                        {
+                            var objSPIncomeDetailsResponse = JsonConvert.DeserializeObject<SPIncomeDetailsResponse>
+                                        (Res.Content.ReadAsStringAsync().Result);
+
+                            if (objSPIncomeDetailsResponse.SPIncomeDetailsList.Count>0)
+                                itrdetail.SelfAssessmentList = objSPIncomeDetailsResponse.SPIncomeDetailsList;
+                        }
+
+                        Res = await client.GetAsync("api/TaxReturnAPI/GetSPIncomeDetailsList?itReturnDetailsId="
+                                    + itReturn.Id + "&itHeadId=" + itHeads.Where(x => x.PropertyName == "RegularAssessment").FirstOrDefault().Id);
+                        if (Res.IsSuccessStatusCode)
+                        {
+                            var objSPIncomeDetailsResponse = JsonConvert.DeserializeObject<SPIncomeDetailsResponse>
+                                        (Res.Content.ReadAsStringAsync().Result);
+
+                            if (objSPIncomeDetailsResponse.SPIncomeDetailsList.Count > 0)
+                                itrdetail.RegularAssessmentList = objSPIncomeDetailsResponse.SPIncomeDetailsList;
+                        }
+
+                        itReturn.TotalIncomeasperRegProvisions = itReturn.GetTotalComputedValue(itHeads.Where(x => x.PropertyName == "IncomefromSalary").FirstOrDefault())
+                            + itReturn.GetTotalComputedValue(itHeads.Where(x => x.PropertyName == "HousePropIncome").FirstOrDefault())
+                            + itReturn.GetTotalComputedValue(itHeads.Where(x => x.PropertyName == "IncomefromCapGainsLTCG").FirstOrDefault())
+                            + itReturn.GetTotalComputedValue(itHeads.Where(x => x.PropertyName == "IncomefromCapGainsSTCG").FirstOrDefault())
+                            + itReturn.GetTotalComputedValue(itHeads.Where(x => x.PropertyName == "IncomefromBusinessProf").FirstOrDefault())
+                            + itReturn.GetTotalComputedValue(itHeads.Where(x => x.PropertyName == "IncomefromSpeculativeBusiness").FirstOrDefault())
+                            + itReturn.GetTotalComputedValue(itHeads.Where(x => x.PropertyName == "IncomeFromOtherSources").FirstOrDefault())
+                            - itReturn.GetTotalComputedValue(itHeads.Where(x => x.PropertyName == "DeductChapterVIA").FirstOrDefault());
+
+                        itReturn.TaxOnTotalIncome = ((itReturn.TotalIncomeasperRegProvisions- foreignDividend)*(standardrefData.BasicTaxRate/100))+ STCGSpecialIncome;
+                        //itReturn.SurchargeTax = ()
+
+                    foreach(var item in surchargeDataModelObject.SurchargeDataObjectList)
+                        {
+                            if (itReturn.TaxOnTotalIncome >= (item.surchargefromthreshold.HasValue?item.surchargefromthreshold:0) && itReturn.TaxOnTotalIncome <= (item.surchargetothreshold.HasValue?item.surchargetothreshold:0))
+                            {
+                                Surchargerate = item.surchargerate;
+                                break;
+                            }
+                        }
+
+                        if (Surchargerate > 0)
+                            itReturn.SurchargeTax = itReturn.TaxOnTotalIncome * (Surchargerate / 100);
+                        else
+                            itReturn.SurchargeTax = 0;
+
+                        if (itReturn.SurchargeTax > 0)
+                            itReturn.EducationCess = (itReturn.TaxOnTotalIncome + itReturn.SurchargeTax) * (standardrefData.EducationCess / 100);
+                        else
+                            itReturn.EducationCess = 0;
+
+                       
+                        if (itReturn.ProfitUS115JB < 0)
+                            itReturn.MATTaxOnTotalIncome = 0;
+                        else
+                            itReturn.MATTaxOnTotalIncome = (itReturn.ProfitUS115JB.HasValue?itReturn.ProfitUS115JB:0) * (standardrefData.MATRate / 100);
+
+                        Surchargerate = 0;//reset surchargerate to calculate surcharge for MAT
+
+                        foreach (var item in surchargeDataModelObject.SurchargeDataObjectList)
+                        {
+                            if (itReturn.MATTaxOnTotalIncome >= (item.surchargefromthreshold.HasValue ? item.surchargefromthreshold : 0) && itReturn.MATTaxOnTotalIncome <= (item.surchargetothreshold.HasValue ? item.surchargetothreshold : 0))
+                            {
+                                Surchargerate = item.surchargerate;
+                                break;
+                            }
+                        }
+
+                        if (Surchargerate > 0)
+                            itReturn.MATSurchargeTax = itReturn.MATTaxOnTotalIncome * (Surchargerate / 100);
+                        else
+                            itReturn.MATSurchargeTax = 0;
+
+                        if (itReturn.SurchargeTax > 0)
+                            itReturn.MATEducationCess = (itReturn.MATTaxOnTotalIncome + itReturn.MATSurchargeTax) * (standardrefData.EducationCess / 100);
+                        else
+                            itReturn.MATEducationCess = 0;
+
+                        if((itReturn.TaxOnTotalIncome + itReturn.SurchargeTax + itReturn.EducationCess) > (itReturn.MATTaxOnTotalIncome + itReturn.MATSurchargeTax + itReturn.MATEducationCess))
+                        {
+                            itReturn.Taxliability = (itReturn.TaxOnTotalIncome + itReturn.SurchargeTax + itReturn.EducationCess);
+                        }
+                        else
+                        {
+                            itReturn.Taxliability = (itReturn.MATTaxOnTotalIncome + itReturn.MATSurchargeTax + itReturn.MATEducationCess);
+                        }
+
+                        itReturn.TotalTaxPaid = (itReturn.AdvanceTax1installment.HasValue ? itReturn.AdvanceTax1installment : 0) +
+                                                (itReturn.AdvanceTax2installment.HasValue ? itReturn.AdvanceTax2installment : 0) +
+                                                (itReturn.AdvanceTax3installment.HasValue ? itReturn.AdvanceTax3installment : 0) +
+                                                (itReturn.AdvanceTax4installment.HasValue ? itReturn.AdvanceTax4installment : 0) +
+                                                (itReturn.TCSPaidbyCompany.HasValue ? itReturn.TCSPaidbyCompany : 0) +
+                                                (itReturn.TaxCollectedAtSource.HasValue ? itReturn.TaxCollectedAtSource : 0) +
+                                                (itReturn.MATCredit.HasValue ? itReturn.MATCredit : 0);
+
+                        itReturn.TotalInterest = (itReturn.InterestUS234A.HasValue ? itReturn.InterestUS234A : 0) +
+                                                 (itReturn.InterestUS234B.HasValue ? itReturn.InterestUS234B : 0) +
+                                                 (itReturn.InterestUS234C.HasValue ? itReturn.InterestUS234C : 0) +
+                                                 (itReturn.InterestUS234D.HasValue ? itReturn.InterestUS234D : 0) +
+                                                 (itReturn.InterestUS244A.HasValue ? itReturn.InterestUS244A : 0) +
+                                                 (itReturn.InterestUS220.HasValue ? itReturn.InterestUS220 : 0);
+
+                        itReturn.TaxPayable = itReturn.Taxliability - itReturn.TotalTaxPaid + itReturn.TotalInterest;
+                        itReturn.NetDemand = 0;
+                        foreach (var selfassmtval in itrdetail.SelfAssessmentList)
+                        {
+                            itReturn.NetDemand = itReturn.NetDemand + (selfassmtval.SPIncomeValue.HasValue ? selfassmtval.SPIncomeValue : 0);
+                        }
+
+                        foreach (var regassmtval in itrdetail.RegularAssessmentList)
+                        {
+                            itReturn.NetDemand = itReturn.NetDemand + (regassmtval.SPIncomeValue.HasValue ? regassmtval.SPIncomeValue : 0);
+                        }
+
+                        itReturn.NetDemand = itReturn.TaxPayable - (itReturn.NetDemand + (itReturn.RefundAdjusted.HasValue ? itReturn.RefundAdjusted:0) + (itReturn.RefundReceived.HasValue ? itReturn.RefundReceived:0));
+                    }
+
+
+                }
+                
+            }
+
+            return PartialView("TaxCalculationSheet", itrdetail);
         }
 
         [HttpPost]
@@ -996,7 +1217,7 @@ namespace LSWebApp.Controllers
                 model.FYAYList = JsonConvert.DeserializeObject<List<FYAY>>(Res.Content.ReadAsStringAsync().Result);
                 Res = await client.GetAsync("api/MasterAPI/GetCompanyList");
                 model.CompanyList = JsonConvert.DeserializeObject<List<Company>>(Res.Content.ReadAsStringAsync().Result);
-                Res = await client.GetAsync("api/MasterAPI/GetITHeadMaster");
+                Res = await client.GetAsync("api/MasterAPI/GetITHeadMaster?IsTaxComputed=");
                 model.ITHeadList = JsonConvert.DeserializeObject<List<ITHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
             }
 
@@ -1223,21 +1444,30 @@ namespace LSWebApp.Controllers
         [HttpGet]
         public async Task<ActionResult> GetStandardData()
         {
+            StandardDataModel standardDataModelObject = new StandardDataModel();
             var model = new List<StandardData>();
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetStandardData?surchargedataId=");
+                HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetFYAYList");
+                if (Res.IsSuccessStatusCode)
+                {
+                    standardDataModelObject.FYAYList = JsonConvert.DeserializeObject<List<FYAY>>(Res.Content.ReadAsStringAsync().Result);
+                }
+
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                Res = await client.GetAsync("api/MasterAPI/GetStandardData?surchargedataId=");
 
                 if (Res.IsSuccessStatusCode)
                 {
-                    model = JsonConvert.DeserializeObject<List<StandardData>>(Res.Content.ReadAsStringAsync().Result);
+                    standardDataModelObject.StandardDataObjectList = JsonConvert.DeserializeObject<List<StandardData>>(Res.Content.ReadAsStringAsync().Result);
                 }
             }
             //return Json(model, JsonRequestBehavior.AllowGet);
-            return View(model);
+            return View(standardDataModelObject);
         }
 
         [HttpPost]

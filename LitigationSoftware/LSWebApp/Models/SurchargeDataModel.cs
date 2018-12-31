@@ -5,22 +5,22 @@ using System.Web;
 
 namespace LSWebApp.Models
 {
-    public class StandardDataModel
+    public class SurchargeDataModel
     {
-        #region Proeprties
+        #region Properties
         public int? FYAYId { get; set; }
         public string FinancialYear { get; set; }
         public string AssessmentYear { get; set; }
         public List<FYAY> FYAYList { get; set; }
-        public StandardData StandardDataObject { get; set; }
-        public List<StandardData> StandardDataObjectList { get; set; }
+        public SurchargeData SurchargeDataObject { get; set; }
+        public List<SurchargeData> SurchargeDataObjectList { get; set; }
         #endregion
 
         #region Constructors
-        public StandardDataModel()
+        public SurchargeDataModel()
         {
-            StandardDataObject = new StandardData();
-            StandardDataObjectList = new List<StandardData>();
+            SurchargeDataObject = new SurchargeData();
+            SurchargeDataObjectList = new List<SurchargeData>();
         }
         #endregion
     }

@@ -98,6 +98,12 @@ namespace LSWebApp
             );
 
             routes.MapRoute(
+                name: "getstandarddata",
+                url: "getstandarddata",
+                defaults: new { controller = "TaxReturn", action = "GetStandardData", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
                 name: "createcompany",
                 url: "createcompany",
                 defaults: new { controller = "TaxReturn", action = "CreateCompany"
