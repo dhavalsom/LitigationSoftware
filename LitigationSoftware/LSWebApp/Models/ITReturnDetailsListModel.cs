@@ -22,6 +22,8 @@ namespace LSWebApp.Models
         public ITReturnDetailsListModel()
         {
             ITReturnDetailsListObject = new List<ITReturnDetails>();
+            SelfAssessmentList = new List<SPIncomeDetails>();
+            RegularAssessmentList = new List<SPIncomeDetails>();
             ItemsWithAmounts_ROI = new List<string>
             {
                 "IncomefromSalary",
