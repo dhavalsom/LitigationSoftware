@@ -339,17 +339,57 @@ namespace LSWebApp.Controllers
         }
 
         [HttpGet]
-        public ActionResult BusinessLossAnalysis()
+        public async Task<ActionResult> BusinessLossAnalysis()
         {
             var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
             if (selectedCompany == null)
             {
                 return RedirectToAction("GetCompanyList");
             }
-            return View(new BusinessLossAnalysisModel()
+            var model = new BusinessLossAnalysisModel()
             {
                 CompanyObject = HttpContext.Session["SelectedCompany"] as Company
-            });
+            };
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                    client.DefaultRequestHeaders.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpResponseMessage Res = await client.GetAsync("api/TaxReturnAPI/GetBusinessLossDetailsList?companyId="
+                        + selectedCompany.Id + "&fyayId=&itSectionCategoryId=&businessLossDetailsId=");
+                    var result = JsonConvert.DeserializeObject<BusinessLossDetailsResponse>(Res.Content.ReadAsStringAsync().Result);
+                    if (result != null
+                        && result.BusinessLossDetailsList != null
+                        && result.BusinessLossDetailsList.Any())
+                    {
+                        model.BusinessLossDetailsList = result.BusinessLossDetailsList;
+                        if (model.BusinessLossDetailsList.Any())
+                        {
+                            model.FYAYList = model.BusinessLossDetailsList
+                                .Select(m => new
+                                {
+                                    Id = m.FYAYId,
+                                    AssessmentYear = m.AssessmentYear,
+                                    FinancialYear = m.FinancialYear
+                                })
+                                .Distinct()
+                                .Select(m => new FYAY
+                                {
+                                    Id = m.Id,
+                                    AssessmentYear = m.AssessmentYear,
+                                    FinancialYear = m.FinancialYear
+                                }).ToList();
+                        }
+                    }
+                    return View(model);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         [HttpGet]
