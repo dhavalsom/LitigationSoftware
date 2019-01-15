@@ -850,8 +850,12 @@ namespace LS.DAL.Library
                             IsCurrentYear = bool.Parse(drBLDetails["IsCurrentYear"].ToString()),
                             Id = int.Parse(drBLDetails["Id"].ToString()),
                             CompanyId = int.Parse(drBLDetails["CompanyId"].ToString()),
+                            CompanyName = drBLDetails["CompanyName"] != DBNull.Value ? drBLDetails["CompanyName"].ToString() : String.Empty,
                             FYAYId = int.Parse(drBLDetails["FYAYId"].ToString()),
+                            FinancialYear = drBLDetails["FinancialYear"] != DBNull.Value ? drBLDetails["FinancialYear"].ToString() : String.Empty,
+                            AssessmentYear = drBLDetails["AssessmentYear"] != DBNull.Value ? drBLDetails["AssessmentYear"].ToString() : String.Empty,
                             ITSectionCategoryId = int.Parse(drBLDetails["ITSectionCategoryId"].ToString()),
+                            CategoryDesc = drBLDetails["CategoryDesc"] != DBNull.Value ? drBLDetails["CategoryDesc"].ToString() : String.Empty,
 
                             IncomeCapGainsLTCG_BF = drBLDetails["IncomeCapGainsLTCG_BF"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeCapGainsLTCG_BF"].ToString()) : (decimal?)null,
                             IncomeCapGainsSTCG_BF = drBLDetails["IncomeCapGainsSTCG_BF"] != DBNull.Value ? decimal.Parse(drBLDetails["IncomeCapGainsSTCG_BF"].ToString()) : (decimal?)null,

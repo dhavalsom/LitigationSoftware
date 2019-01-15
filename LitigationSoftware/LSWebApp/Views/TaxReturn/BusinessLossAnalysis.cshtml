@@ -3,10 +3,1093 @@
     ViewBag.Title = "Business/Loss Analysis";
     Layout = "~/Views/Shared/_LayoutDynemicMenu.cshtml";
 }
-<style>
-    table, th, td {
-        border: 1px solid black;
+<style type="text/css">
+    .table-condensed {
+        width: 200px;
+        height: 10px;
+        font-size: 10px;
     }
 </style>
 
+
 <h3>Business/Loss Analysis for @Model.CompanyObject.CompanyName</h3>
+
+<div class="container">
+    <div class="bs-component">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th colspan="2"
+                        style="text-align:center">
+                        Assesment Year
+                    </th>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <th colspan="2"
+                            style="text-align:center">
+                            @year.AssessmentYear
+                        </th>
+                    }
+                </tr>
+                <tr>
+                    <th colspan="2"></th>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <th style="text-align:center">
+                            ROI
+                        </th>
+                        <th style="text-align:center">
+                            Assesment
+                        </th>
+                    }
+                </tr>
+            </thead>
+            <thead>
+                <tr>
+                    <th>1</th>
+                    <th colspan="@(1 + Model.FYAYList.Count*2)">Brought Forward</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>A</td>
+                    <td colspan="2">
+                        Capital Gains Losses:
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        Income from capital gains(LTCG):
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() ? roiItem.First().IncomeCapGainsLTCG_BF : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() ? assesmentItem.First().IncomeCapGainsLTCG_BF : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        Income from capital gains(STCG):
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().IncomeCapGainsSTCG_BF : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().IncomeCapGainsSTCG_BF : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+
+                <tr>
+                    <td>B</td>
+                    <td colspan="@(1 + Model.FYAYList.Count*2)">
+                        Business Losses:
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        Income from Business & Profession (Non Speculative):
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().IncomeBusinessProf_BF : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().IncomeBusinessProf_BF : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        Income from Speculative Business:
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().IncomeSpeculativeBusiness_BF : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().IncomeSpeculativeBusiness_BF : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        Unabsorbed Depreciation:
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().UnabsorbedDepreciation_BF : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().UnabsorbedDepreciation_BF : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+
+                <tr>
+                    <td>C</td>
+                    <td>
+                        Income from house property:
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().HousePropIncome_BF : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().HousePropIncome_BF : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+                <tr>
+                    <td>D</td>
+                    <td>
+                        Income from other sources:
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().IncomeOtherSources_BF : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().IncomeOtherSources_BF : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+            </tbody>
+            <thead>
+                <tr>
+                    <th>2</th>
+                    <th colspan="@(1 + Model.FYAYList.Count*2)">Current Year Losses</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>A</td>
+                    <td colspan="2">
+                        Capital Gains Losses:
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        Income from capital gains(LTCG):
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() ? roiItem.First().IncomeCapGainsLTCG_CY : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() ? assesmentItem.First().IncomeCapGainsLTCG_CY : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        Income from capital gains(STCG):
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().IncomeCapGainsSTCG_CY : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().IncomeCapGainsSTCG_CY : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+
+                <tr>
+                    <td>B</td>
+                    <td colspan="@(1 + Model.FYAYList.Count*2)">
+                        Business Losses:
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        Income from Business & Profession (Non Speculative):
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().IncomeBusinessProf_CY : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().IncomeBusinessProf_CY : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        Income from Speculative Business:
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().IncomeSpeculativeBusiness_CY : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().IncomeSpeculativeBusiness_CY : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        Unabsorbed Depreciation:
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().UnabsorbedDepreciation_CY : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().UnabsorbedDepreciation_CY : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+
+                <tr>
+                    <td>C</td>
+                    <td>
+                        Income from house property:
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().HousePropIncome_CY : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().HousePropIncome_CY : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+                <tr>
+                    <td>D</td>
+                    <td>
+                        Income from other sources:
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().IncomeOtherSources_CY : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().IncomeOtherSources_CY : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+            </tbody>
+            <thead>
+                <tr>
+                    <th>3</th>
+                    <th colspan="@(1 + Model.FYAYList.Count*2)">Utilisation of Losses</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>A</td>
+                    <td colspan="2">
+                        Capital Gains Losses:
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        Income from capital gains(LTCG):
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() ? roiItem.First().IncomeCapGainsLTCG_UL : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() ? assesmentItem.First().IncomeCapGainsLTCG_UL : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        Income from capital gains(STCG):
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().IncomeCapGainsSTCG_UL : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().IncomeCapGainsSTCG_UL : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+
+                <tr>
+                    <td>B</td>
+                    <td colspan="@(1 + Model.FYAYList.Count*2)">
+                        Business Losses:
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        Income from Business & Profession (Non Speculative):
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().IncomeBusinessProf_UL : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().IncomeBusinessProf_UL : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        Income from Speculative Business:
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().IncomeSpeculativeBusiness_UL : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().IncomeSpeculativeBusiness_UL : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        Unabsorbed Depreciation:
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().UnabsorbedDepreciation_UL : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().UnabsorbedDepreciation_UL : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+
+                <tr>
+                    <td>C</td>
+                    <td>
+                        Income from house property:
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().HousePropIncome_UL : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().HousePropIncome_UL : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+                <tr>
+                    <td>D</td>
+                    <td>
+                        Income from other sources:
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().IncomeOtherSources_UL : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().IncomeOtherSources_UL : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+            </tbody>
+            <thead>
+                <tr>
+                    <th>4</th>
+                    <th colspan="@(1 + Model.FYAYList.Count*2)">Undisputed adjustment</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>A</td>
+                    <td colspan="2">
+                        Capital Gains Losses:
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        Income from capital gains(LTCG):
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() ? roiItem.First().IncomeCapGainsLTCG_UALL : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() ? assesmentItem.First().IncomeCapGainsLTCG_UALL : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        Income from capital gains(STCG):
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().IncomeCapGainsSTCG_UALL : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().IncomeCapGainsSTCG_UALL : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+
+                <tr>
+                    <td>B</td>
+                    <td colspan="@(1 + Model.FYAYList.Count*2)">
+                        Business Losses:
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        Income from Business & Profession (Non Speculative):
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().IncomeBusinessProf_UALL : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().IncomeBusinessProf_UALL : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        Income from Speculative Business:
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().IncomeSpeculativeBusiness_UALL : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().IncomeSpeculativeBusiness_UALL : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        Unabsorbed Depreciation:
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().UnabsorbedDepreciation_UALL : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().UnabsorbedDepreciation_UALL : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+
+                <tr>
+                    <td>C</td>
+                    <td>
+                        Income from house property:
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().HousePropIncome_UALL : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().HousePropIncome_UALL : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+                <tr>
+                    <td>D</td>
+                    <td>
+                        Income from other sources:
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().IncomeOtherSources_UALL : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().IncomeOtherSources_UALL : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+            </tbody>
+            <thead>
+                <tr>
+                    <th>5</th>
+                    <th colspan="@(1 + Model.FYAYList.Count*2)">Total Losses to be carried forward</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>A</td>
+                    <td colspan="2">
+                        Capital Gains Losses:
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        Income from capital gains(LTCG):
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() ? roiItem.First().IncomeCapGainsLTCG_Total : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() ? assesmentItem.First().IncomeCapGainsLTCG_Total : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        Income from capital gains(STCG):
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().IncomeCapGainsSTCG_Total : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().IncomeCapGainsSTCG_Total : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+
+                <tr>
+                    <td>B</td>
+                    <td colspan="@(1 + Model.FYAYList.Count*2)">
+                        Business Losses:
+                    </td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        Income from Business & Profession (Non Speculative):
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().IncomeBusinessProf_Total : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().IncomeBusinessProf_Total : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        Income from Speculative Business:
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().IncomeSpeculativeBusiness_Total : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().IncomeSpeculativeBusiness_Total : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>
+                        Unabsorbed Depreciation:
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().UnabsorbedDepreciation_Total : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().UnabsorbedDepreciation_Total : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+
+                <tr>
+                    <td>C</td>
+                    <td>
+                        Income from house property:
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().HousePropIncome_Total : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().HousePropIncome_Total : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+                <tr>
+                    <td>D</td>
+                    <td>
+                        Income from other sources:
+                    </td>
+                    @foreach (var year in Model.FYAYList)
+                    {
+                        <td style="text-align:right">
+                            @{
+                                var roiItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 1);
+                                @(string.Format("{0:f}", roiItem.Any() 
+                                    ? roiItem.First().IncomeOtherSources_Total : 0))
+                            }
+                        </td>
+                        <td style="text-align:right">
+                            @{
+                                var assesmentItem = Model.BusinessLossDetailsList
+                                           .Where(i => i.FYAYId == year.Id
+                                           && i.ITSectionCategoryId == 2);
+                                @(string.Format("{0:f}", assesmentItem.Any() 
+                                    ? assesmentItem.First().IncomeOtherSources_Total : 0))
+                            }
+                        </td>
+                     }
+                </tr>
+            </tbody>
+        </table>
+        <br />
+    </div>
+</div>
