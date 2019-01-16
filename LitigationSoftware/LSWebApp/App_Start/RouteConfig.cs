@@ -158,6 +158,16 @@ namespace LSWebApp
             );
 
             routes.MapRoute(
+                name: "loaditreturndetails",
+                url: "loaditreturndetails",
+                defaults: new
+                {
+                    controller = "TaxReturn",
+                    action = "LoadITReturnDetails"
+                }
+            );
+
+            routes.MapRoute(
                 name: "dashboard",
                 url: "dashboard",
                 defaults: new

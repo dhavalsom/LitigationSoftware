@@ -21,13 +21,11 @@
             {
                 <th align="center">
                     @Html.ActionLink(@itsectiondetail.ITSectionDescription
-                        , "GetITReturnDetails", "TaxReturn"
+                        , "LoadITReturnDetails", "TaxReturn"
                         , new {
-                            AddedBy = itsectiondetail.AddedBy,
-                            FYAYID = Model.FYAYId,
-                            itsectionid = @itsectiondetail.ITSectionID,
-                            itreturnid = @itsectiondetail.Id,
-                            itsectioncategoryid = @itsectiondetail.ITSectionCategoryID
+                            fyayId = Model.FYAYId,
+                            itSectionId = @itsectiondetail.ITSectionID,
+                            itSectionCategoryId = @itsectiondetail.ITSectionCategoryID
                         }, null)
                 </th>
             }
