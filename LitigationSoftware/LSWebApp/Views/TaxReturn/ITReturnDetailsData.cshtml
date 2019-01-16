@@ -146,9 +146,9 @@
                         <div class="row col-12">
                             <div class="col-md-6">
                                 @Html.RadioButtonFor(m => m.ITReturnDetailsObject.Broughtforwardlosses
-                                , Model.ITReturnDetailsObject.Broughtforwardlosses) Yes
+                                , true, Model.ITReturnDetailsObject.Broughtforwardlosses)@Html.Label("Yes")
                                 @Html.RadioButtonFor(m => m.ITReturnDetailsObject.Broughtforwardlosses
-                                , !Model.ITReturnDetailsObject.Broughtforwardlosses) No
+                                , false, Model.ITReturnDetailsObject.Broughtforwardlosses)@Html.Label("No")                                
                             </div>
                         </div>
                     </td>
