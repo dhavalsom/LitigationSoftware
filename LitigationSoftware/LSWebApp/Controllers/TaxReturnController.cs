@@ -449,6 +449,24 @@ namespace LSWebApp.Controllers
         }
 
         [HttpGet]
+        public ActionResult LoadITReturnDetails(int fyayId, int itSectionCategoryId,
+            int itSectionId)
+        {
+            Company selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+            Session["CurrentITReturnDetails"] = new ITReturnDetails
+            {
+                FYAYID = fyayId,
+                ITSectionID = itSectionId,
+                ITSectionCategoryID = itSectionCategoryId
+            };
+            return RedirectToAction("ITReturnDetails");
+        }
+
+        [HttpGet]
         public async Task<ActionResult> ITReturnDetails()
         {
             Company selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
