@@ -407,17 +407,58 @@ namespace LSWebApp.Controllers
         }
 
         [HttpGet]
-        public ActionResult MatCreditStatus()
+        public async Task<ActionResult> MatCreditStatus()
         {
             var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
             if (selectedCompany == null)
             {
                 return RedirectToAction("GetCompanyList");
             }
-            return View(new MatCreditStatusModel()
+
+            var model = new MatCreditStatusModel()
             {
                 CompanyObject = HttpContext.Session["SelectedCompany"] as Company
-            });
+            };
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                    client.DefaultRequestHeaders.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpResponseMessage Res = await client.GetAsync("api/TaxReturnAPI/GetMATCreditDetailsList?companyId="
+                        + selectedCompany.Id + "&fyayId=&itSectionCategoryId=&matCreditDetailsId=");
+                    var result = JsonConvert.DeserializeObject<MATCreditDetailsResponse>(Res.Content.ReadAsStringAsync().Result);
+                    if (result != null
+                        && result.MATCreditDetailsList != null
+                        && result.MATCreditDetailsList.Any())
+                    {
+                        model.MATCreditDetailsList = result.MATCreditDetailsList;
+                        if (model.MATCreditDetailsList.Any())
+                        {
+                            model.FYAYList = model.MATCreditDetailsList
+                                            .Select(m => new
+                                            {
+                                                Id = m.FYAYId,
+                                                AssessmentYear = m.AssessmentYear,
+                                                FinancialYear = m.FinancialYear
+                                            })
+                                            .Distinct()
+                                            .Select(m => new FYAY
+                                            {
+                                                Id = m.Id,
+                                                AssessmentYear = m.AssessmentYear,
+                                                FinancialYear = m.FinancialYear
+                                            }).ToList();
+                        }
+                    }
+                    return View(model);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         [HttpGet]
@@ -1756,7 +1797,7 @@ namespace LSWebApp.Controllers
             {
                 CompanyObject = selectedCompany,
                 FYAYId = matCreditDetails != null ? matCreditDetails.FYAYId : (int?) null,
-                ITSectionCategoryId = matCreditDetails != null ? matCreditDetails.ITSectionCategoryId : (int?)null,
+                ITSectionCategoryId = 1, //hard-coded to ROI as the IT section category is no more needed
             };
             Session["CurrentMATCreditDetails"] = null;
 
@@ -1774,8 +1815,7 @@ namespace LSWebApp.Controllers
             }
             return View(model);
         }
-
-        
+                
         [HttpGet]
         public async Task<ActionResult> MATCreditDetailsData(int? fyayId
             , int? itSectionCategoryId, int? matCreditDetailsId)

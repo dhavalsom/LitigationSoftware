@@ -3,10 +3,112 @@
     ViewBag.Title = "Mat Credit Status";
     Layout = "~/Views/Shared/_LayoutDynemicMenu.cshtml";
 }
-<style>
-    table, th, td {
-        border: 1px solid black;
+<style type="text/css">
+    .table-condensed {
+        width: 200px;
+        height: 10px;
+        font-size: 10px;
     }
 </style>
 
 <h3>Mat Credit Status for @Model.CompanyObject.CompanyName</h3>
+
+
+<div class="container">
+    <div class="bs-component">
+        <table class="table table-hover">
+            @foreach (var year in Model.FYAYList)
+            {
+                <thead>
+                    <tr>
+                        <th colspan="6"
+                            style="text-align:center">
+                            @year.AssessmentYear
+                        </th>
+                    </tr>
+                    <tr>
+                        <th colspan="2"
+                            style="text-align:center">
+                           Brought Forward
+                        </th>
+                        <th colspan="2"
+                            style="text-align:center">
+                            Current Year
+                        </th>
+                        <th colspan="2"
+                            style="text-align:center">
+                            Utilisation
+                        </th>
+                    </tr>
+                    <tr>
+                        <th style="text-align:center">
+                            Business Losses
+                        </th>
+                        <th style="text-align:center">
+                            Unabsorbed Depreciation
+                        </th>
+                        <th style="text-align:center">
+                            Business Losses
+                        </th>
+                        <th style="text-align:center">
+                            Unabsorbed Depreciation
+                        </th>
+                        <th style="text-align:center">
+                            Business Losses
+                        </th>
+                        <th style="text-align:center">
+                            Unabsorbed Depreciation
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="text-align:center">
+                            @{
+                                var item = Model.MATCreditDetailsList
+                                           .Where(i => i.FYAYId == year.Id);
+                                @(string.Format("{0:f}", item.Any() ? item.First().BusinessLosses_BF : 0))
+                            }
+                        </td>
+                        <td style="text-align:center">
+                            @{
+                                item = Model.MATCreditDetailsList
+                                           .Where(i => i.FYAYId == year.Id);
+                                @(string.Format("{0:f}", item.Any() ? item.First().UnabsorbedDepreciation_BF : 0))
+                            }
+                        </td>
+                        <td style="text-align:center">
+                            @{
+                                item = Model.MATCreditDetailsList
+                                           .Where(i => i.FYAYId == year.Id);
+                                @(string.Format("{0:f}", item.Any() ? item.First().BusinessLosses_CY : 0))
+                            }
+                        </td>
+                        <td style="text-align:center">
+                            @{
+                                item = Model.MATCreditDetailsList
+                                           .Where(i => i.FYAYId == year.Id);
+                                @(string.Format("{0:f}", item.Any() ? item.First().UnabsorbedDepreciation_CY : 0))
+                            }
+                        </td>
+                        <td style="text-align:center">
+                            @{
+                                item = Model.MATCreditDetailsList
+                                           .Where(i => i.FYAYId == year.Id);
+                                @(string.Format("{0:f}", item.Any() ? item.First().BusinessLosses_UL : 0))
+                            }
+                        </td>
+                        <td style="text-align:center">
+                            @{
+                                item = Model.MATCreditDetailsList
+                                           .Where(i => i.FYAYId == year.Id);
+                                @(string.Format("{0:f}", item.Any() ? item.First().UnabsorbedDepreciation_UL : 0))
+                            }
+                        </td>
+                    </tr>
+                </tbody>
+            }
+        </table>
+        <br />
+    </div>
+</div>
