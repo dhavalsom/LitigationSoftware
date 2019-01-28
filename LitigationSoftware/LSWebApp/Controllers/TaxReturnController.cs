@@ -736,9 +736,41 @@ namespace LSWebApp.Controllers
                             {
                                 foreach (var subvalue in itSubHeadValues)
                                 {
-                                    if (subvalue.ITReturnDetailsId == item.ITReturnDetailsId && subvalue.ITSubHeadId == item.ITSubHeadId)
+                                    if (subvalue.ITReturnDetailsId == item.ITReturnDetailsId
+                                        && subvalue.ITSubHeadId == item.ITSubHeadId)
+                                    {
+                                        item.Id = subvalue.Id;
                                         item.ITSubHeadValue = subvalue.ITSubHeadValue;
+                                    }
                                 }
+                            } 
+                        }
+
+                        model.ITReturnExtensionListModels = new Dictionary<string, ITReturnExtensionListModel>();
+                        foreach (var itHead in itHeads)
+                        {
+                            if (itHead.CanAddSubHead)
+                            {
+                                var existingItemsInDb = model.ExtensionList
+                                    .Where(e => e.HeadMasterObject.Id == itHead.Id && e.Id > 0).ToList();
+                                model.ITReturnExtensionListModels.Add(itHead.PropertyName,
+                                    new ITReturnExtensionListModel(
+                                    existingItemsInDb.Any() ? existingItemsInDb :
+                                    (model.ExtensionList
+                                    .Where(e => e.HeadMasterObject.Id == itHead.Id).Any() ?
+                                    new List<ITReturnDetailsExtension>() {
+                                    model.ExtensionList
+                                    .Where(e => e.HeadMasterObject.Id == itHead.Id).First()} :
+                                    new List<ITReturnDetailsExtension>()
+                                    {
+                                        new ITReturnDetailsExtension
+                                        {
+                                            HeadMasterObject = itHead,
+                                            ITReturnDetailsId = model.ITReturnDetailsObject.Id,
+                                            IsAllowance = true
+                                        }
+                                    })
+                                    , itHead, model.ITReturnDetailsObject, itHead.SubHeadList));
                             }
                         }
                     }

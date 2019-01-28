@@ -28,11 +28,11 @@
                     </div>
                     break;
                 case "HousePropIncome":
-                        <div class="col-md-6">
-                            @Html.TextBoxFor(m => m.ITReturnDetailsObject.HousePropIncome
-                        , string.Format("{0:f}", Model.ITReturnDetailsObject.HousePropIncome)
-                        , new { @class = "numericOnly" })
-                        </div>
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.HousePropIncome
+                    , string.Format("{0:f}", Model.ITReturnDetailsObject.HousePropIncome)
+                    , new { @class = "numericOnly" })
+                    </div>
                     break;
                 case "IncomefromCapGainsLTCG":
                     <div class="col-md-6">
@@ -368,6 +368,13 @@
                 , Model.ITHeadDocumentsUploaderModels[Model.ITHead])
             }
 
+            @if (!Model.ITReturnDetailsObject.IsReturn
+                && Model.ITReturnDetailsObject.Id > 0
+                && @Model.ITHeadMasterList[Model.ITHead].CanAddSubHead)
+            {
+                @Html.Partial("_ITReturnExtensionList"
+                    , Model.ITReturnExtensionListModels[Model.ITHead])
+            }
             </div>
     </td>
 </tr>
@@ -375,7 +382,7 @@
 @if (!Model.ITReturnDetailsObject.IsReturn
     && @Model.ITHeadMasterList[Model.ITHead].CanAddSubHead)
 {
-    @Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
+    @*@Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
     .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList[Model.ITHead].Id)
-    .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList[Model.ITHead].Id))
+    .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList[Model.ITHead].Id))*@
 }
