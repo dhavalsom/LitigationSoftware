@@ -1177,6 +1177,43 @@ namespace LSWebApp.Controllers
         }
 
         [HttpPost]
+        public async Task<ActionResult> UpsertITReturnDetailsExtension(
+            List<ITReturnDetailsExtension> itReturnDetailsExtensions)
+        {            
+            using (var client = new HttpClient())
+            {
+                ITReturnComplexModel itrcomplexmodel = new ITReturnComplexModel();
+                itrcomplexmodel.ExtensionList = itReturnDetailsExtensions;
+                itrcomplexmodel.ITReturnDetailsObject = new ITReturnDetails
+                {
+                    Id = itrcomplexmodel.ExtensionList.First().ITReturnDetailsId
+                };
+                var json = JsonConvert.SerializeObject(itrcomplexmodel);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.PostAsync("api/TaxReturnAPI/InsertorUpdateITReturnDetails?operation=EXTENSION", content);
+                ITReturnComplexAPIModelResponse result = new ITReturnComplexAPIModelResponse();
+                if (Res.IsSuccessStatusCode)
+                {
+                    result.IsSuccess = true;
+                    result.Message = "Data saved successfully.";
+                }
+                else
+                {
+                    result.IsSuccess = false;
+                    result.Message = Res.Content.ReadAsStringAsync().Result;
+                    if (result.Message.IndexOf("UC_IT_RETURN_DETAILS_ID_IT_SUB_HEAD_ID") != -1)
+                    {
+                        result.Message = "Check for the duplicate data.";
+                    }
+                }
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
         public async Task<ActionResult> UpsertITReturnDetails(ITReturnDetailsDataModel itReturn
             , FormCollection form)
         {

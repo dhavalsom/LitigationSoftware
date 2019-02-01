@@ -12,7 +12,8 @@ namespace LS.DAL.Library
     {
         #region Methods
 
-        public ITReturnComplexAPIModelResponse InsertorUpdateITReturnDetails(ITReturnComplexAPIModel itReturnDetails)
+        public ITReturnComplexAPIModelResponse InsertorUpdateITReturnDetails
+            (ITReturnComplexAPIModel itReturnDetails, string operation)
         {
             try
             {
@@ -24,6 +25,10 @@ namespace LS.DAL.Library
                 
                 Command.Parameters.AddWithValue("@ITRETURNDETAILS_XML", GetXMLFromObject(itReturnDetails.ITReturnDetailsObject));
                 Command.Parameters.AddWithValue("@EXTENSIONDETAILS_XML", GetXMLFromObject(itReturnDetails.ExtensionList));
+                if(!string.IsNullOrEmpty(operation))
+                {
+                    Command.Parameters.AddWithValue("@OPERATION", operation);
+                }
                 if (itReturnDetails.ITReturnDetailsObject.AddedBy.HasValue)
                 {
                     Command.Parameters.AddWithValue("@USER_ID", itReturnDetails.ITReturnDetailsObject.AddedBy.Value);

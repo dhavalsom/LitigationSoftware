@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace LS.BL.Library
 {
-    public class ITReturnDetailsBL:IITReturnDetailsBL
+    public class ITReturnDetailsBL : IITReturnDetailsBL
     {
         #region Declarations
         IITReturnDetailsDataAccess _itReturnDA;
@@ -23,11 +23,12 @@ namespace LS.BL.Library
 
         #region Methods
 
-        public ITReturnComplexAPIModelResponse InsertorUpdateITReturnDetails(ITReturnComplexAPIModel itreturnDetails)
+        public ITReturnComplexAPIModelResponse InsertorUpdateITReturnDetails
+            (ITReturnComplexAPIModel itreturnDetails, string operation)
         {
             try
             {
-                return this._itReturnDA.InsertorUpdateITReturnDetails(itreturnDetails);
+                return this._itReturnDA.InsertorUpdateITReturnDetails(itreturnDetails, operation);
             }
             catch (Exception ex)
             {
@@ -55,7 +56,7 @@ namespace LS.BL.Library
             }
         }
 
-        public ComplianceDocumentsResponse GetComplianceDocumentsList(int companyId, int fyayId, 
+        public ComplianceDocumentsResponse GetComplianceDocumentsList(int companyId, int fyayId,
             int? complianceId, int? complianceDocumentId)
         {
             try
@@ -76,7 +77,7 @@ namespace LS.BL.Library
         {
             try
             {
-                return this._itReturnDA.GetExistingITReturnDetailsList(companyId, fyayId, itsectionid,itreturnid);
+                return this._itReturnDA.GetExistingITReturnDetailsList(companyId, fyayId, itsectionid, itreturnid);
             }
             catch (Exception ex)
             {
@@ -87,7 +88,7 @@ namespace LS.BL.Library
                 //Log
             }
         }
-        
+
         public List<ITReturnDetailsExtension> GetExistingITReturnDetailsExtension(int? itreturnid)
         {
             try

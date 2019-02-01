@@ -249,7 +249,74 @@
                         var $tr = $(this).parents('.modal-content').find('tr.trITReturnDetailsExtension:last');
                         var $clone = $tr.clone();
                         $clone.find(':text').val('0.00');
+                        $clone.find('.hdITReturnDetailsExtensionId').val("0");
                         $tr.after($clone);
+                        $(".numericOnly").keypress(function (e) {
+                            return isANumber(e);
+                        });
+
+                        $(".numericOnly").change(function (e) {
+                            if ($.isNumeric($(this).val())) {
+                                $(this).val(parseFloat($(this).val()).toFixed(2));
+                            }
+                            else {
+                                $(this).val("0.00");
+                            }
+                        });
+                    });
+
+                    $(".btn-save-it-sub-head").click(function (event) {
+                        var data = [];
+                        var isValid = true;
+                        $(this).parents('.modal-content')
+                            .find('tr.trITReturnDetailsExtension').each(function () {
+                                var itReturnDetailsExtension = {};                                
+                                $('#ObjITReturnDetailsExtension_ITReturnDetailsId').each(function () {
+                                    itReturnDetailsExtension.ITReturnDetailsId = parseInt($(this).val());
+                                });
+                                $(this).find('.hdITReturnDetailsExtensionId').each(function () {
+                                    itReturnDetailsExtension.Id = $(this).val();
+                                });
+                                $(this).find('.txtITSubHeadValue').each(function () {
+                                    if ($(this).val()) {
+                                        itReturnDetailsExtension.ITSubHeadValue = $(this).val();
+                                        $(this).removeClass("validationError");
+                                    }
+                                    else {   
+                                        isValid = false;
+                                        $(this).addClass("validationError");
+                                    }
+                                });
+                                $(this).find('.ddITSubHeadAllDisall').each(function () {
+                                    if ($(this).val()) {
+                                        itReturnDetailsExtension.ITSubHeadId = $(this).val();
+                                        $(this).removeClass("validationError");
+                                    }
+                                    else {
+                                        isValid = false;
+                                        $(this).addClass("validationError");
+                                    }
+                                });
+                                data.push(itReturnDetailsExtension);
+                            });
+                        if (isValid) {
+
+                            $.ajax({
+                                type: 'POST',
+                                url: '/TaxReturn/UpsertITReturnDetailsExtension',
+                                data: { itReturnDetailsExtensions: data },
+                            })
+                            .done(function (response) {
+                                $(".message").html(response.Message);
+                                if (response.IsSuccess) {
+                                    $(".message").css("color", "white");
+                                }
+                                else {
+                                    $(".message").css("color", "red");
+                                }
+                            })
+                            .fail(function () { alert("error"); });
+                        }
                     });
 
                     $(".btn-add-row").click(function (event) {

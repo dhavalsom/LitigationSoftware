@@ -1,105 +1,115 @@
 ﻿@model  LSWebApp.Models.ITReturnExtensionListModel
-@using(Html.BeginForm("InsertUpdateITReturnExtensionList", "TaxReturn", FormMethod.Post))
+@if (Model.ITHeadObject.Id > 0)
 {
-    if(Model.ITHeadObject.Id > 0)
-    {    
-        <div style="margin-left:5px;">
-            @Html.HiddenFor(m => m.ObjITReturnDetailsExtension.ITHeadId, Model.ObjITReturnDetailsExtension.ITHeadId)      
-            @Html.HiddenFor(m => m.ObjITReturnDetailsExtension.ITReturnDetailsId
+    <div style="margin-left:5px;">
+        @Html.HiddenFor(m => m.ObjITReturnDetailsExtension.ITHeadId, Model.ObjITReturnDetailsExtension.ITHeadId)
+        @Html.HiddenFor(m => m.ObjITReturnDetailsExtension.ITReturnDetailsId
             , Model.ObjITReturnDetailsExtension.ITReturnDetailsId)
-            @Html.HiddenFor(m => m.ObjITReturnDetails.Id, Model.ObjITReturnDetails.Id)  
-            @Html.HiddenFor(m => m.ObjITReturnDetails.FYAYID, Model.ObjITReturnDetails.FYAYID)
-            @Html.HiddenFor(m => m.ObjITReturnDetails.ITSectionCategoryID, Model.ObjITReturnDetails.ITSectionCategoryID)  
-            @Html.HiddenFor(m => m.ObjITReturnDetails.ITSectionID, Model.ObjITReturnDetails.ITSectionID)
-            <div>
-                <a href="#itReturnExtensionListModel_@(Model.ITHeadObject.Id.ToString())" 
-                   role="button" class="btn" data-toggle="modal">
-                    <img src="~/images/income.png"
-                         class="imgSpecialIncomeDetails"
-                         title="Click to view/edit allowance/disallowance"
-                         style="width:20px;height:20px;" />
-                </a>
-            </div>
-            <div class="modal" id="itReturnExtensionListModel_@(Model.ITHeadObject.Id.ToString())">
-                <div class="modal-dialog" role="document" style="max-width: 600px;">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">@Model.ITHeadObject.Description</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <table class="table table-hover tblITReturnDetailsExtensionList">
-                                <thead class="thSPIncomeDetails">
-                                    <tr>
-                                        <th>Type</th>
-                                        <th>Particular</th>
-                                        <th>Value</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in Model.ITReturnDetailsExtensionList)
-                                    {
-                                        <tr class="trITReturnDetailsExtension">
-                                            <td>
-                                               @Html.Hidden("hd_" + item.ITSubHeadId.ToString(), item.Id
+        @Html.HiddenFor(m => m.ObjITReturnDetails.Id, Model.ObjITReturnDetails.Id)
+        @Html.HiddenFor(m => m.ObjITReturnDetails.FYAYID, Model.ObjITReturnDetails.FYAYID)
+        @Html.HiddenFor(m => m.ObjITReturnDetails.ITSectionCategoryID, Model.ObjITReturnDetails.ITSectionCategoryID)
+        @Html.HiddenFor(m => m.ObjITReturnDetails.ITSectionID, Model.ObjITReturnDetails.ITSectionID)
+        <div>
+            <a href="#itReturnExtensionListModel_@(Model.ITHeadObject.Id.ToString())"
+               role="button" class="btn" data-toggle="modal">
+                <img src="~/images/income.png"
+                     class="imgSpecialIncomeDetails"
+                     title="Click to view/edit allowance/disallowance"
+                     style="width:20px;height:20px;" />
+            </a>
+        </div>
+        <div class="modal" id="itReturnExtensionListModel_@(Model.ITHeadObject.Id.ToString())">
+            <div class="modal-dialog" role="document" style="max-width: 600px;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">@Model.ITHeadObject.Description</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-hover tblITReturnDetailsExtensionList">
+                            <thead class="thSPIncomeDetails">
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Particular</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.ITReturnDetailsExtensionList)
+                            {
+                            <tr class="trITReturnDetailsExtension">
+                                <td>
+                                    @Html.Hidden("hd_" + item.ITSubHeadId.ToString(), item.Id
                                                 , new { @class = "hdITReturnDetailsExtensionId" })
-                                               <select class="ddSubheadType">
-                                                   <option value="A">Addition/Disallowance</option>
-                                                   @if (item.IsAllowance)
-                                                   {
-                                                        <option value="D">Deletion/Allowance</option>
-                                                   }
-                                                   else
-                                                   {
-                                                        <option value="D" selected>Deletion/Allowance</option>
-                                                   }
-                                               </select>
-                                            </td>
-                                            <td>
-                                                @Html.DropDownList(item.ITSubHeadId.ToString()
+                                    <select class="ddSubheadType">
+                                        <option value="A">Addition/Disallowance</option>
+                                        @if (item.IsAllowance)
+                                            {
+                                            <option value="D">Deletion/Allowance</option>
+                                            }
+                                            else
+                                            {
+                                            <option value="D" selected>Deletion/Allowance</option>
+                                            }
+                                    </select>
+                                </td>
+                                <td>
+                                    @Html.DropDownList(item.ITSubHeadId.ToString()
                                                 , new SelectList(Model.ITSubHeadList
-                                                    .Where(sh=>sh.IsAllowance.HasValue
+                                                    .Where(sh => sh.IsAllowance.HasValue
                                                     && sh.IsAllowance.Value)
                                                 , "Id", "Description", item.ITSubHeadId)
-                                                , new { @class = "ddITSubHeadAllowance",
+                                                , new
+                                                {
+                                                    @class = "ddITSubHeadAllDisall ddITSubHeadAllowance",
                                                     @style = "width:150px;display:" + (item.IsAllowance ? "inline" : "none")
                                                 })
 
-                                                @Html.DropDownList(item.ITSubHeadId.ToString()
+                                    @Html.DropDownList(item.ITSubHeadId.ToString()
                                                 , new SelectList(Model.ITSubHeadList
                                                     .Where(sh => !(sh.IsAllowance.HasValue
                                                     && sh.IsAllowance.Value))
                                                 , "Id", "Description", item.ITSubHeadId)
-                                                , new { @class = "ddITSubHeadDisallowance",
+                                                , new
+                                                {
+                                                    @class = "ddITSubHeadAllDisall ddITSubHeadDisallowance",
                                                     @style = "width:150px;display:" + (item.IsAllowance ? "none" : "inline")
                                                 })
-                                            </td>
-                                            <td>
-                                                @Html.TextBox("ITSubHeadValue_" + item.Id.ToString()
+                                </td>
+                                <td>
+                                    @Html.TextBox("ITSubHeadValue_" + item.Id.ToString()
                                                 , item.ITSubHeadValue
                                                 , new
                                                 {
                                                     @style = "width:150px;",
-                                                    @class = "numericOnly",
+                                                    @class = "numericOnly txtITSubHeadValue",
                                                     @id = "ITSubHeadValue_" + item.Id.ToString()
                                                 })
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>                            
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-primary btn-sm btn-add-row-it-sub-head">Add Row</button>
-                            <button type="submit" class="btn btn-primary btn-sm">Save</button>
-                            <button type="button" class="btn btn-secondary" 
-                                    data-dismiss="modal">Close</button>
-                        </div>
+                                </td>
+                            </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <h5 class="modal-title message"></h5>
+                        <button type="button"
+                                class="btn btn-primary btn-sm btn-add-row-it-sub-head">
+                            Add Row
+                        </button>
+                        <button type="button"
+                                class="btn btn-primary btn-sm btn-save-it-sub-head">
+                            Save
+                        </button>
+                        <button type="button" class="btn btn-secondary"
+                                data-dismiss="modal">
+                            Close
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-    }
+    </div>
 }
