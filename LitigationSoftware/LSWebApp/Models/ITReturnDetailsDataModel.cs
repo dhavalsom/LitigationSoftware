@@ -14,6 +14,7 @@ namespace LSWebApp.Models
         public Dictionary<string, List<SPIncomeDetails>> SPIncomeDetailsList { get; set; }
         public Dictionary<string, ITHeadDocumentsUploaderModel> ITHeadDocumentsUploaderModels { get; set; }
         public Dictionary<string, ITHeadSpecialIncomeModel> ITHeadSpecialIncomeModels { get; set; }
+        public Dictionary<string, ITReturnExtensionListModel> ITReturnExtensionListModels { get; set; }
         public List<ITReturnDetailsExtension> ExtensionList { get; set; }
         public List<string> ItemsWithAmounts { get; set; }
         #endregion
@@ -78,7 +79,8 @@ namespace LSWebApp.Models
                         ITSubHeadId = subItem.Id,
                         SubHeadMasterObject = subItem,
                         HeadMasterObject = item,
-                        ITReturnDetailsId = itreturnId.HasValue ? itreturnId.Value : 0
+                        ITReturnDetailsId = itreturnId.HasValue ? itreturnId.Value : 0,
+                        IsAllowance = subItem.IsAllowance.HasValue ? subItem.IsAllowance.Value : false  
                     });
                 }
             }

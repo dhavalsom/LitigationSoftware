@@ -16,6 +16,10 @@
 	*/}.toString().slice(14, -3)
 }
 
+$(".imgSubHeadClose").click(function (e) {
+    showHideSubHeadControls($(this));
+});
+
 function showHideSubHeadControls(control) {
     control.css("display", "none");
     var isAddMode = control.hasClass("imgSubHead"); //in add mode and switch to the save mode now
@@ -25,6 +29,9 @@ function showHideSubHeadControls(control) {
     });
 
     control.closest(".custom-sub-head").find('.imgSubHeadSave').each(function () {
+        $(this).css("display", isAddMode ? "inline" : "none");
+    });
+    control.closest(".custom-sub-head").find('.imgSubHeadClose').each(function () {
         $(this).css("display", isAddMode ? "inline" : "none");
     });
     control.closest(".custom-sub-head").find('.txtSubHead').each(function () {

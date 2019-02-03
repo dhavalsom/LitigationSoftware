@@ -158,6 +158,7 @@
                 dataType: 'html',
                 success: function (data) {
                     $("#sectionDiv").html(data);
+
                     $('.form_datetime').datetimepicker({
                         weekStart: 1,
                         todayBtn: 1,
@@ -167,9 +168,11 @@
                         minView: 2,
                         forceParse: 0
                     });
+
                     $(".numericOnly").keypress(function (e) {
                         return isANumber(e);
                     });
+
                     $(".numericOnly").change(function (e) {
                         if ($.isNumeric($(this).val())) {
                             $(this).val(parseFloat($(this).val()).toFixed(2));
@@ -179,7 +182,21 @@
                         }
                     });
 
+                    $(".ddSubheadType").change(function (e) {
+                        var isAllowance = $(this).val() == "A";
+                        $(this).closest('tr').find('.ddITSubHeadAllowance').each(function () {
+                            $(this).css("display", isAllowance ? "inline" : "none");
+                        });
+                        $(this).closest('tr').find('.ddITSubHeadDisallowance').each(function () {
+                            $(this).css("display", isAllowance ? "none" : "inline");
+                        });
+                    });
+
                     $(".imgSubHead").click(function (e) {
+                        showHideSubHeadControls($(this));
+                    });
+
+                    $(".imgSubHeadClose").click(function (e) {
                         showHideSubHeadControls($(this));
                     });
 
@@ -216,20 +233,99 @@
                             url: '/manageITSubHead/',
                             data: JSON.stringify(item),
                             success: function (data) {
-                                var trHtml = templates.trSubHeadItem
-                                    .replace("{ITHeadId}", itHeadId)
-                                    .replace("{ITSubHeadId}", data.Id)
-                                    .replace("{ITSubHeadId}", data.Id)
-                                    .replace("{Description}", item.Description);
-                                $.each($('.tblITRetDetails tr.' + (item.IsAllowance ? 'trAllowance' : 'trDisallowance') + itHeadId),
-                                    function (val, obj) {
-                                        $(this).after(trHtml);
+                                if (item.IsAllowance) {
+                                    saveButton.parents('.modal-content')
+                                    .find(".ddITSubHeadAllowance")
+                                    .each(function () {
+                                        $(this).append($('<option></option>').val(data.Id).html(item.Description));
                                     });
+                                }
+                                else {
+                                    saveButton.parents('.modal-content')
+                                    .find(".ddITSubHeadDisallowance")
+                                    .each(function () {
+                                        $(this).append($('<option></option>').val(data.Id).html(item.Description));
+                                    });
+                                }                               
                                 showHideSubHeadControls(saveButton);
                             },
                             contentType: "application/json",
                             dataType: 'json'
                         });
+                    });
+
+                    $(".btn-add-row-it-sub-head").click(function (event) {
+                        var $tr = $(this).parents('.modal-content').find('tr.trITReturnDetailsExtension:last');
+                        var $clone = $tr.clone();
+                        $clone.find(':text').val('0.00');
+                        $clone.find('.hdITReturnDetailsExtensionId').val("0");
+                        $tr.after($clone);
+                        $(".numericOnly").keypress(function (e) {
+                            return isANumber(e);
+                        });
+
+                        $(".numericOnly").change(function (e) {
+                            if ($.isNumeric($(this).val())) {
+                                $(this).val(parseFloat($(this).val()).toFixed(2));
+                            }
+                            else {
+                                $(this).val("0.00");
+                            }
+                        });
+                    });
+
+                    $(".btn-save-it-sub-head").click(function (event) {
+                        var data = [];
+                        var isValid = true;
+                        $(this).parents('.modal-content')
+                            .find('tr.trITReturnDetailsExtension').each(function () {
+                                var itReturnDetailsExtension = {};                                
+                                $('#ObjITReturnDetailsExtension_ITReturnDetailsId').each(function () {
+                                    itReturnDetailsExtension.ITReturnDetailsId = parseInt($(this).val());
+                                });
+                                $(this).find('.hdITReturnDetailsExtensionId').each(function () {
+                                    itReturnDetailsExtension.Id = $(this).val();
+                                });
+                                $(this).find('.txtITSubHeadValue').each(function () {
+                                    if ($(this).val()) {
+                                        itReturnDetailsExtension.ITSubHeadValue = $(this).val();
+                                        $(this).removeClass("validationError");
+                                    }
+                                    else {   
+                                        isValid = false;
+                                        $(this).addClass("validationError");
+                                    }
+                                });
+                                $(this).find('.ddITSubHeadAllDisall').each(function () {
+                                    if ($(this).val()) {
+                                        itReturnDetailsExtension.ITSubHeadId = $(this).val();
+                                        $(this).removeClass("validationError");
+                                    }
+                                    else {
+                                        isValid = false;
+                                        $(this).addClass("validationError");
+                                    }
+                                });
+                                data.push(itReturnDetailsExtension);
+                            });
+                        if (isValid) {
+
+                            $.ajax({
+                                type: 'POST',
+                                url: '/TaxReturn/UpsertITReturnDetailsExtension',
+                                data: { itReturnDetailsExtensions: data },
+                            })
+                            .done(function (response) {
+                                $(".message").html(response.Message);
+                                if (response.IsSuccess) {
+                                    $(".message").css("color", "white");
+                                }
+                                else {
+                                    $(".message").css("color", "red");
+                                }
+                            })
+                            .fail(function () { alert("error"); });
+                        }
                     });
 
                     $(".btn-add-row").click(function (event) {

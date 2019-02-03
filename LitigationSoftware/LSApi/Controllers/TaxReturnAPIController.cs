@@ -29,10 +29,11 @@ namespace LSApi.Controllers
         
         [HttpPost]
         [Route("InsertorUpdateITReturnDetails")]
-        public ITReturnComplexAPIModelResponse InsertorUpdateITReturnDetails(ITReturnComplexAPIModel itreturn)
+        public ITReturnComplexAPIModelResponse InsertorUpdateITReturnDetails(
+            ITReturnComplexAPIModel itreturn, string operation)
         {
             var ItReturnObj = _Kernel.Get<IITReturnDetailsBL>();
-            var ItReturnResult = ItReturnObj.InsertorUpdateITReturnDetails(itreturn);
+            var ItReturnResult = ItReturnObj.InsertorUpdateITReturnDetails(itreturn, operation);
             return ItReturnResult;
         }
 

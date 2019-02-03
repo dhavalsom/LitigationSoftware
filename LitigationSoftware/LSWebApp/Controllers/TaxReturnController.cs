@@ -736,9 +736,41 @@ namespace LSWebApp.Controllers
                             {
                                 foreach (var subvalue in itSubHeadValues)
                                 {
-                                    if (subvalue.ITReturnDetailsId == item.ITReturnDetailsId && subvalue.ITSubHeadId == item.ITSubHeadId)
+                                    if (subvalue.ITReturnDetailsId == item.ITReturnDetailsId
+                                        && subvalue.ITSubHeadId == item.ITSubHeadId)
+                                    {
+                                        item.Id = subvalue.Id;
                                         item.ITSubHeadValue = subvalue.ITSubHeadValue;
+                                    }
                                 }
+                            } 
+                        }
+
+                        model.ITReturnExtensionListModels = new Dictionary<string, ITReturnExtensionListModel>();
+                        foreach (var itHead in itHeads)
+                        {
+                            if (itHead.CanAddSubHead)
+                            {
+                                var existingItemsInDb = model.ExtensionList
+                                    .Where(e => e.HeadMasterObject.Id == itHead.Id && e.Id > 0).ToList();
+                                model.ITReturnExtensionListModels.Add(itHead.PropertyName,
+                                    new ITReturnExtensionListModel(
+                                    existingItemsInDb.Any() ? existingItemsInDb :
+                                    (model.ExtensionList
+                                    .Where(e => e.HeadMasterObject.Id == itHead.Id).Any() ?
+                                    new List<ITReturnDetailsExtension>() {
+                                    model.ExtensionList
+                                    .Where(e => e.HeadMasterObject.Id == itHead.Id).First()} :
+                                    new List<ITReturnDetailsExtension>()
+                                    {
+                                        new ITReturnDetailsExtension
+                                        {
+                                            HeadMasterObject = itHead,
+                                            ITReturnDetailsId = model.ITReturnDetailsObject.Id,
+                                            IsAllowance = true
+                                        }
+                                    })
+                                    , itHead, model.ITReturnDetailsObject, itHead.SubHeadList));
                             }
                         }
                     }
@@ -1145,6 +1177,43 @@ namespace LSWebApp.Controllers
         }
 
         [HttpPost]
+        public async Task<ActionResult> UpsertITReturnDetailsExtension(
+            List<ITReturnDetailsExtension> itReturnDetailsExtensions)
+        {            
+            using (var client = new HttpClient())
+            {
+                ITReturnComplexModel itrcomplexmodel = new ITReturnComplexModel();
+                itrcomplexmodel.ExtensionList = itReturnDetailsExtensions;
+                itrcomplexmodel.ITReturnDetailsObject = new ITReturnDetails
+                {
+                    Id = itrcomplexmodel.ExtensionList.First().ITReturnDetailsId
+                };
+                var json = JsonConvert.SerializeObject(itrcomplexmodel);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.PostAsync("api/TaxReturnAPI/InsertorUpdateITReturnDetails?operation=EXTENSION", content);
+                ITReturnComplexAPIModelResponse result = new ITReturnComplexAPIModelResponse();
+                if (Res.IsSuccessStatusCode)
+                {
+                    result.IsSuccess = true;
+                    result.Message = "Data saved successfully.";
+                }
+                else
+                {
+                    result.IsSuccess = false;
+                    result.Message = Res.Content.ReadAsStringAsync().Result;
+                    if (result.Message.IndexOf("UC_IT_RETURN_DETAILS_ID_IT_SUB_HEAD_ID") != -1)
+                    {
+                        result.Message = "Check for the duplicate data.";
+                    }
+                }
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
         public async Task<ActionResult> UpsertITReturnDetails(ITReturnDetailsDataModel itReturn
             , FormCollection form)
         {
@@ -1177,7 +1246,7 @@ namespace LSWebApp.Controllers
                 client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage Res = await client.PostAsync("api/TaxReturnAPI/InsertorUpdateITReturnDetails", content);
+                HttpResponseMessage Res = await client.PostAsync("api/TaxReturnAPI/InsertorUpdateITReturnDetails?operation=", content);
                 ITReturnComplexAPIModelResponse result = new ITReturnComplexAPIModelResponse();
                 if (Res.IsSuccessStatusCode)
                 {
@@ -1233,7 +1302,7 @@ namespace LSWebApp.Controllers
                 client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage Res = await client.PostAsync("api/TaxReturnAPI/InsertorUpdateITReturnDetails", content);
+                HttpResponseMessage Res = await client.PostAsync("api/TaxReturnAPI/InsertorUpdateITReturnDetails?operation=", content);
                 ITReturnComplexAPIModelResponse result = new ITReturnComplexAPIModelResponse();
                 if (Res.IsSuccessStatusCode)
                 {
