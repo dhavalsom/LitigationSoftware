@@ -16,10 +16,6 @@
 	*/}.toString().slice(14, -3)
 }
 
-$(".imgSubHeadClose").click(function (e) {
-    showHideSubHeadControls($(this));
-});
-
 function showHideSubHeadControls(control) {
     control.css("display", "none");
     var isAddMode = control.hasClass("imgSubHead"); //in add mode and switch to the save mode now
