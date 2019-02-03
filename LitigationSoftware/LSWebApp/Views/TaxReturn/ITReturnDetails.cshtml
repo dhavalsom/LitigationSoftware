@@ -229,15 +229,20 @@
                             url: '/manageITSubHead/',
                             data: JSON.stringify(item),
                             success: function (data) {
-                                var trHtml = templates.trSubHeadItem
-                                    .replace("{ITHeadId}", itHeadId)
-                                    .replace("{ITSubHeadId}", data.Id)
-                                    .replace("{ITSubHeadId}", data.Id)
-                                    .replace("{Description}", item.Description);
-                                $.each($('.tblITRetDetails tr.' + (item.IsAllowance ? 'trAllowance' : 'trDisallowance') + itHeadId),
-                                    function (val, obj) {
-                                        $(this).after(trHtml);
+                                if (item.IsAllowance) {
+                                    saveButton.parents('.modal-content')
+                                    .find(".ddITSubHeadAllowance")
+                                    .each(function () {
+                                        $(this).append($('<option></option>').val(data.Id).html(item.Description));
                                     });
+                                }
+                                else {
+                                    saveButton.parents('.modal-content')
+                                    .find(".ddITSubHeadDisallowance")
+                                    .each(function () {
+                                        $(this).append($('<option></option>').val(data.Id).html(item.Description));
+                                    });
+                                }                               
                                 showHideSubHeadControls(saveButton);
                             },
                             contentType: "application/json",

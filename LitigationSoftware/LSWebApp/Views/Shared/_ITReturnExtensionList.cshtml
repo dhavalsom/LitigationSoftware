@@ -22,12 +22,29 @@
             <div class="modal-dialog" role="document" style="max-width: 600px;">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">@Model.ITHeadObject.Description</h5>
+                        <h5 class="modal-title">@Model.ITHeadObject.Description</h5>                        
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
+                        <div class="custom-sub-head">
+                            @Html.TextBoxFor(m => m.ITHeadObject.Id, Model.ITHeadObject.Id.ToString()
+                        , new { @style = "display:none;", @class = "hdIIHeadIdSubHead" })
+                            @Html.TextBox("txtSubHeadDesc_" + Model.ITHeadObject.Id.ToString(), ""
+                        , new { @style = "display:none;", @class = "txtSubHead" })
+                            @Html.CheckBox("chkSubHeadDesc_" + Model.ITHeadObject.Id.ToString()
+                        , new { @style = "display:none;", @class = "chkSubHead" })
+                            <label for="@Html.Name("chkSubHeadDesc_" + Model.ITHeadObject.Id.ToString())"
+                                   style="display:none;" class="chkSubHeadLabel">Is Allowance</label>
+                            <img src="~/images/plus.png"
+                                 class="imgSubHead"
+                                 style="width:20px;height:20px;"
+                                 title="Click to add sub head" />
+                            <img src="~/images/save.png"
+                                 class="imgSubHeadSave"
+                                 style="width:20px;height:20px;display:none;" />
+                        </div>
                         <table class="table table-hover tblITReturnDetailsExtensionList">
                             <thead class="thSPIncomeDetails">
                                 <tr>
@@ -37,7 +54,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model.ITReturnDetailsExtensionList)
+                            @foreach (var item in Model.ITReturnDetailsExtensionList)
                             {
                             <tr class="trITReturnDetailsExtension">
                                 <td>
