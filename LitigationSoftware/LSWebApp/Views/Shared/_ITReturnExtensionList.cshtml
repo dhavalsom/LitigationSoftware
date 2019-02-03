@@ -44,6 +44,9 @@
                             <img src="~/images/save.png"
                                  class="imgSubHeadSave"
                                  style="width:20px;height:20px;display:none;" />
+                            <img src="~/images/close.png"
+                                 class="imgSubHeadClose"
+                                 style="width:20px;height:20px;display:none;" />
                         </div>
                         <table class="table table-hover tblITReturnDetailsExtensionList">
                             <thead class="thSPIncomeDetails">
@@ -61,15 +64,15 @@
                                     @Html.Hidden("hd_" + item.ITSubHeadId.ToString(), item.Id
                                                 , new { @class = "hdITReturnDetailsExtensionId" })
                                     <select class="ddSubheadType">
-                                        <option value="A">Addition/Disallowance</option>
+                                        <option value="D">Addition/Disallowance</option>
                                         @if (item.IsAllowance)
-                                            {
-                                            <option value="D">Deletion/Allowance</option>
-                                            }
-                                            else
-                                            {
-                                            <option value="D" selected>Deletion/Allowance</option>
-                                            }
+                                        {
+                                            <option value="A">Deletion/Allowance</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="A" selected>Deletion/Allowance</option>
+                                        }
                                     </select>
                                 </td>
                                 <td>
