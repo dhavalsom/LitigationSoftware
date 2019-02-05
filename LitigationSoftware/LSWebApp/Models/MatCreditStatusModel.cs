@@ -12,6 +12,8 @@ namespace LSWebApp.Models
 
         public MatCreditStatusModel() : base(Pages.ITReturnDetailsPage)
         {
+            MATCreditDetailsList = new List<MATCreditDetails>();
+            FYAYList = new List<FYAY>();
         }
     }
 }
