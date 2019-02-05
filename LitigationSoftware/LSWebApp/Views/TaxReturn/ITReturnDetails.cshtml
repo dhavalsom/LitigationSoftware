@@ -297,13 +297,15 @@
                                     }
                                 });
                                 $(this).find('.ddITSubHeadAllDisall').each(function () {
-                                    if ($(this).val()) {
-                                        itReturnDetailsExtension.ITSubHeadId = $(this).val();
-                                        $(this).removeClass("validationError");
-                                    }
-                                    else {
-                                        isValid = false;
-                                        $(this).addClass("validationError");
+                                    if ($(this).css("display") != 'none') {
+                                        if ($(this).val()) {
+                                            itReturnDetailsExtension.ITSubHeadId = $(this).val();
+                                            $(this).removeClass("validationError");
+                                        }
+                                        else {
+                                            isValid = false;
+                                            $(this).addClass("validationError");
+                                        }
                                     }
                                 });
                                 data.push(itReturnDetailsExtension);
