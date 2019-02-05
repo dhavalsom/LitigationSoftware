@@ -272,6 +272,16 @@
                                 $(this).val("0.00");
                             }
                         });
+
+                        $(".ddSubheadType").change(function (e) {
+                            var isAllowance = $(this).val() == "A";
+                            $(this).closest('tr').find('.ddITSubHeadAllowance').each(function () {
+                                $(this).css("display", isAllowance ? "inline" : "none");
+                            });
+                            $(this).closest('tr').find('.ddITSubHeadDisallowance').each(function () {
+                                $(this).css("display", isAllowance ? "none" : "inline");
+                            });
+                        });
                     });
 
                     $(".btn-save-it-sub-head").click(function (event) {
