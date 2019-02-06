@@ -1,6 +1,15 @@
 ﻿@model LSWebApp.Models.ITHeadDetailsModel
-
-<tr>
+@if (Model.ITHead == "AdvanceTax1installment")
+{
+    <tr class="expand">
+        <td class="expandCollapse" style="text-align:center;font-weight:bold;font-size:large;">+</td>
+        <td colspan="3" 
+            style="text-align:center;font-weight:bold;font-size:large;">
+            Advance Tax Installment
+        </td>
+    </tr>
+}
+<tr class="@(Model.ITHead == "TDS" ? "collapse" : "")">
     <td>@Model.ITHeadMasterList[Model.ITHead].ExcelSrNo</td>
     <td></td>
     <td>
