@@ -367,6 +367,14 @@
                             }
                         });
                     });
+
+                    $('.expand').click(function () {
+                        $(this).find('.expandCollapse').text($(this).find('.expandCollapse').text() == "+" ? "-" : "+");
+                        $(this).nextUntil("tr.collapse").slideToggle(10);
+                    });
+                    $('.expand').each(function () {
+                        $(this).nextUntil("tr.collapse").slideToggle(10);
+                    });
                 }
             });
         }
