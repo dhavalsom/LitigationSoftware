@@ -1,15 +1,34 @@
 ﻿@model LSWebApp.Models.ITHeadDetailsModel
-@if (Model.ITHead == "AdvanceTax1installment")
+@if (Model.ITHead == "AdvanceTax1installment"
+                || Model.ITHead == "TDS"
+                || Model.ITHead == "InterestUS234A")
 {
     <tr class="expand">
         <td class="expandCollapse" style="text-align:center;font-weight:bold;font-size:large;">+</td>
-        <td colspan="3" 
+        <td colspan="3"
             style="text-align:center;font-weight:bold;font-size:large;">
-            Advance Tax Installment
+            @switch (Model.ITHead)
+            {
+                case "AdvanceTax1installment":
+                    @Html.Raw("Advance Tax Installment")
+                    break;
+                case "TDS":
+                    @Html.Raw("TDS ")
+                    break;
+                case "InterestUS234A":
+                    @Html.Raw("Interest")
+                    break;
+                default:
+                    break;
+            }
+
         </td>
+
     </tr>
 }
-<tr class="@(Model.ITHead == "TDS" ? "collapse" : "")">
+<tr class="@(Model.ITHead == "AdvanceTax4installment"
+    || Model.ITHead == "TaxCollectedAtSource"
+    || Model.ITHead == "InterestUS234C" ? "collapse" : "")">
     <td>@Model.ITHeadMasterList[Model.ITHead].ExcelSrNo</td>
     <td></td>
     <td>
