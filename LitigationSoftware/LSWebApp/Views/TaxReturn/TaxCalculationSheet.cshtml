@@ -45,15 +45,12 @@
     Statement of Taxes
 </div>
 <table class="table table-hover">
-    @*<tr>
-            <td>
-                Total Income as per Regular Provisions
-            </td>
-        </tr>*@
-    <tr>
-        <td colspan="3"><b><u>A)Tax on Regular Income</u></b></td>
+    <tr class="table-active">
+        <td colspan="@(Model.ITReturnDetailsListObject.Count + 1)">
+            <b><u>A) Tax on Regular Income</u></b>
+        </td>
     </tr>
-    <tr>
+    <tr class="table-active">
         <td>Tax on Total Income</td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
@@ -62,7 +59,7 @@
             </td>
         }
     </tr>
-    <tr>
+    <tr class="table-active">
         <td>Add: Surcharge</td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
@@ -71,7 +68,7 @@
             </td>
         }
     </tr>
-    <tr>
+    <tr class="table-active">
         <td>Add: Education Cess</td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
@@ -89,10 +86,12 @@
             </td>
         }
     </tr>
-    <tr>
-        <td colspan="3"><b><u>B)Tax on income computed under MAT provisions</u></b></td>
+    <tr class="table-active">
+        <td colspan="@(Model.ITReturnDetailsListObject.Count + 1)">
+            <b><u>B) Tax on income computed under MAT provisions</u></b>
+        </td>
     </tr>
-    <tr>
+    <tr class="table-active">
         <td>Tax on Total Income</td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
@@ -101,7 +100,7 @@
             </td>
         }
     </tr>
-    <tr>
+    <tr class="table-active">
         <td>Add: Surcharge</td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
@@ -110,7 +109,7 @@
             </td>
         }
     </tr>
-    <tr>
+    <tr class="table-active">
         <td>Add: Education Cess</td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
@@ -128,7 +127,7 @@
             </td>
         }
     </tr>
-    <tr>
+    <tr class="table-active">
         <td colspan="3"></td>
     </tr>
     <tr class="table-info">
@@ -140,10 +139,12 @@
             </td>
         }
     </tr>
-    <tr>
-        <td><b><u>Less : Advance Tax,  TDS and MAT Credit</u></b></td>
+    <tr class="table-active">
+        <td colspan="@(Model.ITReturnDetailsListObject.Count + 1)">
+            <b><u>Less: Advance Tax,  TDS and MAT Credit</u></b>
+        </td>
     </tr>
-    <tr>
+    <tr class="table-active">
         <td><b>Advance Tax</b></td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
@@ -152,7 +153,7 @@
             </td>
         }
     </tr>
-    <tr>
+    <tr class="table-active">
         <td>First Installment</td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
@@ -161,7 +162,7 @@
             </td>
         }
     </tr>
-    <tr>
+    <tr class="table-active">
         <td>Second Installment</td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
@@ -170,7 +171,7 @@
             </td>
         }
     </tr>
-    <tr>
+    <tr class="table-active">
         <td>Third Installment</td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
@@ -179,7 +180,7 @@
             </td>
         }
     </tr>
-    <tr>
+    <tr class="table-active">
         <td>Fourth Installment</td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
@@ -188,7 +189,7 @@
             </td>
         }
     </tr>
-    <tr>
+    <tr class="table-active">
         <td><b><u>TDS</u></b></td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
@@ -197,7 +198,7 @@
             </td>
         }
     </tr>
-    <tr>
+    <tr class="table-active">
         <td><b><u>TDS</u></b></td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
@@ -206,7 +207,7 @@
             </td>
         }
     </tr>
-    <tr>
+    <tr class="table-active">
         <td><b><u>TCS</u></b></td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
@@ -215,7 +216,7 @@
             </td>
         }
     </tr>
-    <tr>
+    <tr class="table-active">
         <td><b><u>MAT Credit</u></b></td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
@@ -233,7 +234,7 @@
             </td>
         }
     </tr>
-    <tr>
+    <tr class="table-active">
         <td>Interest u/s 234A</td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
@@ -242,7 +243,7 @@
             </td>
         }
     </tr>
-    <tr>
+    <tr class="table-active">
         <td>Interest u/s 234B</td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
@@ -251,7 +252,7 @@
             </td>
         }
     </tr>
-    <tr>
+    <tr class="table-active">
         <td>Interest u/s 234C</td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
@@ -260,7 +261,7 @@
             </td>
         }
     </tr>
-    <tr>
+    <tr class="table-active">
         <td>Interest u/s 234D</td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
@@ -269,7 +270,7 @@
             </td>
         }
     </tr>
-    <tr>
+    <tr class="table-active">
         <td>Interest u/s 244A</td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
@@ -278,7 +279,7 @@
             </td>
         }
     </tr>
-    <tr>
+    <tr class="table-active">
         <td>Interest u/s 220</td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
@@ -287,7 +288,7 @@
             </td>
         }
     </tr>
-    <tr>
+    <tr class="table-active">
         <td>Total Interest</td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
@@ -308,7 +309,7 @@
     @foreach (var selfassmt in Model.SelfAssessmentList)
       {
             
-    <tr>
+    <tr class="table-active">
         <td>@selfassmt.SPIncomeDescription</td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
@@ -317,7 +318,7 @@
     </tr>
             
       }
-    <tr>
+    <tr class="table-active">
         <td>Refund Adjusted</td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
@@ -329,15 +330,18 @@
    
     @foreach (var selfassmt in Model.RegularAssessmentList)
     {
-        <tr>
-            <td>@selfassmt.SPIncomeDescription</td>
-            @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
-            {
-                <td>@selfassmt.SPIncomeValue</td>
-            }
-        </tr>
+        if (!string.IsNullOrEmpty(selfassmt.SPIncomeDescription))
+        {
+            <tr class="table-active">
+                <td>@selfassmt.SPIncomeDescription</td>
+                @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+                {
+                    <td>@selfassmt.SPIncomeValue</td>
+                }
+            </tr>
+        }
     }
-    <tr>
+    <tr class="table-active">
         <td>Refund Already Received</td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {

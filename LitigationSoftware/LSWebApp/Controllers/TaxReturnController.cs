@@ -893,6 +893,34 @@ namespace LSWebApp.Controllers
                     Res = await client.GetAsync("api/MasterAPI/GetITHeadMaster?IsTaxComputed=false");
                     var itHeads = JsonConvert.DeserializeObject<List<ITHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
                     itrdetail.PopulateITHeadMasters(itHeads, itSubHeads);
+                    Res = await client.GetAsync("api/TaxReturnAPI/GetBusinessLossDetailsList?companyId="
+                        + companyId + "&fyayId=" + fyayId + "&itSectionCategoryId=&businessLossDetailsId=");
+                    itrdetail.BusinessLossDetailsList = JsonConvert.DeserializeObject<BusinessLossDetailsResponse>(Res.Content.ReadAsStringAsync().Result).BusinessLossDetailsList;
+                    if (itrdetail.BusinessLossDetailsList.Count != 2)
+                    {
+                        if (!itrdetail.BusinessLossDetailsList.Where(bl => bl.ITSectionCategoryId == 1).Any())
+                        {
+                            itrdetail.BusinessLossDetailsList.Add(new BusinessLossDetails
+                            {
+                                ITSectionCategoryId = 1,
+                                FYAYId = fyayId,
+                                CompanyId = companyId,
+                                UnabsorbedDepreciation_UL = 0,
+                                IncomeBusinessProf_UL = 0
+                            });
+                        }
+                        if (!itrdetail.BusinessLossDetailsList.Where(bl => bl.ITSectionCategoryId == 2).Any())
+                        {
+                            itrdetail.BusinessLossDetailsList.Add(new BusinessLossDetails
+                            {
+                                ITSectionCategoryId = 2,
+                                FYAYId = fyayId,
+                                CompanyId = companyId,
+                                UnabsorbedDepreciation_UL = 0,
+                                IncomeBusinessProf_UL = 0
+                            });
+                        }
+                    }
                 }
             }
 

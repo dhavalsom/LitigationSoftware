@@ -16,6 +16,7 @@ namespace LSWebApp.Models
         public List<string> ItemsWithAmounts_TaxCalc { get; set; }
         public List<SPIncomeDetails> SelfAssessmentList { get; set; }
         public List<SPIncomeDetails> RegularAssessmentList { get; set; }
+        public List<BusinessLossDetails> BusinessLossDetailsList { get; set; }
         #endregion
 
         #region Constructors
@@ -53,6 +54,7 @@ namespace LSWebApp.Models
                 "InterestUS234B",
                 "InterestUS234C"
             };
+            BusinessLossDetailsList = new List<BusinessLossDetails>();
         }
         #endregion
 
@@ -80,14 +82,17 @@ namespace LSWebApp.Models
         public Dictionary<string, ITHeadMaster> ITHeadMasterList { get; set; }
         public List<ITReturnDetailsExtension> ITReturnDetailExtensions { get; set; }
         public List<LAndSComments> LAndSCommentsList { get; set; }
+        public List<BusinessLossDetails> BusinessLossDetailsList { get; set; }
 
         public ITReturnDetailsListItemModel(ITHeadMaster currentItem,
             List<ITReturnDetails> itReturnDetailsListObject,
-            Dictionary<string, ITHeadMaster> itHeadMasterList)
+            Dictionary<string, ITHeadMaster> itHeadMasterList,
+            List<BusinessLossDetails> businessLossDetailsList)
         {
             this.CurrentItem = currentItem;
             this.ITReturnDetailsListObject = itReturnDetailsListObject;
             this.ITHeadMasterList = itHeadMasterList;
+            this.BusinessLossDetailsList = businessLossDetailsList;
         }
 
         public ITReturnDetailsListItemModel(ITHeadMaster currentItem,

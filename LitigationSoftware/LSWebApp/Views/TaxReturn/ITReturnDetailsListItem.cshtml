@@ -52,10 +52,88 @@
     @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
     {
         <td>
-            @Utilities.FormatNumber(itsectiondetail.GetTotalComputedValue(Model.CurrentItem))        
+            @if (Model.CurrentItem.PropertyName == "IncomefromBusinessProf")
+            {
+                @Utilities.FormatNumber(
+                    itsectiondetail.GetTotalComputedValue(Model.CurrentItem)
+                    - Model.BusinessLossDetailsList
+                    .Where(bl => bl.ITSectionCategoryId == (itsectiondetail.IsReturn ? 1 : 2))
+                    .First().IncomeBusinessProf_UL
+                    - Model.BusinessLossDetailsList
+                    .Where(bl => bl.ITSectionCategoryId == (itsectiondetail.IsReturn ? 1 : 2))
+                    .First().UnabsorbedDepreciation_UL)
+
+            }
+            else
+            {
+                @Utilities.FormatNumber(itsectiondetail.GetTotalComputedValue(Model.CurrentItem))
+            }
         </td>
     }
 </tr>
+
+@if (Model.CurrentItem.PropertyName == "IncomefromSpeculativeBusiness")
+{
+    <tr class="table-active">
+        <td>
+            Brought Forward Losses Utilised
+        </td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+               @Utilities.FormatNumber(Model.BusinessLossDetailsList
+                    .Where(bl => bl.ITSectionCategoryId == (itsectiondetail.IsReturn ? 1 : 2))
+                    .First().IncomeBusinessProf_UL)
+            </td>
+        }
+    </tr>
+
+    <tr class="table-active">
+        <td>
+            Unabsorbed depreciation Utilised
+        </td>
+       @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+       {
+            <td>
+                @Utilities.FormatNumber(Model.BusinessLossDetailsList
+                    .Where(bl => bl.ITSectionCategoryId == (itsectiondetail.IsReturn ? 1 : 2))
+                    .First().UnabsorbedDepreciation_UL)
+            </td>
+       }
+    </tr>
+}
+
+@if (Model.CurrentItem.PropertyName == "IncomeFromOtherSources")
+{
+    <tr class="table-info">
+        <td>
+            Gross Total Income
+        </td>
+        @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+        {
+            <td>
+                @Utilities.FormatNumber(
+                    itsectiondetail.GetTotalComputedValue(Model.ITHeadMasterList["IncomefromSalary"])
+                    + itsectiondetail.GetTotalComputedValue(Model.ITHeadMasterList["HousePropIncome"])
+                    + itsectiondetail.GetTotalComputedValue(Model.ITHeadMasterList["IncomefromCapGainsLTCG"])
+                    + itsectiondetail.GetTotalComputedValue(Model.ITHeadMasterList["IncomefromCapGainsSTCG"])
+                
+                    + itsectiondetail.GetTotalComputedValue(Model.ITHeadMasterList["IncomefromBusinessProf"])
+                    - Model.BusinessLossDetailsList
+                    .Where(bl => bl.ITSectionCategoryId == (itsectiondetail.IsReturn ? 1 : 2))
+                    .First().IncomeBusinessProf_UL
+                    - Model.BusinessLossDetailsList
+                    .Where(bl => bl.ITSectionCategoryId == (itsectiondetail.IsReturn ? 1 : 2))
+                    .First().UnabsorbedDepreciation_UL
+
+                    + itsectiondetail.GetTotalComputedValue(Model.ITHeadMasterList["IncomefromSpeculativeBusiness"])
+                    + itsectiondetail.GetTotalComputedValue(Model.ITHeadMasterList["IncomeFromOtherSources"])
+                )
+            </td>
+        }
+    </tr>
+}
+
 @if (Model.CurrentItem.PropertyName == "DeductChapterVIA")
 {
     <tr class="table-info">
@@ -70,7 +148,14 @@
                     + itsectiondetail.GetTotalComputedValue(Model.ITHeadMasterList["HousePropIncome"])
                     + itsectiondetail.GetTotalComputedValue(Model.ITHeadMasterList["IncomefromCapGainsLTCG"])
                     + itsectiondetail.GetTotalComputedValue(Model.ITHeadMasterList["IncomefromCapGainsSTCG"])
+                    
                     + itsectiondetail.GetTotalComputedValue(Model.ITHeadMasterList["IncomefromBusinessProf"])
+                    - Model.BusinessLossDetailsList
+                    .Where(bl => bl.ITSectionCategoryId == (itsectiondetail.IsReturn ? 1 : 2))
+                    .First().IncomeBusinessProf_UL
+                    - Model.BusinessLossDetailsList
+                    .Where(bl => bl.ITSectionCategoryId == (itsectiondetail.IsReturn ? 1 : 2))
+                    .First().UnabsorbedDepreciation_UL
                     + itsectiondetail.GetTotalComputedValue(Model.ITHeadMasterList["IncomefromSpeculativeBusiness"])
                     + itsectiondetail.GetTotalComputedValue(Model.ITHeadMasterList["IncomeFromOtherSources"])
                     - itsectiondetail.GetTotalComputedValue(Model.ITHeadMasterList["DeductChapterVIA"])
@@ -87,22 +172,22 @@
             Book profit of the company
         </td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
-                    {
+        {
             <td>
                 @Utilities.FormatNumber(
-                itsectiondetail.GetTotalComputedValue(Model.ITHeadMasterList["ProfitUS115JB"])
+                    itsectiondetail.GetTotalComputedValue(Model.ITHeadMasterList["ProfitUS115JB"])
                 )
             </td>
         }
     </tr>
 }
 @foreach (var subHead in @Model.CurrentItem.SubHeadList)
-                {
+{
     <tr class="@(subHead.IsAllowance.HasValue && subHead.IsAllowance.Value 
             ? "table-success" : "table-danger") @(Model.CurrentItem.PropertyName)" style="display:none;">
         <td>@subHead.Description</td>
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
-                {
+        {
             <td>
                 @Utilities.FormatNumber(itsectiondetail.Extensions
                 .Where(e => e.ITSubHeadId == subHead.Id)
