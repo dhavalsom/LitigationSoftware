@@ -1,12 +1,36 @@
 ﻿@model LSWebApp.Models.ITHeadDetailsModel
 @if (Model.ITHead == "AdvanceTax1installment"
-                || Model.ITHead == "TDS"
-                || Model.ITHead == "InterestUS234A")
+        || Model.ITHead == "TDS"
+        || Model.ITHead == "InterestUS234A")
 {
-    <tr class="expand">
-        <td class="expandCollapse" style="text-align:center;font-weight:bold;font-size:large;">+</td>
-        <td colspan="3"
-            style="text-align:center;font-weight:bold;font-size:large;">
+    decimal total = 0;
+    switch (Model.ITHead)
+    {
+        case "AdvanceTax1installment":
+            total = Model.ITReturnDetailsObject.AdvanceTax1installment.Value
+                    + Model.ITReturnDetailsObject.AdvanceTax2installment.Value
+                    + Model.ITReturnDetailsObject.AdvanceTax3installment.Value
+                    + Model.ITReturnDetailsObject.AdvanceTax4installment.Value;
+            break;
+        case "TDS":
+            total = Model.ITReturnDetailsObject.TDS.Value
+                    + Model.ITReturnDetailsObject.TDS26AS.Value
+                    + Model.ITReturnDetailsObject.TDSasperBooks.Value
+                    + Model.ITReturnDetailsObject.TCSPaidbyCompany.Value
+                    + Model.ITReturnDetailsObject.TaxCollectedAtSource.Value;
+            break;
+        case "InterestUS234A":
+            total = Model.ITReturnDetailsObject.InterestUS234A.Value
+                    + Model.ITReturnDetailsObject.InterestUS234B.Value
+                    + Model.ITReturnDetailsObject.InterestUS234C.Value;
+            break;
+        default:
+            break;
+    }
+    <tr class="expand table-info">
+        <td class="expandCollapse" style="font-weight:bold;font-size:large;">+</td>
+        <td></td>
+        <td style="text-align:Left;font-weight:bold;font-size:large;">
             @switch (Model.ITHead)
             {
                 case "AdvanceTax1installment":
@@ -23,7 +47,15 @@
             }
 
         </td>
-
+        <td>
+            <div class="row col-12">
+                <div class="col-md-6">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.IncomefromSalary
+                        , string.Format("{0:f}", total)
+                        , new { @class = "numericOnly", @disabled = "disabled" })
+                </div>
+            </div>
+        </td>
     </tr>
 }
 <tr class="@(Model.ITHead == "AdvanceTax4installment"
@@ -405,11 +437,3 @@
             </div>
     </td>
 </tr>
-
-@if (!Model.ITReturnDetailsObject.IsReturn
-    && @Model.ITHeadMasterList[Model.ITHead].CanAddSubHead)
-{
-    @*@Html.Partial("ITSubHeadDetails", new ITReturnDetailsExtensionModel(Model.ExtensionList
-    .Where(el => el.HeadMasterObject.Id == @Model.ITHeadMasterList[Model.ITHead].Id)
-    .ToList<ITReturnDetailsExtension>(), @Model.ITHeadMasterList[Model.ITHead].Id))*@
-}
