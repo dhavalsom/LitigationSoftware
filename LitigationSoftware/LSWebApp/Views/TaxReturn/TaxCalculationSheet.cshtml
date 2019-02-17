@@ -55,7 +55,7 @@
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
             <td>
-                @Utilities.FormatNumber(itsectiondetail.TaxOnTotalIncome)
+                @Utilities.FormatNumber(itsectiondetail.RITotalIncome)
             </td>
         }
     </tr>
@@ -64,7 +64,7 @@
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
             <td>
-                @Utilities.FormatNumber(itsectiondetail.SurchargeTax)
+                @Utilities.FormatNumber(itsectiondetail.RISurcharge)
             </td>
         }
     </tr>
@@ -73,7 +73,7 @@
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
             <td>
-                @Utilities.FormatNumber(itsectiondetail.EducationCess)
+                @Utilities.FormatNumber(itsectiondetail.RIEducationCess)
             </td>
         }
     </tr>
@@ -82,7 +82,9 @@
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
             <td>
-                @Utilities.FormatNumber(itsectiondetail.TaxOnTotalIncome + itsectiondetail.SurchargeTax + itsectiondetail.EducationCess)
+                @Utilities.FormatNumber(itsectiondetail.RITotalIncome 
+                + itsectiondetail.RISurcharge 
+                + itsectiondetail.RIEducationCess)
             </td>
         }
     </tr>
@@ -96,7 +98,7 @@
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
             <td>
-                @Utilities.FormatNumber(itsectiondetail.MATTaxOnTotalIncome)
+                @Utilities.FormatNumber(itsectiondetail.MATTotalIncome)
             </td>
         }
     </tr>
@@ -105,7 +107,7 @@
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
             <td>
-                @Utilities.FormatNumber(itsectiondetail.MATSurchargeTax)
+                @Utilities.FormatNumber(itsectiondetail.MATSurcharge)
             </td>
         }
     </tr>
@@ -123,7 +125,9 @@
         @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
         {
             <td>
-                @Utilities.FormatNumber(itsectiondetail.MATTaxOnTotalIncome + itsectiondetail.MATSurchargeTax + itsectiondetail.MATEducationCess)
+                @Utilities.FormatNumber(itsectiondetail.MATTotalIncome 
+                + itsectiondetail.MATSurcharge 
+                + itsectiondetail.MATEducationCess)
             </td>
         }
     </tr>
