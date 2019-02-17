@@ -879,6 +879,14 @@ namespace LSWebApp.Controllers
                 if (Res.IsSuccessStatusCode)
                 {
                     itrdetail.ITReturnDetailsListObject = JsonConvert.DeserializeObject<ITReturnDetailsListResponse>(Res.Content.ReadAsStringAsync().Result).ITReturnDetailsListObject;
+                    //added the copy of the last object
+                    if (itrdetail.ITReturnDetailsListObject.Any())
+                    {
+                        var extraObject = itrdetail.ITReturnDetailsListObject.Last().Clone() as ITReturnDetails;
+                        extraObject.ITSectionCategoryDesc = "Tax computation";
+                        extraObject.ITSectionDescription = "";
+                        itrdetail.ITReturnDetailsListObject.Add(extraObject);
+                    }
                     foreach (var itReturn in itrdetail.ITReturnDetailsListObject)
                     {
                         itReturn.Extensions = new List<ITReturnDetailsExtension>();
@@ -958,6 +966,12 @@ namespace LSWebApp.Controllers
                 if (Res.IsSuccessStatusCode)
                 {
                     itrdetail.ITReturnDetailsListObject = JsonConvert.DeserializeObject<ITReturnDetailsListResponse>(Res.Content.ReadAsStringAsync().Result).ITReturnDetailsListObject;
+                    //added the copy of the last object
+                    if (itrdetail.ITReturnDetailsListObject.Any())
+                    {
+                        var extraObject = itrdetail.ITReturnDetailsListObject.Last().Clone() as ITReturnDetails;
+                        itrdetail.ITReturnDetailsListObject.Add(extraObject);
+                    }
                     foreach (var itReturn in itrdetail.ITReturnDetailsListObject)
                     {
                         itReturn.Extensions = new List<ITReturnDetailsExtension>();

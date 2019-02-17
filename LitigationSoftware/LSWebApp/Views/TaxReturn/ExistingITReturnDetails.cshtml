@@ -23,7 +23,6 @@
                 <tbody>
                     <tr class="table-active">
                         <td colspan="2">
-                            @*@Model.ITReturnDetailsObject.CompanyName*@
                             @Html.LabelFor(m => m.ITReturnDetailsObject.CompanyName, Model.ITReturnDetailsObject.CompanyName)
                             @Html.HiddenFor(m => m.ITReturnDetailsObject.CompanyName)
                             @Html.HiddenFor(m => m.ITReturnDetailsObject.CompanyID, Model.ITReturnDetailsObject.CompanyID)
@@ -35,7 +34,6 @@
                                     <option value="@item.Id.ToString()" data-year="@item.AssessmentYear">@item.FinancialYear</option>
                                 }
                             </select>
-                            @*@Html.DropDownListFor(m => m.ITReturnDetailsObject.FYAYID, new SelectList(Model.FYAYList, "ID", "FinancialYear"))*@
                         </td>
                         <td class="tdAssessmentYear"></td>
                         <td>

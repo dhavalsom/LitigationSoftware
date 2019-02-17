@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace LS.Models
 {
-    public class ITReturnDetails : BaseEntity
+    public class ITReturnDetails : BaseEntity, ICloneable
     {
         #region Properties
         public int CompanyID { get; set; }
@@ -420,10 +420,15 @@ namespace LS.Models
                     .Where(e => e.ITHeadId == itHeadMaster.Id && e.IsAllowance)
                     .Sum(e => e.ITSubHeadValue);
             return result;
-        }        
+        }
+
+        public object Clone()
+        {
+            var result = this.MemberwiseClone();
+            return result;
+        }
         #endregion
     }
-
     public class ITReturnDetailsResponse
     {
         public string Message { get; set; }
