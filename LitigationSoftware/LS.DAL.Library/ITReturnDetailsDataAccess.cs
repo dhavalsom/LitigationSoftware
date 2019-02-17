@@ -271,6 +271,12 @@ namespace LS.DAL.Library
                             RefundAdjustedDate = reader["RefundAdjustedDate"] != DBNull.Value ? Convert.ToDateTime(reader["RefundAdjustedDate"].ToString()) : (DateTime?)null,
                             RegularAssessmentDate = reader["RegularAssessmentDate"] != DBNull.Value ? Convert.ToDateTime(reader["RegularAssessmentDate"].ToString()) : (DateTime?)null,
                             RefundAlreadyReceivedDate = reader["RefundAlreadyReceivedDate"] != DBNull.Value ? Convert.ToDateTime(reader["RefundAlreadyReceivedDate"].ToString()) : (DateTime?)null,
+                            RITotalIncome = reader["RITotalIncome"] != DBNull.Value ? Convert.ToDecimal(reader["RITotalIncome"].ToString()) : 0,
+                            RISurcharge = reader["RISurcharge"] != DBNull.Value ? Convert.ToDecimal(reader["RISurcharge"].ToString()) : 0,
+                            RIEducationCess = reader["RIEducationCess"] != DBNull.Value ? Convert.ToDecimal(reader["RIEducationCess"].ToString()) : 0,
+                            MATTotalIncome = reader["MATTotalIncome"] != DBNull.Value ? Convert.ToDecimal(reader["MATTotalIncome"].ToString()) : 0,
+                            MATEducationCess = reader["MATEducationCess"] != DBNull.Value ? Convert.ToDecimal(reader["MATEducationCess"].ToString()) : 0,
+                            MATSurcharge = reader["MATSurcharge"] != DBNull.Value ? Convert.ToDecimal(reader["MATSurcharge"].ToString()) : 0,
                         });
                     }
                 }

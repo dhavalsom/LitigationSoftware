@@ -437,3 +437,120 @@
             </div>
     </td>
 </tr>
+
+@if (Model.ITHead == "IncomeFromOtherSources")
+{
+    <tr class="expand table-info">
+        <td class="expandCollapse" style="font-weight:bold;font-size:large;">+</td>
+        <td colspan="3" style="text-align:Left;font-weight:bold;font-size:large;">
+            A) Tax on Regular Income
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>1</td>
+        <td>
+            Tax on Total Income
+        </td>
+        <td>
+            <div class="row col-12">
+                <div class="col-md-6">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.RITotalIncome
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.RITotalIncome)
+                        , new { @class = "numericOnly" })
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>2</td>
+        <td>
+            Surcharge
+        </td>
+        <td>
+            <div class="row col-12">
+                <div class="col-md-6">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.RISurcharge
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.RISurcharge)
+                        , new { @class = "numericOnly" })
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr class="collapse">
+        <td></td>
+        <td>3</td>
+        <td>
+            Education Cess
+        </td>
+        <td>
+            <div class="row col-12">
+                <div class="col-md-6">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.RIEducationCess
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.RIEducationCess)
+                        , new { @class = "numericOnly" })
+                </div>
+            </div>
+        </td>
+    </tr>
+}
+
+@if (Model.ITHead == "ProfitUS115JB")
+{
+    <tr class="expand table-info">
+        <td class="expandCollapse" style="font-weight:bold;font-size:large;">+</td>
+        <td colspan="3" style="text-align:Left;font-weight:bold;font-size:large;">
+            B) Tax on income computed under MAT provisions
+        </td>
+    </tr>
+
+    <tr>
+        <td></td>
+        <td>1</td>
+        <td>
+            Tax on Total Income
+        </td>
+        <td>
+            <div class="row col-12">
+                <div class="col-md-6">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.MATTotalIncome
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.MATTotalIncome)
+                        , new { @class = "numericOnly" })
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td></td>
+        <td>2</td>
+        <td>
+            Surcharge
+        </td>
+        <td>
+            <div class="row col-12">
+                <div class="col-md-6">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.MATSurcharge
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.MATSurcharge)
+                        , new { @class = "numericOnly" })
+                </div>
+            </div>
+        </td>
+    </tr>
+    <tr class="collapse">
+        <td></td>
+        <td>3</td>
+        <td>
+            Education Cess
+        </td>
+        <td>
+            <div class="row col-12">
+                <div class="col-md-6">
+                    @Html.TextBoxFor(m => m.ITReturnDetailsObject.MATEducationCess
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.MATEducationCess)
+                        , new { @class = "numericOnly" })
+                </div>
+            </div>
+        </td>
+    </tr>
+}

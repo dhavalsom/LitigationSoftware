@@ -879,6 +879,14 @@ namespace LSWebApp.Controllers
                 if (Res.IsSuccessStatusCode)
                 {
                     itrdetail.ITReturnDetailsListObject = JsonConvert.DeserializeObject<ITReturnDetailsListResponse>(Res.Content.ReadAsStringAsync().Result).ITReturnDetailsListObject;
+                    //added the copy of the last object
+                    if (itrdetail.ITReturnDetailsListObject.Any())
+                    {
+                        var extraObject = itrdetail.ITReturnDetailsListObject.Last().Clone() as ITReturnDetails;
+                        extraObject.ITSectionCategoryDesc = "Tax computation";
+                        extraObject.ITSectionDescription = "";
+                        itrdetail.ITReturnDetailsListObject.Add(extraObject);
+                    }
                     foreach (var itReturn in itrdetail.ITReturnDetailsListObject)
                     {
                         itReturn.Extensions = new List<ITReturnDetailsExtension>();
@@ -958,6 +966,12 @@ namespace LSWebApp.Controllers
                 if (Res.IsSuccessStatusCode)
                 {
                     itrdetail.ITReturnDetailsListObject = JsonConvert.DeserializeObject<ITReturnDetailsListResponse>(Res.Content.ReadAsStringAsync().Result).ITReturnDetailsListObject;
+                    //added the copy of the last object
+                    if (itrdetail.ITReturnDetailsListObject.Any())
+                    {
+                        var extraObject = itrdetail.ITReturnDetailsListObject.Last().Clone() as ITReturnDetails;
+                        itrdetail.ITReturnDetailsListObject.Add(extraObject);
+                    }
                     foreach (var itReturn in itrdetail.ITReturnDetailsListObject)
                     {
                         itReturn.Extensions = new List<ITReturnDetailsExtension>();
@@ -988,7 +1002,6 @@ namespace LSWebApp.Controllers
                     if (Res.IsSuccessStatusCode)
                     {
                         surchargeDataModelObject.SurchargeDataObjectList = JsonConvert.DeserializeObject<List<SurchargeData>>(Res.Content.ReadAsStringAsync().Result);
-                        //surchargerefData = surchargeDataModelObject.SurchargeDataObjectList.FirstOrDefault();
                     }
 
                     foreach (var itReturn in itrdetail.ITReturnDetailsListObject)
@@ -1052,62 +1065,63 @@ namespace LSWebApp.Controllers
                             + itReturn.GetTotalComputedValue(itHeads.Where(x => x.PropertyName == "IncomeFromOtherSources").FirstOrDefault())
                             - itReturn.GetTotalComputedValue(itHeads.Where(x => x.PropertyName == "DeductChapterVIA").FirstOrDefault());
 
-                        itReturn.TaxOnTotalIncome = ((itReturn.TotalIncomeasperRegProvisions- foreignDividend)*(standardrefData.BasicTaxRate/100))+ STCGSpecialIncome;
-                        //itReturn.SurchargeTax = ()
-
-                    foreach(var item in surchargeDataModelObject.SurchargeDataObjectList)
+                        if (!itReturn.RITotalIncome.HasValue
+                            || itReturn.RITotalIncome.Value == 0)
                         {
-                            if (itReturn.TaxOnTotalIncome >= (item.surchargefromthreshold.HasValue?item.surchargefromthreshold:0) && itReturn.TaxOnTotalIncome <= (item.surchargetothreshold.HasValue?item.surchargetothreshold:0))
+                            itReturn.RITotalIncome = ((itReturn.TotalIncomeasperRegProvisions - foreignDividend) * (standardrefData.BasicTaxRate / 100)) + STCGSpecialIncome;
+                        }
+
+                        foreach (var item in surchargeDataModelObject.SurchargeDataObjectList)
+                        {
+                            if (itReturn.RITotalIncome >= (item.surchargefromthreshold.HasValue 
+                                ? item.surchargefromthreshold : 0) && itReturn.RITotalIncome <= (item.surchargetothreshold.HasValue ? item.surchargetothreshold : 0))
                             {
                                 Surchargerate = item.surchargerate;
                                 break;
                             }
                         }
 
-                        if (Surchargerate > 0)
-                            itReturn.SurchargeTax = itReturn.TaxOnTotalIncome * (Surchargerate / 100);
-                        else
-                            itReturn.SurchargeTax = 0;
+                        if (!itReturn.RISurcharge.HasValue
+                            || itReturn.RISurcharge.Value == 0)
+                            itReturn.RISurcharge = itReturn.RITotalIncome * (Surchargerate / 100);
 
-                        if (itReturn.SurchargeTax > 0)
-                            itReturn.EducationCess = (itReturn.TaxOnTotalIncome + itReturn.SurchargeTax) * (standardrefData.EducationCess / 100);
-                        else
-                            itReturn.EducationCess = 0;
-
-                       
-                        if (itReturn.ProfitUS115JB < 0)
-                            itReturn.MATTaxOnTotalIncome = 0;
-                        else
-                            itReturn.MATTaxOnTotalIncome = (itReturn.ProfitUS115JB.HasValue?itReturn.ProfitUS115JB:0) * (standardrefData.MATRate / 100);
-
+                        if (!itReturn.RIEducationCess.HasValue
+                            || itReturn.RIEducationCess.Value == 0)
+                            itReturn.RIEducationCess = (itReturn.RITotalIncome + itReturn.RISurcharge.Value) * (standardrefData.EducationCess / 100);
+                        
+                        if (!itReturn.MATTotalIncome.HasValue
+                            || itReturn.MATTotalIncome.Value == 0)
+                        {
+                            itReturn.MATTotalIncome = (itReturn.ProfitUS115JB.HasValue ? itReturn.ProfitUS115JB : 0) 
+                                * (standardrefData.MATRate / 100);
+                        }
                         Surchargerate = 0;//reset surchargerate to calculate surcharge for MAT
 
                         foreach (var item in surchargeDataModelObject.SurchargeDataObjectList)
                         {
-                            if (itReturn.MATTaxOnTotalIncome >= (item.surchargefromthreshold.HasValue ? item.surchargefromthreshold : 0) && itReturn.MATTaxOnTotalIncome <= (item.surchargetothreshold.HasValue ? item.surchargetothreshold : 0))
+                            if (itReturn.MATTotalIncome >= (item.surchargefromthreshold.HasValue ? item.surchargefromthreshold : 0) && itReturn.MATTotalIncome <= (item.surchargetothreshold.HasValue ? item.surchargetothreshold : 0))
                             {
                                 Surchargerate = item.surchargerate;
                                 break;
                             }
                         }
 
-                        if (Surchargerate > 0)
-                            itReturn.MATSurchargeTax = itReturn.MATTaxOnTotalIncome * (Surchargerate / 100);
-                        else
-                            itReturn.MATSurchargeTax = 0;
+                        if (!itReturn.MATSurcharge.HasValue
+                            || itReturn.MATSurcharge.Value == 0)
+                            itReturn.MATSurcharge = itReturn.MATTotalIncome * (Surchargerate / 100);
 
-                        if (itReturn.SurchargeTax > 0)
-                            itReturn.MATEducationCess = (itReturn.MATTaxOnTotalIncome + itReturn.MATSurchargeTax) * (standardrefData.EducationCess / 100);
-                        else
-                            itReturn.MATEducationCess = 0;
+                        if (!itReturn.MATEducationCess.HasValue
+                            || itReturn.MATEducationCess.Value == 0)
+                            itReturn.MATEducationCess = (itReturn.MATTotalIncome + itReturn.MATSurcharge) * (standardrefData.EducationCess / 100);
 
-                        if((itReturn.TaxOnTotalIncome + itReturn.SurchargeTax + itReturn.EducationCess) > (itReturn.MATTaxOnTotalIncome + itReturn.MATSurchargeTax + itReturn.MATEducationCess))
+                        if((itReturn.RITotalIncome + itReturn.RISurcharge + itReturn.RIEducationCess) 
+                            > (itReturn.MATTotalIncome + itReturn.MATSurcharge + itReturn.MATEducationCess))
                         {
-                            itReturn.Taxliability = (itReturn.TaxOnTotalIncome + itReturn.SurchargeTax + itReturn.EducationCess);
+                            itReturn.Taxliability = (itReturn.RITotalIncome + itReturn.RISurcharge + itReturn.RIEducationCess);
                         }
                         else
                         {
-                            itReturn.Taxliability = (itReturn.MATTaxOnTotalIncome + itReturn.MATSurchargeTax + itReturn.MATEducationCess);
+                            itReturn.Taxliability = (itReturn.MATTotalIncome + itReturn.MATSurcharge + itReturn.MATEducationCess);
                         }
 
                         itReturn.TotalTaxPaid = (itReturn.AdvanceTax1installment.HasValue ? itReturn.AdvanceTax1installment : 0) +

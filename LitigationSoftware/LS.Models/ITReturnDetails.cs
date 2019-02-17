@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace LS.Models
 {
-    public class ITReturnDetails : BaseEntity
+    public class ITReturnDetails : BaseEntity, ICloneable
     {
         #region Properties
         public int CompanyID { get; set; }
@@ -44,6 +44,13 @@ namespace LS.Models
         public decimal? InterestUS234C { get; set; }
         public decimal? InterestUS244A { get; set; }
         public decimal? RefundReceived { get; set; }
+        public decimal? RITotalIncome { get; set; }
+        public decimal? RISurcharge { get; set; }
+        public decimal? RIEducationCess { get; set; }
+        public decimal? MATTotalIncome { get; set; }
+        public decimal? MATSurcharge { get; set; }
+        public decimal? MATEducationCess { get; set; }
+
         public bool? RevisedReturnFile { get; set; }
         public bool IsReturn { get; set; }
 
@@ -67,12 +74,12 @@ namespace LS.Models
 
         #region TaxComputationSheet
         public decimal? TotalIncomeasperRegProvisions { get; set; }
-        public decimal? TaxOnTotalIncome { get; set; }
+        /*public decimal? TaxOnTotalIncome { get; set; }
         public decimal? SurchargeTax { get; set; }
         public decimal? EducationCess { get; set; }
         public decimal? MATTaxOnTotalIncome { get; set; }
         public decimal? MATSurchargeTax { get; set; }
-        public decimal? MATEducationCess { get; set; }
+        public decimal? MATEducationCess { get; set; }*/
         public decimal? Taxliability { get; set; }
         public decimal? TotalTaxPaid { get; set; }
         public decimal? TotalInterest { get; set; }
@@ -299,6 +306,36 @@ namespace LS.Models
         {
             return RefundAlreadyReceivedDate.HasValue;
         }
+
+        public bool ShouldSerializeRITotalIncome()
+        {
+            return RITotalIncome.HasValue;
+        }
+
+        public bool ShouldSerializeRISurcharge()
+        {
+            return RISurcharge.HasValue;
+        }
+
+        public bool ShouldSerializeRIEducationCess()
+        {
+            return RIEducationCess.HasValue;
+        }
+
+        public bool ShouldSerializeMATTotalIncome()
+        {
+            return MATTotalIncome.HasValue;
+        }
+
+        public bool ShouldSerializeMATSurcharge()
+        {
+            return MATSurcharge.HasValue;
+        }
+
+        public bool ShouldSerializeMATEducationCess()
+        {
+            return MATEducationCess.HasValue;
+        }
         #endregion
 
         #region Methods
@@ -383,10 +420,15 @@ namespace LS.Models
                     .Where(e => e.ITHeadId == itHeadMaster.Id && e.IsAllowance)
                     .Sum(e => e.ITSubHeadValue);
             return result;
-        }        
+        }
+
+        public object Clone()
+        {
+            var result = this.MemberwiseClone();
+            return result;
+        }
         #endregion
     }
-
     public class ITReturnDetailsResponse
     {
         public string Message { get; set; }

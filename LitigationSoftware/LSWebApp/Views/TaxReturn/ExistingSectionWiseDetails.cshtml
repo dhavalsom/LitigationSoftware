@@ -20,13 +20,17 @@
             @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
             {
                 <th align="center">
-                    @Html.ActionLink(@itsectiondetail.ITSectionDescription
+                    @if (!string.IsNullOrEmpty(itsectiondetail.ITSectionDescription))
+                    {
+                        @Html.ActionLink(@itsectiondetail.ITSectionDescription
                         , "LoadITReturnDetails", "TaxReturn"
-                        , new {
+                        , new
+                        {
                             fyayId = Model.FYAYId,
                             itSectionId = @itsectiondetail.ITSectionID,
                             itSectionCategoryId = @itsectiondetail.ITSectionCategoryID
                         }, null)
+                    }
                 </th>
             }
         </tr>
