@@ -86,6 +86,12 @@ namespace LSWebApp
             );
 
             routes.MapRoute(
+                name: "manageSubDocumentCategory",
+                url: "manageSubDocumentCategory",
+                defaults: new { controller = "TaxReturn", action = "InsertUpdateSubDocumentCategoryMaster", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
                 name: "manageLAndSComments",
                 url: "manageLAndSComments",
                 defaults: new { controller = "TaxReturn", action = "InsertUpdateLAndSComments", id = UrlParameter.Optional }
