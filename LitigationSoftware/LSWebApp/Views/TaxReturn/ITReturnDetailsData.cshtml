@@ -8,15 +8,15 @@
     <thead>
         <tr>
             <th colspan="2">SNo.</th>
-            <th>Questions</th>
-            <th>Response</th>
+            <th>Particulars</th>
+            <th>Inputs</th>
         </tr>
     </thead>
     <tbody>
         <tr>
             <td>1</td>
             <td></td>
-            <td>The information is being updated for:-</td>
+            <td>The information is being updated for</td>
             <td>
                 <div class="row col-12">
                     <div class="col-md-6">
@@ -30,13 +30,14 @@
                     , Model.ITReturnDetailsObject.FYAYID)
                         @Model.ITReturnDetailsObject.ITSectionCategoryDesc
                         @*This is to fix/hook the wierd bug of missing the <form>
-                    tag for first instance of file upload popup*@
+                        tag for first instance of file upload popup*@
                         @Html.Partial("_ITHeadDocumentsUploader",
                                 new ITHeadDocumentsUploaderModel(
                                     new List<ITReturnDocumentsDisplay>(), new ITHeadMaster()
                                     , new ITReturnDetails()))
 
-            </div></div>
+                    </div>
+                </div>
             </td>
 
         </tr>
@@ -44,7 +45,7 @@
         <tr>
             <td>2</td>
             <td></td>
-            <td>Section number:-</td>
+            <td>Section number</td>
             <td>
                 <div class="row col-12">
                     <div class="col-md-6">
@@ -55,11 +56,16 @@
                 </div>
             </td>
         </tr>
-        
+
         <tr>
             <td>3</td>
             <td></td>
-            <td>Date of filing the return/order:-</td>
+            @if (Model.ITReturnDetailsObject.ITSectionCategoryID == 1)
+            {
+                <td>Date of filing the return</td> }
+            else
+            {
+                <td>Date of filing the order</td>}
             <td>
                 <div class="row col-12">
                     <div class="col-md-6">
@@ -85,37 +91,37 @@
                 </div>
             </td>
         </tr>
-        
-        <tr>
-            <td>4</td>
-            <td></td>
-            <td>Due date of filing the return/order:-</td>
-            <td>
-                <div class="row col-12">
-                    <div class="col-md-6">
-                        <div class="input-group date form_datetime HLV_clacInput"
-                             data-date="" data-date-format="dd M yyyy" data-link-field="ITReturnDetailsObject_ITReturnDueDate"
-                             data-link-format="dd M yyyy">
-                            @Html.TextBoxFor(m => m.ITReturnDetailsObject.ITReturnDueDate
-                      , Model.ITReturnDetailsObject.ITReturnDueDate.HasValue
-                         ? Model.ITReturnDetailsObject.ITReturnDueDate.Value.ToString("dd MMM yyyy")
-                         : string.Empty
-                      , new
-                      {
-                          @class = "form-control",
-                          @size = "16",
-                          @value = ""
-                      })
-                            <span class="input-group-addon">
-                                &nbsp;&nbsp;<i class="fa fa-calendar fa-2x" aria-hidden="true">
-                                </i>
-                            </span>
+        @if (Model.ITReturnDetailsObject.ITSectionCategoryID == 1)
+        {    <tr>
+                <td></td>
+                <td></td>
+                <td>Due date of filing the return/order:-</td>
+                <td>
+                    <div class="row col-12">
+                        <div class="col-md-6">
+                            <div class="input-group date form_datetime HLV_clacInput"
+                                 data-date="" data-date-format="dd M yyyy" data-link-field="ITReturnDetailsObject_ITReturnDueDate"
+                                 data-link-format="dd M yyyy">
+                                @Html.TextBoxFor(m => m.ITReturnDetailsObject.ITReturnDueDate
+                                       , Model.ITReturnDetailsObject.ITReturnDueDate.HasValue
+                                          ? Model.ITReturnDetailsObject.ITReturnDueDate.Value.ToString("dd MMM yyyy")
+                                          : string.Empty
+                                       , new
+                                       {
+                                           @class = "form-control",
+                                           @size = "16",
+                                           @value = ""
+                                       })
+                                <span class="input-group-addon">
+                                    &nbsp;&nbsp;<i class="fa fa-calendar fa-2x" aria-hidden="true">
+                                    </i>
+                                </span>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </td>
-        </tr>
-
+                </td>
+            </tr>
+        }
         @foreach (var itHead in Model.ItemsWithAmounts)
         {
             if (
@@ -149,13 +155,13 @@
                                 @Html.RadioButtonFor(m => m.ITReturnDetailsObject.Broughtforwardlosses
                                 , true, Model.ITReturnDetailsObject.Broughtforwardlosses)@Html.Label("Yes")
                                 @Html.RadioButtonFor(m => m.ITReturnDetailsObject.Broughtforwardlosses
-                                , false, Model.ITReturnDetailsObject.Broughtforwardlosses)@Html.Label("No")                                
+                                , false, Model.ITReturnDetailsObject.Broughtforwardlosses)@Html.Label("No")
                             </div>
                         </div>
                     </td>
                 </tr>
             }
-        }       
+        }
         <tr>
             <td colspan="4" align="center">
                 <button type="submit" class="btn btn-primary">

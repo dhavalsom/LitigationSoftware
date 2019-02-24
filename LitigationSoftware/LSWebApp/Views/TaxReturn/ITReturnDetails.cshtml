@@ -11,7 +11,12 @@
     }
 </style>
 
-<h3>Input Sheet</h3>
+<h3>
+    @Html.LabelFor(m => m.CompanyObject.CompanyName
+                               , Model.CompanyObject.CompanyName) 
+    @Html.HiddenFor(m => m.CompanyObject.Id
+, Model.CompanyObject.Id)
+</h3>
 
 <div class="container">
     <div class="bs-component">
@@ -19,23 +24,9 @@
             <thead>
                 <tr>
                     @Html.Hidden("hdNewSpIncomeRecordCount", "0")
-                    <th colspan="2">Company Name</th>
+                    @*<th colspan="2">Company Name</th>*@
                     <th>Financial Year</th>
-                    <th>Assesment Year</th>
-                    <th>Section Category</th>
-                    <th>IT Section</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="table-active">
-                    <td colspan="2">
-                        @Html.LabelFor(m => m.CompanyObject.CompanyName
-                                , Model.CompanyObject.CompanyName)
-                        @Html.HiddenFor(m => m.CompanyObject.Id
-                                , Model.CompanyObject.Id)
-                    </td>
-                    <td>
+                    <th>
                         <select id="FYAYId"
                                 name="@Html.NameFor(m=>m.FYAYId)">
                             @foreach (var item in Model.FYAYList)
@@ -43,28 +34,71 @@
                                 <option value="@item.Id.ToString()"
                                         data-year="@item.AssessmentYear">
                                     @item.FinancialYear
-                                    </option>
+                                </option>
                             }
                         </select>
-                    </td>
-                    <td class="tdAssessmentYear"></td>
-                    <td>
+                    </th>
+
+                    <th>Assesment Year</th>
+                    <th class="tdAssessmentYear"></th>
+
+                    <th>Section Category</th>
+                    <th>
                         @Html.DropDownListFor(m => m.ITSectionCategoryId
                                 , new SelectList(Model.ITSectionCategories
                                 , "Id", "Description", Model.ITSectionCategoryId)
                                 , new { @class = "ddITSectionCategory" })
-                    </td>
-                    <td>
+                    </th>
+
+                    <th>IT Section</th>
+                    <th>
                         @Html.Partial("_LitigationDD", Model.ITSectionListSource)
-                    </td>
-                    <td>
+                    </th>
+                    <th>
                         <button type="button" class="btn btn-primary btn-sm btn-search"
                                 id="btnsrch">
                             Search
                         </button>
-                    </td>
+                    </th>
                 </tr>
-            </tbody>
+            </thead>
+            @*<tbody>
+        <tr class="table-active">
+           <td colspan="2">
+                @Html.LabelFor(m => m.CompanyObject.CompanyName
+                        , Model.CompanyObject.CompanyName)
+
+            </td>
+            <td>
+            <select id="FYAYId"
+                    name="@Html.NameFor(m=>m.FYAYId)">
+                @foreach (var item in Model.FYAYList)
+                {
+                    <option value="@item.Id.ToString()"
+                            data-year="@item.AssessmentYear">
+                        @item.FinancialYear
+                        </option>
+                }
+            </select>
+        </td>
+            <td class="tdAssessmentYear"></td>
+            <td>
+            @Html.DropDownListFor(m => m.ITSectionCategoryId
+                    , new SelectList(Model.ITSectionCategories
+                    , "Id", "Description", Model.ITSectionCategoryId)
+                    , new { @class = "ddITSectionCategory" })
+        </td>
+            <td>
+                @Html.Partial("_LitigationDD", Model.ITSectionListSource)
+            </td>
+            <td>
+                <button type="button" class="btn btn-primary btn-sm btn-search"
+                        id="btnsrch">
+                    Search
+                </button>
+            </td>
+            </tr>
+            </tbody>*@
         </table>
         <br />
     </div>
