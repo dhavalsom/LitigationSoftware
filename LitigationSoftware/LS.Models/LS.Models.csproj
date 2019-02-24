@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseEntity.cs" />
+    <Compile Include="DocumentCategoryMaster.cs" />
+    <Compile Include="SubDocumentCategoryMaster.cs" />
     <Compile Include="MATCreditDetails.cs" />
     <Compile Include="BusinessLossDetails.cs" />
     <Compile Include="Company.cs" />

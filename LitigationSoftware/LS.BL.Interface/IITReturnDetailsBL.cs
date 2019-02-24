@@ -13,8 +13,10 @@ namespace LS.BL.Interface
         List<ITReturnDetailsExtension> GetExistingITReturnDetailsExtension(int? itreturnid);
         ITReturnDocumentsResponse InsertUpdateITReturnDocuments(ITReturnDocuments itReturnDocuments
             , string operation);
-        ITReturnDocumentsResponse GetITReturnDocumentsList(int? companyId, 
-            int? fyayId, int? itReturnDetailsId, int? itHeadId, int? itReturnDocumentId);
+        ITReturnDocumentsResponse GetITReturnDocumentsList(int? companyId,
+            int? fyayId, int? itReturnDetailsId, int? itHeadId, int? itReturnDocumentId,
+            int? documentCategoryId, int? subDocumentCategoryId);
+
         ITReturnDetailsListResponse GetLitigationAndSimulation(int companyId);
         LAndSCommentsResponse GetLAndSCommentList(int? companyId, int? itSubHeadId);
         LAndSCommentsResponse InsertUpdateLAndSComments(LAndSComments landsComments

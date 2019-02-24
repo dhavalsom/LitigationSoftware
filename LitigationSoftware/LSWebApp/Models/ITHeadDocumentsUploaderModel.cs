@@ -11,9 +11,12 @@ namespace LSWebApp.Models
         public ITHeadMaster ITHeadObject { get; set; }
         public ITReturnDocuments ObjITReturnDocuments { get; set; }
         public ITReturnDetails ObjITReturnDetails { get; set; }
+        public List<DocumentCategoryMaster> DocumentCategoryList { get; set; }
+        public List<SubDocumentCategoryMaster> SubDocumentCategoryList { get; set; }
 
         public ITHeadDocumentsUploaderModel(List<ITReturnDocumentsDisplay> documentList
-            , ITHeadMaster itHeadObject, ITReturnDetails objITReturnDetails)
+            , ITHeadMaster itHeadObject, ITReturnDetails objITReturnDetails
+            , List<DocumentCategoryMaster> documentCategoryList)
         {
             ObjITReturnDocuments = new ITReturnDocuments();
             ObjITReturnDocuments.ITHeadId = itHeadObject.Id;
@@ -21,6 +24,8 @@ namespace LSWebApp.Models
             this.DocumentList = documentList;
             this.ITHeadObject = itHeadObject;
             this.ObjITReturnDetails = objITReturnDetails;
+            this.DocumentCategoryList = documentCategoryList;
+            this.SubDocumentCategoryList = new List<SubDocumentCategoryMaster>();
         }
 
         public ITHeadDocumentsUploaderModel()

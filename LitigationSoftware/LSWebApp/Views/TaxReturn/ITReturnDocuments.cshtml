@@ -8,22 +8,11 @@
     <table>
         <tr>
             <td>
-                Select Company:
-            </td>
-            <td>
-                @Html.HiddenFor(m=>m.CompanyName, Model.CompanyName)
-                @Html.DropDownListFor(m => m.CompanyId
-                , new SelectList(Model.CompanyList.Where(c=>c.Id == Model.CompanyId)
-                , "Id", "CompanyName", Model.CompanyId)
-                , new { @name = "CompanyId", @id = "CompanyId", @class = "ddCompanyITRD", @style = "width:400px" })
-            </td>
-        </tr>
-        <tr style="height:5px;"></tr>
-        <tr>
-            <td>
                 Select Financial Year:
             </td>
             <td>
+                @Html.HiddenFor(m=>m.CompanyName, Model.CompanyName)
+                @Html.HiddenFor(m => m.CompanyId, Model.CompanyId)
                 @Html.HiddenFor(m => m.FinancialYear, Model.FinancialYear)
                 @Html.DropDownListFor(m => m.FYAYId
                 , new SelectList(Model.FYAYList, "Id", "FinancialYear", Model.FYAYId)
@@ -34,14 +23,32 @@
         <tr style="height:5px;"></tr>
         <tr>
             <td>
-                Select IT Head:
+                Document Category:
             </td>
             <td>
-                @Html.HiddenFor(m => m.ITHeadId, Model.ITHeadId)
-                @Html.DropDownListFor(m => m.ITHeadId
-                , new SelectList(Model.ITHeadList.Where(ith=>ith.CanAddDocuments), "Id", "Description", Model.ITHeadId)
+                @Html.DropDownListFor(m => m.DocumentCategoryId
+                , new SelectList(Model.DocumentCategoryList, "Id", "Description", Model.DocumentCategoryId)
                 , "All"
-                , new { @name = "ITHeadId", @id = "ITHeadId", @class = "ddITHeadITRD", @style = "width:400px" })
+                , new { @name = "DocumentCategoryId", @id = "DocumentCategoryId"
+                , @class = "ddDocumentCategory", @style = "width:400px" })
+            </td>
+        </tr>
+        <tr style="height:5px;"></tr>
+        <tr>
+            <td>
+                Sub Category:
+            </td>
+            <td>
+                @Html.DropDownListFor(m => m.SubDocumentCategoryId
+                , new SelectList(Model.SubDocumentCategoryList, "Id", "Description", Model.SubDocumentCategoryId)
+                , "All"
+                , new
+                {
+                    @name = "SubDocumentCategoryId",
+                    @id = "SubDocumentCategoryId",
+                    @class = "ddSubDocumentCategory",
+                    @style = "width:400px"
+                })            
             </td>               
         </tr>            
     </table>
@@ -59,10 +66,31 @@
             $(".ddFYAYITRD").change(function () {
                 loadITReturnDetailDocuments();
             });
-            $(".ddCompanyITRD").change(function () {
-                loadITReturnDetailDocuments();
+            $(".ddDocumentCategory").change(function () {
+                var subDocumentCatObject = $(this).closest('table').find('.ddSubDocumentCategory');
+
+                $.ajax({
+                    url: '/getSubDocumentCategories?documentCategoryId='
+                    + $(this).find("option:selected").val(),
+                    error: function () {
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        subDocumentCatObject.html('');
+                        subDocumentCatObject.append('<option>All</option>');
+                        $(data).each(function () {
+                            var option = $('<option />');
+                            option.attr('value', this.Id).html(this.Description);
+                            subDocumentCatObject.append(option);
+                        });
+                        loadITReturnDetailDocuments();
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    },
+                    type: 'GET'
+                });
             });
-            $(".ddITHeadITRD").change(function () {
+            $(".ddSubDocumentCategory").change(function () {
                 loadITReturnDetailDocuments();
             });
         }); 
@@ -83,8 +111,10 @@
 
         function loadITReturnDetailDocuments() {
             $.ajax({
-                url: '/itreturndetaildocuments?companyId=' + $(".ddCompanyITRD").val()
-                + '&fyayId=' + $(".ddFYAYITRD").val() + '&itHeadId=' + $(".ddITHeadITRD").val(),
+                url: '/itreturndetaildocuments?fyayId=' + $(".ddFYAYITRD").val()
+                + '&itHeadId='
+                + '&documentCategoryId=' + $(".ddDocumentCategory").val()
+                + '&subDocumentCategoryId=' + $(".ddSubDocumentCategory").val(),
                 error: function () {
                 },
                 dataType: 'html',

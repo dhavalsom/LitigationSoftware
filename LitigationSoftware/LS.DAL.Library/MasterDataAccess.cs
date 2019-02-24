@@ -621,6 +621,147 @@ namespace LS.DAL.Library
                 Connection.Close();
             }
         }
+
+        public List<DocumentCategoryMaster> GetDocumentCategoryMaster(bool? IsActive)
+        {
+            try
+            {
+                Log.Info("Started call to GetDocumentCategoryMaster");
+                Command.CommandText = "SP_GET_DOCUMENT_CATEGORY_MASTER";
+                Command.CommandType = CommandType.StoredProcedure;
+                Command.Parameters.Clear();
+
+                if (IsActive.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@ACTIVE", IsActive.Value);
+                }
+                Connection.Open();
+                SqlDataReader reader = Command.ExecuteReader();
+                List<DocumentCategoryMaster> result = new List<DocumentCategoryMaster>();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result.Add(new DocumentCategoryMaster
+                        {
+                            Description = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : null,
+                            Active = Convert.ToBoolean(reader["Active"].ToString()),
+                            Id = Convert.ToInt32(reader["Id"].ToString()),
+                        });
+                    }
+                }
+                Log.Info("End call to GetDocumentCategoryMaster:" + JsonConvert.SerializeObject(result));
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            finally
+            {
+                Connection.Close();
+            }
+        }
+
+        public List<SubDocumentCategoryMaster> GetSubDocumentCategoryMaster(int? documentCategoryId
+            , bool? IsActive)
+        {
+            try
+            {
+                Log.Info("Started call to GetSubDocumentCategoryMaster");
+                Command.CommandText = "SP_GET_SUB_DOCUMENT_CATEGORY_MASTER";
+                Command.CommandType = CommandType.StoredProcedure;
+                Connection.Open();
+                if (documentCategoryId.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@DOCUMENT_CATEGORY_ID", documentCategoryId.Value);
+                }
+                if (IsActive.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@ACTIVE", IsActive.Value);
+                }
+                SqlDataReader reader = Command.ExecuteReader();
+                List<SubDocumentCategoryMaster> result = new List<SubDocumentCategoryMaster>();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result.Add(new SubDocumentCategoryMaster
+                        {
+                            DocumentCategoryId = Convert.ToInt32(reader["DocumentCategoryId"].ToString()),
+                            Description = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : null,
+                            DocumentCategoryName = reader["DocumentCategoryName"] != DBNull.Value ? reader["DocumentCategoryName"].ToString() : null,
+                            Active = Convert.ToBoolean(reader["Active"].ToString()),
+                            Id = Convert.ToInt32(reader["Id"].ToString())
+                        });
+                    }
+                }
+
+                Log.Info("End call to GetSubDocumentCategoryMaster:" + JsonConvert.SerializeObject(result));
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            finally
+            {
+                Connection.Close();
+            }
+        }
+
+        public SubDocumentCategoryMasterResponse InsertUpdateSubDocumentCategoryMaster
+            (SubDocumentCategoryMaster objSubDocumentCategoryMaster)
+        {
+            try
+            {
+                Log.Info("Started call to InsertUpdateSubDocumentCategoryMaster");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(objSubDocumentCategoryMaster));
+                Command.CommandText = "SP_SUB_DOCUMENT_CATEGORY_MANAGER";
+                Command.CommandType = CommandType.StoredProcedure;
+                Command.Parameters.Clear();
+
+                Command.Parameters.AddWithValue("@SUB_DOCUMENT_CATEGORY_XML", GetXMLFromObject(objSubDocumentCategoryMaster));
+
+                if (objSubDocumentCategoryMaster.AddedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", objSubDocumentCategoryMaster.AddedBy.Value);
+                }
+                if (objSubDocumentCategoryMaster.ModifiedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", objSubDocumentCategoryMaster.ModifiedBy.Value);
+                }
+                Connection.Open();
+                SqlDataReader reader = Command.ExecuteReader();
+
+                SubDocumentCategoryMasterResponse result = new SubDocumentCategoryMasterResponse();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result = new SubDocumentCategoryMasterResponse
+                        {
+                            Id = Convert.ToInt32(reader["Id"].ToString()),
+                            Message = reader["ReturnMessage"] != DBNull.Value ? reader["ReturnMessage"].ToString() : null,
+                            IsSuccess = Convert.ToBoolean(reader["Result"].ToString())
+                        };
+                    }
+                }
+                Log.Info("End call to InsertUpdateSubDocumentCategoryMaster");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                Connection.Close();
+            }
+        }
         #endregion
     }
 }

@@ -26,6 +26,12 @@ namespace LSWebApp
            );
 
             routes.MapRoute(
+               name: "getSubDocumentCategories",
+               url: "getSubDocumentCategories",
+               defaults: new { controller = "TaxReturn", action = "GetSubDocumentCategoryList", id = UrlParameter.Optional }
+           );
+
+            routes.MapRoute(
                name: "getCompliance",
                url: "getCompliance",
                defaults: new { controller = "TaxReturn", action = "GetComplianceMasterList", id = UrlParameter.Optional }
