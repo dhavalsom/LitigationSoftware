@@ -32,7 +32,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body custom-sub-doc-category">
                             <table>
                                 <tr>
                                     <td>
@@ -55,13 +55,34 @@
                                         , "Id", "Description", Model.ObjITReturnDocuments.SubDocumentCategoryId)
                                         , "Please Select"
                                         , new { @class = "ddSubDocumentCategory", @style = "width:150px;" })
+
+                                        <img src="~/images/plus.png"
+                                             class="imgSubDocCategory"
+                                             style="width:20px;height:20px;"
+                                             title="Click to add sub head" />
+                                    </td>
+                                </tr>
+                                <tr class="tr-custom-add">
+                                    <td>
+                                        New Sub Category:
+                                    </td>
+                                    <td>
+                                        <input type="text" 
+                                               style="width:150px;" 
+                                               class="txtSubDocCategory"/>
+                                        <img src="~/images/save.png"
+                                             class="imgSubDocCategorySave"
+                                             style="width:20px;height:20px;" />
+                                        <img src="~/images/close.png"
+                                             class="imgSubDocCategoryClose"
+                                             style="width:20px;height:20px;" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>
                                         Choose File:
                                     </td>
-                                    <td colspan="2">
+                                    <td>
                                         @Html.TextBoxFor(model => model.ITHeadFile, new { type = "file" })
                                     </td>
                                 </tr>

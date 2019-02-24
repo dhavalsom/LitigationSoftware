@@ -302,6 +302,55 @@
                         });
                     });
 
+                    $(".imgSubDocCategory").click(function (e) {
+                        showHideSubDocCategoryControls($(this));
+                    });
+
+                    $(".imgSubDocCategoryClose").click(function (e) {
+                        showHideSubDocCategoryControls($(this));
+                    });
+
+                    $(".imgSubDocCategorySave").click(function (e) {
+                        var txtControl = null;
+                        var saveButton = $(this);
+                        var documentCategoryId = 0;
+                        $(e.target).closest(".custom-sub-doc-category").find('.txtSubDocCategory').each(function () {
+                            txtControl = $(this);
+                        });
+                        $(e.target).closest(".custom-sub-doc-category").find('.ddDocumentCategory').each(function () {
+                            documentCategoryId = $(this).val();
+                        });
+                        if (txtControl.val() == "") {
+                            txtControl.addClass("validationError");
+                            return;
+                        }
+                        else {
+                            txtControl.removeClass("validationError");
+                        }
+
+                        var item = {};
+                        item.Description = txtControl.val();
+                        item.Active = true;
+                        item.DocumentCategoryId = documentCategoryId;
+
+                        $.ajax({
+                            type: 'POST',
+                            url: '/manageSubDocumentCategory/',
+                            data: JSON.stringify(item),
+                            success: function (data) {
+                                saveButton.parents('.modal-content')
+                                    .find(".ddSubDocumentCategory")
+                                    .each(function () {
+                                        $(this).append($('<option></option>').val(data.Id).html(item.Description));
+                                    });
+                                showHideSubDocCategoryControls(saveButton);
+                            },
+                            contentType: "application/json",
+                            dataType: 'json'
+                        });
+                    });
+
+                    $(".tr-custom-add").hide();
                     $(".btn-add-row-it-sub-head").click(function (event) {
                         var $tr = $(this).parents('.modal-content').find('tr.trITReturnDetailsExtension:last');
                         var $clone = $tr.clone();

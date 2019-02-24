@@ -185,7 +185,15 @@ namespace LSWebApp.Controllers
                     var itHeads = JsonConvert.DeserializeObject<List<ITHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
                     Res = await client.GetAsync("api/MasterAPI/GetDocumentCategoryMaster?IsActive=true");
                     var documentCategories = JsonConvert.DeserializeObject<List<DocumentCategoryMaster>>(Res.Content.ReadAsStringAsync().Result);
+                    var subDocumentCategories = new List<SubDocumentCategoryMaster>();
+                    if (documentCategories != null
+                        && documentCategories.Any())
+                    {
+                        Res = await client.GetAsync("api/MasterAPI/GetSubDocumentCategoryMaster?IsActive=true&documentCategoryId=" 
+                            + documentCategories.First().Id);
+                        subDocumentCategories = JsonConvert.DeserializeObject<List<SubDocumentCategoryMaster>>(Res.Content.ReadAsStringAsync().Result);
 
+                    }
                     if (itsectionid.HasValue)
                     {
                         Res = await client.GetAsync("api/TaxReturnAPI/GetExistingITReturnDetailsList?companyId=" + companyId + "&fyayId=" + FYAYID + "&itsectionid=" + itsectionid + "&itreturnid=" + itreturnid);
@@ -223,13 +231,15 @@ namespace LSWebApp.Controllers
                                             {
                                                 itrdetails.ITHeadDocumentsUploaderModels.Add(itHead.PropertyName
                                                     , new ITHeadDocumentsUploaderModel(itrdetails.ITReturnDocumentList[itHead.PropertyName]
-                                                    , itHead, itrdetails.ITReturnDetailsObject, documentCategories));
+                                                    , itHead, itrdetails.ITReturnDetailsObject, documentCategories
+                                                    , subDocumentCategories));
                                             }
                                             else
                                             {
                                                 itrdetails.ITHeadDocumentsUploaderModels.Add(itHead.PropertyName
                                                     , new ITHeadDocumentsUploaderModel(new List<ITReturnDocumentsDisplay>()
-                                                    , itHead, itrdetails.ITReturnDetailsObject, documentCategories));
+                                                    , itHead, itrdetails.ITReturnDetailsObject, documentCategories
+                                                    , subDocumentCategories));
                                             }
                                         }
                                     }
@@ -621,7 +631,15 @@ namespace LSWebApp.Controllers
                     var itHeads = JsonConvert.DeserializeObject<List<ITHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
                     Res = await client.GetAsync("api/MasterAPI/GetDocumentCategoryMaster?IsActive=true");
                     var documentCategories = JsonConvert.DeserializeObject<List<DocumentCategoryMaster>>(Res.Content.ReadAsStringAsync().Result);
+                    var subDocumentCategories = new List<SubDocumentCategoryMaster>();
+                    if (documentCategories != null
+                        && documentCategories.Any())
+                    {
+                        Res = await client.GetAsync("api/MasterAPI/GetSubDocumentCategoryMaster?IsActive=true&documentCategoryId="
+                            + documentCategories.First().Id);
+                        subDocumentCategories = JsonConvert.DeserializeObject<List<SubDocumentCategoryMaster>>(Res.Content.ReadAsStringAsync().Result);
 
+                    }
                     if (itSectionId.HasValue)
                     {
                         Res = await client.GetAsync("api/TaxReturnAPI/GetExistingITReturnDetailsList?companyId=" 
@@ -665,13 +683,15 @@ namespace LSWebApp.Controllers
                                             {
                                                 model.ITHeadDocumentsUploaderModels.Add(itHead.PropertyName
                                                     , new ITHeadDocumentsUploaderModel(model.ITReturnDocumentList[itHead.PropertyName]
-                                                    , itHead, model.ITReturnDetailsObject, documentCategories));
+                                                    , itHead, model.ITReturnDetailsObject, documentCategories
+                                                    , subDocumentCategories));
                                             }
                                             else
                                             {
                                                 model.ITHeadDocumentsUploaderModels.Add(itHead.PropertyName
                                                     , new ITHeadDocumentsUploaderModel(new List<ITReturnDocumentsDisplay>()
-                                                    , itHead, model.ITReturnDetailsObject, documentCategories));
+                                                    , itHead, model.ITReturnDetailsObject, documentCategories
+                                                    , subDocumentCategories));
                                             }
                                         }
                                     }
@@ -1422,6 +1442,23 @@ namespace LSWebApp.Controllers
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpResponseMessage Res = await client.PostAsync("api/MasterAPI/InsertUpdateITSubHeadMaster", content);
                 ITSubHeadMasterResponse result = JsonConvert.DeserializeObject<ITSubHeadMasterResponse>(Res.Content.ReadAsStringAsync().Result);                
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> InsertUpdateSubDocumentCategoryMaster
+            (SubDocumentCategoryMaster objSubDocumentCategoryMaster)
+        {
+            using (var client = new HttpClient())
+            {
+                var json = JsonConvert.SerializeObject(objSubDocumentCategoryMaster);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.PostAsync("api/MasterAPI/InsertUpdateSubDocumentCategoryMaster", content);
+                SubDocumentCategoryMasterResponse result = JsonConvert.DeserializeObject<SubDocumentCategoryMasterResponse>(Res.Content.ReadAsStringAsync().Result);
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
         }
