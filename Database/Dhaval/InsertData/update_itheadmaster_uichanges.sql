@@ -15,10 +15,10 @@ update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 17,Description='Advanc
 update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 18 where PropertyName = 'TDS'
 update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 19 where PropertyName = 'TDS26AS'
 update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 20 where PropertyName = 'TDSasperBooks'
-update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 21 where PropertyName = 'TCSPaidbyCompany'
+update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 21,Active=0 where PropertyName = 'TCSPaidbyCompany'
 update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 22 where PropertyName = 'TaxCollectedAtSource'
 update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 23 where PropertyName = 'SelfAssessmentTax'
-update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 24 where PropertyName = 'ForeignTaxCredit'
+update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 24, description = 'Foreign Tax Credit claimed' where PropertyName = 'ForeignTaxCredit'
 update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 25 where PropertyName = 'MATCredit'
 update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 26 where PropertyName = 'InterestUS234A'
 update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 27 where PropertyName = 'InterestUS234B'
@@ -26,7 +26,7 @@ update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 28 where PropertyName 
 update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 29 where PropertyName = 'InterestUS234D'
 update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 30 where PropertyName = 'InterestUS220'
 update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 31 where PropertyName = 'RefundAdjusted'
-update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 32 where PropertyName = 'RegularAssessment'
+update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 32,IsROI=0 where PropertyName = 'RegularAssessment'
 update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 33 where PropertyName = 'RefundAlreadyReceived'
 
                                

@@ -306,6 +306,8 @@ namespace LS.DAL.Library
                 {
                     Command.Parameters.AddWithValue("@IsTaxComputed", IsTaxComputed.Value);
                 }
+                Command.Parameters.AddWithValue("@ACTIVE", 1);
+
                 Connection.Open();
                 SqlDataReader reader = Command.ExecuteReader();
                 List<ITHeadMaster> result = new List<ITHeadMaster>();

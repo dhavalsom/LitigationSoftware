@@ -1,11 +1,7 @@
 USE [LitigationApp]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_GET_IT_HEAD_MASTER]    Script Date: 6/30/2018 1:39:44 PM ******/
-DROP PROCEDURE [dbo].[SP_GET_IT_HEAD_MASTER]
-GO
-
-/****** Object:  StoredProcedure [dbo].[SP_GET_IT_HEAD_MASTER]    Script Date: 6/30/2018 1:39:44 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_GET_IT_HEAD_MASTER]    Script Date: 2/24/2019 8:09:06 PM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -13,8 +9,14 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 
-CREATE PROCEDURE [dbo].[SP_GET_IT_HEAD_MASTER]
-(
+
+
+
+
+
+ALTER PROCEDURE [dbo].[SP_GET_IT_HEAD_MASTER]
+(	
+	@IsTaxComputed BIT = NULL,
 	@ACTIVE BIT = NULL,
 	@PROPERTY_NAME NVARCHAR(100) =  NULL
 )
@@ -29,12 +31,23 @@ BEGIN
       ,[Description]
       ,[PropertyName]
 	  ,[CanAddSubHead]
+	  ,[CanAddDocuments]
+	  ,[IsROI]
+	  ,[HasDate]
+	  ,[IsSpecialIncomeEnabled]
       ,[Active]
+	  ,[IsTaxComputed]
 	FROM [ITHeadMaster]
 	WHERE (@ACTIVE IS NULL OR [Active] = @ACTIVE)
 	AND (@PROPERTY_NAME IS NULL OR [PropertyName] = @PROPERTY_NAME) 
-	ORDER BY [Id]
+	AND (@IsTaxComputed IS NULL OR IsTaxComputed = @IsTaxComputed)
+	ORDER BY CAST([ExcelSrNo] AS BIGINT)
 END
+
+
+
+
+
 
 
 GO

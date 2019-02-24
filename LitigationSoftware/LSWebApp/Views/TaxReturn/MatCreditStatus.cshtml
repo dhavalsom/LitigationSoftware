@@ -17,52 +17,58 @@
 <div class="container">
     <div class="bs-component">
         <table class="table table-hover">
+
+            <thead>
+                @*<tr>
+                <th colspan="6"
+                    style="text-align:center">
+                    @year.AssessmentYear
+                </th>
+            </tr>*@
+                <tr>
+                    <th></th>
+                    <th colspan="2"
+                        style="text-align:center">
+                        Brought Forward
+                    </th>
+                    <th colspan="2"
+                        style="text-align:center">
+                        Current Year
+                    </th>
+                    <th colspan="2"
+                        style="text-align:center">
+                        Utilisation
+                    </th>
+                </tr>
+                <tr>
+                    <th style="text-align:center">Year</th>
+                    <th style="text-align:center">
+                        Business Losses
+                    </th>
+                    <th style="text-align:center">
+                        Unabsorbed Depreciation
+                    </th>
+                    <th style="text-align:center">
+                        Business Losses
+                    </th>
+                    <th style="text-align:center">
+                        Unabsorbed Depreciation
+                    </th>
+                    <th style="text-align:center">
+                        Business Losses
+                    </th>
+                    <th style="text-align:center">
+                        Unabsorbed Depreciation
+                    </th>
+                </tr>
+            </thead>
             @foreach (var year in Model.FYAYList)
             {
-                <thead>
-                    <tr>
-                        <th colspan="6"
-                            style="text-align:center">
-                            @year.AssessmentYear
-                        </th>
-                    </tr>
-                    <tr>
-                        <th colspan="2"
-                            style="text-align:center">
-                           Brought Forward
-                        </th>
-                        <th colspan="2"
-                            style="text-align:center">
-                            Current Year
-                        </th>
-                        <th colspan="2"
-                            style="text-align:center">
-                            Utilisation
-                        </th>
-                    </tr>
-                    <tr>
-                        <th style="text-align:center">
-                            Business Losses
-                        </th>
-                        <th style="text-align:center">
-                            Unabsorbed Depreciation
-                        </th>
-                        <th style="text-align:center">
-                            Business Losses
-                        </th>
-                        <th style="text-align:center">
-                            Unabsorbed Depreciation
-                        </th>
-                        <th style="text-align:center">
-                            Business Losses
-                        </th>
-                        <th style="text-align:center">
-                            Unabsorbed Depreciation
-                        </th>
-                    </tr>
-                </thead>
                 <tbody>
                     <tr>
+                        <td style="text-align:center">
+                            @year.AssessmentYear
+                        </td>
                         <td style="text-align:center">
                             @{
                                 var item = Model.MATCreditDetailsList
