@@ -155,5 +155,37 @@ namespace LSApi.Controllers
             var CompObj = _Kernel.Get<IMaster>();
             return CompObj.GetSurchargeData(FYAYID, surchargedataId, entitycategorytypeid);
         }
+
+        [HttpGet]
+        [Route("GetDocumentCategoryMaster")]
+        // GET: api/MasterAPI/GetDocumentCategoryMaster
+        public List<DocumentCategoryMaster> GetDocumentCategoryMaster(bool? IsActive)
+        {
+            var CompObj = _Kernel.Get<IMaster>();
+            return CompObj.GetDocumentCategoryMaster(IsActive);
+        }
+
+        [HttpGet]
+        [Route("GetSubDocumentCategoryMaster")]
+        // GET: api/MasterAPI/GetSubDocumentCategoryMaster
+        public List<SubDocumentCategoryMaster> GetSubDocumentCategoryMaster(int? documentCategoryId
+            , bool? IsActive)
+        {
+            var CompObj = _Kernel.Get<IMaster>();
+            return CompObj.GetSubDocumentCategoryMaster(documentCategoryId, IsActive);
+        }
+
+        // POST: api/MasterAPI/InsertUpdateSubDocumentCategoryMaster
+        [HttpPost]
+        [Route("InsertUpdateSubDocumentCategoryMaster")]
+        public SubDocumentCategoryMasterResponse InsertUpdateSubDocumentCategoryMaster
+            ([FromBody] SubDocumentCategoryMaster objSubDocumentCategoryMaster)
+        {
+            var objMaster = _Kernel.Get<IMaster>();
+            var objSubDocumentCategoryMasterResponse = objMaster.
+                InsertUpdateSubDocumentCategoryMaster(objSubDocumentCategoryMaster);
+            return objSubDocumentCategoryMasterResponse;
+        }
+
     }
 }

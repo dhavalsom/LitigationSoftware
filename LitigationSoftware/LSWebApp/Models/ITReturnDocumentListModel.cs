@@ -12,6 +12,8 @@ namespace LSWebApp.Models
         public int? ITReturnDetailsId { get; set; }
         public int? ITHeadId { get; set; }
         public int? ITReturnDocumentId { get; set; }
+        public int? DocumentCategoryId { get; set; }
+        public int? SubDocumentCategoryId { get; set; }
         #endregion
 
         #region Constructors

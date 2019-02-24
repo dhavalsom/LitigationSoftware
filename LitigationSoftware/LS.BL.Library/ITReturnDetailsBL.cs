@@ -123,12 +123,14 @@ namespace LS.BL.Library
         }
 
         public ITReturnDocumentsResponse GetITReturnDocumentsList(int? companyId,
-            int? fyayId, int? itReturnDetailsId, int? itHeadId, int? itReturnDocumentId)
+            int? fyayId, int? itReturnDetailsId, int? itHeadId, int? itReturnDocumentId,
+            int? documentCategoryId, int? subDocumentCategoryId)
         {
             try
             {
                 return this._itReturnDA.GetITReturnDocumentsList(companyId, fyayId,
-                    itReturnDetailsId, itHeadId, itReturnDocumentId);
+                    itReturnDetailsId, itHeadId, itReturnDocumentId
+                    , documentCategoryId, subDocumentCategoryId);
             }
             catch (Exception ex)
             {

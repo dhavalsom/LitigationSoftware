@@ -1,0 +1,35 @@
+USE [LitigationApp]
+GO
+
+/****** Object:  StoredProcedure [dbo].[SP_GET_DOCUMENT_CATEGORY_MASTER]    Script Date: 2/24/2019 1:00:34 AM ******/
+DROP PROCEDURE [dbo].[SP_GET_DOCUMENT_CATEGORY_MASTER]
+GO
+
+/****** Object:  StoredProcedure [dbo].[SP_GET_DOCUMENT_CATEGORY_MASTER]    Script Date: 2/24/2019 1:00:34 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[SP_GET_DOCUMENT_CATEGORY_MASTER]
+(	
+	@ACTIVE BIT = NULL
+)
+AS
+
+BEGIN
+
+--EXEC [SP_GET_DOCUMENT_CATEGORY_MASTER]
+--EXEC [SP_GET_DOCUMENT_CATEGORY_MASTER] 1
+	SELECT [Id]
+      ,[Description]
+      ,[Active]
+	FROM [DocumentCategoryMaster]
+	WHERE (@ACTIVE IS NULL OR [Active] = @ACTIVE)
+	ORDER BY [Description]
+END
+
+GO
+
+

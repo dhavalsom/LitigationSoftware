@@ -183,6 +183,8 @@ namespace LSWebApp.Controllers
                     var itSubHeads = JsonConvert.DeserializeObject<List<ITSubHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
                     Res = await client.GetAsync("api/MasterAPI/GetITHeadMaster?IsTaxComputed=");
                     var itHeads = JsonConvert.DeserializeObject<List<ITHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
+                    Res = await client.GetAsync("api/MasterAPI/GetDocumentCategoryMaster?IsActive=true");
+                    var documentCategories = JsonConvert.DeserializeObject<List<DocumentCategoryMaster>>(Res.Content.ReadAsStringAsync().Result);
 
                     if (itsectionid.HasValue)
                     {
@@ -221,13 +223,13 @@ namespace LSWebApp.Controllers
                                             {
                                                 itrdetails.ITHeadDocumentsUploaderModels.Add(itHead.PropertyName
                                                     , new ITHeadDocumentsUploaderModel(itrdetails.ITReturnDocumentList[itHead.PropertyName]
-                                                    , itHead, itrdetails.ITReturnDetailsObject));
+                                                    , itHead, itrdetails.ITReturnDetailsObject, documentCategories));
                                             }
                                             else
                                             {
                                                 itrdetails.ITHeadDocumentsUploaderModels.Add(itHead.PropertyName
                                                     , new ITHeadDocumentsUploaderModel(new List<ITReturnDocumentsDisplay>()
-                                                    , itHead, itrdetails.ITReturnDetailsObject));
+                                                    , itHead, itrdetails.ITReturnDetailsObject, documentCategories));
                                             }
                                         }
                                     }
@@ -311,6 +313,25 @@ namespace LSWebApp.Controllers
                 if (Res.IsSuccessStatusCode)
                 {
                     model = JsonConvert.DeserializeObject<List<ITSection>>(Res.Content.ReadAsStringAsync().Result);
+                }
+            }
+            return Json(model, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetSubDocumentCategoryList(int documentCategoryId)
+        {
+            var model = new List<SubDocumentCategoryMaster>();
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetSubDocumentCategoryMaster?IsActive=true&documentCategoryId=" + documentCategoryId);
+
+                if (Res.IsSuccessStatusCode)
+                {
+                    model = JsonConvert.DeserializeObject<List<SubDocumentCategoryMaster>>(Res.Content.ReadAsStringAsync().Result);
                 }
             }
             return Json(model, JsonRequestBehavior.AllowGet);
@@ -598,6 +619,8 @@ namespace LSWebApp.Controllers
                     var itSubHeads = JsonConvert.DeserializeObject<List<ITSubHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
                     Res = await client.GetAsync("api/MasterAPI/GetITHeadMaster?IsTaxComputed=");
                     var itHeads = JsonConvert.DeserializeObject<List<ITHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
+                    Res = await client.GetAsync("api/MasterAPI/GetDocumentCategoryMaster?IsActive=true");
+                    var documentCategories = JsonConvert.DeserializeObject<List<DocumentCategoryMaster>>(Res.Content.ReadAsStringAsync().Result);
 
                     if (itSectionId.HasValue)
                     {
@@ -615,7 +638,7 @@ namespace LSWebApp.Controllers
                                 model.ITReturnDetailsObject = response.ITReturnDetailsListObject.First();
                                 Session["CurrentBusinessLossDetails"] = model.ITReturnDetailsObject;
                                 Res = await client.GetAsync("api/TaxReturnAPI/GetITReturnDocumentsList?companyId=&fyayId=&itReturnDetailsId="
-                                    + model.ITReturnDetailsObject.Id + "&itHeadId=&itReturnDocumentId=");
+                                    + model.ITReturnDetailsObject.Id + "&itHeadId=&itReturnDocumentId=&documentCategoryId=&subDocumentCategoryId=");
                                 if (Res.IsSuccessStatusCode)
                                 {
                                     var objITReturnDocumentsResponse = JsonConvert.DeserializeObject<ITReturnDocumentsResponse>
@@ -625,12 +648,12 @@ namespace LSWebApp.Controllers
                                     {
                                         if (model.ITReturnDocumentList.ContainsKey(item.PropertyName))
                                         {
-                                            model.ITReturnDocumentList[item.PropertyName].Add(item);
+                                            model.ITReturnDocumentList[item.PropertyName] = objITReturnDocumentsResponse.ITReturnDocumentsList;
                                         }
                                         else
                                         {
                                             model.ITReturnDocumentList.Add(item.PropertyName,
-                                                new List<ITReturnDocumentsDisplay> { item });
+                                                objITReturnDocumentsResponse.ITReturnDocumentsList);
                                         }
                                     }
                                     model.ITHeadDocumentsUploaderModels = new Dictionary<string, ITHeadDocumentsUploaderModel>();
@@ -642,13 +665,13 @@ namespace LSWebApp.Controllers
                                             {
                                                 model.ITHeadDocumentsUploaderModels.Add(itHead.PropertyName
                                                     , new ITHeadDocumentsUploaderModel(model.ITReturnDocumentList[itHead.PropertyName]
-                                                    , itHead, model.ITReturnDetailsObject));
+                                                    , itHead, model.ITReturnDetailsObject, documentCategories));
                                             }
                                             else
                                             {
                                                 model.ITHeadDocumentsUploaderModels.Add(itHead.PropertyName
                                                     , new ITHeadDocumentsUploaderModel(new List<ITReturnDocumentsDisplay>()
-                                                    , itHead, model.ITReturnDetailsObject));
+                                                    , itHead, model.ITReturnDetailsObject, documentCategories));
                                             }
                                         }
                                     }
@@ -1429,6 +1452,8 @@ namespace LSWebApp.Controllers
                 model.CompanyList = JsonConvert.DeserializeObject<List<Company>>(Res.Content.ReadAsStringAsync().Result);
                 Res = await client.GetAsync("api/MasterAPI/GetITHeadMaster?IsTaxComputed=");
                 model.ITHeadList = JsonConvert.DeserializeObject<List<ITHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
+                Res = await client.GetAsync("api/MasterAPI/GetDocumentCategoryMaster?IsActive=true");
+                model.DocumentCategoryList = JsonConvert.DeserializeObject<List<DocumentCategoryMaster>>(Res.Content.ReadAsStringAsync().Result);
             }
 
             return View("ITReturnDocuments", model);
@@ -1436,7 +1461,8 @@ namespace LSWebApp.Controllers
 
         [HttpGet]
         public async Task<ActionResult> GetITReturnDocumentList( int? fyayId
-            , int? itReturnDetailsId, int? itHeadId, int? itReturnDocumentId)
+            , int? itReturnDetailsId, int? itHeadId, int? itReturnDocumentId
+            , int? documentCategoryId, int? subDocumentCategoryId)
         {
             var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
             if (selectedCompany == null)
@@ -1449,7 +1475,9 @@ namespace LSWebApp.Controllers
                 FYAYId = fyayId,
                 ITHeadId = itHeadId,
                 ITReturnDetailsId = itReturnDetailsId,
-                ITReturnDocumentId = itReturnDocumentId
+                ITReturnDocumentId = itReturnDocumentId,
+                DocumentCategoryId = documentCategoryId,
+                SubDocumentCategoryId = subDocumentCategoryId
             };
             using (var client = new HttpClient())
             {
@@ -1460,7 +1488,9 @@ namespace LSWebApp.Controllers
                      + selectedCompany.Id + "&fyayId=" + fyayId
                      + "&itReturnDetailsId=" + itReturnDetailsId
                      + "&itHeadId=" + itHeadId
-                     + "&itReturnDocumentId=" + itReturnDocumentId);
+                     + "&itReturnDocumentId=" + itReturnDocumentId
+                     + "&documentCategoryId=" + documentCategoryId
+                     + "&subDocumentCategoryId=" + subDocumentCategoryId);
                 model.ITReturnDocumentsList = (JsonConvert.DeserializeObject<ITReturnDocumentsResponse>(Res.Content.ReadAsStringAsync().Result)).ITReturnDocumentsList;
             }
 

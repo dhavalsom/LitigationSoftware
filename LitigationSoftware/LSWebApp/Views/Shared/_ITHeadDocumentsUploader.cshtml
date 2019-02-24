@@ -15,7 +15,6 @@
             @Html.HiddenFor(m => m.ObjITReturnDetails.ITSectionID, Model.ObjITReturnDetails.ITSectionID)
             @Html.HiddenFor(m => m.ObjITReturnDetails.ITSectionCategoryID, Model.ObjITReturnDetails.ITSectionCategoryID)
 
-
             <div>
                 <a href="#myModal_@(Model.ITHeadObject.Id.ToString())" role="button" class="btn" data-toggle="modal">
                     <img src="~/images/upload.png"
@@ -34,10 +33,45 @@
                             </button>
                         </div>
                         <div class="modal-body">
-
+                            <table>
+                                <tr>
+                                    <td>
+                                        Document Category:
+                                    </td>
+                                    <td>
+                                        @Html.DropDownListFor(m => m.ObjITReturnDocuments.DocumentCategoryId
+                                        , new SelectList(Model.DocumentCategoryList
+                                        , "Id", "Description", Model.ObjITReturnDocuments.DocumentCategoryId)
+                                        , new { @class = "ddDocumentCategory", @style="width:150px;" })
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Sub Category:
+                                    </td>
+                                    <td>
+                                        @Html.DropDownListFor(m => m.ObjITReturnDocuments.SubDocumentCategoryId
+                                        , new SelectList(Model.SubDocumentCategoryList
+                                        , "Id", "Description", Model.ObjITReturnDocuments.SubDocumentCategoryId)
+                                        , "Please Select"
+                                        , new { @class = "ddSubDocumentCategory", @style = "width:150px;" })
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Choose File:
+                                    </td>
+                                    <td colspan="2">
+                                        @Html.TextBoxFor(model => model.ITHeadFile, new { type = "file" })
+                                    </td>
+                                </tr>
+                            </table>
+                            <br/>
                             <table class="table table-hover tblITRetDetails">
                                 <thead>
                                     <tr>
+                                        <th>Document Category</th>
+                                        <th>Sub Category</th>
                                         <th>File Name</th>
                                         <th>Actions</th>
                                     </tr>
@@ -46,6 +80,12 @@
                                     @foreach (var document in Model.DocumentList)
                                     {
                                         <tr>
+                                            <td>
+                                                @document.DocumentCategoryName
+                                            </td>
+                                            <td>
+                                                @document.SubDocumentCategoryName
+                                            </td>
                                             <td>
                                                 @document.FileName
                                             </td>
@@ -64,16 +104,6 @@
                                         </tr>
                                     }
                                 </tbody>
-                            </table>
-                            <table>
-                                <tr>
-                                    <td>
-                                        Choose File:
-                                    </td>
-                                    <td colspan="2">
-                                        @Html.TextBoxFor(model => model.ITHeadFile, new { type = "file" })
-                                    </td>
-                                </tr>
                             </table>
                         </div>
                         <div class="modal-footer">
