@@ -402,7 +402,8 @@ namespace LS.DAL.Library
         }
 
         public ITReturnDocumentsResponse GetITReturnDocumentsList(int? companyId,
-            int? fyayId, int? itReturnDetailsId, int? itHeadId, int? itReturnDocumentId)
+            int? fyayId, int? itReturnDetailsId, int? itHeadId, int? itReturnDocumentId,
+            int? documentCategoryId, int? subDocumentCategoryId)
         {
             try
             {
@@ -437,6 +438,14 @@ namespace LS.DAL.Library
                 {
                     Command.Parameters.AddWithValue("@IT_RETURN_DOCUMENT_ID", itReturnDocumentId);
                 }
+                if (documentCategoryId.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@DOCUMENT_CATEGORY_ID", documentCategoryId);
+                }
+                if (subDocumentCategoryId.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@SUB_DOCUMENT_CATEGORY_ID", subDocumentCategoryId);
+                }
                 Connection.Open();
 
                 SqlDataReader reader = Command.ExecuteReader();
@@ -450,7 +459,11 @@ namespace LS.DAL.Library
                         {
                             Id = Convert.ToInt32(reader["Id"].ToString()),
                             ITReturnDetailsId = Convert.ToInt32(reader["ITReturnDetailsId"].ToString()),
-                            ITHeadId = Convert.ToInt32(reader["ITHeadId"].ToString()),
+                            ITHeadId = reader["ITHeadId"] != DBNull.Value ? Convert.ToInt32(reader["ITHeadId"].ToString()) : (int?)null,
+                            DocumentCategoryId = Convert.ToInt32(reader["DocumentCategoryId"].ToString()),
+                            DocumentCategoryName = reader["DocumentCategoryName"] != DBNull.Value ? reader["DocumentCategoryName"].ToString() : null,
+                            SubDocumentCategoryId = reader["SubDocumentCategoryId"] != DBNull.Value ? Convert.ToInt32(reader["SubDocumentCategoryId"].ToString()) : (int?)null,
+                            SubDocumentCategoryName = reader["SubDocumentCategoryName"] != DBNull.Value ? reader["SubDocumentCategoryName"].ToString() : null,
                             ExcelSrNo = reader["ExcelSrNo"] != DBNull.Value ? reader["ExcelSrNo"].ToString() : null,
                             ITHeadDescription = reader["ITHeadDescription"] != DBNull.Value ? reader["ITHeadDescription"].ToString() : null,
                             PropertyName = reader["PropertyName"] != DBNull.Value ? reader["PropertyName"].ToString() : null,

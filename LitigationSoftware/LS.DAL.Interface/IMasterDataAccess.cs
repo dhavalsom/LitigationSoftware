@@ -19,5 +19,10 @@ namespace LS.DAL.Interface
         ComplianceMasterResponse InsertUpdateComplianceMaster(ComplianceMaster objComplianceMaster);
         List<StandardData> GetStandardData(int? FYAYID,int? standarddataId);
         List<SurchargeData> GetSurchargeData(int? FYAYID, int? surchargedataId, int? entitycategorytypeid);
+        List<DocumentCategoryMaster> GetDocumentCategoryMaster(bool? IsActive);
+        List<SubDocumentCategoryMaster> GetSubDocumentCategoryMaster(int? documentCategoryId
+            , bool? IsActive);
+        SubDocumentCategoryMasterResponse InsertUpdateSubDocumentCategoryMaster
+            (SubDocumentCategoryMaster objSubDocumentCategoryMaster);
     }
 }

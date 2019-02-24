@@ -246,6 +246,55 @@ namespace LS.BL.Library
             }
         }
 
+        public List<DocumentCategoryMaster> GetDocumentCategoryMaster(bool? IsActive)
+        {
+            try
+            {
+                return this._masterDA.GetDocumentCategoryMaster(IsActive);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+
+            }
+        }
+
+        public List<SubDocumentCategoryMaster> GetSubDocumentCategoryMaster(int? documentCategoryId
+            , bool? IsActive)
+        {
+            try
+            {
+                return this._masterDA.GetSubDocumentCategoryMaster(documentCategoryId, IsActive);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+
+            }
+        }
+
+        public SubDocumentCategoryMasterResponse InsertUpdateSubDocumentCategoryMaster
+            (SubDocumentCategoryMaster objSubDocumentCategoryMaster)
+        {
+            try
+            {
+                return this._masterDA.InsertUpdateSubDocumentCategoryMaster(objSubDocumentCategoryMaster);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+
+            }
+        }
         #endregion
 
         #region IDisposable
