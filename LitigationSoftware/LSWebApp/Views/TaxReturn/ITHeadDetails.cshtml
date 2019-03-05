@@ -449,16 +449,24 @@
             @if (Model.ITReturnDetailsObject.Id > 0
                 && Model.ITHeadMasterList[Model.ITHead].CanAddDocuments)
             {
-                @Html.Partial("_ITHeadDocumentsUploader"
-                , Model.ITHeadDocumentsUploaderModels[Model.ITHead])
+                <div class="col-md-6">
+                    <a href="#myModal_0" role="button" class="btn" data-toggle="modal">
+                        <img src="~/images/upload.png"
+                             class="imgITHeadDocumentsUploader"
+                             title="click to upload the documents"
+                             style="width:20px;height:20px;" />
+                    </a>
+                </div>
             }
 
             @if (!Model.ITReturnDetailsObject.IsReturn
                 && Model.ITReturnDetailsObject.Id > 0
                 && @Model.ITHeadMasterList[Model.ITHead].CanAddSubHead)
             {
-                @Html.Partial("_ITReturnExtensionList"
+                <div class="col-md-6">
+                    @Html.Partial("_ITReturnExtensionList"
                     , Model.ITReturnExtensionListModels[Model.ITHead])
+                </div>
             }
             </div>
     </td>
