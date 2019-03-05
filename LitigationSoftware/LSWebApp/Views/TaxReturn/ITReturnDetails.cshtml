@@ -1,4 +1,6 @@
 ﻿@model  LSWebApp.Models.ITReturnDetailsHeaderModel
+@using LS.Models;
+@using LSWebApp.Models
 @{
     ViewBag.Title = "Input Sheet";
     Layout = "~/Views/Shared/_LayoutDynemicMenu.cshtml";
@@ -52,53 +54,22 @@
 
                     <th>IT Section</th>
                     <th>
-                        @Html.Partial("_LitigationDD", Model.ITSectionListSource)
+                        @Html.Partial("_LitigationDD", Model.ITSectionListSource)                        
                     </th>
                     <th>
                         <button type="button" class="btn btn-primary btn-sm btn-search"
                                 id="btnsrch">
                             Search
                         </button>
+                        <a href="#myModal_0" role="button" class="btn" data-toggle="modal">
+                            <img src="~/images/upload.png"
+                                 class="imgITHeadDocumentsUploader"
+                                 title="click to upload the documents"
+                                 style="width:20px;height:20px;" />
+                        </a>
                     </th>
                 </tr>
             </thead>
-            @*<tbody>
-        <tr class="table-active">
-           <td colspan="2">
-                @Html.LabelFor(m => m.CompanyObject.CompanyName
-                        , Model.CompanyObject.CompanyName)
-
-            </td>
-            <td>
-            <select id="FYAYId"
-                    name="@Html.NameFor(m=>m.FYAYId)">
-                @foreach (var item in Model.FYAYList)
-                {
-                    <option value="@item.Id.ToString()"
-                            data-year="@item.AssessmentYear">
-                        @item.FinancialYear
-                        </option>
-                }
-            </select>
-        </td>
-            <td class="tdAssessmentYear"></td>
-            <td>
-            @Html.DropDownListFor(m => m.ITSectionCategoryId
-                    , new SelectList(Model.ITSectionCategories
-                    , "Id", "Description", Model.ITSectionCategoryId)
-                    , new { @class = "ddITSectionCategory" })
-        </td>
-            <td>
-                @Html.Partial("_LitigationDD", Model.ITSectionListSource)
-            </td>
-            <td>
-                <button type="button" class="btn btn-primary btn-sm btn-search"
-                        id="btnsrch">
-                    Search
-                </button>
-            </td>
-            </tr>
-            </tbody>*@
         </table>
         <br />
     </div>
@@ -219,6 +190,31 @@
 
                     $(".numericOnly").keypress(function (e) {
                         return isANumber(e);
+                    });
+
+                    $(".btn-submit-doc-upload").click(function (e) {
+                        var model = new FormData();
+                        var itReturnDocuments = {};
+                        itReturnDocuments.ITReturnDetailsId = 1;
+                        itReturnDocuments.DocumentCategoryId = 1;
+                        itReturnDocuments.SubDocumentCategoryId = 1;
+                        model.append("itHeadFile", $('#ITHeadFile')[0].files[0]);
+                        model.append("documentCategoryId", $(".ddDocumentCategory").val());
+                        model.append("subDocumentCategoryId", $(".ddSubDocumentCategory").val());
+                        model.append("itReturnDetailsId", $("#ObjITReturnDocuments_ITReturnDetailsId").val())
+                        $.ajax({ 
+                            url: '/TaxReturn/InsertUpdateITReturnDocuments',
+                                type: "POST",
+                                data: model,
+                                contentType: false,
+                                processData: false,
+                                success: function (result) {
+                                    window.location.reload();
+                                },
+                                error: function () {
+                                    alert("Error loading data! Please try again.");
+                                }
+                            });
                     });
 
                     $(".numericOnly").change(function (e) {
