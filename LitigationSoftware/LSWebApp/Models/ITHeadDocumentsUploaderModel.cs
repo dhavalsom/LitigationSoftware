@@ -16,16 +16,15 @@ namespace LSWebApp.Models
 
         public ITHeadDocumentsUploaderModel(List<ITReturnDocumentsDisplay> documentList
             , ITHeadMaster itHeadObject, ITReturnDetails objITReturnDetails
-            , List<DocumentCategoryMaster> documentCategoryList)
+            , List<DocumentCategoryMaster> documentCategoryList
+            , List<SubDocumentCategoryMaster> subDocumentCategoryList)
         {
             ObjITReturnDocuments = new ITReturnDocuments();
-            ObjITReturnDocuments.ITHeadId = itHeadObject.Id;
             ObjITReturnDocuments.ITReturnDetailsId = objITReturnDetails.Id;
             this.DocumentList = documentList;
-            this.ITHeadObject = itHeadObject;
             this.ObjITReturnDetails = objITReturnDetails;
             this.DocumentCategoryList = documentCategoryList;
-            this.SubDocumentCategoryList = new List<SubDocumentCategoryMaster>();
+            this.SubDocumentCategoryList = subDocumentCategoryList;
         }
 
         public ITHeadDocumentsUploaderModel()

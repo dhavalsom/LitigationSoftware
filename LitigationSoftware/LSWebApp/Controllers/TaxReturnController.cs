@@ -12,6 +12,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
@@ -185,7 +186,15 @@ namespace LSWebApp.Controllers
                     var itHeads = JsonConvert.DeserializeObject<List<ITHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
                     Res = await client.GetAsync("api/MasterAPI/GetDocumentCategoryMaster?IsActive=true");
                     var documentCategories = JsonConvert.DeserializeObject<List<DocumentCategoryMaster>>(Res.Content.ReadAsStringAsync().Result);
+                    var subDocumentCategories = new List<SubDocumentCategoryMaster>();
+                    if (documentCategories != null
+                        && documentCategories.Any())
+                    {
+                        Res = await client.GetAsync("api/MasterAPI/GetSubDocumentCategoryMaster?IsActive=true&documentCategoryId=" 
+                            + documentCategories.First().Id);
+                        subDocumentCategories = JsonConvert.DeserializeObject<List<SubDocumentCategoryMaster>>(Res.Content.ReadAsStringAsync().Result);
 
+                    }
                     if (itsectionid.HasValue)
                     {
                         Res = await client.GetAsync("api/TaxReturnAPI/GetExistingITReturnDetailsList?companyId=" + companyId + "&fyayId=" + FYAYID + "&itsectionid=" + itsectionid + "&itreturnid=" + itreturnid);
@@ -202,37 +211,39 @@ namespace LSWebApp.Controllers
                                     var objITReturnDocumentsResponse = JsonConvert.DeserializeObject<ITReturnDocumentsResponse>
                                         (Res.Content.ReadAsStringAsync().Result);
                                     itrdetails.ITReturnDocumentList = new Dictionary<string, List<ITReturnDocumentsDisplay>>();
-                                    foreach (var item in objITReturnDocumentsResponse.ITReturnDocumentsList)
-                                    {
-                                        if (itrdetails.ITReturnDocumentList.ContainsKey(item.PropertyName))
-                                        {
-                                            itrdetails.ITReturnDocumentList[item.PropertyName].Add(item);
-                                        }
-                                        else
-                                        {
-                                            itrdetails.ITReturnDocumentList.Add(item.PropertyName,
-                                                new List<ITReturnDocumentsDisplay> { item });
-                                        }
-                                    }
+                                    //foreach (var item in objITReturnDocumentsResponse.ITReturnDocumentsList)
+                                    //{
+                                    //    if (itrdetails.ITReturnDocumentList.ContainsKey(item.PropertyName))
+                                    //    {
+                                    //        itrdetails.ITReturnDocumentList[item.PropertyName].Add(item);
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        itrdetails.ITReturnDocumentList.Add(item.PropertyName,
+                                    //            new List<ITReturnDocumentsDisplay> { item });
+                                    //    }
+                                    //}
                                     itrdetails.ITHeadDocumentsUploaderModels = new Dictionary<string, ITHeadDocumentsUploaderModel>();
-                                    foreach (var itHead in itHeads)
-                                    {
-                                        if (itHead.CanAddDocuments)
-                                        {
-                                            if (itrdetails.ITReturnDocumentList.ContainsKey(itHead.PropertyName))
-                                            {
-                                                itrdetails.ITHeadDocumentsUploaderModels.Add(itHead.PropertyName
-                                                    , new ITHeadDocumentsUploaderModel(itrdetails.ITReturnDocumentList[itHead.PropertyName]
-                                                    , itHead, itrdetails.ITReturnDetailsObject, documentCategories));
-                                            }
-                                            else
-                                            {
-                                                itrdetails.ITHeadDocumentsUploaderModels.Add(itHead.PropertyName
-                                                    , new ITHeadDocumentsUploaderModel(new List<ITReturnDocumentsDisplay>()
-                                                    , itHead, itrdetails.ITReturnDetailsObject, documentCategories));
-                                            }
-                                        }
-                                    }
+                                    //foreach (var itHead in itHeads)
+                                    //{
+                                    //    if (itHead.CanAddDocuments)
+                                    //    {
+                                    //        if (itrdetails.ITReturnDocumentList.ContainsKey(itHead.PropertyName))
+                                    //        {
+                                    //            itrdetails.ITHeadDocumentsUploaderModels.Add(itHead.PropertyName
+                                    //                , new ITHeadDocumentsUploaderModel(itrdetails.ITReturnDocumentList[itHead.PropertyName]
+                                    //                , itHead, itrdetails.ITReturnDetailsObject, documentCategories
+                                    //                , subDocumentCategories));
+                                    //        }
+                                    //        else
+                                    //        {
+                                    //            itrdetails.ITHeadDocumentsUploaderModels.Add(itHead.PropertyName
+                                    //                , new ITHeadDocumentsUploaderModel(new List<ITReturnDocumentsDisplay>()
+                                    //                , itHead, itrdetails.ITReturnDetailsObject, documentCategories
+                                    //                , subDocumentCategories));
+                                    //        }
+                                    //    }
+                                    //}
                                 }
                             }
 
@@ -605,8 +616,16 @@ namespace LSWebApp.Controllers
                     ITSectionID = itSectionId.HasValue ? itSectionId.Value : 0,
                     ITSectionCategoryID = itSectionCategoryId.HasValue ? itSectionCategoryId.Value : 0,
                     IsReturn = true
-                }
-            };
+                },
+                ITHeadDocumentsUploaderModel = new ITHeadDocumentsUploaderModel
+                (
+                        new List<ITReturnDocumentsDisplay>()
+                    , new ITHeadMaster()
+                    , new ITReturnDetails()
+                    , new List<DocumentCategoryMaster>()
+                    , new List<SubDocumentCategoryMaster>()
+                )
+        };
 
             try
             {
@@ -621,7 +640,15 @@ namespace LSWebApp.Controllers
                     var itHeads = JsonConvert.DeserializeObject<List<ITHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
                     Res = await client.GetAsync("api/MasterAPI/GetDocumentCategoryMaster?IsActive=true");
                     var documentCategories = JsonConvert.DeserializeObject<List<DocumentCategoryMaster>>(Res.Content.ReadAsStringAsync().Result);
+                    var subDocumentCategories = new List<SubDocumentCategoryMaster>();
+                    if (documentCategories != null
+                        && documentCategories.Any())
+                    {
+                        Res = await client.GetAsync("api/MasterAPI/GetSubDocumentCategoryMaster?IsActive=true&documentCategoryId="
+                            + documentCategories.First().Id);
+                        subDocumentCategories = JsonConvert.DeserializeObject<List<SubDocumentCategoryMaster>>(Res.Content.ReadAsStringAsync().Result);
 
+                    }
                     if (itSectionId.HasValue)
                     {
                         Res = await client.GetAsync("api/TaxReturnAPI/GetExistingITReturnDetailsList?companyId=" 
@@ -644,37 +671,48 @@ namespace LSWebApp.Controllers
                                     var objITReturnDocumentsResponse = JsonConvert.DeserializeObject<ITReturnDocumentsResponse>
                                         (Res.Content.ReadAsStringAsync().Result);
                                     model.ITReturnDocumentList = new Dictionary<string, List<ITReturnDocumentsDisplay>>();
-                                    foreach (var item in objITReturnDocumentsResponse.ITReturnDocumentsList)
-                                    {
-                                        if (model.ITReturnDocumentList.ContainsKey(item.PropertyName))
-                                        {
-                                            model.ITReturnDocumentList[item.PropertyName] = objITReturnDocumentsResponse.ITReturnDocumentsList;
-                                        }
-                                        else
-                                        {
-                                            model.ITReturnDocumentList.Add(item.PropertyName,
-                                                objITReturnDocumentsResponse.ITReturnDocumentsList);
-                                        }
-                                    }
+                                    model.ITHeadDocumentsUploaderModel = new ITHeadDocumentsUploaderModel
+                                        (
+                                            objITReturnDocumentsResponse.ITReturnDocumentsList
+                                            , null
+                                            , model.ITReturnDetailsObject
+                                            , documentCategories
+                                            , subDocumentCategories
+
+                                        );
+                                    //foreach (var item in objITReturnDocumentsResponse.ITReturnDocumentsList)
+                                    //{
+                                    //    if (model.ITReturnDocumentList.ContainsKey(item.PropertyName))
+                                    //    {
+                                    //        model.ITReturnDocumentList[item.PropertyName] = objITReturnDocumentsResponse.ITReturnDocumentsList;
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        model.ITReturnDocumentList.Add(item.PropertyName,
+                                    //            objITReturnDocumentsResponse.ITReturnDocumentsList);
+                                    //    }
+                                    //}
                                     model.ITHeadDocumentsUploaderModels = new Dictionary<string, ITHeadDocumentsUploaderModel>();
-                                    foreach (var itHead in itHeads)
-                                    {
-                                        if (itHead.CanAddDocuments)
-                                        {
-                                            if (model.ITReturnDocumentList.ContainsKey(itHead.PropertyName))
-                                            {
-                                                model.ITHeadDocumentsUploaderModels.Add(itHead.PropertyName
-                                                    , new ITHeadDocumentsUploaderModel(model.ITReturnDocumentList[itHead.PropertyName]
-                                                    , itHead, model.ITReturnDetailsObject, documentCategories));
-                                            }
-                                            else
-                                            {
-                                                model.ITHeadDocumentsUploaderModels.Add(itHead.PropertyName
-                                                    , new ITHeadDocumentsUploaderModel(new List<ITReturnDocumentsDisplay>()
-                                                    , itHead, model.ITReturnDetailsObject, documentCategories));
-                                            }
-                                        }
-                                    }
+                                    //foreach (var itHead in itHeads)
+                                    //{
+                                    //    if (itHead.CanAddDocuments)
+                                    //    {
+                                    //        if (model.ITReturnDocumentList.ContainsKey(itHead.PropertyName))
+                                    //        {
+                                    //            model.ITHeadDocumentsUploaderModels.Add(itHead.PropertyName
+                                    //                , new ITHeadDocumentsUploaderModel(model.ITReturnDocumentList[itHead.PropertyName]
+                                    //                , itHead, model.ITReturnDetailsObject, documentCategories
+                                    //                , subDocumentCategories));
+                                    //        }
+                                    //        else
+                                    //        {
+                                    //            model.ITHeadDocumentsUploaderModels.Add(itHead.PropertyName
+                                    //                , new ITHeadDocumentsUploaderModel(new List<ITReturnDocumentsDisplay>()
+                                    //                , itHead, model.ITReturnDetailsObject, documentCategories
+                                    //                , subDocumentCategories));
+                                    //        }
+                                    //    }
+                                    //}
                                 }
                                 
                                 Res = await client.GetAsync("api/TaxReturnAPI/GetSPIncomeDetailsList?itReturnDetailsId="
@@ -716,6 +754,8 @@ namespace LSWebApp.Controllers
                                         }
                                     }
                                 }
+
+                                
                             }
                             else
                             {
@@ -730,11 +770,11 @@ namespace LSWebApp.Controllers
                                     JsonConvert.DeserializeObject<List<ITSection>>
                                     (Res.Content.ReadAsStringAsync().Result)
                                     .Where(l => l.Id == model.ITReturnDetailsObject.ITSectionID)
-                                    .First().Description; ;
+                                    .First().Description;
                             }
                         }
                     }
-
+                   
                     model.PopulateITHeadMasters(itHeads, itSubHeads
                         , model.ITReturnDetailsObject != null 
                             ? model.ITReturnDetailsObject.Id 
@@ -1210,10 +1250,20 @@ namespace LSWebApp.Controllers
 
         [HttpPost]
         public async Task<ActionResult> InsertUpdateITReturnDocuments
-            (ITHeadDocumentsUploaderModel objITHeadDocumentsUploaderModel)
+            (HttpPostedFileBase itHeadFile, int itReturnDetailsId
+            , int documentCategoryId, int? subDocumentCategoryId)
         {
-            string relativePath = "/" + objITHeadDocumentsUploaderModel.ObjITReturnDocuments.ITReturnDetailsId.ToString() + "/"
-                + objITHeadDocumentsUploaderModel.ObjITReturnDocuments.ITHeadId.ToString() + "/";
+            var objITHeadDocumentsUploaderModel = new ITHeadDocumentsUploaderModel()
+            {
+                ITHeadFile = itHeadFile,
+                ObjITReturnDocuments = new ITReturnDocuments
+                {
+                    ITReturnDetailsId = itReturnDetailsId,
+                    DocumentCategoryId = documentCategoryId,
+                    SubDocumentCategoryId = subDocumentCategoryId
+                }
+            };
+            string relativePath = "/" + objITHeadDocumentsUploaderModel.ObjITReturnDocuments.ITReturnDetailsId.ToString() + "/"; ;
             string path = Server.MapPath("~/ITReturnDetailsDocumentsUpload" + relativePath);
             if (!Directory.Exists(path))
             {
@@ -1422,6 +1472,23 @@ namespace LSWebApp.Controllers
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 HttpResponseMessage Res = await client.PostAsync("api/MasterAPI/InsertUpdateITSubHeadMaster", content);
                 ITSubHeadMasterResponse result = JsonConvert.DeserializeObject<ITSubHeadMasterResponse>(Res.Content.ReadAsStringAsync().Result);                
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> InsertUpdateSubDocumentCategoryMaster
+            (SubDocumentCategoryMaster objSubDocumentCategoryMaster)
+        {
+            using (var client = new HttpClient())
+            {
+                var json = JsonConvert.SerializeObject(objSubDocumentCategoryMaster);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.PostAsync("api/MasterAPI/InsertUpdateSubDocumentCategoryMaster", content);
+                SubDocumentCategoryMasterResponse result = JsonConvert.DeserializeObject<SubDocumentCategoryMasterResponse>(Res.Content.ReadAsStringAsync().Result);
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
         }

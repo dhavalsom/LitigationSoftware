@@ -1,118 +1,128 @@
 ﻿@model  LSWebApp.Models.ITHeadDocumentsUploaderModel
-@using(Html.BeginForm("InsertUpdateITReturnDocuments", "TaxReturn", FormMethod.Post
-    , new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm("InsertUpdateITReturnDocuments", "TaxReturn", FormMethod.Post
+                            , new { enctype = "multipart/form-data" }))
 {
-    if(Model.ITHeadObject.Id > 0)
-    {    
-        <div style="margin-left:5px;">
-            @Html.HiddenFor(m => m.ObjITReturnDocuments.ITHeadId, Model.ObjITReturnDocuments.ITHeadId)      
-            @Html.HiddenFor(m => m.ObjITReturnDocuments.ITReturnDetailsId
+    <div style="margin-left:5px;">
+        @Html.HiddenFor(m => m.ObjITReturnDocuments.ITHeadId, Model.ObjITReturnDocuments.ITHeadId)
+        @Html.HiddenFor(m => m.ObjITReturnDocuments.ITReturnDetailsId
             , Model.ObjITReturnDocuments.ITReturnDetailsId)
-            @Html.HiddenFor(m => m.ObjITReturnDetails.Id, Model.ObjITReturnDetails.Id)  
-            @Html.HiddenFor(m => m.ObjITReturnDetails.CompanyID, Model.ObjITReturnDetails.CompanyID)   
-            @Html.HiddenFor(m => m.ObjITReturnDetails.FYAYID, Model.ObjITReturnDetails.FYAYID)        
-            @Html.HiddenFor(m => m.ObjITReturnDetails.CompanyName, Model.ObjITReturnDetails.CompanyName)
-            @Html.HiddenFor(m => m.ObjITReturnDetails.ITSectionID, Model.ObjITReturnDetails.ITSectionID)
-            @Html.HiddenFor(m => m.ObjITReturnDetails.ITSectionCategoryID, Model.ObjITReturnDetails.ITSectionCategoryID)
+        @Html.HiddenFor(m => m.ObjITReturnDetails.Id, Model.ObjITReturnDetails.Id)
+        @Html.HiddenFor(m => m.ObjITReturnDetails.CompanyID, Model.ObjITReturnDetails.CompanyID)
+        @Html.HiddenFor(m => m.ObjITReturnDetails.FYAYID, Model.ObjITReturnDetails.FYAYID)
+        @Html.HiddenFor(m => m.ObjITReturnDetails.CompanyName, Model.ObjITReturnDetails.CompanyName)
+        @Html.HiddenFor(m => m.ObjITReturnDetails.ITSectionID, Model.ObjITReturnDetails.ITSectionID)
+        @Html.HiddenFor(m => m.ObjITReturnDetails.ITSectionCategoryID, Model.ObjITReturnDetails.ITSectionCategoryID)
 
-            <div>
-                <a href="#myModal_@(Model.ITHeadObject.Id.ToString())" role="button" class="btn" data-toggle="modal">
-                    <img src="~/images/upload.png"
-                         class="imgITHeadDocumentsUploader"
-                         title="click to upload the documents"
-                         style="width:20px;height:20px;" />
-                </a>
-            </div>
-            <div class="modal" id="myModal_@(Model.ITHeadObject.Id.ToString())">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Documents for @Model.ITHeadObject.Description</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <table>
-                                <tr>
-                                    <td>
-                                        Document Category:
-                                    </td>
-                                    <td>
-                                        @Html.DropDownListFor(m => m.ObjITReturnDocuments.DocumentCategoryId
+        <div class="modal" id="myModal_0">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Documents</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body custom-sub-doc-category">
+                        <table>
+                            <tr>
+                                <td>
+                                    Document Category:
+                                </td>
+                                <td>
+                                    @Html.DropDownListFor(m => m.ObjITReturnDocuments.DocumentCategoryId
                                         , new SelectList(Model.DocumentCategoryList
                                         , "Id", "Description", Model.ObjITReturnDocuments.DocumentCategoryId)
-                                        , new { @class = "ddDocumentCategory", @style="width:150px;" })
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        Sub Category:
-                                    </td>
-                                    <td>
-                                        @Html.DropDownListFor(m => m.ObjITReturnDocuments.SubDocumentCategoryId
+                                        , new { @class = "ddDocumentCategory", @style = "width:150px;" })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Sub Category:
+                                </td>
+                                <td>
+                                    @Html.DropDownListFor(m => m.ObjITReturnDocuments.SubDocumentCategoryId
                                         , new SelectList(Model.SubDocumentCategoryList
                                         , "Id", "Description", Model.ObjITReturnDocuments.SubDocumentCategoryId)
                                         , "Please Select"
                                         , new { @class = "ddSubDocumentCategory", @style = "width:150px;" })
-                                    </td>
-                                </tr>
+
+                                    <img src="~/images/plus.png"
+                                         class="imgSubDocCategory"
+                                         style="width:20px;height:20px;"
+                                         title="Click to add sub head" />
+                                </td>
+                            </tr>
+                            <tr class="tr-custom-add">
+                                <td>
+                                    New Sub Category:
+                                </td>
+                                <td>
+                                    <input type="text"
+                                           style="width:150px;"
+                                           class="txtSubDocCategory" />
+                                    <img src="~/images/save.png"
+                                         class="imgSubDocCategorySave"
+                                         style="width:20px;height:20px;" />
+                                    <img src="~/images/close.png"
+                                         class="imgSubDocCategoryClose"
+                                         style="width:20px;height:20px;" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Choose File:
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(model => model.ITHeadFile, new { type = "file" })
+                                </td>
+                            </tr>
+                        </table>
+                        <br />
+                        <table class="table table-hover tblITRetDetails">
+                            <thead>
                                 <tr>
-                                    <td>
-                                        Choose File:
-                                    </td>
-                                    <td colspan="2">
-                                        @Html.TextBoxFor(model => model.ITHeadFile, new { type = "file" })
-                                    </td>
+                                    <th>Document Category</th>
+                                    <th>Sub Category</th>
+                                    <th>File Name</th>
+                                    <th>Actions</th>
                                 </tr>
-                            </table>
-                            <br/>
-                            <table class="table table-hover tblITRetDetails">
-                                <thead>
+                            </thead>
+                            <tbody>
+                                @foreach (var document in Model.DocumentList)
+                                {
                                     <tr>
-                                        <th>Document Category</th>
-                                        <th>Sub Category</th>
-                                        <th>File Name</th>
-                                        <th>Actions</th>
+                                        <td>
+                                            @document.DocumentCategoryName
+                                        </td>
+                                        <td>
+                                            @document.SubDocumentCategoryName
+                                        </td>
+                                        <td>
+                                            @document.FileName
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Content("~/ITReturnDetailsDocumentsUpload/" + document.FilePath)"
+                                               target="_blank">
+                                                View
+                                            </a>
+                                            &nbsp;
+                                            <a href="#"
+                                               title="click to delete the document"
+                                               onclick="deleteITReturnDetailsDocument(@(document.Id), '@(document.FilePath)')">
+                                                Delete
+                                            </a>
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var document in Model.DocumentList)
-                                    {
-                                        <tr>
-                                            <td>
-                                                @document.DocumentCategoryName
-                                            </td>
-                                            <td>
-                                                @document.SubDocumentCategoryName
-                                            </td>
-                                            <td>
-                                                @document.FileName
-                                            </td>
-                                            <td>
-                                                <a href="@Url.Content("~/ITReturnDetailsDocumentsUpload/" + document.FilePath)"
-                                                   target="_blank">
-                                                    View
-                                                </a>
-                                                &nbsp;
-                                                <a href="#"
-                                                   title="click to delete the document"
-                                                   onclick="deleteITReturnDetailsDocument(@(document.Id), '@(document.FilePath)')">
-                                                    Delete
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary btn-sm">Upload File</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        </div>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary btn-sm btn-submit-doc-upload">Upload File</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
         </div>
-    }
+    </div>
 }

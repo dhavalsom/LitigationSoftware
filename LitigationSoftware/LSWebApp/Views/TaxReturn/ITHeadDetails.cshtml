@@ -7,22 +7,48 @@
     switch (Model.ITHead)
     {
         case "AdvanceTax1installment":
-            total = Model.ITReturnDetailsObject.AdvanceTax1installment.Value
-                    + Model.ITReturnDetailsObject.AdvanceTax2installment.Value
-                    + Model.ITReturnDetailsObject.AdvanceTax3installment.Value
-                    + Model.ITReturnDetailsObject.AdvanceTax4installment.Value;
+            total = (Model.ITReturnDetailsObject.AdvanceTax1installment.HasValue
+                        ? Model.ITReturnDetailsObject.AdvanceTax1installment.Value
+                        : 0)
+                    + (Model.ITReturnDetailsObject.AdvanceTax2installment.HasValue
+                        ? Model.ITReturnDetailsObject.AdvanceTax2installment.Value
+                        : 0)
+                    + (Model.ITReturnDetailsObject.AdvanceTax3installment.HasValue
+                        ? Model.ITReturnDetailsObject.AdvanceTax3installment.Value
+                        : 0)
+                    + (Model.ITReturnDetailsObject.AdvanceTax4installment.HasValue
+                        ? Model.ITReturnDetailsObject.AdvanceTax4installment.Value
+                        : 0);
             break;
         case "TDS":
-            total = Model.ITReturnDetailsObject.TDS.Value
-                    + Model.ITReturnDetailsObject.TDS26AS.Value
-                    + Model.ITReturnDetailsObject.TDSasperBooks.Value
-                    + Model.ITReturnDetailsObject.TCSPaidbyCompany.Value
-                    + Model.ITReturnDetailsObject.TaxCollectedAtSource.Value;
+            total = (Model.ITReturnDetailsObject.TDS.HasValue
+                        ? Model.ITReturnDetailsObject.TDS.Value
+                        : 0)
+                    + (Model.ITReturnDetailsObject.TDS26AS.HasValue
+                        ? Model.ITReturnDetailsObject.TDS26AS.Value
+                        : 0)
+                    + (Model.ITReturnDetailsObject.TDSasperBooks.HasValue
+                        ? Model.ITReturnDetailsObject.TDSasperBooks.Value
+                        : 0)
+                    + (Model.ITReturnDetailsObject.TCSPaidbyCompany.HasValue
+                        ? Model.ITReturnDetailsObject.TCSPaidbyCompany.Value
+                        : 0)
+                    + (Model.ITReturnDetailsObject.TaxCollectedAtSource.HasValue
+                        ? Model.ITReturnDetailsObject.TaxCollectedAtSource.Value
+                        : 0);
             break;
         case "InterestUS234A":
-            total = Model.ITReturnDetailsObject.InterestUS234A.Value
-                    + Model.ITReturnDetailsObject.InterestUS234B.Value
-                    + Model.ITReturnDetailsObject.InterestUS234C.Value;
+            total = (Model.ITReturnDetailsObject.InterestUS234A.HasValue
+                        ? Model.ITReturnDetailsObject.InterestUS234A.Value
+                        : 0)
+                    +
+                    (Model.ITReturnDetailsObject.InterestUS234B.HasValue
+                        ? Model.ITReturnDetailsObject.InterestUS234B.Value
+                        : 0)
+                    +
+                    (Model.ITReturnDetailsObject.InterestUS234C.HasValue
+                        ? Model.ITReturnDetailsObject.InterestUS234C.Value
+                        : 0);
             break;
         default:
             break;
@@ -465,16 +491,24 @@
             @if (Model.ITReturnDetailsObject.Id > 0
                 && Model.ITHeadMasterList[Model.ITHead].CanAddDocuments)
             {
-                @Html.Partial("_ITHeadDocumentsUploader"
-                , Model.ITHeadDocumentsUploaderModels[Model.ITHead])
+                <div class="col-md-6">
+                    <a href="#myModal_0" role="button" class="btn" data-toggle="modal">
+                        <img src="~/images/upload.png"
+                             class="imgITHeadDocumentsUploader"
+                             title="click to upload the documents"
+                             style="width:20px;height:20px;" />
+                    </a>
+                </div>
             }
 
             @if (!Model.ITReturnDetailsObject.IsReturn
                 && Model.ITReturnDetailsObject.Id > 0
                 && @Model.ITHeadMasterList[Model.ITHead].CanAddSubHead)
             {
-                @Html.Partial("_ITReturnExtensionList"
+                <div class="col-md-6">
+                    @Html.Partial("_ITReturnExtensionList"
                     , Model.ITReturnExtensionListModels[Model.ITHead])
+                </div>
             }
         </div>
     </td>

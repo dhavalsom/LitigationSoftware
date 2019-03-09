@@ -17,6 +17,7 @@ namespace LSWebApp.Models
         public Dictionary<string, ITReturnExtensionListModel> ITReturnExtensionListModels { get; set; }
         public List<ITReturnDetailsExtension> ExtensionList { get; set; }
         public List<string> ItemsWithAmounts { get; set; }
+        public ITHeadDocumentsUploaderModel ITHeadDocumentsUploaderModel { get; set; }
         #endregion
 
         #region Constructors

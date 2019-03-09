@@ -1,4 +1,6 @@
 ﻿@model  LSWebApp.Models.ITReturnDetailsHeaderModel
+@using LS.Models;
+@using LSWebApp.Models
 @{
     ViewBag.Title = "Input Sheet";
     Layout = "~/Views/Shared/_LayoutDynemicMenu.cshtml";
@@ -52,53 +54,22 @@
 
                     <th>IT Section</th>
                     <th>
-                        @Html.Partial("_LitigationDD", Model.ITSectionListSource)
+                        @Html.Partial("_LitigationDD", Model.ITSectionListSource)                        
                     </th>
                     <th>
                         <button type="button" class="btn btn-primary btn-sm btn-search"
                                 id="btnsrch">
                             Search
                         </button>
+                        <a href="#myModal_0" role="button" class="btn" data-toggle="modal">
+                            <img src="~/images/upload.png"
+                                 class="imgITHeadDocumentsUploader"
+                                 title="click to upload the documents"
+                                 style="width:20px;height:20px;" />
+                        </a>
                     </th>
                 </tr>
             </thead>
-            @*<tbody>
-        <tr class="table-active">
-           <td colspan="2">
-                @Html.LabelFor(m => m.CompanyObject.CompanyName
-                        , Model.CompanyObject.CompanyName)
-
-            </td>
-            <td>
-            <select id="FYAYId"
-                    name="@Html.NameFor(m=>m.FYAYId)">
-                @foreach (var item in Model.FYAYList)
-                {
-                    <option value="@item.Id.ToString()"
-                            data-year="@item.AssessmentYear">
-                        @item.FinancialYear
-                        </option>
-                }
-            </select>
-        </td>
-            <td class="tdAssessmentYear"></td>
-            <td>
-            @Html.DropDownListFor(m => m.ITSectionCategoryId
-                    , new SelectList(Model.ITSectionCategories
-                    , "Id", "Description", Model.ITSectionCategoryId)
-                    , new { @class = "ddITSectionCategory" })
-        </td>
-            <td>
-                @Html.Partial("_LitigationDD", Model.ITSectionListSource)
-            </td>
-            <td>
-                <button type="button" class="btn btn-primary btn-sm btn-search"
-                        id="btnsrch">
-                    Search
-                </button>
-            </td>
-            </tr>
-            </tbody>*@
         </table>
         <br />
     </div>
@@ -221,6 +192,31 @@
                         return isANumber(e);
                     });
 
+                    $(".btn-submit-doc-upload").click(function (e) {
+                        var model = new FormData();
+                        var itReturnDocuments = {};
+                        itReturnDocuments.ITReturnDetailsId = 1;
+                        itReturnDocuments.DocumentCategoryId = 1;
+                        itReturnDocuments.SubDocumentCategoryId = 1;
+                        model.append("itHeadFile", $('#ITHeadFile')[0].files[0]);
+                        model.append("documentCategoryId", $(".ddDocumentCategory").val());
+                        model.append("subDocumentCategoryId", $(".ddSubDocumentCategory").val());
+                        model.append("itReturnDetailsId", $("#ObjITReturnDocuments_ITReturnDetailsId").val())
+                        $.ajax({ 
+                            url: '/TaxReturn/InsertUpdateITReturnDocuments',
+                                type: "POST",
+                                data: model,
+                                contentType: false,
+                                processData: false,
+                                success: function (result) {
+                                    window.location.reload();
+                                },
+                                error: function () {
+                                    alert("Error loading data! Please try again.");
+                                }
+                            });
+                    });
+
                     $(".numericOnly").change(function (e) {
                         if ($.isNumeric($(this).val())) {
                             $(this).val(parseFloat($(this).val()).toFixed(2));
@@ -302,6 +298,55 @@
                         });
                     });
 
+                    $(".imgSubDocCategory").click(function (e) {
+                        showHideSubDocCategoryControls($(this));
+                    });
+
+                    $(".imgSubDocCategoryClose").click(function (e) {
+                        showHideSubDocCategoryControls($(this));
+                    });
+
+                    $(".imgSubDocCategorySave").click(function (e) {
+                        var txtControl = null;
+                        var saveButton = $(this);
+                        var documentCategoryId = 0;
+                        $(e.target).closest(".custom-sub-doc-category").find('.txtSubDocCategory').each(function () {
+                            txtControl = $(this);
+                        });
+                        $(e.target).closest(".custom-sub-doc-category").find('.ddDocumentCategory').each(function () {
+                            documentCategoryId = $(this).val();
+                        });
+                        if (txtControl.val() == "") {
+                            txtControl.addClass("validationError");
+                            return;
+                        }
+                        else {
+                            txtControl.removeClass("validationError");
+                        }
+
+                        var item = {};
+                        item.Description = txtControl.val();
+                        item.Active = true;
+                        item.DocumentCategoryId = documentCategoryId;
+
+                        $.ajax({
+                            type: 'POST',
+                            url: '/manageSubDocumentCategory/',
+                            data: JSON.stringify(item),
+                            success: function (data) {
+                                saveButton.parents('.modal-content')
+                                    .find(".ddSubDocumentCategory")
+                                    .each(function () {
+                                        $(this).append($('<option></option>').val(data.Id).html(item.Description));
+                                    });
+                                showHideSubDocCategoryControls(saveButton);
+                            },
+                            contentType: "application/json",
+                            dataType: 'json'
+                        });
+                    });
+
+                    $(".tr-custom-add").hide();
                     $(".btn-add-row-it-sub-head").click(function (event) {
                         var $tr = $(this).parents('.modal-content').find('tr.trITReturnDetailsExtension:last');
                         var $clone = $tr.clone();
