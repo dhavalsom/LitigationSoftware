@@ -53,7 +53,7 @@
         default:
             break;
     }
-    <tr class="expand table-info">
+    <tr class="expand">
         <td class="expandCollapse" style="font-weight:bold;font-size:large;">+</td>
         <td></td>
         <td style="text-align:Left;font-weight:bold;font-size:large;">
@@ -81,6 +81,7 @@
                         , new { @class = "numericOnly", @disabled = "disabled" })
                 </div>
             </div>
+            <div class="input-group col-md-6"></div>
         </td>
     </tr>
 }
@@ -111,6 +112,7 @@
                         , string.Format("{0:f}", Model.ITReturnDetailsObject.IncomefromSalary)
                         , new { @class = "numericOnly" })
                     </div>
+                    <div class="input-group col-md-6"></div>
                     break;
                 case "HousePropIncome":
                     <div class="col-md-6">
@@ -118,6 +120,7 @@
                     , string.Format("{0:f}", Model.ITReturnDetailsObject.HousePropIncome)
                     , new { @class = "numericOnly" })
                     </div>
+                    <div class="input-group col-md-6"></div>
                     break;
                 case "IncomefromCapGainsLTCG":
                     <div class="col-md-6">
@@ -125,6 +128,7 @@
                         , string.Format("{0:f}", Model.ITReturnDetailsObject.IncomefromCapGainsLTCG)
                         , new { @class = "numericOnly" })
                     </div>
+                    <div class="input-group col-md-6"></div>
                     break;
                 case "IncomefromCapGainsSTCG":
                     <div class="col-md-6">
@@ -132,6 +136,7 @@
                         , string.Format("{0:f}", Model.ITReturnDetailsObject.IncomefromCapGainsSTCG)
                         , new { @class = "numericOnly" })
                     </div>
+                    <div class="input-group col-md-6"></div>
                     break;
                 case "IncomefromBusinessProf":
                     <div class="col-md-6">
@@ -139,6 +144,7 @@
                         , string.Format("{0:f}", Model.ITReturnDetailsObject.IncomefromBusinessProf)
                         , new { @class = "numericOnly" })
                     </div>
+                    <div class="input-group col-md-6"></div>
                     break;
                 case "IncomefromSpeculativeBusiness":
                     <div class="col-md-6">
@@ -146,6 +152,7 @@
                         , string.Format("{0:f}", Model.ITReturnDetailsObject.IncomefromSpeculativeBusiness)
                         , new { @class = "numericOnly" })
                     </div>
+                    <div class="input-group col-md-6"></div>
                     break;
                 case "IncomeFromOtherSources":
                     <div class="col-md-6">
@@ -153,6 +160,7 @@
                         , string.Format("{0:f}", Model.ITReturnDetailsObject.IncomeFromOtherSources)
                         , new { @class = "numericOnly" })
                     </div>
+                    <div class="input-group col-md-6"></div>
                     break;
                 case "DeductChapterVIA":
                     <div class="col-md-6">
@@ -160,12 +168,19 @@
                         , string.Format("{0:f}", Model.ITReturnDetailsObject.DeductChapterVIA)
                         , new { @class = "numericOnly" })
                     </div>
+                    <div class="input-group col-md-6"></div>
                     break;
                 case "ProfitUS115JB":
                     <div class="col-md-6">
                         @Html.TextBoxFor(m => m.ITReturnDetailsObject.ProfitUS115JB
                         , string.Format("{0:f}", Model.ITReturnDetailsObject.ProfitUS115JB)
                         , new { @class = "numericOnly" })
+                    </div>
+                    <div class="input-group col-md-6">
+                        <span class="input-group-addon">
+                            &nbsp;&nbsp;<i class="fa fa-calendar fa-2x" aria-hidden="true">
+                            </i>
+                        </span>
                     </div>
                     break;
                 case "AdvanceTax1installment":
@@ -175,9 +190,9 @@
                         , new { @class = "numericOnly"})
                     </div>
                     <div class="input-group date form_datetime HLV_clacInput col-md-6"
-                            data-date="" data-date-format="dd M yyyy"
-                            data-link-field="ITReturnDetailsObject_AdvanceTax1installmentDate"
-                            data-link-format="dd M yyyy">
+                         data-date="" data-date-format="dd M yyyy"
+                         data-link-field="ITReturnDetailsObject_AdvanceTax1installmentDate"
+                         data-link-format="dd M yyyy">
                         @Html.TextBoxFor(m => m.ITReturnDetailsObject.AdvanceTax1installmentDate
                         , Model.ITReturnDetailsObject.AdvanceTax1installmentDate.HasValue
                         ? Model.ITReturnDetailsObject.AdvanceTax1installmentDate.Value.ToString("dd MMM yyyy")
@@ -320,21 +335,21 @@
                         , string.Format("{0:f}", Model.ITReturnDetailsObject.ForeignTaxCredit)
                         , new { @class = "numericOnly" })
                     </div>
-                break;
+                    break;
                 case "MATCredit":
                     <div class="col-md-6">
                         @Html.TextBoxFor(m => m.ITReturnDetailsObject.MATCredit
                         , string.Format("{0:f}", Model.ITReturnDetailsObject.MATCredit)
                         , new { @class = "numericOnly" })
                     </div>
-                break;
+                    break;
                 case "InterestUS234A":
                     <div class="col-md-6">
                         @Html.TextBoxFor(m => m.ITReturnDetailsObject.InterestUS234A
                         , string.Format("{0:f}", Model.ITReturnDetailsObject.InterestUS234A)
                         , new { @class = "numericOnly" })
                     </div>
-                break;
+                    break;
                 case "InterestUS234B":
                     <div class="col-md-6">
                         @Html.TextBoxFor(m => m.ITReturnDetailsObject.InterestUS234B
@@ -345,7 +360,7 @@
                 case "InterestUS234C":
                     <div class="col-md-6">
                         @Html.TextBoxFor(m => m.ITReturnDetailsObject.InterestUS234C
-                        , string.Format("{0:f}", Model.ITReturnDetailsObject.InterestUS234C)    
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.InterestUS234C)
                         , new { @class = "numericOnly" })
                     </div>
                     break;
@@ -362,7 +377,7 @@
                         , string.Format("{0:f}", Model.ITReturnDetailsObject.InterestUS220)
                         , new { @class = "numericOnly" })
                     </div>
-                break;
+                    break;
                 case "RefundAdjusted":
                     <div class="col-md-6">
                         @Html.TextBoxFor(m => m.ITReturnDetailsObject.RefundAdjusted
@@ -442,6 +457,33 @@
                         </span>
                     </div>
                     break;
+
+                case "OtherRefundAdjusted":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.OtherRefundAdjusted
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.OtherRefundAdjusted)
+                        , new { @class = "numericOnly" })
+                    </div>
+                    <div class="input-group date form_datetime HLV_clacInput col-md-6"
+                         data-date="" data-date-format="dd M yyyy"
+                         data-link-field="ITReturnDetailsObject_OtherRefundAdjustedDate"
+                         data-link-format="dd M yyyy">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.OtherRefundAdjustedDate
+                        , Model.ITReturnDetailsObject.OtherRefundAdjustedDate.HasValue
+                        ? Model.ITReturnDetailsObject.OtherRefundAdjustedDate.Value.ToString("dd MMM yyyy")
+                        : string.Empty
+                        , new
+                        {
+                            @class = "form-control",
+                            @size = "16",
+                            @value = ""
+                        })
+                        <span class="input-group-addon">
+                            &nbsp;&nbsp;<i class="fa fa-calendar fa-2x" aria-hidden="true">
+                            </i>
+                        </span>
+                    </div>
+                    break;
                 default:
                     break;
             }
@@ -468,7 +510,7 @@
                     , Model.ITReturnExtensionListModels[Model.ITHead])
                 </div>
             }
-            </div>
+        </div>
     </td>
 </tr>
 

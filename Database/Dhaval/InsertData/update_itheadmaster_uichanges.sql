@@ -25,10 +25,23 @@ update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 27 where PropertyName 
 update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 28 where PropertyName = 'InterestUS234C'
 update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 29 where PropertyName = 'InterestUS234D'
 update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 30 where PropertyName = 'InterestUS220'
-update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 31 where PropertyName = 'RefundAdjusted'
-update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 32,IsROI=0 where PropertyName = 'RegularAssessment'
-update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 33 where PropertyName = 'RefundAlreadyReceived'
+update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 31,Description='Refund of other years adjusted against current year' where PropertyName = 'RefundAdjusted'
+update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 32,IsROI=1 where PropertyName = 'RegularAssessment'
+update [LitigationApp].dbo.[ITHeadMaster] set ExcelSrNo = 33,Description='Current Year Refund Received' where PropertyName = 'RefundAlreadyReceived'
 
+INSERT INTO [LitigationApp].[dbo].[ITHeadMaster]
+           ([Description]
+           ,[PropertyName]
+           ,[CanAddSubHead]
+           ,[Active]
+           ,[AddedBy]
+           ,[AddedDate]
+           ,[CanAddDocuments]
+           ,[IsROI]
+           ,[HasDate]
+           ,[IsSpecialIncomeEnabled])
+     VALUES
+           ('Current Year Refund adjusted against other years','OtherRefundAdjusted',0,1,1,getdate(),0,0,1,0)
                                
                 
                 

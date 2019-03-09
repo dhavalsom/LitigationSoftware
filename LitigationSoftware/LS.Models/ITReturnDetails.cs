@@ -61,6 +61,7 @@ namespace LS.Models
         public decimal? RefundAdjusted { get; set; }
         public decimal? RegularAssessment { get; set; }
         public decimal? RefundAlreadyReceived { get; set; }
+        public decimal? OtherRefundAdjusted { get; set; }
         public DateTime? SelfAssessmentTaxDate { get; set; }
         public DateTime? AdvanceTax1installmentDate { get; set; }
         public DateTime? AdvanceTax2installmentDate { get; set; }
@@ -69,7 +70,7 @@ namespace LS.Models
         public DateTime? RefundAdjustedDate { get; set; }
         public DateTime? RegularAssessmentDate { get; set; }
         public DateTime? RefundAlreadyReceivedDate { get; set; }
-
+        public DateTime? OtherRefundAdjustedDate { get; set; }
         public List<ITReturnDetailsExtension> Extensions { get; set; }
 
         #region TaxComputationSheet
