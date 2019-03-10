@@ -1,16 +1,17 @@
 USE [LitigationApp]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_ITRETURNDETAILS_REFUNDDETAILS_MANAGER]    Script Date: 3/10/2019 2:06:20 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_REFUNDDETAILS_MANAGER]    Script Date: 3/10/2019 11:18:23 PM ******/
 DROP PROCEDURE [dbo].[SP_REFUNDDETAILS_MANAGER]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_ITRETURNDETAILS_REFUNDDETAILS_MANAGER]    Script Date: 3/10/2019 2:06:20 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_REFUNDDETAILS_MANAGER]    Script Date: 3/10/2019 11:18:23 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 CREATE PROCEDURE [dbo].[SP_REFUNDDETAILS_MANAGER]
 (
@@ -60,7 +61,7 @@ FROM   @REFUNDDETAILS_XML.nodes('RefundDetails') AS RefundDetailsList(Columns)
      ,@ITHeadMasterID
      ,@RefDate
      ,@RefAmount 
-     ,0
+     ,@Active
 	 ,@USER_ID
 	 ,GETUTCDATE())
 
@@ -94,6 +95,7 @@ FROM   @REFUNDDETAILS_XML.nodes('RefundDetails') AS RefundDetailsList(Columns)
 SELECT @Id as RefundDetailsId, @Result AS Result, @ReturnMessage AS ReturnMessage
 
 END
+
 
 GO
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace LS.Models
 {
@@ -10,7 +9,7 @@ namespace LS.Models
         public int ITReturnDetailsID { get; set; }
         public int FYAYID { get; set; }
         public int ITHeadMasterID { get; set; }
-        public DateTime RefDate { get; set; }
+        public DateTime? RefDate { get; set; }
         public decimal RefAmount { get; set; }
         #endregion
 
@@ -42,10 +41,10 @@ namespace LS.Models
     {
         public string Message { get; set; }
         public bool IsSuccess { get; set; }
-        public List<RefundDetails> RefundDetailsListObject { get; set; }
+        public List<RefundDetails> RefundDetailsList { get; set; }
         public RefundDetailsListResponse()
         {
-            RefundDetailsListObject = new List<RefundDetails>();
+            RefundDetailsList = new List<RefundDetails>();
         }
     }
 }

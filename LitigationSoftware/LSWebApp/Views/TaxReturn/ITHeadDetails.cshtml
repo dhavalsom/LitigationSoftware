@@ -100,6 +100,24 @@
                     , Model.ITHeadSpecialIncomeModels[Model.ITHead])
             }
 
+            @if (Model.ITReturnDetailsObject.Id > 0
+                && Model.ITHeadMasterList[Model.ITHead].CanAddDocuments)
+            {
+                <a href="#myModal_0" role="button" class="btn" data-toggle="modal">
+                    <img src="~/images/upload.png"
+                         class="imgITHeadDocumentsUploader"
+                         title="click to upload the documents"
+                         style="width:20px;height:20px;" />
+                </a>
+            }
+
+            @if (!Model.ITReturnDetailsObject.IsReturn
+                && Model.ITReturnDetailsObject.Id > 0
+                && @Model.ITHeadMasterList[Model.ITHead].CanAddSubHead)
+            {
+                @Html.Partial("_ITReturnExtensionList"
+                    , Model.ITReturnExtensionListModels[Model.ITHead])
+            }
         </div>
     </td>
     <td>
@@ -175,12 +193,6 @@
                         @Html.TextBoxFor(m => m.ITReturnDetailsObject.ProfitUS115JB
                         , string.Format("{0:f}", Model.ITReturnDetailsObject.ProfitUS115JB)
                         , new { @class = "numericOnly" })
-                    </div>
-                    <div class="input-group col-md-6">
-                        <span class="input-group-addon">
-                            &nbsp;&nbsp;<i class="fa fa-calendar fa-2x" aria-hidden="true">
-                            </i>
-                        </span>
                     </div>
                     break;
                 case "AdvanceTax1installment":
@@ -380,28 +392,8 @@
                     break;
                 case "RefundAdjusted":
                     <div class="col-md-6">
-                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.RefundAdjusted
-                        , string.Format("{0:f}", Model.ITReturnDetailsObject.RefundAdjusted)
-                        , new { @class = "numericOnly" })
-                    </div>
-                    <div class="input-group date form_datetime HLV_clacInput col-md-6"
-                         data-date="" data-date-format="dd M yyyy"
-                         data-link-field="ITReturnDetailsObject_RefundAdjustedDate"
-                         data-link-format="dd M yyyy">
-                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.RefundAdjustedDate
-                        , Model.ITReturnDetailsObject.RefundAdjustedDate.HasValue
-                        ? Model.ITReturnDetailsObject.RefundAdjustedDate.Value.ToString("dd MMM yyyy")
-                        : string.Empty
-                        , new
-                        {
-                            @class = "form-control",
-                            @size = "16",
-                            @value = ""
-                        })
-                        <span class="input-group-addon">
-                            &nbsp;&nbsp;<i class="fa fa-calendar fa-2x" aria-hidden="true">
-                            </i>
-                        </span>
+                        @Html.Partial("_RefundDetailsList"
+                        , Model.RefundDetailsListModels[Model.ITHead])
                     </div>
                     break;
                 case "RegularAssessment":
@@ -433,82 +425,18 @@
 
                 case "RefundAlreadyReceived":
                     <div class="col-md-6">
-                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.RefundAlreadyReceived
-                        , string.Format("{0:f}", Model.ITReturnDetailsObject.RefundAlreadyReceived)
-                        , new { @class = "numericOnly" })
-                    </div>
-                    <div class="input-group date form_datetime HLV_clacInput col-md-6"
-                         data-date="" data-date-format="dd M yyyy"
-                         data-link-field="ITReturnDetailsObject_RefundAlreadyReceivedDate"
-                         data-link-format="dd M yyyy">
-                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.RefundAlreadyReceivedDate
-                        , Model.ITReturnDetailsObject.RefundAlreadyReceivedDate.HasValue
-                        ? Model.ITReturnDetailsObject.RefundAlreadyReceivedDate.Value.ToString("dd MMM yyyy")
-                        : string.Empty
-                        , new
-                        {
-                            @class = "form-control",
-                            @size = "16",
-                            @value = ""
-                        })
-                        <span class="input-group-addon">
-                            &nbsp;&nbsp;<i class="fa fa-calendar fa-2x" aria-hidden="true">
-                            </i>
-                        </span>
-                    </div>
+                        @Html.Partial("_RefundDetailsList"
+                        , Model.RefundDetailsListModels[Model.ITHead])
+                    </div>                    
                     break;
-
                 case "OtherRefundAdjusted":
                     <div class="col-md-6">
-                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.OtherRefundAdjusted
-                        , string.Format("{0:f}", Model.ITReturnDetailsObject.OtherRefundAdjusted)
-                        , new { @class = "numericOnly" })
-                    </div>
-                    <div class="input-group date form_datetime HLV_clacInput col-md-6"
-                         data-date="" data-date-format="dd M yyyy"
-                         data-link-field="ITReturnDetailsObject_OtherRefundAdjustedDate"
-                         data-link-format="dd M yyyy">
-                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.OtherRefundAdjustedDate
-                        , Model.ITReturnDetailsObject.OtherRefundAdjustedDate.HasValue
-                        ? Model.ITReturnDetailsObject.OtherRefundAdjustedDate.Value.ToString("dd MMM yyyy")
-                        : string.Empty
-                        , new
-                        {
-                            @class = "form-control",
-                            @size = "16",
-                            @value = ""
-                        })
-                        <span class="input-group-addon">
-                            &nbsp;&nbsp;<i class="fa fa-calendar fa-2x" aria-hidden="true">
-                            </i>
-                        </span>
-                    </div>
+                       @Html.Partial("_RefundDetailsList"
+                        , Model.RefundDetailsListModels[Model.ITHead])
+                    </div>                    
                     break;
                 default:
                     break;
-            }
-
-            @if (Model.ITReturnDetailsObject.Id > 0
-                && Model.ITHeadMasterList[Model.ITHead].CanAddDocuments)
-            {
-                <div class="col-md-6">
-                    <a href="#myModal_0" role="button" class="btn" data-toggle="modal">
-                        <img src="~/images/upload.png"
-                             class="imgITHeadDocumentsUploader"
-                             title="click to upload the documents"
-                             style="width:20px;height:20px;" />
-                    </a>
-                </div>
-            }
-
-            @if (!Model.ITReturnDetailsObject.IsReturn
-                && Model.ITReturnDetailsObject.Id > 0
-                && @Model.ITHeadMasterList[Model.ITHead].CanAddSubHead)
-            {
-                <div class="col-md-6">
-                    @Html.Partial("_ITReturnExtensionList"
-                    , Model.ITReturnExtensionListModels[Model.ITHead])
-                </div>
             }
         </div>
     </td>

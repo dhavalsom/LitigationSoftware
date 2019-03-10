@@ -42,6 +42,7 @@ namespace LSWebApp.Models
         public Dictionary<string, ITHeadDocumentsUploaderModel> ITHeadDocumentsUploaderModels { get; set; }
         public Dictionary<string, ITHeadSpecialIncomeModel> ITHeadSpecialIncomeModels { get; set; }
         public Dictionary<string, ITReturnExtensionListModel> ITReturnExtensionListModels { get; set; }
+        public Dictionary<string, RefundDetailsListModel> RefundDetailsListModels { get; set; }
 
         public ITHeadDetailsModel(string itHead,
             Dictionary<string, ITHeadMaster> itHeadMasterList,
@@ -49,7 +50,8 @@ namespace LSWebApp.Models
             List<ITReturnDetailsExtension> extensionList,
             Dictionary<string, ITHeadDocumentsUploaderModel> itHeadDocumentsUploaderModels,
             Dictionary<string, ITHeadSpecialIncomeModel> itHeadSpecialIncomeModels,
-            Dictionary<string, ITReturnExtensionListModel> itReturnExtensionListModels)
+            Dictionary<string, ITReturnExtensionListModel> itReturnExtensionListModels,
+            Dictionary<string, RefundDetailsListModel> refundDetailsListModels)
         {
             this.ITHead = itHead;
             this.ITHeadMasterList = itHeadMasterList;
@@ -58,6 +60,7 @@ namespace LSWebApp.Models
             this.ITHeadDocumentsUploaderModels = itHeadDocumentsUploaderModels;
             this.ITHeadSpecialIncomeModels = itHeadSpecialIncomeModels;
             this.ITReturnExtensionListModels = itReturnExtensionListModels;
+            this.RefundDetailsListModels = refundDetailsListModels;
         }
     }
 }

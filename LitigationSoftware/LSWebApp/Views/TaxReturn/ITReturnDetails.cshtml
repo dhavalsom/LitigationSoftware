@@ -26,7 +26,7 @@
             <thead>
                 <tr>
                     @Html.Hidden("hdNewSpIncomeRecordCount", "0")
-                    @*<th colspan="2">Company Name</th>*@
+                    @Html.Hidden("hdNewRefundDetailsRecordCount", "0")
                     <th>Financial Year</th>
                     <th>
                         <select id="FYAYId"
@@ -459,6 +459,101 @@
                                 $(this).val("0.00");
                             }
                         });
+                    });
+
+                    $(".btn-add-row-refund-details").click(function (event) {
+                        var $tr = $(this).parents('.modal-content').find('tr.trRefundDetails:last');
+                        var $clone = $tr.clone();
+                        $clone.find('.txtRefundDetailsValue').val('0.00');
+                        $clone.find('.hdRefundDetailsId').val("0");
+                        $tr.after($clone);                        
+                        $('.form_datetime').datetimepicker({
+                            weekStart: 1,
+                            todayBtn: 1,
+                            autoclose: 1,
+                            todayHighlight: 1,
+                            startView: 2,
+                            minView: 2,
+                            forceParse: 0
+                        });
+                        $(".numericOnly").keypress(function (e) {
+                            return isANumber(e);
+                        });
+                        $(".numericOnly").change(function (e) {
+                            if ($.isNumeric($(this).val())) {
+                                $(this).val(parseFloat($(this).val()).toFixed(2));
+                            }
+                            else {
+                                $(this).val("0.00");
+                            }
+                        });
+                    });
+
+                    $(".btn-save-it-refund-details").click(function (event) {
+                        var data = [];
+                        var isValid = true;
+                        $(this).parents('.modal-content')
+                            .find('tr.trRefundDetails').each(function () {
+                                var refundDetail = {};
+                                $('#ObjRefundDetails_ITReturnDetailsID').each(function () {
+                                    refundDetail.ITReturnDetailsID = parseInt($(this).val());
+                                });
+                                $('#ObjRefundDetails_ITHeadMasterID').each(function () {
+                                    refundDetail.ITHeadMasterID = parseInt($(this).val());
+                                });
+                                $(this).find('.hdRefundDetailsId').each(function () {
+                                    refundDetail.Id = $(this).val();
+                                });
+                                $(this).find('.txtRefundDetailsValue').each(function () {
+                                    if ($(this).val()) {
+                                        refundDetail.RefAmount = $(this).val();
+                                        $(this).removeClass("validationError");
+                                    }
+                                    else {
+                                        isValid = false;
+                                        $(this).addClass("validationError");
+                                    }
+                                });
+                                $(this).find('.RefundDetailsDate').each(function () {
+                                    if ($(this).val()) {
+                                        refundDetail.RefDate = $(this).val();
+                                        $(this).removeClass("validationError");
+                                    }
+                                    else {
+                                        isValid = false;
+                                        $(this).addClass("validationError");
+                                    }
+                                });
+                                $(this).find('.ddFYAYRefundDetails').each(function () {
+                                    if ($(this).val()) {
+                                        refundDetail.FYAYID = $(this).val();
+                                        $(this).removeClass("validationError");
+                                    }
+                                    else {
+                                        isValid = false;
+                                        $(this).addClass("validationError");
+                                    }
+                                });
+                                data.push(refundDetail);
+                            });
+                        if (isValid) {
+
+                            $.ajax({
+                                type: 'POST',
+                                url: '/TaxReturn/UpsertRefundDetails',
+                                data: { refundDetailsList: data },
+                            })
+                                .done(function (response) {
+                                    $(".message").html(response.Message);
+                                    if (response.IsSuccess) {
+                                        $(".message").css("color", "white");
+                                    }
+                                    else {
+                                        $(".message").css("color", "red");
+                                    }
+                                })
+                                .fail(function () { alert("error"); });
+                        }
                     });
 
                     $('.expand').click(function () {
