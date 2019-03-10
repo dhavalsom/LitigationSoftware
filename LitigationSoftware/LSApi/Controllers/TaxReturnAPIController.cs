@@ -214,6 +214,38 @@ namespace LSApi.Controllers
             var matCreditDetailsResult = ItReturnObj.InsertUpdateMATCreditDetails(matCreditDetails, null);
             return matCreditDetailsResult;
         }
+
+        [HttpGet]
+        [Route("GetRefundDetailsList")]
+        // GET: api/TaxReturnAPI/GetRefundDetailsList
+        public RefundDetailsListResponse GetRefundDetailsList
+            (int ITReturnDetailsID, int? ITHeadMasterID, int? FYAYID)
+        {
+            var ItReturnObj = _Kernel.Get<IITReturnDetailsBL>();
+            return ItReturnObj.GetRefundDetailsList(ITReturnDetailsID, ITHeadMasterID, FYAYID);
+        }
+
+        // POST: api/InsertUpdateRefundDetails
+        [HttpPost]
+        [Route("InsertUpdateRefundDetails")]
+        public RefundDetailsResponse InsertUpdateRefundDetails
+            ([FromBody]List<RefundDetails> refundDetailsList)
+        {
+            var ItReturnObj = _Kernel.Get<IITReturnDetailsBL>();
+            var result = new RefundDetailsResponse
+            {
+                IsSuccess = true
+            };
+            foreach (var item in refundDetailsList)
+            {
+                if (result.IsSuccess)
+                {
+                    item.Active = true;
+                    result = ItReturnObj.InsertUpdateRefundDetails(item);
+                }
+            }
+            return result;
+        }
         #endregion
     }
 }

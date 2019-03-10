@@ -1083,7 +1083,7 @@ namespace LS.DAL.Library
             }
         }
 
-        public RefundDetailsListResponse GetRefundDetailsList(int ITReturnDetailsID, int ITHeadMasterID, int? FYAYID)
+        public RefundDetailsListResponse GetRefundDetailsList(int ITReturnDetailsID, int? ITHeadMasterID, int? FYAYID)
         {
             try
             {
@@ -1104,7 +1104,7 @@ namespace LS.DAL.Library
                 {
                     Command.Parameters.AddWithValue("@FYAYID", FYAYID);
                 }
-                if (ITHeadMasterID > 0)
+                if (ITHeadMasterID.HasValue && ITHeadMasterID > 0)
                 {
                     Command.Parameters.AddWithValue("@ITHeadMasterID", ITHeadMasterID);
                 }
@@ -1115,21 +1115,21 @@ namespace LS.DAL.Library
                 DataSet ds = new DataSet();
                 da.Fill(ds);
                 RefundDetailsListResponse result = new RefundDetailsListResponse();
-                result.RefundDetailsListObject = new List<RefundDetails>();
+                result.RefundDetailsList = new List<RefundDetails>();
 
                 if (ds != null && ds.Tables.Count > 0)
                 {
-                    foreach (DataRow drBLDetails in ds.Tables[0].Rows)
+                    foreach (DataRow drRefundDetails in ds.Tables[0].Rows)
                     {
-                        result.RefundDetailsListObject.Add(new RefundDetails
+                        result.RefundDetailsList.Add(new RefundDetails
                         {
-                            Id = int.Parse(drBLDetails["id"].ToString()),
-                            ITReturnDetailsID = int.Parse(drBLDetails["ITReturnDetailsId"].ToString()),
-                            FYAYID = int.Parse(drBLDetails["FYAYID"].ToString()),
-                            ITHeadMasterID = int.Parse(drBLDetails["ITHeadMasterID"].ToString()),
-                            RefDate = drBLDetails["RefDate"] != DBNull.Value ? Convert.ToDateTime(drBLDetails["RefDate"].ToString()) : Convert.ToDateTime(drBLDetails["RefDate"].ToString()),
-                            RefAmount = int.Parse(drBLDetails["RefAmount"].ToString()),
-                            Active = bool.Parse(drBLDetails["Active"].ToString()),
+                            Id = int.Parse(drRefundDetails["id"].ToString()),
+                            ITReturnDetailsID = int.Parse(drRefundDetails["ITReturnDetailsId"].ToString()),
+                            FYAYID = int.Parse(drRefundDetails["FYAYID"].ToString()),
+                            ITHeadMasterID = int.Parse(drRefundDetails["ITHeadMasterID"].ToString()),
+                            RefDate = drRefundDetails["RefDate"] != DBNull.Value ? Convert.ToDateTime(drRefundDetails["RefDate"].ToString()) : (DateTime?) null,
+                            RefAmount = decimal.Parse(drRefundDetails["RefAmount"].ToString()),
+                            Active = bool.Parse(drRefundDetails["Active"].ToString()),
                         });
                     }
                 }

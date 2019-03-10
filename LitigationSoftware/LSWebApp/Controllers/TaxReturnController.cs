@@ -836,6 +836,44 @@ namespace LSWebApp.Controllers
                                     , itHead, model.ITReturnDetailsObject, itHead.SubHeadList));
                             }
                         }
+
+                        Res = await client.GetAsync("api/MasterAPI/GetFYAYList");
+                        var fyayList = new List<FYAY>();
+                        if (Res.IsSuccessStatusCode)
+                        {
+                            fyayList = JsonConvert.DeserializeObject<List<FYAY>>(Res.Content.ReadAsStringAsync().Result);
+                        }
+
+                        model.RefundDetailsListModels = new Dictionary<string, RefundDetailsListModel>();
+                        Res = await client.GetAsync("api/TaxReturnAPI/GetRefundDetailsList?ITHeadMasterID=&FYAYID=&ITReturnDetailsID=" + model.ITReturnDetailsObject.Id);
+                        if (Res.IsSuccessStatusCode)
+                        {
+                            var objRefundDetailsListResponse = JsonConvert.DeserializeObject<RefundDetailsListResponse>
+                                                                (Res.Content.ReadAsStringAsync().Result);
+                            if (objRefundDetailsListResponse != null)
+                            {
+                                foreach (var itHead in itHeads)
+                                {
+                                    if (itHead.PropertyName.Contains("Refund"))
+                                    {
+                                        var existingItemsInDb = objRefundDetailsListResponse.RefundDetailsList
+                                            .Where(e => e.ITHeadMasterID == itHead.Id && e.Id > 0).ToList();
+                                        model.RefundDetailsListModels.Add(itHead.PropertyName,
+                                            new RefundDetailsListModel(
+                                                existingItemsInDb.Any() 
+                                                ? existingItemsInDb : new List<RefundDetails>()
+                                                {
+                                                    new RefundDetails
+                                                    {
+                                                        ITHeadMasterID = itHead.Id,
+                                                        ITReturnDetailsID = model.ITReturnDetailsObject.Id
+                                                    }
+                                                }
+                                                , itHead, model.ITReturnDetailsObject, fyayList));
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -1289,6 +1327,24 @@ namespace LSWebApp.Controllers
                 Session["CurrentITReturnDetails"] = objITHeadDocumentsUploaderModel.ObjITReturnDetails;
                 return RedirectToAction("ITReturnDetails");
             }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> UpsertRefundDetails(
+            List<RefundDetails> refundDetailsList)
+        {
+            RefundDetailsResponse result = new RefundDetailsResponse();
+            using (var client = new HttpClient())
+            {
+                var json = JsonConvert.SerializeObject(refundDetailsList);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.PostAsync("api/TaxReturnAPI/InsertUpdateRefundDetails", content);
+                result = JsonConvert.DeserializeObject<RefundDetailsResponse>(Res.Content.ReadAsStringAsync().Result);
+            }
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]

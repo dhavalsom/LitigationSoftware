@@ -32,7 +32,7 @@ namespace LS.BL.Interface
             (MATCreditDetails matCreditDetails, string operation);
         MATCreditDetailsResponse GetMATCreditDetailsList(int? companyId, int? fyayId
             , int? itSectionCategoryId, int? matCreditDetailsId);
-        RefundDetailsListResponse GetRefundDetailsList(int ITReturnDetailsID, int ITHeadMasterID, int? FYAYID);
+        RefundDetailsListResponse GetRefundDetailsList(int ITReturnDetailsID, int? ITHeadMasterID, int? FYAYID);
         RefundDetailsResponse InsertUpdateRefundDetails(RefundDetails objRefundDetails);
     }
 }

@@ -296,7 +296,7 @@ namespace LS.BL.Library
             }
         }
 
-        public RefundDetailsListResponse GetRefundDetailsList(int ITReturnDetailsID, int ITHeadMasterID, int? FYAYID)
+        public RefundDetailsListResponse GetRefundDetailsList(int ITReturnDetailsID, int? ITHeadMasterID, int? FYAYID)
         {
             try
             {
