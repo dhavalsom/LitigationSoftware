@@ -1082,6 +1082,115 @@ namespace LS.DAL.Library
                 Connection.Close();
             }
         }
+
+        public RefundDetailsListResponse GetRefundDetailsList(int ITReturnDetailsID, int ITHeadMasterID, int? FYAYID)
+        {
+            try
+            {
+                Log.Info("Started call to GetRefundDetailsList");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(new
+                {
+                    ITReturnDetailsID = ITReturnDetailsID,
+                    ITHeadMasterID = ITHeadMasterID,
+                    FYAYID = FYAYID
+                }));
+                Command.CommandText = "SP_GET_RefundDetails";
+                Command.CommandType = CommandType.StoredProcedure;
+                if ( ITReturnDetailsID > 0)
+                {
+                    Command.Parameters.AddWithValue("@ITReturnDetailsID", ITReturnDetailsID);
+                }
+                if (FYAYID.HasValue && FYAYID > 0)
+                {
+                    Command.Parameters.AddWithValue("@FYAYID", FYAYID);
+                }
+                if (ITHeadMasterID > 0)
+                {
+                    Command.Parameters.AddWithValue("@ITHeadMasterID", ITHeadMasterID);
+                }
+               
+                Connection.Open();
+
+                SqlDataAdapter da = new SqlDataAdapter(Command);
+                DataSet ds = new DataSet();
+                da.Fill(ds);
+                RefundDetailsListResponse result = new RefundDetailsListResponse();
+                result.RefundDetailsListObject = new List<RefundDetails>();
+
+                if (ds != null && ds.Tables.Count > 0)
+                {
+                    foreach (DataRow drBLDetails in ds.Tables[0].Rows)
+                    {
+                        result.RefundDetailsListObject.Add(new RefundDetails
+                        {
+                            Id = int.Parse(drBLDetails["id"].ToString()),
+                            ITReturnDetailsID = int.Parse(drBLDetails["ITReturnDetailsId"].ToString()),
+                            FYAYID = int.Parse(drBLDetails["FYAYID"].ToString()),
+                            ITHeadMasterID = int.Parse(drBLDetails["ITHeadMasterID"].ToString()),
+                            RefDate = drBLDetails["RefDate"] != DBNull.Value ? Convert.ToDateTime(drBLDetails["RefDate"].ToString()) : Convert.ToDateTime(drBLDetails["RefDate"].ToString()),
+                            RefAmount = int.Parse(drBLDetails["RefAmount"].ToString()),
+                            Active = bool.Parse(drBLDetails["Active"].ToString()),
+                        });
+                    }
+                }
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            finally
+            {
+                Connection.Close();
+            }
+        }
+
+        public RefundDetailsResponse InsertUpdateRefundDetails(RefundDetails objRefundDetails)
+        {
+            try
+            {
+                Log.Info("Started call to InsertUpdateRefundDetails");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(objRefundDetails));
+                Command.CommandText = "SP_REFUNDDETAILS_MANAGER";
+                Command.CommandType = CommandType.StoredProcedure;
+                Command.Parameters.Clear();
+
+                Command.Parameters.AddWithValue("@REFUNDDETAILS_XML", GetXMLFromObject(objRefundDetails));
+                                
+                Connection.Open();
+                SqlDataReader reader = Command.ExecuteReader();
+
+                RefundDetailsResponse result = new RefundDetailsResponse();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result = new RefundDetailsResponse
+                        {
+                            Message = reader["ReturnMessage"] != DBNull.Value ? reader["ReturnMessage"].ToString() : null,
+                            IsSuccess = Convert.ToBoolean(reader["Result"].ToString()),
+                            RefundDetailsObject = new RefundDetails
+                            {
+                                Id = Convert.ToInt32(reader["RefundDetailsId"].ToString())
+                            }
+                        };
+                    }
+                }
+                Log.Info("End call to InsertUpdateRefundDetails");
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                Connection.Close();
+            }
+        }
+
         #endregion
     }
 }

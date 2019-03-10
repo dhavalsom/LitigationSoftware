@@ -295,6 +295,40 @@ namespace LS.BL.Library
                 //Log
             }
         }
+
+        public RefundDetailsListResponse GetRefundDetailsList(int ITReturnDetailsID, int ITHeadMasterID, int? FYAYID)
+        {
+            try
+            {
+                return this._itReturnDA.GetRefundDetailsList(ITReturnDetailsID, ITHeadMasterID, FYAYID);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                //Log
+            }
+        }
+
+        public RefundDetailsResponse InsertUpdateRefundDetails(RefundDetails objRefundDetails)
+        {
+            try
+            {
+                objRefundDetails.Active = true;
+                return this._itReturnDA.InsertUpdateRefundDetails(objRefundDetails);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                //Log
+            }
+        }
+
         #endregion
 
 
