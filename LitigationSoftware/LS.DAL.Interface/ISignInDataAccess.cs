@@ -2,7 +2,7 @@
 
 namespace LS.DAL.Interface
 {
-    public interface ISignInDataAccess
+    public interface ISignInDataAccess : IDataAccessBase
     {
         UserLogin InitiateSignInProcess(UserLogin user);
     }

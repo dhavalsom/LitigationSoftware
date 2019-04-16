@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace LS.DAL.Interface
 {
-    public interface IITReturnDetailsDataAccess
+    public interface IITReturnDetailsDataAccess: IDataAccessBase
     {
         ITReturnComplexAPIModelResponse InsertorUpdateITReturnDetails(ITReturnComplexAPIModel itReturnDetails, string operation);
         ComplianceDocumentsResponse InsertUpdateComplianceDocuments(ComplianceDocuments complianceDocuments, string operation);

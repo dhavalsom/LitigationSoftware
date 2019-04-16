@@ -194,16 +194,12 @@
 
                     $(".btn-submit-doc-upload").click(function (e) {
                         var model = new FormData();
-                        var itReturnDocuments = {};
-                        itReturnDocuments.ITReturnDetailsId = 1;
-                        itReturnDocuments.DocumentCategoryId = 1;
-                        itReturnDocuments.SubDocumentCategoryId = 1;
                         model.append("itHeadFile", $('#ITHeadFile')[0].files[0]);
                         model.append("documentCategoryId", $(".ddDocumentCategory").val());
                         model.append("subDocumentCategoryId", $(".ddSubDocumentCategory").val());
                         model.append("itReturnDetailsId", $("#ObjITReturnDocuments_ITReturnDetailsId").val())
                         $.ajax({ 
-                            url: '/TaxReturn/InsertUpdateITReturnDocuments',
+                            url: '/TaxReturn/InsertUpdateITReturnDocumentsDirect',
                                 type: "POST",
                                 data: model,
                                 contentType: false,

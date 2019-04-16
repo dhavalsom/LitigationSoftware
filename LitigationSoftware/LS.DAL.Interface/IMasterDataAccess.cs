@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace LS.DAL.Interface
 {
-    public interface IMasterDataAccess
+    public interface IMasterDataAccess : IDataAccessBase
     {
         List<Company> GetCompanies();
         List<CompanyCategory> GetCompanyCategories();

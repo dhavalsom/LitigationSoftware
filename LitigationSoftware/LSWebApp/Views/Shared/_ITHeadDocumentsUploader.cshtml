@@ -1,6 +1,6 @@
 ﻿@model  LSWebApp.Models.ITHeadDocumentsUploaderModel
 @using (Html.BeginForm("InsertUpdateITReturnDocuments", "TaxReturn", FormMethod.Post
-                            , new { enctype = "multipart/form-data" }))
+                                        , new { enctype = "multipart/form-data" }))
 {
     <div style="margin-left:5px;">
         @Html.HiddenFor(m => m.ObjITReturnDocuments.ITHeadId, Model.ObjITReturnDocuments.ITHeadId)
@@ -13,16 +13,28 @@
         @Html.HiddenFor(m => m.ObjITReturnDetails.ITSectionID, Model.ObjITReturnDetails.ITSectionID)
         @Html.HiddenFor(m => m.ObjITReturnDetails.ITSectionCategoryID, Model.ObjITReturnDetails.ITSectionCategoryID)
 
-        <div class="modal" id="myModal_0">
+        @if (Model.ITHeadObject != null)
+        {
+            <div>
+                <a href="#myModal_@(Model.ITHeadObject.Id.ToString())"
+                   role="button" class="btn" data-toggle="modal">
+                    <img src="~/images/upload.png"
+                         class="imgITHeadDocumentsUploader"
+                         title="click to upload the documents"
+                         style="width:20px;height:20px;" />
+                </a>
+            </div>
+        }
+        <div class="modal" id="myModal_@(Model.ITHeadObject != null ? Model.ITHeadObject.Id.ToString() : "0")">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Documents</h5>
+                        <h5 class="modal-title">@(Model.ITHeadObject != null ? "Documents for" + Model.ITHeadObject.Description : "Documents")</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body custom-sub-doc-category">
+                    <div class="modal-body doc-uploader-model">
                         <table>
                             <tr>
                                 <td>
@@ -73,7 +85,7 @@
                                     Choose File:
                                 </td>
                                 <td>
-                                    @Html.TextBoxFor(model => model.ITHeadFile, new { type = "file" })
+                                    @Html.TextBoxFor(model => model.ITHeadFile, new { type = "file", @class = "ITHeadFile" })
                                 </td>
                             </tr>
                         </table>
@@ -118,7 +130,20 @@
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary btn-sm btn-submit-doc-upload">Upload File</button>
+                        @if (Model.ITHeadObject != null)
+                        {
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                Upload File
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="button"
+                                 class="btn btn-primary btn-sm btn-submit-doc-upload">
+                                Upload File
+                            </button>
+                            
+                        }
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>

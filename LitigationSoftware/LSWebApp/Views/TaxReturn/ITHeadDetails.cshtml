@@ -103,12 +103,14 @@
             @if (Model.ITReturnDetailsObject.Id > 0
                 && Model.ITHeadMasterList[Model.ITHead].CanAddDocuments)
             {
-                <a href="#myModal_0" role="button" class="btn" data-toggle="modal">
+                @Html.Partial("_ITHeadDocumentsUploader"
+                , Model.ITHeadDocumentsUploaderModels[Model.ITHead])
+                @*<a href="#myModal_0" role="button" class="btn" data-toggle="modal">
                     <img src="~/images/upload.png"
                          class="imgITHeadDocumentsUploader"
                          title="click to upload the documents"
                          style="width:20px;height:20px;" />
-                </a>
+                </a>*@
             }
 
             @if (!Model.ITReturnDetailsObject.IsReturn
@@ -236,7 +238,6 @@
                         : string.Empty
                         , new
                         {
-                            @class = "form-control",
                             @size = "16",
                             @value = ""
                         })
@@ -262,7 +263,6 @@
                         : string.Empty
                         , new
                         {
-                            @class = "form-control",
                             @size = "16",
                             @value = ""
                         })
@@ -288,7 +288,6 @@
                         : string.Empty
                         , new
                         {
-                            @class = "form-control",
                             @size = "16",
                             @value = ""
                         })
@@ -411,8 +410,7 @@
                         : string.Empty
                         , new
                         {
-                            @class = "form-control",
-                            @size = "16",
+                            @size = "12",
                             @value = ""
                         })
                         <span class="input-group-addon">
