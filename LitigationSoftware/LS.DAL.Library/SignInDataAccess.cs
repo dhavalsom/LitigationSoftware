@@ -50,7 +50,7 @@ namespace LS.DAL.Library
             }
             catch (Exception ex)
             {
-                Log.Info("Error in InitiateSignInProcess. Error:" + JsonConvert.SerializeObject(ex));
+                Log.Error("Error in InitiateSignInProcess. Error:" + JsonConvert.SerializeObject(ex));
                 LogError(ex);
                 throw;
             }
