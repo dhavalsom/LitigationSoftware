@@ -21,10 +21,12 @@ namespace LSWebApp.Models
         {
             ObjITReturnDocuments = new ITReturnDocuments();
             ObjITReturnDocuments.ITReturnDetailsId = objITReturnDetails.Id;
+            ObjITReturnDocuments.ITHeadId = itHeadObject != null ? itHeadObject.Id : 0;
             this.DocumentList = documentList;
             this.ObjITReturnDetails = objITReturnDetails;
             this.DocumentCategoryList = documentCategoryList;
             this.SubDocumentCategoryList = subDocumentCategoryList;
+            this.ITHeadObject = itHeadObject;
         }
 
         public ITHeadDocumentsUploaderModel()

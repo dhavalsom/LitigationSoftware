@@ -87,6 +87,7 @@ namespace LSApi.Controllers
             ([FromBody]ITReturnDocuments itReturnDocuments)
         {
             var ItReturnObj = _Kernel.Get<IITReturnDetailsBL>();
+            itReturnDocuments.Active = true;
             var itReturnDocumentsResult = ItReturnObj.InsertUpdateITReturnDocuments
                 (itReturnDocuments, string.Empty);
             return itReturnDocumentsResult;
