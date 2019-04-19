@@ -105,7 +105,13 @@
                 $("#sectionDiv").html(data);
 
                 $(".ddDocumentCategory").change(function () {
+                    $(this).parents('.modal-content').find('.trDocument')
+                        .each(function () {
+                            $(this).show();
+                        });
                     var subDocumentCatObject = $(this).closest('table').find('.ddSubDocumentCategory');
+                    subDocumentCatObject.html('');
+                    subDocumentCatObject.append('<option value="">Please Select</option>');
                     $.ajax({
                         url: '/getSubDocumentCategories?documentCategoryId='
                         + $(this).find("option:selected").val(),
@@ -113,8 +119,6 @@
                         },
                         dataType: 'json',
                         success: function (data) {
-                            subDocumentCatObject.html('');
-                            subDocumentCatObject.append('<option> Please Select</option>');
                             $(data).each(function () {
                                 var option = $('<option />');
                                 option.attr('value', this.Id).html(this.Description);
@@ -124,6 +128,23 @@
                         error: function (XMLHttpRequest, textStatus, errorThrown) {
                         },
                         type: 'GET'
+                    });
+                });
+
+                $(".ddSubDocumentCategory").change(function () {
+                    var ddSubDocumentCategoryObject = $(this);
+                    $(this).parents('.modal-content').find('.trDocument').each(function () {
+                        var hdSubCategoryId;
+                        $(this).find('.hdSubCategoryId').each(function () {
+                            hdSubCategoryId = $(this).val();
+                        });
+                        if (ddSubDocumentCategoryObject.val() === ""
+                            || ddSubDocumentCategoryObject.val() === hdSubCategoryId) {
+                            $(this).show();
+                        }
+                        else {
+                            $(this).hide();
+                        }
                     });
                 });
             }
