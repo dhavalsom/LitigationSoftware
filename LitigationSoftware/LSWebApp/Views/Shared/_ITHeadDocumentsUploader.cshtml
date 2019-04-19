@@ -97,7 +97,7 @@
                             }
                         </table>
                         <br />
-                        <table class="table table-hover tblITRetDetails">
+                        <table class="table table-hover tblITReturnDocuments">
                             <thead>
                                 <tr>
                                     <th>Document Category</th>
@@ -109,11 +109,12 @@
                             <tbody>
                                 @foreach (var document in Model.DocumentList)
                                 {
-                                    <tr>
+                                    <tr class="trDocument">
                                         <td>
                                             @document.DocumentCategoryName
                                         </td>
                                         <td>
+                                            @Html.Hidden("hdSubCategoryId", document.SubDocumentCategoryId, new { @class = "hdSubCategoryId" })
                                             @document.SubDocumentCategoryName
                                         </td>
                                         <td>
