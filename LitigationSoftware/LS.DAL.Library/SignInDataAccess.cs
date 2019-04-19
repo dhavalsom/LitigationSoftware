@@ -1,8 +1,7 @@
-﻿using Newtonsoft.Json;
-using LS.DAL.Interface;
+﻿using LS.DAL.Interface;
 using LS.Models;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -45,12 +44,14 @@ namespace LS.DAL.Library
                         };                        
                     }
                 }
-                Log.Info("End call to InitiateSignInProcess");
+                Log.Info("End call to InitiateSignInProcess. Result:" +JsonConvert.SerializeObject(result));
                 return result;
 
             }
             catch (Exception ex)
             {
+                Log.Error("Error in InitiateSignInProcess. Error:" + JsonConvert.SerializeObject(ex));
+                LogError(ex);
                 throw;
             }
 

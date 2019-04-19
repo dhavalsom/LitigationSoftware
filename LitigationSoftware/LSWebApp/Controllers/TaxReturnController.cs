@@ -674,45 +674,47 @@ namespace LSWebApp.Controllers
                                     model.ITHeadDocumentsUploaderModel = new ITHeadDocumentsUploaderModel
                                         (
                                             objITReturnDocumentsResponse.ITReturnDocumentsList
+                                            .Where(itrd => !itrd.ITHeadId.HasValue)
+                                            .ToList<ITReturnDocumentsDisplay>()
                                             , null
                                             , model.ITReturnDetailsObject
                                             , documentCategories
                                             , subDocumentCategories
-
                                         );
-                                    //foreach (var item in objITReturnDocumentsResponse.ITReturnDocumentsList)
-                                    //{
-                                    //    if (model.ITReturnDocumentList.ContainsKey(item.PropertyName))
-                                    //    {
-                                    //        model.ITReturnDocumentList[item.PropertyName] = objITReturnDocumentsResponse.ITReturnDocumentsList;
-                                    //    }
-                                    //    else
-                                    //    {
-                                    //        model.ITReturnDocumentList.Add(item.PropertyName,
-                                    //            objITReturnDocumentsResponse.ITReturnDocumentsList);
-                                    //    }
-                                    //}
+                                    foreach (var item in objITReturnDocumentsResponse.ITReturnDocumentsList
+                                        .Where(itrd => itrd.PropertyName != null))
+                                    {
+                                        if (model.ITReturnDocumentList.ContainsKey(item.PropertyName))
+                                        {
+                                            model.ITReturnDocumentList[item.PropertyName].Add(item);
+                                        }
+                                        else
+                                        {
+                                            model.ITReturnDocumentList.Add(item.PropertyName,
+                                              new List<ITReturnDocumentsDisplay>() { item });
+                                        }
+                                    }
                                     model.ITHeadDocumentsUploaderModels = new Dictionary<string, ITHeadDocumentsUploaderModel>();
-                                    //foreach (var itHead in itHeads)
-                                    //{
-                                    //    if (itHead.CanAddDocuments)
-                                    //    {
-                                    //        if (model.ITReturnDocumentList.ContainsKey(itHead.PropertyName))
-                                    //        {
-                                    //            model.ITHeadDocumentsUploaderModels.Add(itHead.PropertyName
-                                    //                , new ITHeadDocumentsUploaderModel(model.ITReturnDocumentList[itHead.PropertyName]
-                                    //                , itHead, model.ITReturnDetailsObject, documentCategories
-                                    //                , subDocumentCategories));
-                                    //        }
-                                    //        else
-                                    //        {
-                                    //            model.ITHeadDocumentsUploaderModels.Add(itHead.PropertyName
-                                    //                , new ITHeadDocumentsUploaderModel(new List<ITReturnDocumentsDisplay>()
-                                    //                , itHead, model.ITReturnDetailsObject, documentCategories
-                                    //                , subDocumentCategories));
-                                    //        }
-                                    //    }
-                                    //}
+                                    foreach (var itHead in itHeads)
+                                    {
+                                        if (itHead.CanAddDocuments)
+                                        {
+                                            if (model.ITReturnDocumentList.ContainsKey(itHead.PropertyName))
+                                            {
+                                                model.ITHeadDocumentsUploaderModels.Add(itHead.PropertyName
+                                                    , new ITHeadDocumentsUploaderModel(model.ITReturnDocumentList[itHead.PropertyName]
+                                                    , itHead, model.ITReturnDetailsObject, documentCategories
+                                                    , subDocumentCategories));
+                                            }
+                                            else
+                                            {
+                                                model.ITHeadDocumentsUploaderModels.Add(itHead.PropertyName
+                                                    , new ITHeadDocumentsUploaderModel(new List<ITReturnDocumentsDisplay>()
+                                                    , itHead, model.ITReturnDetailsObject, documentCategories
+                                                    , subDocumentCategories));
+                                            }
+                                        }
+                                    }
                                 }
                                 
                                 Res = await client.GetAsync("api/TaxReturnAPI/GetSPIncomeDetailsList?itReturnDetailsId="
@@ -1287,7 +1289,7 @@ namespace LSWebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> InsertUpdateITReturnDocuments
+        public async Task<ActionResult> InsertUpdateITReturnDocumentsDirect
             (HttpPostedFileBase itHeadFile, int itReturnDetailsId
             , int documentCategoryId, int? subDocumentCategoryId)
         {
@@ -1298,10 +1300,12 @@ namespace LSWebApp.Controllers
                 {
                     ITReturnDetailsId = itReturnDetailsId,
                     DocumentCategoryId = documentCategoryId,
-                    SubDocumentCategoryId = subDocumentCategoryId
+                    SubDocumentCategoryId = subDocumentCategoryId,
+                    AddedBy = Session["User"] != null ? (Session["User"] as UserLogin).Id : 1,
+                    ModifiedBy = Session["User"] != null ? (Session["User"] as UserLogin).Id : 1,
                 }
             };
-            string relativePath = "/" + objITHeadDocumentsUploaderModel.ObjITReturnDocuments.ITReturnDetailsId.ToString() + "/"; ;
+            string relativePath = "/" + objITHeadDocumentsUploaderModel.ObjITReturnDocuments.ITReturnDetailsId.ToString() + "/";
             string path = Server.MapPath("~/ITReturnDetailsDocumentsUpload" + relativePath);
             if (!Directory.Exists(path))
             {
@@ -1310,9 +1314,37 @@ namespace LSWebApp.Controllers
             objITHeadDocumentsUploaderModel.ITHeadFile.SaveAs(path + Path.GetFileName(objITHeadDocumentsUploaderModel.ITHeadFile.FileName));
             objITHeadDocumentsUploaderModel.ObjITReturnDocuments.FileName = Path.GetFileName(objITHeadDocumentsUploaderModel.ITHeadFile.FileName);
             objITHeadDocumentsUploaderModel.ObjITReturnDocuments.FilePath = relativePath + Path.GetFileName(objITHeadDocumentsUploaderModel.ITHeadFile.FileName);
-            objITHeadDocumentsUploaderModel.ObjITReturnDocuments.AddedBy = 1;
-            objITHeadDocumentsUploaderModel.ObjITReturnDocuments.ModifiedBy = 1;
-            objITHeadDocumentsUploaderModel.ObjITReturnDocuments.Active = true;
+            using (var client = new HttpClient())
+            {
+                var json = JsonConvert.SerializeObject(objITHeadDocumentsUploaderModel.ObjITReturnDocuments);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.PostAsync("api/TaxReturnAPI/InsertUpdateITReturnDocuments", content);
+                ITReturnDocumentsResponse result = JsonConvert.DeserializeObject<ITReturnDocumentsResponse>(Res.Content.ReadAsStringAsync().Result);
+
+                Session["CurrentITReturnDetails"] = objITHeadDocumentsUploaderModel.ObjITReturnDetails;
+                return RedirectToAction("ITReturnDetails");
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> InsertUpdateITReturnDocuments
+            (ITHeadDocumentsUploaderModel objITHeadDocumentsUploaderModel)
+        {
+            string relativePath = "/" + objITHeadDocumentsUploaderModel.ObjITReturnDocuments.ITReturnDetailsId.ToString() + "/"
+                + objITHeadDocumentsUploaderModel.ObjITReturnDocuments.ITHeadId.ToString() + "/";
+            string path = Server.MapPath("~/ITReturnDetailsDocumentsUpload" + relativePath);
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            objITHeadDocumentsUploaderModel.ITHeadFile.SaveAs(path + Path.GetFileName(objITHeadDocumentsUploaderModel.ITHeadFile.FileName));
+            objITHeadDocumentsUploaderModel.ObjITReturnDocuments.FileName = Path.GetFileName(objITHeadDocumentsUploaderModel.ITHeadFile.FileName);
+            objITHeadDocumentsUploaderModel.ObjITReturnDocuments.FilePath = relativePath + Path.GetFileName(objITHeadDocumentsUploaderModel.ITHeadFile.FileName);
+            objITHeadDocumentsUploaderModel.ObjITReturnDocuments.AddedBy = Session["User"] != null ? (Session["User"] as UserLogin).Id : 1;
+            objITHeadDocumentsUploaderModel.ObjITReturnDocuments.ModifiedBy = Session["User"] != null ? (Session["User"] as UserLogin).Id : 1;
 
             using (var client = new HttpClient())
             {

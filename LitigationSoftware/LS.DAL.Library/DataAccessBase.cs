@@ -1,12 +1,11 @@
-﻿using System.Configuration;
+﻿using log4net;
+using System;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using LS.Models;
-using System;
-using log4net;
+using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
-using System.IO;
 
 namespace LS.DAL.Library
 {
@@ -21,7 +20,6 @@ namespace LS.DAL.Library
         #region Constructors 
         public DataAccessBase()
         {
-            //Connection = new SqlConnection(@"Data Source=localhost;Initial Catalog=HealthCare;Integrated Security=True;");
             Connection = new SqlConnection(ConfigurationManager.ConnectionStrings["myConnectionString"].ConnectionString);
             Command = new SqlCommand();
             Command.Connection = Connection;
@@ -30,28 +28,30 @@ namespace LS.DAL.Library
 
         #region Methods
 
-        public void LogError(ErrorLog error)
+        public void LogError(Exception error)
         {
             try
             {
-                Command.CommandText = "SP_LOG_ERRORS";
-                Command.CommandType = CommandType.StoredProcedure;
-
-                Command.Parameters.AddWithValue("@MESSAGE", error.Message);
-                Command.Parameters.AddWithValue("@STACK_TRACE", error.StackTrace);
-                Command.Parameters.AddWithValue("@EXCEPTION_TYPE", error.ExceptionType);
-                Command.Parameters.AddWithValue("@SOURCE", error.Source);
-                Command.Parameters.AddWithValue("@USER_ID", 1);
-                Connection.Open();
-                Command.ExecuteNonQuery();
+                using (SqlConnection errConnection = new SqlConnection(Connection.ConnectionString))
+                {
+                    SqlCommand errCommand = new SqlCommand();
+                    errCommand.Connection = errConnection;
+                    errCommand.CommandText = "SP_LOG_ERRORS";
+                    errCommand.CommandType = CommandType.StoredProcedure;
+                    errCommand.Parameters.AddWithValue("@MESSAGE", error.Message);
+                    errCommand.Parameters.AddWithValue("@STACK_TRACE", error.StackTrace);
+                    errCommand.Parameters.AddWithValue("@EXCEPTION_TYPE", error.GetType().ToString());
+                    errCommand.Parameters.AddWithValue("@SOURCE", error.Source);
+                    errCommand.Parameters.AddWithValue("@USER_ID", 1);
+                    errConnection.Open();
+                    errCommand.ExecuteNonQuery();
+                }
             }
             catch (Exception ex)
             {
             }
-
             finally
             {
-                Connection.Close();
             }
         }
 
