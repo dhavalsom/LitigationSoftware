@@ -37,7 +37,10 @@
                         </td>
                         <td class="tdAssessmentYear"></td>
                         <td>
-                            <button type="submit" class="btn btn-primary btn-sm" id="btnsrch">Search</button>
+                            <button type="submit" 
+                                    class="btn btn-primary btn-sm" id="btnsrch">
+                                Search
+                            </button>
                         </td>
                     </tr>
                 </tbody>
@@ -79,6 +82,7 @@
         });
 
         loadAssessmentYear();
+       
     });
 
     function loadAssessmentYear() {
@@ -98,7 +102,30 @@
             },
             dataType: 'html',
             success: function (data) {
-                 $("#sectionDiv").html(data);
+                $("#sectionDiv").html(data);
+
+                $(".ddDocumentCategory").change(function () {
+                    var subDocumentCatObject = $(this).closest('table').find('.ddSubDocumentCategory');
+                    $.ajax({
+                        url: '/getSubDocumentCategories?documentCategoryId='
+                        + $(this).find("option:selected").val(),
+                        error: function () {
+                        },
+                        dataType: 'json',
+                        success: function (data) {
+                            subDocumentCatObject.html('');
+                            subDocumentCatObject.append('<option> Please Select</option>');
+                            $(data).each(function () {
+                                var option = $('<option />');
+                                option.attr('value', this.Id).html(this.Description);
+                                subDocumentCatObject.append(option);
+                            });
+                        },
+                        error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        },
+                        type: 'GET'
+                    });
+                });
             }
             });
     }

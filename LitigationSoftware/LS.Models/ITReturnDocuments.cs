@@ -44,5 +44,9 @@ namespace LS.Models
         public string AssessmentYear { get; set; }
         public string DocumentCategoryName { get; set; }
         public string SubDocumentCategoryName { get; set; }
+        public string ITSectionDescription { get; set; }
+        public int ITSectionId { get; set; }
+        public string SectionCategoryDescription { get; set; }
+        public int SectionCategoryId { get; set; }
     }
 }

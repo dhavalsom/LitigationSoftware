@@ -23,6 +23,8 @@ namespace LSWebApp.Models
         public ITReturnDocumentListModel ObjITReturnDocumentListModel { get; set; }
         public List<DocumentCategoryMaster> DocumentCategoryList { get; set; }
         public List<SubDocumentCategoryMaster> SubDocumentCategoryList { get; set; }
+        public List<ITSectionCategory> ITSectionCategories { get; set; }
+        public List<ITSection> ITSectionList { get; set; }
         #endregion
 
         #region Constructors

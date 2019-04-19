@@ -16,7 +16,6 @@ namespace LS.DAL.Library
             try
             {
                 Log.Info("Started call to GetCompanies");
-
                 Command.CommandText = "SP_GET_COMPANY";
                 Command.CommandType = CommandType.StoredProcedure;
                 Connection.Open();
@@ -36,10 +35,15 @@ namespace LS.DAL.Library
                         });
                     }
                 }
+                Log.Info("End call to GetCompanies. Result:"
+                    + JsonConvert.SerializeObject(result));
                 return result;
             }
             catch (Exception ex)
             {
+                Log.Error("Error in GetCompanies. Error:"
+                    + JsonConvert.SerializeObject(ex));
+                LogError(ex);
                 throw;
             }
 
@@ -72,13 +76,17 @@ namespace LS.DAL.Library
                         });
                     }
                 }
+                Log.Info("End call to GetCompanyCategories. Result:"
+                    + JsonConvert.SerializeObject(result));
                 return result;
             }
             catch (Exception ex)
             {
+                Log.Error("Error in GetCompanyCategories. Error:"
+                       + JsonConvert.SerializeObject(ex));
+                LogError(ex);
                 throw;
             }
-
             finally
             {
                 Connection.Close();
@@ -113,9 +121,11 @@ namespace LS.DAL.Library
             }
             catch (Exception ex)
             {
+                Log.Error("Error in CreateCompany. Error:"
+                       + JsonConvert.SerializeObject(ex));
+                LogError(ex);
                 throw;
             }
-
             finally
             {
                 Connection.Close();
@@ -127,7 +137,6 @@ namespace LS.DAL.Library
             try
             {
                 Log.Info("Started call to GetFYAY");
-
                 Command.CommandText = "SP_GET_FYAY";
                 Command.CommandType = CommandType.StoredProcedure;
                 Connection.Open();
@@ -148,13 +157,17 @@ namespace LS.DAL.Library
                         });
                     }
                 }
+                Log.Info("End call to GetFYAY. Result:"
+                    + JsonConvert.SerializeObject(result));
                 return result;
             }
             catch (Exception ex)
             {
+                Log.Error("Error in GetFYAY. Error:"
+                       + JsonConvert.SerializeObject(ex));
+                LogError(ex);
                 throw;
             }
-
             finally
             {
                 Connection.Close();
@@ -186,10 +199,15 @@ namespace LS.DAL.Library
                         });
                     }
                 }
+                Log.Info("End call to GetITSectionCategory. Result:"
+                    + JsonConvert.SerializeObject(result));
                 return result;
             }
             catch (Exception ex)
             {
+                Log.Error("Error in GetITSectionCategory. Error:"
+                       + JsonConvert.SerializeObject(ex));
+                LogError(ex);
                 throw;
             }
 
@@ -204,7 +222,10 @@ namespace LS.DAL.Library
             try
             {
                 Log.Info("Started call to GetITSection");
-
+                Log.Info("parameter values" + JsonConvert.SerializeObject(new
+                {
+                    categoryId = categoryId
+                }));
                 Command.CommandText = "SP_GET_ITSection";
                 Command.CommandType = CommandType.StoredProcedure;
                 Connection.Open();
@@ -231,10 +252,15 @@ namespace LS.DAL.Library
                         });
                     }
                 }
+                Log.Info("End call to GetITSection. Result:"
+                    + JsonConvert.SerializeObject(result));
                 return result;
             }
             catch (Exception ex)
             {
+                Log.Error("Error in GetITSection. Error:"
+                       + JsonConvert.SerializeObject(ex));
+                LogError(ex);
                 throw;
             }
 
@@ -279,12 +305,15 @@ namespace LS.DAL.Library
                         };
                     }
                 }
-                Log.Info("End call to InsertUpdateITSection");
-
+                Log.Info("End call to InsertUpdateITSection. Result:"
+                    + JsonConvert.SerializeObject(result));
                 return result;
             }
             catch (Exception ex)
             {
+                Log.Error("Error in InsertUpdateITSection. Error:"
+                       + JsonConvert.SerializeObject(ex));
+                LogError(ex);
                 throw;
             }
             finally
@@ -298,6 +327,10 @@ namespace LS.DAL.Library
             try
             {
                 Log.Info("Started call to GetITHeadMaster");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(new
+                {
+                    IsTaxComputed = IsTaxComputed
+                }));
                 Command.CommandText = "SP_GET_IT_HEAD_MASTER";
                 Command.CommandType = CommandType.StoredProcedure;
                 Command.Parameters.Clear();
@@ -331,11 +364,15 @@ namespace LS.DAL.Library
                         });
                     }
                 }
-                Log.Info("End call to GetITHeadMaster:" + JsonConvert.SerializeObject(result));
+                Log.Info("End call to GetITHeadMaster:"
+                    + JsonConvert.SerializeObject(result));
                 return result;
             }
             catch (Exception ex)
             {
+                Log.Error("Error in GetITHeadMaster. Error:"
+                       + JsonConvert.SerializeObject(ex));
+                LogError(ex);
                 throw;
             }
 
@@ -350,6 +387,10 @@ namespace LS.DAL.Library
             try
             {
                 Log.Info("Started call to GetITSubHeadMaster");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(new
+                {
+                    itHeadId = itHeadId
+                }));
                 Command.CommandText = "SP_GET_IT_SUB_HEAD_MASTER";
                 Command.CommandType = CommandType.StoredProcedure;
                 Connection.Open();
@@ -373,26 +414,31 @@ namespace LS.DAL.Library
                     }
                 }
 
-                Log.Info("End call to GetITSubHeadMaster:" + JsonConvert.SerializeObject(result));
+                Log.Info("End call to GetITSubHeadMaster:"
+                    + JsonConvert.SerializeObject(result));
                 return result;
             }
             catch (Exception ex)
             {
+                Log.Error("Error in GetITSubHeadMaster. Error:"
+                       + JsonConvert.SerializeObject(ex));
+                LogError(ex);
                 throw;
             }
-
             finally
             {
                 Connection.Close();
             }
         }
 
-        public ITSubHeadMasterResponse InsertUpdateITSubHeadMaster(ITSubHeadMaster objITSubHeadMaster)
+        public ITSubHeadMasterResponse InsertUpdateITSubHeadMaster
+            (ITSubHeadMaster objITSubHeadMaster)
         {
             try
             {
                 Log.Info("Started call to InsertUpdateITSubHeadMaster");
-                Log.Info("parameter values" + JsonConvert.SerializeObject(objITSubHeadMaster));
+                Log.Info("parameter values" 
+                    + JsonConvert.SerializeObject(objITSubHeadMaster));
                 Command.CommandText = "SP_IT_SUB_HEAD_MANAGER";
                 Command.CommandType = CommandType.StoredProcedure;
                 Command.Parameters.Clear();
@@ -423,12 +469,15 @@ namespace LS.DAL.Library
                         };
                     }
                 }
-                Log.Info("End call to InsertUpdateITSubHeadMaster");
-
+                Log.Info("End call to InsertUpdateITSubHeadMaster. Result:"
+                    + JsonConvert.SerializeObject(result));
                 return result;
             }
             catch (Exception ex)
             {
+                Log.Error("Error in InsertUpdateITSubHeadMaster. Error:"
+                       + JsonConvert.SerializeObject(ex));
+                LogError(ex);
                 throw;
             }
             finally
@@ -442,7 +491,10 @@ namespace LS.DAL.Library
             try
             {
                 Log.Info("Started call to GetComplianceMaster");
-                Log.Info("parameter values" + JsonConvert.SerializeObject(complianceId));
+                Log.Info("parameter values" + JsonConvert.SerializeObject(new
+                {
+                    complianceId = complianceId
+                }));
                 Command.CommandText = "SP_GET_COMPLIANCE_LIST";
                 Command.CommandType = CommandType.StoredProcedure;
                 Connection.Open();
@@ -461,26 +513,31 @@ namespace LS.DAL.Library
                         });
                     }
                 }
-                Log.Info("End call to GetComplianceMaster:" + JsonConvert.SerializeObject(result));
+                Log.Info("End call to GetComplianceMaster:"
+                    + JsonConvert.SerializeObject(result));
                 return result;
             }
             catch (Exception ex)
             {
+                Log.Error("Error in GetComplianceMaster. Error:"
+                       + JsonConvert.SerializeObject(ex));
+                LogError(ex);
                 throw;
             }
-
             finally
             {
                 Connection.Close();
             }
         }
 
-        public ComplianceMasterResponse InsertUpdateComplianceMaster(ComplianceMaster objComplianceMaster)
+        public ComplianceMasterResponse InsertUpdateComplianceMaster
+            (ComplianceMaster objComplianceMaster)
         {
             try
             {
                 Log.Info("Started call to InsertUpdateComplianceMaster");
-                Log.Info("parameter values" + JsonConvert.SerializeObject(objComplianceMaster));
+                Log.Info("parameter values " 
+                    + JsonConvert.SerializeObject(objComplianceMaster));
                 Command.CommandText = "SP_COMPLIANCE_MANAGER";
                 Command.CommandType = CommandType.StoredProcedure;
                 Command.Parameters.Clear();
@@ -510,12 +567,15 @@ namespace LS.DAL.Library
                         };
                     }
                 }
-                Log.Info("End call to InsertUpdateComplianceMaster");
-
+                Log.Info("End call to InsertUpdateComplianceMaster. Result:"
+                    + JsonConvert.SerializeObject(result));
                 return result;
             }
             catch (Exception ex)
             {
+                Log.Error("Error in InsertUpdateComplianceMaster. Error:"
+                       + JsonConvert.SerializeObject(ex));
+                LogError(ex);
                 throw;
             }
             finally
@@ -529,7 +589,11 @@ namespace LS.DAL.Library
             try
             {
                 Log.Info("Started call to GetStandardData");
-                Log.Info("parameter values" + JsonConvert.SerializeObject(standarddataId));
+                Log.Info("parameter values" + JsonConvert.SerializeObject(new
+                {
+                    FYAYID = FYAYID,
+                    standarddataId = standarddataId
+                }));
                 Command.CommandText = "SP_GET_STANDARDDATA_LIST";
                 Command.CommandType = CommandType.StoredProcedure;
                 Connection.Open();
@@ -559,26 +623,35 @@ namespace LS.DAL.Library
                         });
                     }
                 }
-                Log.Info("End call to GetStandardData:" + JsonConvert.SerializeObject(result));
+                Log.Info("End call to GetStandardData:"
+                    + JsonConvert.SerializeObject(result));
                 return result;
             }
             catch (Exception ex)
             {
+                Log.Error("Error in GetStandardData. Error:"
+                       + JsonConvert.SerializeObject(ex));
+                LogError(ex);
                 throw;
             }
-
             finally
             {
                 Connection.Close();
             }
         }
 
-        public List<SurchargeData> GetSurchargeData(int? FYAYID, int? surchargedataId, int? entitycategorytypeid)
+        public List<SurchargeData> GetSurchargeData(int? FYAYID, int? surchargedataId
+            , int? entitycategorytypeid)
         {
             try
             {
                 Log.Info("Started call to SurchargeData");
-                Log.Info("parameter values" + JsonConvert.SerializeObject(surchargedataId));
+                Log.Info("parameter values" + JsonConvert.SerializeObject(new
+                {
+                    FYAYID = FYAYID,
+                    surchargedataId = surchargedataId,
+                    entitycategorytypeid = entitycategorytypeid
+                }));
                 Command.CommandText = "SP_GET_SURCHARGEDATA_LIST";
                 Command.CommandType = CommandType.StoredProcedure;
                 Connection.Open();
@@ -610,11 +683,15 @@ namespace LS.DAL.Library
                         });
                     }
                 }
-                Log.Info("End call to SurchargeData:" + JsonConvert.SerializeObject(result));
+                Log.Info("End call to SurchargeData:" 
+                    + JsonConvert.SerializeObject(result));
                 return result;
             }
             catch (Exception ex)
             {
+                Log.Error("Error in GetSurchargeData. Error:"
+                       + JsonConvert.SerializeObject(ex));
+                LogError(ex);
                 throw;
             }
 
@@ -629,6 +706,10 @@ namespace LS.DAL.Library
             try
             {
                 Log.Info("Started call to GetDocumentCategoryMaster");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(new
+                {
+                    IsActive = IsActive
+                }));
                 Command.CommandText = "SP_GET_DOCUMENT_CATEGORY_MASTER";
                 Command.CommandType = CommandType.StoredProcedure;
                 Command.Parameters.Clear();
@@ -652,14 +733,17 @@ namespace LS.DAL.Library
                         });
                     }
                 }
-                Log.Info("End call to GetDocumentCategoryMaster:" + JsonConvert.SerializeObject(result));
+                Log.Info("End call to GetDocumentCategoryMaster:" 
+                    + JsonConvert.SerializeObject(result));
                 return result;
             }
             catch (Exception ex)
             {
+                Log.Error("Error in GetDocumentCategoryMaster. Error:"
+                       + JsonConvert.SerializeObject(ex));
+                LogError(ex);
                 throw;
             }
-
             finally
             {
                 Connection.Close();
@@ -672,6 +756,11 @@ namespace LS.DAL.Library
             try
             {
                 Log.Info("Started call to GetSubDocumentCategoryMaster");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(new
+                {
+                    documentCategoryId = documentCategoryId,
+                    IsActive = IsActive
+                }));
                 Command.CommandText = "SP_GET_SUB_DOCUMENT_CATEGORY_MASTER";
                 Command.CommandType = CommandType.StoredProcedure;
                 Connection.Open();
@@ -700,11 +789,15 @@ namespace LS.DAL.Library
                     }
                 }
 
-                Log.Info("End call to GetSubDocumentCategoryMaster:" + JsonConvert.SerializeObject(result));
+                Log.Info("End call to GetSubDocumentCategoryMaster:"
+                    + JsonConvert.SerializeObject(result));
                 return result;
             }
             catch (Exception ex)
             {
+                Log.Error("Error in GetSubDocumentCategoryMaster. Error:"
+                       + JsonConvert.SerializeObject(ex));
+                LogError(ex);
                 throw;
             }
 
@@ -720,7 +813,8 @@ namespace LS.DAL.Library
             try
             {
                 Log.Info("Started call to InsertUpdateSubDocumentCategoryMaster");
-                Log.Info("parameter values" + JsonConvert.SerializeObject(objSubDocumentCategoryMaster));
+                Log.Info("parameter values" 
+                    + JsonConvert.SerializeObject(objSubDocumentCategoryMaster));
                 Command.CommandText = "SP_SUB_DOCUMENT_CATEGORY_MANAGER";
                 Command.CommandType = CommandType.StoredProcedure;
                 Command.Parameters.Clear();
@@ -751,12 +845,15 @@ namespace LS.DAL.Library
                         };
                     }
                 }
-                Log.Info("End call to InsertUpdateSubDocumentCategoryMaster");
-
+                Log.Info("End call to InsertUpdateSubDocumentCategoryMaster. Result:"
+                    + JsonConvert.SerializeObject(result));
                 return result;
             }
             catch (Exception ex)
             {
+                Log.Error("Error in InsertUpdateSubDocumentCategoryMaster. Error:"
+                       + JsonConvert.SerializeObject(ex));
+                LogError(ex);
                 throw;
             }
             finally
