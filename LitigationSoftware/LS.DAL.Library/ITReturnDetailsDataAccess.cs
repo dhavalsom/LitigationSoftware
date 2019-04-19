@@ -18,7 +18,11 @@ namespace LS.DAL.Library
             try
             {
                 Log.Info("Started call to InsertorUpdateITReturnDetails");
-                Log.Info("parameter values" + JsonConvert.SerializeObject(itReturnDetails));
+                Log.Info("parameter values" + JsonConvert.SerializeObject(new
+                {
+                    itReturnDetails = itReturnDetails,
+                    operation = operation
+                }));
                 Command.CommandText = "SP_ITRETURNDETAILS_MANAGER";
                 Command.CommandType = CommandType.StoredProcedure;
                 Command.Parameters.Clear();
@@ -56,12 +60,15 @@ namespace LS.DAL.Library
                         };
                     }
                 }
-                Log.Info("End call to InsertorUpdateITReturnDetails");
-
+                Log.Info("End call to InsertorUpdateITReturnDetails. Result:"
+                    + JsonConvert.SerializeObject(result));
                 return result;
             }
             catch (Exception ex)
             {
+                Log.Error("Error in InsertorUpdateITReturnDetails. Error:" 
+                    + JsonConvert.SerializeObject(ex));
+                LogError(ex);
                 throw;
             }
             finally

@@ -619,11 +619,12 @@ namespace LSWebApp.Controllers
                 },
                 ITHeadDocumentsUploaderModel = new ITHeadDocumentsUploaderModel
                 (
-                        new List<ITReturnDocumentsDisplay>()
+                    new List<ITReturnDocumentsDisplay>()
                     , new ITHeadMaster()
                     , new ITReturnDetails()
                     , new List<DocumentCategoryMaster>()
                     , new List<SubDocumentCategoryMaster>()
+                    , false
                 )
         };
 
@@ -680,6 +681,7 @@ namespace LSWebApp.Controllers
                                             , model.ITReturnDetailsObject
                                             , documentCategories
                                             , subDocumentCategories
+                                            , false
                                         );
                                     foreach (var item in objITReturnDocumentsResponse.ITReturnDocumentsList
                                         .Where(itrd => itrd.PropertyName != null))
@@ -704,14 +706,14 @@ namespace LSWebApp.Controllers
                                                 model.ITHeadDocumentsUploaderModels.Add(itHead.PropertyName
                                                     , new ITHeadDocumentsUploaderModel(model.ITReturnDocumentList[itHead.PropertyName]
                                                     , itHead, model.ITReturnDetailsObject, documentCategories
-                                                    , subDocumentCategories));
+                                                    , subDocumentCategories, false));
                                             }
                                             else
                                             {
                                                 model.ITHeadDocumentsUploaderModels.Add(itHead.PropertyName
                                                     , new ITHeadDocumentsUploaderModel(new List<ITReturnDocumentsDisplay>()
                                                     , itHead, model.ITReturnDetailsObject, documentCategories
-                                                    , subDocumentCategories));
+                                                    , subDocumentCategories, false));
                                             }
                                         }
                                     }
@@ -990,8 +992,37 @@ namespace LSWebApp.Controllers
                         extraObject.ITSectionDescription = "";
                         itrdetail.ITReturnDetailsListObject.Add(extraObject);
                     }
+
+                    Res = await client.GetAsync("api/MasterAPI/GetDocumentCategoryMaster?IsActive=true");
+                    var documentCategories = JsonConvert.DeserializeObject<List<DocumentCategoryMaster>>(Res.Content.ReadAsStringAsync().Result);
+                    var subDocumentCategories = new List<SubDocumentCategoryMaster>();
+                    if (documentCategories != null
+                        && documentCategories.Any())
+                    {
+                        Res = await client.GetAsync("api/MasterAPI/GetSubDocumentCategoryMaster?IsActive=true&documentCategoryId="
+                            + documentCategories.First().Id);
+                       subDocumentCategories = JsonConvert.DeserializeObject<List<SubDocumentCategoryMaster>>(Res.Content.ReadAsStringAsync().Result);
+                    }
                     foreach (var itReturn in itrdetail.ITReturnDetailsListObject)
                     {
+                        Res = await client.GetAsync("api/TaxReturnAPI/GetITReturnDocumentsList?companyId=&fyayId=&itReturnDetailsId="
+                                    + itReturn.Id + "&itHeadId=&itReturnDocumentId=&documentCategoryId=&subDocumentCategoryId=");
+                        if (Res.IsSuccessStatusCode)
+                        {
+                            var objITReturnDocumentsResponse = JsonConvert.DeserializeObject<ITReturnDocumentsResponse>
+                                (Res.Content.ReadAsStringAsync().Result);
+                            itrdetail.ITHeadDocumentsUploaderModels.Add(new ITHeadDocumentsUploaderModel
+                                (
+                                    objITReturnDocumentsResponse.ITReturnDocumentsList
+                                    .Where(itrd => !itrd.ITHeadId.HasValue)
+                                    .ToList<ITReturnDocumentsDisplay>()
+                                    , null
+                                    , itReturn
+                                    , documentCategories
+                                    , subDocumentCategories
+                                    , true
+                                ));
+                        }
                         itReturn.Extensions = new List<ITReturnDetailsExtension>();
                         Res = await client.GetAsync("api/TaxReturnAPI/GetExistingITReturnDetailsExtension?itreturnid=" + itReturn.Id);
                         if (Res.IsSuccessStatusCode)

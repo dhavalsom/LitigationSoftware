@@ -17,6 +17,7 @@ namespace LSWebApp.Models
         public List<SPIncomeDetails> SelfAssessmentList { get; set; }
         public List<SPIncomeDetails> RegularAssessmentList { get; set; }
         public List<BusinessLossDetails> BusinessLossDetailsList { get; set; }
+        public List<ITHeadDocumentsUploaderModel> ITHeadDocumentsUploaderModels { get; set; }
         #endregion
 
         #region Constructors
@@ -37,7 +38,7 @@ namespace LSWebApp.Models
                 "DeductChapterVIA",
                 "ProfitUS115JB"                
             };
-
+            ITHeadDocumentsUploaderModels = new List<ITHeadDocumentsUploaderModel>();
             ItemsWithAmounts_TaxCalc = new List<string>
             {
                 "AdvanceTax1installment",

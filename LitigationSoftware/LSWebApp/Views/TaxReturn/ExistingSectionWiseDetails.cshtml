@@ -17,19 +17,31 @@
         </tr>
         <tr>
             <th>Section</th>
-            @foreach (var itsectiondetail in Model.ITReturnDetailsListObject)
+            @foreach (var itReturnDetail in Model.ITReturnDetailsListObject)
             {
                 <th align="center">
-                    @if (!string.IsNullOrEmpty(itsectiondetail.ITSectionDescription))
+                    @if (!string.IsNullOrEmpty(itReturnDetail.ITSectionDescription))
                     {
-                        @Html.ActionLink(@itsectiondetail.ITSectionDescription
+                        @Html.ActionLink(@itReturnDetail.ITSectionDescription
                         , "LoadITReturnDetails", "TaxReturn"
                         , new
                         {
                             fyayId = Model.FYAYId,
-                            itSectionId = @itsectiondetail.ITSectionID,
-                            itSectionCategoryId = @itsectiondetail.ITSectionCategoryID
+                            itSectionId = @itReturnDetail.ITSectionID,
+                            itSectionCategoryId = @itReturnDetail.ITSectionCategoryID
                         }, null)
+
+                        <a href="#myModal_@(itReturnDetail.Id.ToString())" role="button" class="btn" data-toggle="modal">
+                            <img src="~/images/upload.png"
+                                 class="imgITHeadDocumentsUploader"
+                                 title="click to upload the documents"
+                                 style="width:20px;height:20px;" />
+                        </a>
+
+                        @Html.Partial("_ITHeadDocumentsUploader"
+                        , Model.ITHeadDocumentsUploaderModels
+                        .Where(ithd => ithd.ObjITReturnDetails.Id == itReturnDetail.Id)
+                        .FirstOrDefault())
                     }
                 </th>
             }
