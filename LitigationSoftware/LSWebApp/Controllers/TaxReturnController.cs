@@ -205,7 +205,7 @@ namespace LSWebApp.Controllers
                                 itrdetails.ITReturnDetailsObject = JsonConvert.DeserializeObject<ITReturnDetailsListResponse>
                                     (Res.Content.ReadAsStringAsync().Result).ITReturnDetailsListObject.First<ITReturnDetails>();
                                 Res = await client.GetAsync("api/TaxReturnAPI/GetITReturnDocumentsList?companyId=&fyayId=&itReturnDetailsId="
-                                    + itrdetails.ITReturnDetailsObject.Id + "&itHeadId=&itReturnDocumentId=");
+                                    + itrdetails.ITReturnDetailsObject.Id + "&itHeadId=&itReturnDocumentId=&itSectionId=&itSectionCategoryId=");
                                 if (Res.IsSuccessStatusCode)
                                 {
                                     var objITReturnDocumentsResponse = JsonConvert.DeserializeObject<ITReturnDocumentsResponse>
@@ -666,7 +666,7 @@ namespace LSWebApp.Controllers
                                 model.ITReturnDetailsObject = response.ITReturnDetailsListObject.First();
                                 Session["CurrentBusinessLossDetails"] = model.ITReturnDetailsObject;
                                 Res = await client.GetAsync("api/TaxReturnAPI/GetITReturnDocumentsList?companyId=&fyayId=&itReturnDetailsId="
-                                    + model.ITReturnDetailsObject.Id + "&itHeadId=&itReturnDocumentId=&documentCategoryId=&subDocumentCategoryId=");
+                                    + model.ITReturnDetailsObject.Id + "&itHeadId=&itReturnDocumentId=&documentCategoryId=&subDocumentCategoryId=&itSectionId=&itSectionCategoryId=");
                                 if (Res.IsSuccessStatusCode)
                                 {
                                     var objITReturnDocumentsResponse = JsonConvert.DeserializeObject<ITReturnDocumentsResponse>
@@ -1006,7 +1006,7 @@ namespace LSWebApp.Controllers
                     foreach (var itReturn in itrdetail.ITReturnDetailsListObject)
                     {
                         Res = await client.GetAsync("api/TaxReturnAPI/GetITReturnDocumentsList?companyId=&fyayId=&itReturnDetailsId="
-                                    + itReturn.Id + "&itHeadId=&itReturnDocumentId=&documentCategoryId=&subDocumentCategoryId=");
+                                    + itReturn.Id + "&itHeadId=&itReturnDocumentId=&documentCategoryId=&subDocumentCategoryId=&itSectionId=&itSectionCategoryId=");
                         if (Res.IsSuccessStatusCode)
                         {
                             var objITReturnDocumentsResponse = JsonConvert.DeserializeObject<ITReturnDocumentsResponse>
@@ -1640,6 +1640,11 @@ namespace LSWebApp.Controllers
                 model.ITHeadList = JsonConvert.DeserializeObject<List<ITHeadMaster>>(Res.Content.ReadAsStringAsync().Result);
                 Res = await client.GetAsync("api/MasterAPI/GetDocumentCategoryMaster?IsActive=true");
                 model.DocumentCategoryList = JsonConvert.DeserializeObject<List<DocumentCategoryMaster>>(Res.Content.ReadAsStringAsync().Result);
+                Res = await client.GetAsync("api/MasterAPI/GetITSectionCategoryList");
+                model.ITSectionCategories = JsonConvert.DeserializeObject<List<ITSectionCategory>>
+                    (Res.Content.ReadAsStringAsync().Result)
+                    .OrderBy(its => its.Id).ToList<ITSectionCategory>();
+                model.ITSectionList = new List<ITSection>();
             }
 
             return View("ITReturnDocuments", model);
@@ -1648,7 +1653,8 @@ namespace LSWebApp.Controllers
         [HttpGet]
         public async Task<ActionResult> GetITReturnDocumentList( int? fyayId
             , int? itReturnDetailsId, int? itHeadId, int? itReturnDocumentId
-            , int? documentCategoryId, int? subDocumentCategoryId)
+            , int? documentCategoryId, int? subDocumentCategoryId
+            , int? itSectionId, int? itSectionCategoryId)
         {
             var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
             if (selectedCompany == null)
@@ -1663,7 +1669,9 @@ namespace LSWebApp.Controllers
                 ITReturnDetailsId = itReturnDetailsId,
                 ITReturnDocumentId = itReturnDocumentId,
                 DocumentCategoryId = documentCategoryId,
-                SubDocumentCategoryId = subDocumentCategoryId
+                SubDocumentCategoryId = subDocumentCategoryId,
+                ITSectionId = itSectionId,
+                ITSectionCategoryId = itSectionCategoryId
             };
             using (var client = new HttpClient())
             {
@@ -1676,7 +1684,9 @@ namespace LSWebApp.Controllers
                      + "&itHeadId=" + itHeadId
                      + "&itReturnDocumentId=" + itReturnDocumentId
                      + "&documentCategoryId=" + documentCategoryId
-                     + "&subDocumentCategoryId=" + subDocumentCategoryId);
+                     + "&subDocumentCategoryId=" + subDocumentCategoryId
+                     + "&itSectionId=" + itSectionId
+                     + "&itSectionCategoryId=" + itSectionCategoryId);
                 model.ITReturnDocumentsList = (JsonConvert.DeserializeObject<ITReturnDocumentsResponse>(Res.Content.ReadAsStringAsync().Result)).ITReturnDocumentsList;
             }
 

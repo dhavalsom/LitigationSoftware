@@ -15,7 +15,8 @@ namespace LS.BL.Interface
             , string operation);
         ITReturnDocumentsResponse GetITReturnDocumentsList(int? companyId,
             int? fyayId, int? itReturnDetailsId, int? itHeadId, int? itReturnDocumentId,
-            int? documentCategoryId, int? subDocumentCategoryId);
+            int? documentCategoryId, int? subDocumentCategoryId,
+            int? itSectionId, int? itSectionCategoryId);
 
         ITReturnDetailsListResponse GetLitigationAndSimulation(int companyId);
         LAndSCommentsResponse GetLAndSCommentList(int? companyId, int? itSubHeadId);

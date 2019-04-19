@@ -8,7 +8,7 @@
     <table>
         <tr>
             <td>
-                Select Financial Year:
+                Financial Year:
             </td>
             <td>
                 @Html.HiddenFor(m=>m.CompanyName, Model.CompanyName)
@@ -16,11 +16,40 @@
                 @Html.HiddenFor(m => m.FinancialYear, Model.FinancialYear)
                 @Html.DropDownListFor(m => m.FYAYId
                 , new SelectList(Model.FYAYList, "Id", "FinancialYear", Model.FYAYId)
+                , new { @name = "FYAYId", @id = "FYAYId", @class = "ddFYAYITRD", @style = "width:200px" })
+            </td>
+            <td>
+                Section Category:
+            </td>
+            <td>
+                @Html.DropDownListFor(m => m.ITSectionCategories
+                , new SelectList(Model.ITSectionCategories, "Id", "Description", Model.FYAYId)
                 , "All"
-                , new { @name = "FYAYId", @id = "FYAYId", @class = "ddFYAYITRD", @style = "width:400px" })
+                , new
+                {
+                    @name = "ITSectionCategories",
+                    @id = "ITSectionCategories",
+                    @class = "ddITSectionCategories",
+                    @style = "width:200px"
+                })
+            </td>
+            <td>
+                IT Section:
+            </td>
+            <td>
+                @Html.DropDownListFor(m => m.ITSectionList
+                , new SelectList(Model.ITSectionList, "Id", "Description", Model.FYAYId)
+                , "All"
+                , new
+                {
+                    @name = "ITSectionList",
+                    @id = "ITSectionList",
+                    @class = "ddITSectionList",
+                    @style = "width:200px"
+                })
             </td>
         </tr>
-        <tr style="height:5px;"></tr>
+        
         <tr>
             <td>
                 Document Category:
@@ -30,11 +59,8 @@
                 , new SelectList(Model.DocumentCategoryList, "Id", "Description", Model.DocumentCategoryId)
                 , "All"
                 , new { @name = "DocumentCategoryId", @id = "DocumentCategoryId"
-                , @class = "ddDocumentCategory", @style = "width:400px" })
+                , @class = "ddDocumentCategory", @style = "width:200px" })
             </td>
-        </tr>
-        <tr style="height:5px;"></tr>
-        <tr>
             <td>
                 Sub Category:
             </td>
@@ -47,10 +73,17 @@
                     @name = "SubDocumentCategoryId",
                     @id = "SubDocumentCategoryId",
                     @class = "ddSubDocumentCategory",
-                    @style = "width:400px"
-                })            
-            </td>               
-        </tr>            
+                    @style = "width:200px"
+                })
+            </td>   
+            <td colspan="2" style="text-align:right;">
+                <button type="button"
+                        class="btn btn-primary btn-sm search" id="btnsrch">
+                    Search
+                </button>
+            </td>   
+        </tr>
+        <tr style="height:5px;"></tr>
     </table>
     <br />
 
@@ -62,13 +95,38 @@
 {
     <script type="text/javascript">
         $(document).ready(function () { 
-            loadITReturnDetailDocuments();
-            $(".ddFYAYITRD").change(function () {
+            $(".search").click(function () {
                 loadITReturnDetailDocuments();
             });
+
+            $(".ddITSectionCategories").change(function () {
+                $('.ddITSectionList').html('');
+                var option = $('<option />');
+                option.attr('value', "").html("All");
+                $('.ddITSectionList').append(option);
+                $.ajax({
+                    url: '/getITSections?categoryId=' + $(this).find("option:selected").val(),
+                    error: function () {
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                       
+                        $(data).each(function () {
+                            var option = $('<option />');
+                            option.attr('value', this.Id).html(this.Description);
+                            $('.ddITSectionList').append(option);
+                        });
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    },
+                    type: 'GET'
+                });
+            });
+
             $(".ddDocumentCategory").change(function () {
                 var subDocumentCatObject = $(this).closest('table').find('.ddSubDocumentCategory');
-
+                subDocumentCatObject.html('');
+                subDocumentCatObject.append('<option>All</option>');
                 $.ajax({
                     url: '/getSubDocumentCategories?documentCategoryId='
                     + $(this).find("option:selected").val(),
@@ -76,23 +134,17 @@
                     },
                     dataType: 'json',
                     success: function (data) {
-                        subDocumentCatObject.html('');
-                        subDocumentCatObject.append('<option>All</option>');
                         $(data).each(function () {
                             var option = $('<option />');
                             option.attr('value', this.Id).html(this.Description);
                             subDocumentCatObject.append(option);
                         });
-                        loadITReturnDetailDocuments();
                     },
                     error: function (XMLHttpRequest, textStatus, errorThrown) {
                     },
                     type: 'GET'
                 });
-            });
-            $(".ddSubDocumentCategory").change(function () {
-                loadITReturnDetailDocuments();
-            });
+            });            
         }); 
 
         function deleteITReturnDetailsDocument(itReturnDocumentId, filePath) {
@@ -114,7 +166,9 @@
                 url: '/itreturndetaildocuments?fyayId=' + $(".ddFYAYITRD").val()
                 + '&itHeadId='
                 + '&documentCategoryId=' + $(".ddDocumentCategory").val()
-                + '&subDocumentCategoryId=' + $(".ddSubDocumentCategory").val(),
+                + '&subDocumentCategoryId=' + $(".ddSubDocumentCategory").val()
+                + '&itSectionId=' + $(".ddITSectionList").val()
+                + '&itSectionCategoryId=' + $(".ddITSectionCategories").val(),
                 error: function () {
                 },
                 dataType: 'html',

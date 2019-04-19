@@ -9,8 +9,9 @@
 </style>
 <table class="table table-hover">
     <thead>
-        <th>Company Name</th>
         <th>Financial Year</th>
+        <th>Section Category</th>
+        <th>IT Section</th>
         <th>Document Category</th>
         <th>Sub Category</th>
         <th>File Name</th>
@@ -20,11 +21,14 @@
     {
         <tr>
             <td class="tdBorder">
-                @document.CompanyName
-            </td>
-            <td class="tdBorder">
                 @document.FinancialYear
             </td>
+            <td class="tdBorder">
+                @document.SectionCategoryDescription
+            </td>
+            <td class="tdBorder">
+                @document.ITSectionDescription
+            </td>            
             <td class="tdBorder">
                 @document.DocumentCategoryName
             </td>
