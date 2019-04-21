@@ -72,12 +72,14 @@ namespace LSApi.Controllers
         // GET: api/TaxReturnAPI/GetITReturnDocumentsList
         public ITReturnDocumentsResponse GetITReturnDocumentsList(int? companyId,
             int? fyayId, int? itReturnDetailsId, int? itHeadId, int? itReturnDocumentId,
-            int? documentCategoryId, int? subDocumentCategoryId)
+            int? documentCategoryId, int? subDocumentCategoryId,
+            int? itSectionId, int? itSectionCategoryId)
         {
             var ItReturnObj = _Kernel.Get<IITReturnDetailsBL>();
             return ItReturnObj.GetITReturnDocumentsList(companyId, fyayId
                 , itReturnDetailsId, itHeadId, itReturnDocumentId
-                , documentCategoryId, subDocumentCategoryId);
+                , documentCategoryId, subDocumentCategoryId
+                , itSectionId, itSectionCategoryId);
         }
 
         // POST: api/InsertUpdateITReturnDocuments

@@ -1,16 +1,17 @@
 USE [LitigationApp]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_GET_IT_RETURN_DOCUMENT_LIST]    Script Date: 2/24/2019 1:01:42 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_GET_IT_RETURN_DOCUMENT_LIST]    Script Date: 4/19/2019 4:56:27 PM ******/
 DROP PROCEDURE [dbo].[SP_GET_IT_RETURN_DOCUMENT_LIST]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_GET_IT_RETURN_DOCUMENT_LIST]    Script Date: 2/24/2019 1:01:42 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_GET_IT_RETURN_DOCUMENT_LIST]    Script Date: 4/19/2019 4:56:27 PM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 
@@ -22,7 +23,9 @@ CREATE PROCEDURE [dbo].[SP_GET_IT_RETURN_DOCUMENT_LIST]
 	@IT_HEAD_ID BIGINT = NULL,
 	@IT_RETURN_DOCUMENT_ID BIGINT = NULL,
 	@DOCUMENT_CATEGORY_ID BIGINT = NULL,
-	@SUB_DOCUMENT_CATEGORY_ID BIGINT = NULL
+	@SUB_DOCUMENT_CATEGORY_ID BIGINT = NULL,
+	@IT_SECTION_ID  BIGINT = NULL,
+	@IT_SECTION_CATEGORY_ID  BIGINT = NULL
 )
 AS
 
@@ -32,6 +35,10 @@ BEGIN
 
 SELECT ITRD.Id
 	, ITRD.ITReturnDetailsId
+	, ITSM.Id AS ITSectionId
+	, ITSM.Description AS ITSectionDescription
+	, ITSC.Id AS SectionCategoryId
+	, ITSC.CategoryDesc AS SectionCategoryDescription
 	, ITRD.ITHeadId
 	, ITRD.DocumentCategoryId
 	, DCM.Description DocumentCategoryName
@@ -54,6 +61,8 @@ SELECT ITRD.Id
 	, ITRD.ModifiedDate	
 	FROM [ITReturnDocuments] ITRD
 	INNER JOIN ITReturnDetails ITR on ITR.Id = ITRD.ITReturnDetailsId
+	INNER JOIN ITSectionMaster ITSM ON ITSM.Id = ITR.ITSectionID
+	INNER JOIN ITSectionCategory ITSC ON ITSC.Id = ITSM.SectionCategoryId
 	LEFT OUTER JOIN ITHeadMaster ITH ON ITH.Id = ITRD.ITHeadId
 	INNER JOIN CompanyMaster COMP ON COMP.Id = ITR.CompanyId
 	INNER JOIN FYAYMaster FYAY ON FYAY.Id = ITR.FYAYId
@@ -67,8 +76,11 @@ SELECT ITRD.Id
 	AND (@IT_RETURN_DOCUMENT_ID IS NULL OR ITRD.Id = @IT_RETURN_DOCUMENT_ID)
 	AND (@DOCUMENT_CATEGORY_ID IS NULL OR DCM.Id = @DOCUMENT_CATEGORY_ID)
 	AND (@SUB_DOCUMENT_CATEGORY_ID IS NULL OR SDCM.Id = @SUB_DOCUMENT_CATEGORY_ID)
+	AND (@IT_SECTION_ID IS NULL OR ITSM.Id = @IT_SECTION_ID)
+	AND (@IT_SECTION_CATEGORY_ID IS NULL OR ITSC.Id = @IT_SECTION_CATEGORY_ID)
 	ORDER BY  COMP.CompanyName, FYAY.FinancialYear, DCM.[Description], SDCM.[Description], ITRD.AddedDate DESC
 END
+
 
 
 

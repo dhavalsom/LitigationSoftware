@@ -18,7 +18,11 @@ namespace LS.DAL.Library
             try
             {
                 Log.Info("Started call to InsertorUpdateITReturnDetails");
-                Log.Info("parameter values" + JsonConvert.SerializeObject(itReturnDetails));
+                Log.Info("parameter values" + JsonConvert.SerializeObject(new
+                {
+                    itReturnDetails = itReturnDetails,
+                    operation = operation
+                }));
                 Command.CommandText = "SP_ITRETURNDETAILS_MANAGER";
                 Command.CommandType = CommandType.StoredProcedure;
                 Command.Parameters.Clear();
@@ -56,12 +60,15 @@ namespace LS.DAL.Library
                         };
                     }
                 }
-                Log.Info("End call to InsertorUpdateITReturnDetails");
-
+                Log.Info("End call to InsertorUpdateITReturnDetails. Result:"
+                    + JsonConvert.SerializeObject(result));
                 return result;
             }
             catch (Exception ex)
             {
+                Log.Error("Error in InsertorUpdateITReturnDetails. Error:" 
+                    + JsonConvert.SerializeObject(ex));
+                LogError(ex);
                 throw;
             }
             finally
@@ -403,7 +410,8 @@ namespace LS.DAL.Library
 
         public ITReturnDocumentsResponse GetITReturnDocumentsList(int? companyId,
             int? fyayId, int? itReturnDetailsId, int? itHeadId, int? itReturnDocumentId,
-            int? documentCategoryId, int? subDocumentCategoryId)
+            int? documentCategoryId, int? subDocumentCategoryId,
+            int? itSectionId, int? itSectionCategoryId)
         {
             try
             {
@@ -415,6 +423,8 @@ namespace LS.DAL.Library
                     itReturnDetailsId = itReturnDetailsId,
                     itHeadId = itHeadId,
                     itReturnDocumentId = itReturnDocumentId,
+                    itSectionId = itSectionId,
+                    itSectionCategoryId = itSectionCategoryId
                 }));
                 Command.CommandText = "SP_GET_IT_RETURN_DOCUMENT_LIST";
                 Command.CommandType = CommandType.StoredProcedure;
@@ -446,6 +456,14 @@ namespace LS.DAL.Library
                 {
                     Command.Parameters.AddWithValue("@SUB_DOCUMENT_CATEGORY_ID", subDocumentCategoryId);
                 }
+                if (itSectionId.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@IT_SECTION_ID", itSectionId);
+                }
+                if (itSectionCategoryId.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@IT_SECTION_CATEGORY_ID", itSectionCategoryId);
+                }
                 Connection.Open();
 
                 SqlDataReader reader = Command.ExecuteReader();
@@ -474,6 +492,10 @@ namespace LS.DAL.Library
                             FYAYId = Convert.ToInt32(reader["FYAYId"].ToString()),
                             FinancialYear = reader["FinancialYear"] != DBNull.Value ? reader["FinancialYear"].ToString() : null,
                             AssessmentYear = reader["AssessmentYear"] != DBNull.Value ? reader["AssessmentYear"].ToString() : null,
+                            ITSectionId = Convert.ToInt32(reader["ITSectionId"].ToString()),
+                            ITSectionDescription = reader["ITSectionDescription"] != DBNull.Value ? reader["ITSectionDescription"].ToString() : null,
+                            SectionCategoryId = Convert.ToInt32(reader["SectionCategoryId"].ToString()),
+                            SectionCategoryDescription = reader["SectionCategoryDescription"] != DBNull.Value ? reader["SectionCategoryDescription"].ToString() : null,
                             Active = Convert.ToBoolean(reader["Active"].ToString()),                            
                         });
                     }

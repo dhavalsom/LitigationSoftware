@@ -1,6 +1,6 @@
 ﻿@model  LSWebApp.Models.ITHeadDocumentsUploaderModel
 @using (Html.BeginForm("InsertUpdateITReturnDocuments", "TaxReturn", FormMethod.Post
-                                        , new { enctype = "multipart/form-data" }))
+                                                    , new { enctype = "multipart/form-data" }))
 {
     <div style="margin-left:5px;">
         @Html.HiddenFor(m => m.ObjITReturnDocuments.ITHeadId, Model.ObjITReturnDocuments.ITHeadId)
@@ -25,7 +25,9 @@
                 </a>
             </div>
         }
-        <div class="modal" id="myModal_@(Model.ITHeadObject != null ? Model.ITHeadObject.Id.ToString() : "0")">
+        <div class="modal" id="myModal_@(Model.ITHeadObject != null 
+            ? Model.ITHeadObject.Id.ToString() 
+            : (Model.IsReadonly ? Model.ObjITReturnDetails.Id.ToString() : "0"))">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -34,7 +36,7 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body doc-uploader-model">
+                    <div class="modal-body doc-uploader-model custom-sub-doc-category">
                         <table>
                             <tr>
                                 <td>
@@ -57,40 +59,45 @@
                                         , "Id", "Description", Model.ObjITReturnDocuments.SubDocumentCategoryId)
                                         , "Please Select"
                                         , new { @class = "ddSubDocumentCategory", @style = "width:150px;" })
-
-                                    <img src="~/images/plus.png"
-                                         class="imgSubDocCategory"
-                                         style="width:20px;height:20px;"
-                                         title="Click to add sub head" />
+                                    @if (!Model.IsReadonly)
+                                    {
+                                        <img src="~/images/plus.png"
+                                             class="imgSubDocCategory"
+                                             style="width:20px;height:20px;"
+                                             title="Click to add sub head" />
+                                    }
                                 </td>
                             </tr>
-                            <tr class="tr-custom-add">
-                                <td>
-                                    New Sub Category:
-                                </td>
-                                <td>
-                                    <input type="text"
-                                           style="width:150px;"
-                                           class="txtSubDocCategory" />
-                                    <img src="~/images/save.png"
-                                         class="imgSubDocCategorySave"
-                                         style="width:20px;height:20px;" />
-                                    <img src="~/images/close.png"
-                                         class="imgSubDocCategoryClose"
-                                         style="width:20px;height:20px;" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Choose File:
-                                </td>
-                                <td>
-                                    @Html.TextBoxFor(model => model.ITHeadFile, new { type = "file", @class = "ITHeadFile" })
-                                </td>
-                            </tr>
+                            @if (!Model.IsReadonly)
+                            {
+                                <tr class="tr-custom-add">
+                                    <td>
+                                        New Sub Category:
+                                    </td>
+                                    <td>
+                                        <input type="text"
+                                               style="width:150px;"
+                                               class="txtSubDocCategory" />
+                                        <img src="~/images/save.png"
+                                             class="imgSubDocCategorySave"
+                                             style="width:20px;height:20px;" />
+                                        <img src="~/images/close.png"
+                                             class="imgSubDocCategoryClose"
+                                             style="width:20px;height:20px;" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Choose File:
+                                    </td>
+                                    <td>
+                                        @Html.TextBoxFor(model => model.ITHeadFile, new { type = "file", @class = "ITHeadFile" })
+                                    </td>
+                                </tr>
+                            }
                         </table>
                         <br />
-                        <table class="table table-hover tblITRetDetails">
+                        <table class="table table-hover tblITReturnDocuments">
                             <thead>
                                 <tr>
                                     <th>Document Category</th>
@@ -102,11 +109,12 @@
                             <tbody>
                                 @foreach (var document in Model.DocumentList)
                                 {
-                                    <tr>
+                                    <tr class="trDocument">
                                         <td>
                                             @document.DocumentCategoryName
                                         </td>
                                         <td>
+                                            @Html.Hidden("hdSubCategoryId", document.SubDocumentCategoryId, new { @class = "hdSubCategoryId" })
                                             @document.SubDocumentCategoryName
                                         </td>
                                         <td>
@@ -118,11 +126,14 @@
                                                 View
                                             </a>
                                             &nbsp;
-                                            <a href="#"
-                                               title="click to delete the document"
-                                               onclick="deleteITReturnDetailsDocument(@(document.Id), '@(document.FilePath)')">
-                                                Delete
-                                            </a>
+                                            @if (!Model.IsReadonly)
+                                            {
+                                                <a href="#"
+                                                   title="click to delete the document"
+                                                   onclick="deleteITReturnDetailsDocument(@(document.Id), '@(document.FilePath)')">
+                                                    Delete
+                                                </a>
+                                            }
                                         </td>
                                     </tr>
                                 }
@@ -130,19 +141,22 @@
                         </table>
                     </div>
                     <div class="modal-footer">
-                        @if (Model.ITHeadObject != null)
+                        @if (!Model.IsReadonly)
                         {
-                            <button type="submit" class="btn btn-primary btn-sm">
-                                Upload File
-                            </button>
-                        }
-                        else
-                        {
-                            <button type="button"
-                                 class="btn btn-primary btn-sm btn-submit-doc-upload">
-                                Upload File
-                            </button>
-                            
+                            if (Model.ITHeadObject != null)
+                            {
+                                <button type="submit" class="btn btn-primary btn-sm">
+                                    Upload File
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="button"
+                                        class="btn btn-primary btn-sm btn-submit-doc-upload">
+                                    Upload File
+                                </button>
+
+                            }
                         }
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>

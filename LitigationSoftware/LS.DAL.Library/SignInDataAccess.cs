@@ -5,10 +5,9 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 
-
 namespace LS.DAL.Library
 {
-    public class  SignInDataAccess : DataAccessBase, ISignInDataAccess
+    public class SignInDataAccess : DataAccessBase, ISignInDataAccess
     {
         public UserLogin InitiateSignInProcess(UserLogin user)
         {
@@ -41,12 +40,12 @@ namespace LS.DAL.Library
                             EmailAddress = resultRow["EmailAddress"] != DBNull.Value ? resultRow["EmailAddress"].ToString() : null,
                             PhoneNumber = resultRow["PhoneNumber"] != DBNull.Value ? resultRow["PhoneNumber"].ToString() : null,
                             Password = resultRow["Password"] != DBNull.Value ? resultRow["Password"].ToString() : null
-                        };                        
+                        };
                     }
                 }
-                Log.Info("End call to InitiateSignInProcess. Result:" +JsonConvert.SerializeObject(result));
+                Log.Info("End call to InitiateSignInProcess. Result:"
+                    + JsonConvert.SerializeObject(result));
                 return result;
-
             }
             catch (Exception ex)
             {
