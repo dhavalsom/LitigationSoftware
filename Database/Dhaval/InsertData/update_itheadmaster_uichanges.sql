@@ -39,9 +39,10 @@ INSERT INTO [LitigationApp].[dbo].[ITHeadMaster]
            ,[CanAddDocuments]
            ,[IsROI]
            ,[HasDate]
-           ,[IsSpecialIncomeEnabled])
+           ,[IsSpecialIncomeEnabled]
+		   ,ExcelSrNo)
      VALUES
-           ('Current Year Refund adjusted against other years','OtherRefundAdjusted',0,1,1,getdate(),0,0,1,0)
+           ('Current Year Refund adjusted against other years','OtherRefundAdjusted',0,1,1,getdate(),0,0,1,0,34)
                                
                 
                 

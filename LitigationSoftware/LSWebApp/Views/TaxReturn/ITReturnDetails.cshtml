@@ -176,6 +176,16 @@
                 success: function (data) {
                     $("#sectionDiv").html(data);
 
+                    $('input[type=radio]').change(function (e) {
+                        if ($(this).val() == "True") {
+                            //alert('selected yes');
+                            this.form.submit();
+                        }
+                        else {
+                            //alert('selected no');
+                        }
+                    });
+
                     $('.form_datetime').datetimepicker({
                         weekStart: 1,
                         todayBtn: 1,

@@ -557,7 +557,7 @@ namespace LSWebApp.Controllers
                 itrdetails.FYAYId = currentITReturnDetails.FYAYID;
                 itrdetails.ITSectionCategoryId = currentITReturnDetails.ITSectionCategoryID;
                 itrdetails.ITSectionId = currentITReturnDetails.ITSectionID;
-                Session["CurrentITReturnDetails"] = null;
+               // Session["CurrentITReturnDetails"] = null;
             }
             using (var client = new HttpClient())
             {
@@ -1488,6 +1488,7 @@ namespace LSWebApp.Controllers
                     if (itReturn.ITReturnDetailsObject.Broughtforwardlosses.HasValue
                         && itReturn.ITReturnDetailsObject.Broughtforwardlosses.Value)
                     {
+                        Session["CurrentITReturnDetails"] = itReturn.ITReturnDetailsObject;
                         return RedirectToAction("BusinessLossDetails");
                     }
                     else
@@ -2111,13 +2112,15 @@ namespace LSWebApp.Controllers
                 if (Res.IsSuccessStatusCode)
                 {
                     result = JsonConvert.DeserializeObject<BusinessLossDetailsResponse>(Res.Content.ReadAsStringAsync().Result);
+                    return RedirectToAction("ITReturnDetails");
                 }
                 else
                 {
                     result.IsSuccess = false;
                     result.Message = Res.Content.ReadAsStringAsync().Result;
+                    return RedirectToAction("BusinessLossDetails");
                 }
-                return RedirectToAction("BusinessLossDetails");
+                
             }
         }
 
