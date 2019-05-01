@@ -24,5 +24,6 @@ namespace LS.DAL.Interface
             , bool? IsActive);
         SubDocumentCategoryMasterResponse InsertUpdateSubDocumentCategoryMaster
             (SubDocumentCategoryMaster objSubDocumentCategoryMaster);
+        List<Implementor> GetImplementors(int? implementorId, bool? isActive);
     }
 }

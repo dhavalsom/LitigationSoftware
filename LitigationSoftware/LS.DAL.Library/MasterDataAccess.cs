@@ -152,7 +152,7 @@ namespace LS.DAL.Library
                             FinancialYear = reader["FinancialYear"] != DBNull.Value ? reader["FinancialYear"].ToString() : null,
                             AssessmentYear = reader["AssessmentYear"] != DBNull.Value ? reader["AssessmentYear"].ToString() : null,
                             IsDefault = Convert.ToBoolean(reader["IsDefault"].ToString()),
-                            Active = Convert.ToBoolean(reader["IsDefault"].ToString()),
+                            Active = Convert.ToBoolean(reader["Active"].ToString()),
                             Id = Convert.ToInt32(reader["ID"].ToString())
                         });
                     }
@@ -852,6 +852,59 @@ namespace LS.DAL.Library
             catch (Exception ex)
             {
                 Log.Error("Error in InsertUpdateSubDocumentCategoryMaster. Error:"
+                       + JsonConvert.SerializeObject(ex));
+                LogError(ex);
+                throw;
+            }
+            finally
+            {
+                Connection.Close();
+            }
+        }
+
+        public List<Implementor> GetImplementors(int? implementorId, bool? isActive)
+        {
+            try
+            {
+                Log.Info("Started call to GetImplementors");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(new
+                {
+                    implementorId = implementorId,
+                    isActive = isActive
+                }));
+                Command.CommandText = "SP_GET_IMPLEMENTORS";
+                Command.CommandType = CommandType.StoredProcedure;
+                if (implementorId.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@ImplementorId", implementorId.Value);
+                }
+                if (isActive.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@ACTIVE", isActive.Value);
+                }
+                Connection.Open();
+
+                SqlDataReader reader = Command.ExecuteReader();
+                List<Implementor> result = new List<Implementor>();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result.Add(new Implementor
+                        {
+                            Description = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : null,
+                            Active = Convert.ToBoolean(reader["Active"].ToString()),
+                            Id = Convert.ToInt32(reader["Id"].ToString())
+                        });
+                    }
+                }
+                Log.Info("End call to GetImplementors. Result:"
+                    + JsonConvert.SerializeObject(result));
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error in GetImplementors. Error:"
                        + JsonConvert.SerializeObject(ex));
                 LogError(ex);
                 throw;

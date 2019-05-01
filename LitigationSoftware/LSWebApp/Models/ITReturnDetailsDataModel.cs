@@ -19,6 +19,7 @@ namespace LSWebApp.Models
         public List<ITReturnDetailsExtension> ExtensionList { get; set; }
         public List<string> ItemsWithAmounts { get; set; }
         public ITHeadDocumentsUploaderModel ITHeadDocumentsUploaderModel { get; set; }
+        public List<Implementor> ImplementorList { get; set; }
         #endregion
 
         #region Constructors
@@ -57,7 +58,10 @@ namespace LSWebApp.Models
                 "RefundAdjusted",
                 "RegularAssessment",
                 "RefundAlreadyReceived",
-                "OtherRefundAdjusted"
+                "OtherRefundAdjusted",
+                "TaxProvisions",
+                "TaxAssets",
+                "ContingentLiabilities"
             };
         }
         #endregion

@@ -25,5 +25,6 @@ namespace LS.BL.Interface
             , bool? IsActive);
         SubDocumentCategoryMasterResponse InsertUpdateSubDocumentCategoryMaster
             (SubDocumentCategoryMaster objSubDocumentCategoryMaster);
+        List<Implementor> GetImplementors(int? implementorId, bool? isActive);
     }
 }

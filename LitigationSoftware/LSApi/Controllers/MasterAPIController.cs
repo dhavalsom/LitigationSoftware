@@ -79,8 +79,7 @@ namespace LSApi.Controllers
             var CompResult = CompObj.GetITSectionCategory();
             return CompResult;
         }
-
-
+        
         // POST: api/MasterAPI/InsertUpdateITSection
         [HttpPost]
         [Route("InsertUpdateITSection")]
@@ -187,5 +186,14 @@ namespace LSApi.Controllers
             return objSubDocumentCategoryMasterResponse;
         }
 
+        [HttpGet]
+        [Route("GetImplementorList")]
+        // GET: api/MasterAPI/GetImplementorList
+        public List<Implementor> GetImplementors(int? implementorId, bool? isActive)
+        {
+            var CompObj = _Kernel.Get<IMaster>();
+            var result = CompObj.GetImplementors(implementorId, isActive);
+            return result;
+        }
     }
 }

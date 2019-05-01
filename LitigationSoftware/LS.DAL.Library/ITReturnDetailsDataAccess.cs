@@ -284,6 +284,11 @@ namespace LS.DAL.Library
                             MATTotalIncome = reader["MATTotalIncome"] != DBNull.Value ? Convert.ToDecimal(reader["MATTotalIncome"].ToString()) : 0,
                             MATEducationCess = reader["MATEducationCess"] != DBNull.Value ? Convert.ToDecimal(reader["MATEducationCess"].ToString()) : 0,
                             MATSurcharge = reader["MATSurcharge"] != DBNull.Value ? Convert.ToDecimal(reader["MATSurcharge"].ToString()) : 0,
+                            TaxProvisions = reader["TaxProvisions"] != DBNull.Value ? Convert.ToDecimal(reader["TaxProvisions"].ToString()) : 0,
+                            TaxAssets = reader["TaxAssets"] != DBNull.Value ? Convert.ToDecimal(reader["TaxAssets"].ToString()) : 0,
+                            ContingentLiabilities = reader["ContingentLiabilities"] != DBNull.Value ? Convert.ToDecimal(reader["ContingentLiabilities"].ToString()) : 0,
+                            ImplementorId = reader["ImplementorId"] != DBNull.Value ? Convert.ToInt32(reader["ImplementorId"].ToString()) : (int?)null,
+                            ImplementorDescription = reader["ImplementorDescription"] != DBNull.Value ? reader["ImplementorDescription"].ToString().ToString() : string.Empty,
                         });
                     }
                 }

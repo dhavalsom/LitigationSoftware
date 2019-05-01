@@ -650,6 +650,10 @@ namespace LSWebApp.Controllers
                         subDocumentCategories = JsonConvert.DeserializeObject<List<SubDocumentCategoryMaster>>(Res.Content.ReadAsStringAsync().Result);
 
                     }
+
+                    Res = await client.GetAsync("api/MasterAPI/GetImplementorList?implementorId=&isActive=");
+                    model.ImplementorList = JsonConvert.DeserializeObject<List<Implementor>>(Res.Content.ReadAsStringAsync().Result);
+
                     if (itSectionId.HasValue)
                     {
                         Res = await client.GetAsync("api/TaxReturnAPI/GetExistingITReturnDetailsList?companyId=" 

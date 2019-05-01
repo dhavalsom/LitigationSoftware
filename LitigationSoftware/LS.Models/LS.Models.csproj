@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="BaseEntity.cs" />
     <Compile Include="DocumentCategoryMaster.cs" />
+    <Compile Include="Implementor.cs" />
     <Compile Include="RefundDetails.cs" />
     <Compile Include="SubDocumentCategoryMaster.cs" />
     <Compile Include="MATCreditDetails.cs" />

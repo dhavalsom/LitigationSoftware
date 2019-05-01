@@ -295,6 +295,22 @@ namespace LS.BL.Library
 
             }
         }
+
+        public List<Implementor> GetImplementors(int? implementorId, bool? isActive)
+        {
+            try
+            {
+                return this._masterDA.GetImplementors(implementorId, isActive);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+
+            }
+        }
         #endregion
 
         #region IDisposable

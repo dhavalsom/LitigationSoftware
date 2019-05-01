@@ -430,7 +430,31 @@
                     <div class="col-md-6">
                        @Html.Partial("_RefundDetailsList"
                         , Model.RefundDetailsListModels[Model.ITHead])
-                    </div>                    
+                    </div>
+                    break;
+                case "TaxProvisions":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.TaxProvisions
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.TaxProvisions)
+                        , new { @class = "numericOnly" })
+                    </div>
+                    <div class="input-group col-md-6"></div>
+                    break;
+                case "TaxAssets":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.TaxAssets
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.TaxAssets)
+                        , new { @class = "numericOnly" })
+                    </div>
+                    <div class="input-group col-md-6"></div>
+                    break;
+                case "ContingentLiabilities":
+                    <div class="col-md-6">
+                        @Html.TextBoxFor(m => m.ITReturnDetailsObject.ContingentLiabilities
+                        , string.Format("{0:f}", Model.ITReturnDetailsObject.ContingentLiabilities)
+                        , new { @class = "numericOnly" })
+                    </div>
+                    <div class="input-group col-md-6"></div>
                     break;
                 default:
                     break;
