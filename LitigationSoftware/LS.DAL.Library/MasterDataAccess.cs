@@ -914,6 +914,181 @@ namespace LS.DAL.Library
                 Connection.Close();
             }
         }
+
+        public CompetitorResponse InsertUpdateCompetitorMaster
+            (CompetitorMaster competitorMaster)
+        {
+            try
+            {
+                Log.Info("Started call to InsertUpdateCompetitorMaster");
+                Log.Info("parameter values"
+                    + JsonConvert.SerializeObject(competitorMaster));
+                Command.CommandText = "SP_COMPETITOR_MANAGER";
+                Command.CommandType = CommandType.StoredProcedure;
+                Command.Parameters.Clear();
+
+                Command.Parameters.AddWithValue("@COMPETITOR_XML"
+                    , GetXMLFromObject(competitorMaster));
+
+                if (competitorMaster.AddedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", competitorMaster.AddedBy.Value);
+                }
+                else if (competitorMaster.ModifiedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", competitorMaster.ModifiedBy.Value);
+                }
+                Connection.Open();
+                SqlDataReader reader = Command.ExecuteReader();
+
+                CompetitorResponse result = new CompetitorResponse();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result = new CompetitorResponse
+                        {
+                            Id = Convert.ToInt32(reader["Id"].ToString()),
+                            Message = reader["ReturnMessage"] != DBNull.Value ? reader["ReturnMessage"].ToString() : null,
+                            IsSuccess = Convert.ToBoolean(reader["Result"].ToString())
+                        };
+                    }
+                }
+                Log.Info("End call to InsertUpdateCompetitorMaster. Result:"
+                    + JsonConvert.SerializeObject(result));
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error in InsertUpdateCompetitorMaster. Error:"
+                       + JsonConvert.SerializeObject(ex));
+                LogError(ex);
+                throw;
+            }
+            finally
+            {
+                Connection.Close();
+            }
+        }
+
+        public CompetitorTaxRateResponse InsertUpdateCompetitorTaxRate
+            (CompetitorTaxRate competitorTaxRate)
+        {
+            try
+            {
+                Log.Info("Started call to InsertUpdateCompetitorTaxRate");
+                Log.Info("parameter values"
+                    + JsonConvert.SerializeObject(competitorTaxRate));
+                Command.CommandText = "SP_COMPETITOR_TAX_RATE_MANAGER";
+                Command.CommandType = CommandType.StoredProcedure;
+                Command.Parameters.Clear();
+
+                Command.Parameters.AddWithValue("@COMPETITOR_TAX_RATE_XML"
+                    , GetXMLFromObject(competitorTaxRate));
+
+                if (competitorTaxRate.AddedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", competitorTaxRate.AddedBy.Value);
+                }
+                else if (competitorTaxRate.ModifiedBy.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@USER_ID", competitorTaxRate.ModifiedBy.Value);
+                }
+                Connection.Open();
+                SqlDataReader reader = Command.ExecuteReader();
+
+                CompetitorTaxRateResponse result = new CompetitorTaxRateResponse();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result = new CompetitorTaxRateResponse
+                        {
+                            Id = Convert.ToInt32(reader["Id"].ToString()),
+                            Message = reader["ReturnMessage"] != DBNull.Value ? reader["ReturnMessage"].ToString() : null,
+                            IsSuccess = Convert.ToBoolean(reader["Result"].ToString())
+                        };
+                    }
+                }
+                Log.Info("End call to InsertUpdateCompetitorTaxRate. Result:"
+                    + JsonConvert.SerializeObject(result));
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error in InsertUpdateCompetitorTaxRate. Error:"
+                       + JsonConvert.SerializeObject(ex));
+                LogError(ex);
+                throw;
+            }
+            finally
+            {
+                Connection.Close();
+            }
+        }
+
+        public CompetitorTaxRateResponse GetCompetitorTaxRates
+            (int companyId, bool? insertDummyRecords, bool? isActive)
+        {
+            try
+            {
+                Log.Info("Started call to GetCompetitorTaxRates");
+                Log.Info("parameter values" + JsonConvert.SerializeObject(new
+                {
+                    companyId = companyId,
+                    insertDummyRecords = insertDummyRecords,
+                    isActive = isActive
+                }));
+                Command.CommandText = "SP_GET_SP_COMPETITOR_TAX_RATES";
+                Command.CommandType = CommandType.StoredProcedure;
+                Command.Parameters.AddWithValue("@COMPANY_ID", companyId);
+                if (insertDummyRecords.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@INSERT_DUMMY_RECORDS", insertDummyRecords.Value);
+                }
+                if (isActive.HasValue)
+                {
+                    Command.Parameters.AddWithValue("@ACTIVE", isActive.Value);
+                }
+                Connection.Open();
+
+                SqlDataReader reader = Command.ExecuteReader();
+                CompetitorTaxRateResponse result = new CompetitorTaxRateResponse();
+                result.CompetitorTaxRates = new List<CompetitorTaxRate>();
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        result.CompetitorTaxRates.Add(new CompetitorTaxRate
+                        {
+                            CompetitorId = int.Parse(reader["CompetitorId"].ToString()),
+                            FYAYId = int.Parse(reader["FYAYId"].ToString()),
+                            TaxRate = decimal.Parse(reader["TaxRate"].ToString()),
+                            Description = reader["Description"] != DBNull.Value ? reader["Description"].ToString() : null,
+                            CompanyName = reader["CompanyName"] != DBNull.Value ? reader["CompanyName"].ToString() : null,
+                            AssessmentYear = reader["AssessmentYear"] != DBNull.Value ? reader["AssessmentYear"].ToString() : null,
+                            FinancialYear = reader["FinancialYear"] != DBNull.Value ? reader["FinancialYear"].ToString() : null,
+                            Active = Convert.ToBoolean(reader["Active"].ToString()),
+                            Id = Convert.ToInt32(reader["Id"].ToString())
+                        });
+                    }
+                }
+                Log.Info("End call to GetCompetitorTaxRates. Result:"
+                    + JsonConvert.SerializeObject(result));
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error in GetCompetitorTaxRates. Error:"
+                       + JsonConvert.SerializeObject(ex));
+                LogError(ex);
+                throw;
+            }
+            finally
+            {
+                Connection.Close();
+            }
+        }
         #endregion
     }
 }
