@@ -2129,6 +2129,21 @@ namespace LSWebApp.Controllers
         }
 
         [HttpGet]
+        public ActionResult CompetitorTaxRates()
+        {
+            Company selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+            CompetitorTaxRatesHeaderModel model = new CompetitorTaxRatesHeaderModel
+            {
+                CompanyObject = selectedCompany
+            };
+            return View(model);
+        }
+
+        [HttpGet]
         public async Task<ActionResult> MATCreditDetails()
         {
             Company selectedCompany = HttpContext.Session["SelectedCompany"] as Company;

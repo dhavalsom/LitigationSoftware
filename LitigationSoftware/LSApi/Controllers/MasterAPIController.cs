@@ -195,5 +195,39 @@ namespace LSApi.Controllers
             var result = CompObj.GetImplementors(implementorId, isActive);
             return result;
         }
+
+        // POST: api/MasterAPI/InsertUpdateCompetitorMaster
+        [HttpPost]
+        [Route("InsertUpdateCompetitorMaster")]
+        public CompetitorResponse InsertUpdateCompetitorMaster
+                ([FromBody]CompetitorMaster competitorMaster)
+        {
+            var objMaster = _Kernel.Get<IMaster>();
+            var objCompetitorResponse = objMaster.
+                InsertUpdateCompetitorMaster(competitorMaster);
+            return objCompetitorResponse;
+        }
+
+        // POST: api/MasterAPI/InsertUpdateCompetitorTaxRate
+        [HttpPost]
+        [Route("InsertUpdateCompetitorTaxRate")]
+        public CompetitorTaxRateResponse InsertUpdateCompetitorTaxRate
+                ([FromBody]CompetitorTaxRate competitorTaxRate)
+        {
+            var objMaster = _Kernel.Get<IMaster>();
+            var objCCompetitorTaxRateResponse = objMaster.
+                InsertUpdateCompetitorTaxRate(competitorTaxRate);
+            return objCCompetitorTaxRateResponse;
+        }
+
+        [HttpGet]
+        [Route("GetCompetitorTaxRates")]
+        // GET: api/MasterAPI/GetCompetitorTaxRates
+        public CompetitorTaxRateResponse GetCompetitorTaxRates
+            (int companyId, bool? insertDummyRecords, bool? isActive)            
+        {
+            var masterObj = _Kernel.Get<IMaster>();
+            return masterObj.GetCompetitorTaxRates(companyId, insertDummyRecords, isActive);
+        }
     }
 }
