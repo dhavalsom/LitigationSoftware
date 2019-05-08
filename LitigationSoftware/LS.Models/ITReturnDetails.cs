@@ -90,6 +90,11 @@ namespace LS.Models
         //public List<SPIncomeDetails> RegularAssessmentList { get; set; }
         #endregion
 
+        public decimal? TaxProvisions { get; set; }
+        public decimal? TaxAssets { get; set; }
+        public decimal? ContingentLiabilities { get; set; }
+        public int? ImplementorId { get; set; }
+        public string ImplementorDescription { get; set; }
         #endregion
 
         #region Serialization
@@ -337,6 +342,31 @@ namespace LS.Models
         {
             return MATEducationCess.HasValue;
         }
+
+        public bool ShouldSerializeTaxProvisions()
+        {
+            return TaxProvisions.HasValue;
+        }
+
+        public bool ShouldSerializeTaxAssets()
+        {
+            return TaxAssets.HasValue;
+        }
+
+        public bool ShouldSerializeContingentLiabilities()
+        {
+            return ContingentLiabilities.HasValue;
+        }
+
+        public bool ShouldSerializeImplementorId()
+        {
+            return ImplementorId.HasValue;
+        }
+
+        public bool ShouldSerializeImplementorDescription()
+        {
+            return false;
+        }
         #endregion
 
         #region Methods
@@ -430,6 +460,7 @@ namespace LS.Models
         }
         #endregion
     }
+
     public class ITReturnDetailsResponse
     {
         public string Message { get; set; }

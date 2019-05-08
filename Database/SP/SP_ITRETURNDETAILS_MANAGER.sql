@@ -1,16 +1,17 @@
 USE [LitigationApp]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_ITRETURNDETAILS_MANAGER]    Script Date: 2/16/2019 11:03:12 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_ITRETURNDETAILS_MANAGER]    Script Date: 5/1/2019 10:12:23 AM ******/
 DROP PROCEDURE [dbo].[SP_ITRETURNDETAILS_MANAGER]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_ITRETURNDETAILS_MANAGER]    Script Date: 2/16/2019 11:03:12 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_ITRETURNDETAILS_MANAGER]    Script Date: 5/1/2019 10:12:23 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 
@@ -46,7 +47,9 @@ DECLARE @Id AS BIGINT, @CompanyID AS BIGINT, @FYAYID AS BIGINT,@ITSectionID AS B
 		@AdvanceTax2installmentDate AS DATETIME, @AdvanceTax3installmentDate AS DATETIME, @AdvanceTax4installmentDate  AS DATETIME,
 		@RefundAdjustedDate AS DATETIME, @RegularAssessmentDate AS DATETIME, @RefundAlreadyReceivedDate AS DATETIME,
 		@RITotalIncome AS DECIMAL (18, 2), @RISurcharge AS DECIMAL (18, 2), @RIEducationCess AS DECIMAL (18, 2),
-		@MATTotalIncome AS DECIMAL (18, 2), @MATSurcharge AS DECIMAL (18, 2), @MATEducationCess AS DECIMAL (18, 2)
+		@MATTotalIncome AS DECIMAL (18, 2), @MATSurcharge AS DECIMAL (18, 2), @MATEducationCess AS DECIMAL (18, 2),
+		@TaxProvisions AS DECIMAL (18, 2), @TaxAssets AS DECIMAL (18, 2), @ContingentLiabilities AS DECIMAL (18, 2),
+		@ImplementorId AS BIGINT
 
 
 SELECT	 @Id = ITReturnDetailsList.Columns.value('Id[1]', 'BIGINT')
@@ -103,6 +106,10 @@ SELECT	 @Id = ITReturnDetailsList.Columns.value('Id[1]', 'BIGINT')
 	   , @RefundAdjustedDate = ITReturnDetailsList.Columns.value('RefundAdjustedDate[1]', 'DATETIME')
 	   , @RegularAssessmentDate = ITReturnDetailsList.Columns.value('RegularAssessmentDate[1]', 'DATETIME')
 	   , @RefundAlreadyReceivedDate = ITReturnDetailsList.Columns.value('RefundAlreadyReceivedDate[1]', 'DATETIME')
+	   , @TaxProvisions = ITReturnDetailsList.Columns.value('TaxProvisions[1]', 'DECIMAL (18, 2)')
+	   , @TaxAssets = ITReturnDetailsList.Columns.value('TaxAssets[1]', 'DECIMAL (18, 2)')
+	   , @ContingentLiabilities = ITReturnDetailsList.Columns.value('ContingentLiabilities[1]', 'DECIMAL (18, 2)')
+	   , @ImplementorId = ITReturnDetailsList.Columns.value('ImplementorId[1]', 'BIGINT')
 FROM   @ITRETURNDETAILS_XML.nodes('ITReturnDetails') AS ITReturnDetailsList(Columns)
 
 SELECT 
@@ -174,7 +181,11 @@ FROM @EXTENSIONDETAILS_XML.nodes('/ArrayOfITReturnDetailsExtension/ITReturnDetai
 	  ,[AdvanceTax4installmentDate]
 	  ,[RefundAdjustedDate]
 	  ,[RegularAssessmentDate]
-	  ,[RefundAlreadyReceivedDate])
+	  ,[RefundAlreadyReceivedDate]
+	  ,[TaxProvisions]
+	  ,[TaxAssets]
+	  ,[ContingentLiabilities]
+	  ,[ImplementorId])
      VALUES
 	(@CompanyID
      ,@FYAYID 
@@ -231,7 +242,11 @@ FROM @EXTENSIONDETAILS_XML.nodes('/ArrayOfITReturnDetailsExtension/ITReturnDetai
 	,@AdvanceTax4installmentDate
 	,@RefundAdjustedDate
 	,@RegularAssessmentDate
-	,@RefundAlreadyReceivedDate)
+	,@RefundAlreadyReceivedDate
+	,@TaxProvisions
+	,@TaxAssets
+	,@ContingentLiabilities
+	,@ImplementorId)
 
 	set @Id = @@IDENTITY
 	
@@ -325,6 +340,10 @@ FROM @EXTENSIONDETAILS_XML.nodes('/ArrayOfITReturnDetailsExtension/ITReturnDetai
 		  ,[RefundAdjustedDate] = @RefundAdjustedDate
 		  ,[RegularAssessmentDate] = @RegularAssessmentDate
 		  ,[RefundAlreadyReceivedDate] = @RefundAlreadyReceivedDate
+		  ,[TaxProvisions] = @TaxProvisions
+		  ,[TaxAssets] = @TaxAssets
+		  ,[ContingentLiabilities] = @ContingentLiabilities
+		  ,[ImplementorId] = @ImplementorId
 		WHERE Id = @Id
 		
 		END
@@ -381,6 +400,7 @@ FROM @EXTENSIONDETAILS_XML.nodes('/ArrayOfITReturnDetailsExtension/ITReturnDetai
 SELECT @Id as ITReturDetailsId, @Result AS Result, @ReturnMessage AS ReturnMessage
 
 END
+
 
 
 

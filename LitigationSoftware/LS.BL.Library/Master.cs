@@ -295,6 +295,74 @@ namespace LS.BL.Library
 
             }
         }
+
+        public List<Implementor> GetImplementors(int? implementorId, bool? isActive)
+        {
+            try
+            {
+                return this._masterDA.GetImplementors(implementorId, isActive);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+
+            }
+        }
+
+        public CompetitorResponse InsertUpdateCompetitorMaster
+            (CompetitorMaster competitorMaster)
+        {
+            try
+            {
+                return this._masterDA.InsertUpdateCompetitorMaster(competitorMaster);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+
+            }
+        }
+
+        public CompetitorTaxRateResponse InsertUpdateCompetitorTaxRate
+            (CompetitorTaxRate competitorTaxRate)
+        {
+            try
+            {
+                return this._masterDA.InsertUpdateCompetitorTaxRate(competitorTaxRate);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+
+            }
+        }
+
+        public CompetitorTaxRateResponse GetCompetitorTaxRates
+            (int companyId, bool? insertDummyRecords, bool? isActive)
+        {
+            try
+            {
+                return this._masterDA.GetCompetitorTaxRates(companyId,
+                    insertDummyRecords, isActive);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+
+            }
+        }
         #endregion
 
         #region IDisposable

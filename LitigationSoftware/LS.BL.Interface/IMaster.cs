@@ -25,5 +25,12 @@ namespace LS.BL.Interface
             , bool? IsActive);
         SubDocumentCategoryMasterResponse InsertUpdateSubDocumentCategoryMaster
             (SubDocumentCategoryMaster objSubDocumentCategoryMaster);
+        List<Implementor> GetImplementors(int? implementorId, bool? isActive);
+        CompetitorResponse InsertUpdateCompetitorMaster
+                (CompetitorMaster competitorMaster);
+        CompetitorTaxRateResponse InsertUpdateCompetitorTaxRate
+            (CompetitorTaxRate competitorTaxRate);
+        CompetitorTaxRateResponse GetCompetitorTaxRates
+            (int companyId, bool? insertDummyRecords, bool? isActive);
     }
 }
