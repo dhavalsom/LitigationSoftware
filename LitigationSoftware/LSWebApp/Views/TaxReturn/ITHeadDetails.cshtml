@@ -390,8 +390,11 @@
                     break;
                 case "RefundAdjusted":
                     <div class="col-md-6">
-                        @Html.Partial("_RefundDetailsList"
-                        , Model.RefundDetailsListModels[Model.ITHead])
+                        @if (Model.ITReturnDetailsObject.IsReturn)
+                        {
+                            @Html.Partial("_RefundDetailsList"
+                                 , Model.RefundDetailsListModels[Model.ITHead])
+                        }
                     </div>
                     break;
                 case "RegularAssessment":
