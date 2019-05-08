@@ -94,7 +94,9 @@ BEGIN
 			INNER JOIN ITSectionMaster ITSM_INNER ON ITSM_INNER.SECTIONCATEGORYID = ITSC_INNER.Id
 			WHERE ITSM_INNER.Id = @ITSectionID)
 		END as [CategoryDesc]
-	  ,isnull(ITSM.IsReturn,0) as IsReturn
+	   ,CASE @GET_DEFAULT_DATA WHEN 0 THEN ISNULL(ITSM.IsReturn,0) ELSE 
+		(SELECT [IsReturn] FROM ITSectionMaster WHERE Id = @ITSectionID)
+		END as [IsReturn]
       ,[ITReturnFillingDate]
       ,[ITReturnDueDate]
       ,[HousePropIncome]
