@@ -1,16 +1,17 @@
 USE [LitigationApp]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_GET_ITReturnDetails]    Script Date: 12/8/2018 1:21:05 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_GET_ITReturnDetails]    Script Date: 08-05-2019 07:42:23 ******/
 DROP PROCEDURE [dbo].[SP_GET_ITReturnDetails]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_GET_ITReturnDetails]    Script Date: 12/8/2018 1:21:05 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_GET_ITReturnDetails]    Script Date: 08-05-2019 07:42:23 ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 
@@ -93,7 +94,9 @@ BEGIN
 			INNER JOIN ITSectionMaster ITSM_INNER ON ITSM_INNER.SECTIONCATEGORYID = ITSC_INNER.Id
 			WHERE ITSM_INNER.Id = @ITSectionID)
 		END as [CategoryDesc]
-	  ,isnull(ITSM.IsReturn,0) as IsReturn
+	 ,CASE @GET_DEFAULT_DATA WHEN 0 THEN ISNULL(ITSM.IsReturn,0) ELSE 
+		(SELECT [IsReturn] FROM ITSectionMaster WHERE Id = @ITSectionID)
+		END as [IsReturn]
       ,[ITReturnFillingDate]
       ,[ITReturnDueDate]
       ,[HousePropIncome]
@@ -153,6 +156,7 @@ BEGIN
   (@FYAYID IS NULL OR ITRD.FYAYID = @FYAYID)
   ORDER BY [ITReturnFillingDate],[ITReturnDueDate]
 END
+
 
 
 
