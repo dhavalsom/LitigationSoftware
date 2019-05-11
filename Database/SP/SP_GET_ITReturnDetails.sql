@@ -1,21 +1,17 @@
 USE [LitigationApp]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_GET_ITReturnDetails]    Script Date: 5/1/2019 10:09:27 AM ******/
+/****** Object:  StoredProcedure [dbo].[SP_GET_ITReturnDetails]    Script Date: 08-05-2019 07:42:23 ******/
 DROP PROCEDURE [dbo].[SP_GET_ITReturnDetails]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_GET_ITReturnDetails]    Script Date: 5/1/2019 10:09:27 AM ******/
+/****** Object:  StoredProcedure [dbo].[SP_GET_ITReturnDetails]    Script Date: 08-05-2019 07:42:23 ******/
+
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
-
-
-
-
-
 
 --exec dbo.[SP_GET_ITReturnDetails] 1,1,4
 
@@ -94,7 +90,7 @@ BEGIN
 			INNER JOIN ITSectionMaster ITSM_INNER ON ITSM_INNER.SECTIONCATEGORYID = ITSC_INNER.Id
 			WHERE ITSM_INNER.Id = @ITSectionID)
 		END as [CategoryDesc]
-	   ,CASE @GET_DEFAULT_DATA WHEN 0 THEN ISNULL(ITSM.IsReturn,0) ELSE 
+    ,CASE @GET_DEFAULT_DATA WHEN 0 THEN ISNULL(ITSM.IsReturn,0) ELSE
 		(SELECT [IsReturn] FROM ITSectionMaster WHERE Id = @ITSectionID)
 		END as [IsReturn]
       ,[ITReturnFillingDate]
