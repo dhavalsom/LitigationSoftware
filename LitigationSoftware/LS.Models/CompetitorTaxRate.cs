@@ -16,24 +16,25 @@ namespace LS.Models
         #endregion
 
         #region Serialization
+
         public bool ShouldSerializeDescription()
         {
-            return false;
+            return !string.IsNullOrEmpty(Description);
         }
 
         public bool ShouldSerializeCompanyName()
         {
-            return false;
+            return !string.IsNullOrEmpty(CompanyName);
         }
 
         public bool ShouldSerializeAssessmentYear()
         {
-            return false;
+            return !string.IsNullOrEmpty(AssessmentYear);
         }
 
         public bool ShouldSerializeFinancialYear()
         {
-            return false;
+            return !string.IsNullOrEmpty(FinancialYear);
         }
         #endregion
     }

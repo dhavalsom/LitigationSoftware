@@ -63,7 +63,7 @@ BEGIN
 	SELECT 
 	   CTR.[Id]
       , CTR.[CompetitorId]
-	  , CM.[Description]
+	  , CTR.[Description]
 	  , CM.CompanyId
 	  , C.CompanyName
       , CTR.[FYAYId]

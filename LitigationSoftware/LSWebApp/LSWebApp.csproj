@@ -342,6 +342,7 @@
     <Content Include="Views\Shared\_ITReturnExtensionList.cshtml" />
     <Content Include="Views\Shared\_RefundDetailsList.cshtml" />
     <Content Include="Views\TaxReturn\CompetitorTaxRates.cshtml" />
+    <Content Include="Views\TaxReturn\CompetitorTaxRatesDetailsData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

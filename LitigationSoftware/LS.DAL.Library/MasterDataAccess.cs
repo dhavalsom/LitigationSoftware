@@ -1004,7 +1004,6 @@ namespace LS.DAL.Library
                     {
                         result = new CompetitorTaxRateResponse
                         {
-                            Id = Convert.ToInt32(reader["Id"].ToString()),
                             Message = reader["ReturnMessage"] != DBNull.Value ? reader["ReturnMessage"].ToString() : null,
                             IsSuccess = Convert.ToBoolean(reader["Result"].ToString())
                         };

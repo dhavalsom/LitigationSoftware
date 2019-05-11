@@ -22,12 +22,19 @@
 {
     <script type="text/javascript">
         $(document).ready(function () {            
-            //loadCompetitorTaxRatesDetailsData();
+            loadCompetitorTaxRatesDetailsData();
         });
+
+        function isANumber(evt) {
+            var charCode = (evt.which) ? evt.which : evt.keyCode
+            if (charCode == 45 || charCode == 46 || (charCode >= 48 && charCode <= 57))
+                return true;
+            return false;
+        }
 
         function loadCompetitorTaxRatesDetailsData() {
             $.ajax({
-                url: '/TaxReturn/CompetitorTaxRatesDetailsData',
+                url: '/TaxReturn/CompetitorTaxRatesDetailsData?insertDummyRecords=true',
                 dataType: 'json',
                 contentType: 'application/json; charset=utf-8',
                 type: 'GET',
