@@ -68,6 +68,13 @@
             loadBusinessLossDetailsData();
         });
 
+        function isANumber(evt) {
+            var charCode = (evt.which) ? evt.which : evt.keyCode
+            if (charCode == 45 || charCode == 46 || (charCode >= 48 && charCode <= 57))
+                return true;
+            return false;
+        }
+
         function loadBusinessLossDetailsData() {
             $.ajax({
                 url: '/TaxReturn/BusinessLossDetailsData?fyayId=' + $('#FYAYObject_Id').val()

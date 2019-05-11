@@ -1,6 +1,5 @@
 ﻿using LS.Models;
 using LSWebApp.Infrastructure;
-using System.Collections.Generic;
 
 namespace LSWebApp.Models
 {

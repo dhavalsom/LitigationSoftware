@@ -1,0 +1,47 @@
+﻿@model  LSWebApp.Models.CompetitorTaxRatesDataModel
+
+@using (Html.BeginForm("InsertUpdateCompetitorTaxRates", "TaxReturn"))
+{
+<table class="table table-hover tblITRetDetails">
+    <thead>
+        <tr>
+            <th>Assessment Year</th>
+            @foreach (var item in Model.FYAYList)
+            {
+                <th>@item.AssessmentYear</th>
+            }
+        </tr>
+    </thead>
+    @foreach (var item in Model.Competitors)
+    {
+        <tbody>
+            <tr>
+                <td>@item.Description</td>
+
+                @foreach (var competitorTaxRate in
+                    Model.CompetitorTaxRates.Where(ctr => ctr.CompetitorId == item.Id))
+                {
+                <td>
+                    @*@Html.TextBoxFor(m => competitorTaxRate.Id
+                            , string.Format("{0:f}", competitorTaxRate.TaxRate)
+                            , new { @class = "numericOnly", @id = "txtTaxRate_" + competitorTaxRate.Id })*@
+                    @Html.TextBox("txtTaxRate_" + competitorTaxRate.Id, string.Format("{0:f}", competitorTaxRate.TaxRate)
+                    , new { @class = "numericOnly", @id = "txtTaxRate_" + competitorTaxRate.Id })
+                </td>
+                }
+
+            </tr>
+        </tbody>
+    }
+
+    <tbody>
+        <tr>
+            <td colspan="4" align="left">
+                <button type="submit" class="btn btn-primary">
+                    Save
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+}

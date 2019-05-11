@@ -212,12 +212,22 @@ namespace LSApi.Controllers
         [HttpPost]
         [Route("InsertUpdateCompetitorTaxRate")]
         public CompetitorTaxRateResponse InsertUpdateCompetitorTaxRate
-                ([FromBody]CompetitorTaxRate competitorTaxRate)
+                ([FromBody]List<CompetitorTaxRate> competitorTaxRates)
         {
             var objMaster = _Kernel.Get<IMaster>();
-            var objCCompetitorTaxRateResponse = objMaster.
-                InsertUpdateCompetitorTaxRate(competitorTaxRate);
-            return objCCompetitorTaxRateResponse;
+            CompetitorTaxRateResponse result = new CompetitorTaxRateResponse()
+            {
+                IsSuccess = false
+            };
+            foreach (var competitorTaxRate in competitorTaxRates)
+            {
+                result = objMaster.InsertUpdateCompetitorTaxRate(competitorTaxRate);
+                if (!result.IsSuccess)
+                {
+                    break;
+                }
+            }
+            return result;
         }
 
         [HttpGet]
