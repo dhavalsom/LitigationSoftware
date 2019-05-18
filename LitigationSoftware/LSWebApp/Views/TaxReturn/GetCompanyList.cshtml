@@ -11,16 +11,20 @@
         margin-right: 5px;
     }
 </style>
-<h3>List of Companies</h3>
-
-@{
+<h3>List of Entities</h3>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+@using (Html.BeginForm("CreateCompany", "TaxReturn"))
+{
+    @Html.AntiForgeryToken()
     if (Model.Companies != null)
     {
         @Html.HiddenFor(m => m.UserId, Model.UserId)
         <table class="table table-hover">
             <thead>
-                <th>Company Name</th>
-                <th>PAN Number</th>
+            <th>Entity Name</th>
+            <th>PAN Number</th>
+            <th>Status</th>
+            <th></th>
             </thead>
 
             @foreach (var company in Model.Companies)
@@ -33,9 +37,15 @@
                             , "TaxReturn"
                             , new { companyId = company.Id }
                             , null)
-                        
+
                     </td>
                     <td>@company.PANNumber</td>
+                    <td>@company.Active</td>
+                    <td>
+                        @Ajax.ActionLink("De-activate"
+                           , "DeleteCompany"
+                           , "TaxReturn", new { CompanyId = company.Id }, new AjaxOptions { HttpMethod = "GET" })
+                    </td>
                 </tr>
             }
         </table>

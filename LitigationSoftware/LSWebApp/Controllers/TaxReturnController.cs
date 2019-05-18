@@ -102,6 +102,48 @@ namespace LSWebApp.Controllers
         }
 
         [HttpGet]
+        public async Task<ActionResult> DeleteCompany(int CompanyId)
+        {
+            CompanyModel comp = new CompanyModel();
+            comp.companyObject = new Company();
+            comp.companyObject.Id = CompanyId;
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                var json = JsonConvert.SerializeObject(comp.companyObject);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                HttpResponseMessage Res = await client.PostAsync("api/MasterAPI/PostCreateCompany", content);
+                var model = new CompanyList();
+                if (Res.IsSuccessStatusCode)
+                {
+                    var objCompResponse = JsonConvert.DeserializeObject<bool>(Res.Content.ReadAsStringAsync().Result);
+                    if (objCompResponse)
+                    {
+                        content = null;
+                        Res = null;
+
+                        Res = await client.GetAsync("api/MasterAPI/GetCompanyList");
+
+                        if (Res.IsSuccessStatusCode)
+                        {
+                            model.Companies = JsonConvert.DeserializeObject<List<Company>>(Res.Content.ReadAsStringAsync().Result);
+                            return View("GetCompanyList", model);
+                        }
+                        return View("CompanyRegistrationFailure", objCompResponse);
+                    }
+                    else
+                        return View("CompanyRegistrationFailure", objCompResponse);
+                }
+                else
+                    return View("CompanyRegistrationFailure");
+
+            }
+        }
+
+        [HttpGet]
         public async Task<ActionResult> GetITReturnDetails(int? userId, int FYAYID
             , int? itsectionid, int? itreturnid, int? itsectioncategoryid)
         {

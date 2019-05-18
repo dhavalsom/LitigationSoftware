@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_LayoutDynemicMenu.cshtml";
 }
 
-<h3>Register a new company</h3>
+<h3>Register a new entity</h3>
 
 @using (Html.BeginForm("CreateCompany", "TaxReturn"))
 {
@@ -13,12 +13,12 @@
         <tr>
             <td>
                 <div class="form-group">
-                    Company Name:
+                    Entity Name:
                 </div>
             </td>
             <td>
                 @Html.TextBoxFor(m => m.companyObject.CompanyName
-                    , new { @class = "form-control-sm", @placeholder = "Enter new company name" })
+                    , new { @class = "form-control-sm", @placeholder = "Enter new entity name" })
             </td>
         </tr>
         <tr>
@@ -51,7 +51,7 @@
         <tr style="height:20px;"></tr>
         <tr>
             <td colspan="2" align="center">
-                <button type="submit" class="btn btn-primary">Create Company</button>
+                <button type="submit" class="btn btn-primary">Create Entity</button>
             </td>
         </tr>
 
