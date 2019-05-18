@@ -34,7 +34,6 @@
                         </div>
                     </div>
                 </td>
-
             </tr>
 
             <tr>
@@ -85,6 +84,7 @@
                     </div>
                 </td>
             </tr>
+
             @if (Model.ITReturnDetailsObject.ITSectionCategoryID == 1)
             {
                 <tr>
@@ -98,14 +98,14 @@
                                      data-date="" data-date-format="dd M yyyy" data-link-field="ITReturnDetailsObject_ITReturnDueDate"
                                      data-link-format="dd M yyyy">
                                     @Html.TextBoxFor(m => m.ITReturnDetailsObject.ITReturnDueDate
-                                               , Model.ITReturnDetailsObject.ITReturnDueDate.HasValue
-                                                  ? Model.ITReturnDetailsObject.ITReturnDueDate.Value.ToString("dd MMM yyyy")
-                                                  : string.Empty
-                                               , new
-                                               {
-                                                   @size = "16",
-                                                   @value = ""
-                                               })
+                                , Model.ITReturnDetailsObject.ITReturnDueDate.HasValue
+                                   ? Model.ITReturnDetailsObject.ITReturnDueDate.Value.ToString("dd MMM yyyy")
+                                   : string.Empty
+                                , new
+                                {
+                                    @size = "16",
+                                    @value = ""
+                                })
                                     <span class="input-group-addon">
                                         &nbsp;&nbsp;<i class="fa fa-calendar fa-2x" aria-hidden="true">
                                         </i>
@@ -116,13 +116,33 @@
                     </td>
                 </tr>
             }
+            else
+            {
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td>Implementor</td>
+                    <td>
+                        <div class="col-md-6">
+                            @Html.DropDownListFor(m => m.ITReturnDetailsObject.ImplementorId
+                                , new SelectList(Model.ImplementorList
+                                , "Id", "Description", Model.ITReturnDetailsObject.ImplementorId)
+                                , new { @class = "ddImplementor" })
+                        </div>
+                        <div class="input-group col-md-6"></div>
+                    </td>
+                </tr>
+            }
             @foreach (var itHead in Model.ItemsWithAmounts)
             {
                 if (
                    (Model.ITReturnDetailsObject.ITSectionCategoryID == 1
-                   && Model.ITHeadMasterList[itHead].IsROI)
+                    && Model.ITHeadMasterList[itHead].IsROI)
                     ||
-                    (Model.ITReturnDetailsObject.ITSectionCategoryID != 1)
+                    (Model.ITReturnDetailsObject.ITSectionCategoryID != 1
+                    && Model.ITHeadMasterList[itHead].PropertyName != "TaxProvisions"
+                    && Model.ITHeadMasterList[itHead].PropertyName != "TaxAssets"
+                    && Model.ITHeadMasterList[itHead].PropertyName != "ContingentLiabilities")
                    )
                 {
                     @Html.Partial("ITHeadDetails", new ITHeadDetailsModel(itHead,

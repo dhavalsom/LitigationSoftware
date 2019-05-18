@@ -1,0 +1,125 @@
+git.exe pull --progress -v --no-rebase "origin"
+
+POST git-upload-pack (437 bytes)
+remote: Enumerating objects: 159, done.
+remote: Counting objects: 100% (159/159), done.
+remote: Compressing objects: 100% (46/46), done.
+remote: Total 159 (delta 117), reused 151 (delta 113), pack-reused 0
+Receiving objects: 100% (159/159), 34.22 KiB | 148.00 KiB/s, done.
+Resolving deltas: 100% (117/117), completed with 38 local objects.
+From https://github.com/dhavalsom/LitigationSoftware
+1e4fad3..3d0fb4e  master        -> origin/master
+8ef7441..ac94f2d  DhavalsBranch -> origin/DhavalsBranch
+= [up to date]      KM            -> origin/KM
+= [up to date]      KM-2          -> origin/KM-2
+Updating 1e4fad3..3d0fb4e
+Fast-forward
+Database/Dhaval/InsertData/insert_ITHeadmaster.sql | Bin 0 -> 886 bytes
+Database/Dhaval/InsertData/insert_StandardData.sql | Bin 0 -> 1688 bytes
+.../Dhaval/InsertData/insert_surchargeData.sql     | Bin 0 -> 2234 bytes
+.../Dhaval/SP Changes/[dbo].[SP_GET_COMPANY].sql   |  36 ++
+.../SP Changes/[dbo].[SP_GET_IT_HEAD_MASTER].sql   |  53 ++
+.../[dbo].[SP_GET_STANDARDDATA_LIST].sql           |  12 +-
+.../[dbo].[SP_GET_SURCHARGEDATA_LIST].sql          |  18 +-
+.../Dhaval/Table Changes/alter_ITHeadMaster.sql    | Bin 0 -> 1038 bytes
+.../Alter table ITReturnDetails.sql                |  13 +-
+.../ItReturnDetails update table and data.sql      |   5 +
+.../Kunal/SP/SP_BUSINESS_LOSS_DETAILS_MANAGER.sql  | 230 ++++++++
+.../Kunal/SP/SP_GET_BUSINESS_LOSS_DETAILS_LIST.sql | 118 ++++
+Database/Kunal/SP/SP_GET_ITReturnDetails.sql       |   8 +-
+Database/Kunal/SP/SP_GET_IT_HEAD_MASTER.sql        |   7 +-
+.../Kunal/SP/SP_GET_MAT_CREDIT_DETAILS_LIST.sql    |  60 ++
+Database/Kunal/SP/SP_GET_SP_INCOME_DETAILS.sql     |  64 +++
+Database/Kunal/SP/SP_INCOME_DETAILS_MANAGER.sql    | 115 ++++
+Database/Kunal/SP/SP_ITRETURNDETAILS_MANAGER.sql   |  31 +-
+Database/Kunal/SP/SP_IT_SUB_HEAD_MANAGER.sql       |   9 +-
+.../Kunal/SP/SP_MAT_CREDIT_DETAILS_MANAGER.sql     | 126 +++++
+.../Kunal/Tables/Alter FYAYMaster And Set Data.sql |   7 +
+.../Tables/Alter ITHeadMaster And Set Data-2.sql   |  10 +
+Database/Kunal/Tables/BusinessLossDetails.sql      |  99 ++++
+Database/Kunal/Tables/MATCreditDetails.sql         |  77 +++
+Database/Kunal/Tables/SPIncomeDetails.sql          |  58 ++
+.../LS.BL.Interface/IITReturnDetailsBL.cs          |  11 +
+LitigationSoftware/LS.BL.Interface/IMaster.cs      |   6 +-
+.../LS.BL.Library/ITReturnDetailsBL.cs             | 105 ++++
+LitigationSoftware/LS.BL.Library/Master.cs         |  12 +-
+.../LS.DAL.Interface/IITReturnDetailsDataAccess.cs |  11 +
+.../LS.DAL.Interface/IMasterDataAccess.cs          |   6 +-
+.../LS.DAL.Library/ITReturnDetailsDataAccess.cs    | 427 ++++++++++++++-
+.../LS.DAL.Library/MasterDataAccess.cs             |  22 +-
+.../LS.Models/BusinessLossDetails.cs               | 283 ++++++++++
+LitigationSoftware/LS.Models/ITHeadMaster.cs       |   2 +
+LitigationSoftware/LS.Models/ITReturnDetails.cs    |  30 +
+LitigationSoftware/LS.Models/LS.Models.csproj      |   3 +
+LitigationSoftware/LS.Models/MATCreditDetails.cs   |  95 ++++
+LitigationSoftware/LS.Models/SPIncomeDetails.cs    |  59 ++
+.../LSApi/Controllers/MasterAPIController.cs       |  16 +-
+.../LSApi/Controllers/TaxReturnAPIController.cs    |  65 +++
+LitigationSoftware/LSApi/Web.config                |   4 +-
+.../LSWebApp/App_Start/RouteConfig.cs              |  26 +
+.../LSWebApp/Controllers/TaxReturnController.cs    | 603 ++++++++++++++++++++-
+LitigationSoftware/LSWebApp/LSWebApp.csproj        |  13 +
+LitigationSoftware/LSWebApp/Menu.xml               |  25 +-
+.../Models/BusinessLossDetailsDataModel.cs         |  21 +
+.../Models/BusinessLossDetailsHeaderModel.cs       |  23 +
+.../Models/ITHeadSpecialIncomeDetailsModel.cs      |  25 +
+.../LSWebApp/Models/ITHeadSpecialIncomeModel.cs    |  29 +
+.../LSWebApp/Models/ITReturnDetailsDataModel.cs    |   5 +-
+.../Models/ITReturnDetailsExtensionModel.cs        |   5 +-
+.../LSWebApp/Models/ITReturnDetailsListModel.cs    |  13 +-
+.../LSWebApp/Models/MATCreditDetailsDataModel.cs   |  21 +
+.../LSWebApp/Models/MATCreditDetailsHeaderModel.cs |  26 +
+.../LSWebApp/Models/StandardDataModel.cs           |  20 +-
+.../LSWebApp/Models/SurchargeDataModel.cs          |  27 +
+.../Views/Shared/_ITHeadSpecialIncome.cshtml       | 104 ++++
+.../Views/TaxReturn/BusinessLossDetails.cshtml     | 100 ++++
+.../Views/TaxReturn/BusinessLossDetailsData.cshtml | 433 +++++++++++++++
+.../Views/TaxReturn/ExistingITReturnDetails.cshtml |  24 +
+.../TaxReturn/ExistingSectionWiseDetails.cshtml    |   6 +-
+.../Views/TaxReturn/GetITReturnDetails.cshtml      |   8 +-
+.../Views/TaxReturn/GetStandardData.cshtml         | 106 +++-
+.../LSWebApp/Views/TaxReturn/ITHeadDetails.cshtml  |  79 ++-
+.../Views/TaxReturn/ITReturnDetails.cshtml         |  54 ++
+.../Views/TaxReturn/ITReturnDetailsData.cshtml     |  11 +-
+.../Views/TaxReturn/ItSubHeadDetails.cshtml        |   3 +-
+.../Views/TaxReturn/MATCreditDetails.cshtml        | 126 +++++
+.../Views/TaxReturn/MATCreditDetailsData.cshtml    | 124 +++++
+.../Views/TaxReturn/TaxCalculationSheet.cshtml     | 358 ++++++++++++
+LitigationSoftware/LSWebApp/images/income.png      | Bin 0 -> 2216 bytes
+72 files changed, 4618 insertions(+), 113 deletions(-)
+create mode 100644 Database/Dhaval/InsertData/insert_ITHeadmaster.sql
+create mode 100644 Database/Dhaval/InsertData/insert_StandardData.sql
+create mode 100644 Database/Dhaval/InsertData/insert_surchargeData.sql
+create mode 100644 Database/Dhaval/SP Changes/[dbo].[SP_GET_COMPANY].sql
+create mode 100644 Database/Dhaval/SP Changes/[dbo].[SP_GET_IT_HEAD_MASTER].sql
+create mode 100644 Database/Dhaval/Table Changes/alter_ITHeadMaster.sql
+create mode 100644 Database/Kunal/SP/SP_BUSINESS_LOSS_DETAILS_MANAGER.sql
+create mode 100644 Database/Kunal/SP/SP_GET_BUSINESS_LOSS_DETAILS_LIST.sql
+create mode 100644 Database/Kunal/SP/SP_GET_MAT_CREDIT_DETAILS_LIST.sql
+create mode 100644 Database/Kunal/SP/SP_GET_SP_INCOME_DETAILS.sql
+create mode 100644 Database/Kunal/SP/SP_INCOME_DETAILS_MANAGER.sql
+create mode 100644 Database/Kunal/SP/SP_MAT_CREDIT_DETAILS_MANAGER.sql
+create mode 100644 Database/Kunal/Tables/Alter FYAYMaster And Set Data.sql
+create mode 100644 Database/Kunal/Tables/Alter ITHeadMaster And Set Data-2.sql
+create mode 100644 Database/Kunal/Tables/BusinessLossDetails.sql
+create mode 100644 Database/Kunal/Tables/MATCreditDetails.sql
+create mode 100644 Database/Kunal/Tables/SPIncomeDetails.sql
+create mode 100644 LitigationSoftware/LS.Models/BusinessLossDetails.cs
+create mode 100644 LitigationSoftware/LS.Models/MATCreditDetails.cs
+create mode 100644 LitigationSoftware/LS.Models/SPIncomeDetails.cs
+create mode 100644 LitigationSoftware/LSWebApp/Models/BusinessLossDetailsDataModel.cs
+create mode 100644 LitigationSoftware/LSWebApp/Models/BusinessLossDetailsHeaderModel.cs
+create mode 100644 LitigationSoftware/LSWebApp/Models/ITHeadSpecialIncomeDetailsModel.cs
+create mode 100644 LitigationSoftware/LSWebApp/Models/ITHeadSpecialIncomeModel.cs
+create mode 100644 LitigationSoftware/LSWebApp/Models/MATCreditDetailsDataModel.cs
+create mode 100644 LitigationSoftware/LSWebApp/Models/MATCreditDetailsHeaderModel.cs
+create mode 100644 LitigationSoftware/LSWebApp/Models/SurchargeDataModel.cs
+create mode 100644 LitigationSoftware/LSWebApp/Views/Shared/_ITHeadSpecialIncome.cshtml
+create mode 100644 LitigationSoftware/LSWebApp/Views/TaxReturn/BusinessLossDetails.cshtml
+create mode 100644 LitigationSoftware/LSWebApp/Views/TaxReturn/BusinessLossDetailsData.cshtml
+create mode 100644 LitigationSoftware/LSWebApp/Views/TaxReturn/MATCreditDetails.cshtml
+create mode 100644 LitigationSoftware/LSWebApp/Views/TaxReturn/MATCreditDetailsData.cshtml
+create mode 100644 LitigationSoftware/LSWebApp/Views/TaxReturn/TaxCalculationSheet.cshtml
+create mode 100644 LitigationSoftware/LSWebApp/images/income.png
+
+Success (12328 ms @ 1/3/2019 8:33:14 AM)

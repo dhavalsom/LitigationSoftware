@@ -650,6 +650,10 @@ namespace LSWebApp.Controllers
                         subDocumentCategories = JsonConvert.DeserializeObject<List<SubDocumentCategoryMaster>>(Res.Content.ReadAsStringAsync().Result);
 
                     }
+
+                    Res = await client.GetAsync("api/MasterAPI/GetImplementorList?implementorId=&isActive=");
+                    model.ImplementorList = JsonConvert.DeserializeObject<List<Implementor>>(Res.Content.ReadAsStringAsync().Result);
+
                     if (itSectionId.HasValue)
                     {
                         Res = await client.GetAsync("api/TaxReturnAPI/GetExistingITReturnDetailsList?companyId=" 
@@ -2121,6 +2125,122 @@ namespace LSWebApp.Controllers
                     return RedirectToAction("BusinessLossDetails");
                 }
                 
+            }
+        }
+
+        [HttpGet]
+        public ActionResult CompetitorTaxRates()
+        {
+            Company selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+            CompetitorTaxRatesHeaderModel model = new CompetitorTaxRatesHeaderModel
+            {
+                CompanyObject = selectedCompany
+            };
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> CompetitorTaxRatesDetailsData(bool insertDummyRecords)
+        {
+            var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+            CompetitorTaxRatesDataModel model = new CompetitorTaxRatesDataModel();
+
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                    client.DefaultRequestHeaders.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpResponseMessage Res = await client.GetAsync("api/MasterAPI/GetCompetitorTaxRates?companyId="
+                        + selectedCompany.Id + "&isActive=true&insertDummyRecords=" + insertDummyRecords);
+                    var result = JsonConvert.DeserializeObject<CompetitorTaxRateResponse>(Res.Content.ReadAsStringAsync().Result);
+                    if (result != null)
+                    {
+                        model.CompetitorTaxRates = result.CompetitorTaxRates;
+                        var competitors = result.CompetitorTaxRates
+                            .Select(c => new
+                            {
+                                Id = c.CompetitorId,
+                                Description = c.Description
+                            }).Distinct();
+                        model.Competitors = competitors.Select(c => new CompetitorMaster
+                        {
+                            Id = c.Id,
+                            Description = c.Description
+                        }).ToList<CompetitorMaster>();
+                        var fyays = result.CompetitorTaxRates
+                            .Select(c => new
+                            {
+                                Id = c.FYAYId,
+                                FinancialYear = c.FinancialYear,
+                                AssessmentYear = c.AssessmentYear
+                            }).Distinct();
+                        model.FYAYList = fyays.Select(c => new FYAY
+                        {
+                            Id = c.Id,
+                            FinancialYear = c.FinancialYear,
+                            AssessmentYear = c.AssessmentYear
+                        }).ToList<FYAY>();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return PartialView(model);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> InsertUpdateCompetitorTaxRates
+            (CompetitorTaxRatesDataModel model, FormCollection form)
+        {
+            model.CompetitorTaxRates = new List<CompetitorTaxRate>();
+            foreach (var control in form.Keys)
+            {
+                if (control.ToString().StartsWith("txtTaxRate_"))
+                {
+                    decimal value;
+                    if (decimal.TryParse(form[control.ToString()].ToString(), out value))
+                    {
+                        model.CompetitorTaxRates.Add(new CompetitorTaxRate
+                        {
+                            Id = Convert.ToInt32(control.ToString().Split('_')[1]),
+                            TaxRate = value
+                        });
+                    }
+                }
+            }
+
+            using (var client = new HttpClient())
+            {
+                var json = JsonConvert.SerializeObject(model.CompetitorTaxRates);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage Res = await client.PostAsync("api/MasterAPI/InsertUpdateCompetitorTaxRate", content);
+                CompetitorTaxRateResponse result = new CompetitorTaxRateResponse();
+                if (Res.IsSuccessStatusCode)
+                {
+                    result = JsonConvert.DeserializeObject<CompetitorTaxRateResponse>
+                            (Res.Content.ReadAsStringAsync().Result);
+                }
+                else
+                {
+                    result.IsSuccess = false;
+                    result.Message = Res.Content.ReadAsStringAsync().Result;
+                }
+                return RedirectToAction("CompetitorTaxRates");
             }
         }
 

@@ -1,0 +1,62 @@
+﻿@model  LSWebApp.Models.CompetitorTaxRatesHeaderModel
+@{
+    ViewBag.Title = "Competitor Tax Rates";
+    Layout = "~/Views/Shared/_LayoutDynemicMenu.cshtml";
+}
+<style type="text/css">
+    .table-condensed {
+        width: 200px;
+        height: 10px;
+        font-size: 10px;
+    }
+</style>
+
+<h3>Competitor Tax Rates for @(Model.CompanyObject.CompanyName)</h3>
+
+<div class="container">
+    <div class="bs-component" id="sectionDiv">
+
+    </div>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+        $(document).ready(function () {            
+            loadCompetitorTaxRatesDetailsData();
+        });
+
+        function isANumber(evt) {
+            var charCode = (evt.which) ? evt.which : evt.keyCode
+            if (charCode == 45 || charCode == 46 || (charCode >= 48 && charCode <= 57))
+                return true;
+            return false;
+        }
+
+        function loadCompetitorTaxRatesDetailsData() {
+            $.ajax({
+                url: '/TaxReturn/CompetitorTaxRatesDetailsData?insertDummyRecords=true',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                type: 'GET',
+                error: function (xhr, status, error) {
+                    alert("inside error " + xhr.responseText);
+                },
+                dataType: 'html',
+                success: function (data) {
+                    $("#sectionDiv").html(data);
+                    $(".numericOnly").keypress(function (e) {
+                        return isANumber(e);
+                    });
+                    $(".numericOnly").change(function (e) {
+                        if ($.isNumeric($(this).val())) {
+                            $(this).val(parseFloat($(this).val()).toFixed(2));
+                        }
+                        else {
+                            $(this).val("0.00");
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+}

@@ -160,6 +160,16 @@ namespace LSWebApp
            );
 
             routes.MapRoute(
+               name: "competitortaxrates",
+               url: "competitortaxrates",
+               defaults: new
+               {
+                   controller = "TaxReturn",
+                   action = "CompetitorTaxRates"
+               }
+           );
+
+            routes.MapRoute(
                 name: "computationsheet",
                 url: "computationsheet",
                 defaults: new
