@@ -59,7 +59,7 @@
                                 id="btnsrch">
                             Search
                         </button>
-                        <button type="button" class="btn btn-primary btn-sm btn-reset" id="btnreset" onclick="alert("Hi!");">
+                        <button type="button" class="btn btn-primary btn-sm btn-reset" id="btnreset">
                             Reset
                         </button>
                         <a href="#myModal_0" role="button" class="btn" data-toggle="modal">
@@ -119,8 +119,7 @@
             loadITReturnDetailsData();
 
             $(".btn-reset").click(function () {
-                debugger;
-                $(this).closest('form').find('input[type=text], textarea').val('');
+                $('.container').find('input[type=text], textarea').val('');
             });
         });
 
