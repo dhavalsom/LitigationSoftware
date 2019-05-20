@@ -59,6 +59,9 @@
                                 id="btnsrch">
                             Search
                         </button>
+                        <button type="button" class="btn btn-primary btn-sm btn-reset" id="btnreset" onclick="alert("Hi!");">
+                            Reset
+                        </button>
                         <a href="#myModal_0" role="button" class="btn" data-toggle="modal">
                             <img src="~/images/upload.png"
                                  class="imgITHeadDocumentsUploader"
@@ -114,6 +117,11 @@
             $("#FYAYId").val('@(Model.FYAYId.HasValue ? Model.FYAYId.Value.ToString() :"1")');
             loadAssessmentYear();
             loadITReturnDetailsData();
+
+            $(".btn-reset").click(function () {
+                debugger;
+                $(this).closest('form').find('input[type=text], textarea').val('');
+            });
         });
 
         function loadAssessmentYear() {
@@ -137,6 +145,7 @@
 
         $(".ddLitigationDD").change(function () {
             $("#sectionDiv").html('');
+            loadITReturnDetailsData();
         });
 
         $(".ddITSectionCategory").change(function () {
@@ -162,6 +171,7 @@
         });
 
         function loadITReturnDetailsData() {
+            //debugger;
             $.ajax({
                 url: '/TaxReturn/ITReturnDetailsData?fyayId=' + $('#FYAYId').val()
                 + '&itSectionId=' + $('#ITReturnDetailsObject_ITSectionID').val()
@@ -624,5 +634,7 @@
         $(".btn-search").click(function () {
             loadITReturnDetailsData();
         });
+
+       
     </script>
 }

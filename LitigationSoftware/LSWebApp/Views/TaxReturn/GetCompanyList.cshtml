@@ -12,11 +12,7 @@
     }
 </style>
 <h3>List of Entities</h3>
-<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
-@using (Html.BeginForm("CreateCompany", "TaxReturn"))
-{
-    @Html.AntiForgeryToken()
-    if (Model.Companies != null)
+    @if (Model.Companies != null)
     {
         @Html.HiddenFor(m => m.UserId, Model.UserId)
         <table class="table table-hover">
@@ -50,6 +46,6 @@
             }
         </table>
     }
-}
+
 
 
