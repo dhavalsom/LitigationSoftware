@@ -52,6 +52,7 @@
     <Compile Include="ITReturnDetailsBL.cs" />
     <Compile Include="Master.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReportDataBL.cs" />
     <Compile Include="SignIn.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

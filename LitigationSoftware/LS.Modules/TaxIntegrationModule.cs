@@ -14,6 +14,8 @@ namespace LS.Modules
             {
                 Bind<IITReturnDetailsBL>().To<ITReturnDetailsBL>();
                 Bind<IITReturnDetailsDataAccess>().To<ITReturnDetailsDataAccess>();
+                Bind<IReportDataBL>().To<ReportDataBL>();
+                Bind<IReportDataAccess>().To<ReportDataAccess>();
             }
             catch
             {

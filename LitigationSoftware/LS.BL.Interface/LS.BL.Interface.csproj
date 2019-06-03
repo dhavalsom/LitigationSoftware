@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="IITReturnDetailsBL.cs" />
     <Compile Include="IMaster.cs" />
+    <Compile Include="IReportDataBL.cs" />
     <Compile Include="ISignIn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

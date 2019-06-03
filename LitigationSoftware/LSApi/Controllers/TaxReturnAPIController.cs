@@ -249,6 +249,15 @@ namespace LSApi.Controllers
             }
             return result;
         }
+
+        [HttpGet]
+        [Route("GetABCReportData")]
+        // GET: api/TaxReturnAPI/GetABCReportData
+        public ABCReportResponse GetABCReportData(int companyId, bool? isAllowance)
+        {
+            var reportDataBL = _Kernel.Get<IReportDataBL>();
+            return reportDataBL.GetABCReportData(companyId, isAllowance);
+        }
         #endregion
     }
 }
