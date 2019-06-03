@@ -31,7 +31,8 @@ namespace LS.DAL.Library
                             CompanyName = reader["CompanyName"] != DBNull.Value ? reader["CompanyName"].ToString() : null,
                             PANNumber = reader["PANNumber"] != DBNull.Value ? reader["PANNumber"].ToString() : null,
                             Id = Convert.ToInt32(reader["ID"].ToString()),
-                            CategoryID = reader["CategoryID"] != DBNull.Value ? Convert.ToInt32(reader["CategoryID"].ToString()) : 0
+                            CategoryID = reader["CategoryID"] != DBNull.Value ? Convert.ToInt32(reader["CategoryID"].ToString()) : 0,
+                            Active = Convert.ToBoolean(reader["Active"].ToString())
                         });
                     }
                 }
