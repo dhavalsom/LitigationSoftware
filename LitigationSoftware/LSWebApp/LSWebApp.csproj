@@ -171,7 +171,9 @@
     <Compile Include="Infrastructure\Menu.cs" />
     <Compile Include="Infrastructure\MenuItem.cs" />
     <Compile Include="Infrastructure\Utilities.cs" />
+    <Compile Include="Models\ABCReportModel.cs" />
     <Compile Include="Models\BusinessLossAnalysisModel.cs" />
+    <Compile Include="Models\ABCReportDataModel.cs" />
     <Compile Include="Models\CompetitorTaxRatesHeaderModel.cs" />
     <Compile Include="Models\CompetitorTaxRatesDataModel.cs" />
     <Compile Include="Models\RefundDetailsListModel.cs" />
@@ -346,6 +348,8 @@
     <Content Include="Views\TaxReturn\CompetitorTaxRates.cshtml" />
     <Content Include="Views\TaxReturn\CompetitorTaxRatesDetailsData.cshtml" />
     <Content Include="Views\CompanyDashboard\Index.cshtml" />
+    <Content Include="Views\TaxReturn\ABCAnalysis.cshtml" />
+    <Content Include="Views\TaxReturn\ABCAnalysisData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,39 @@
+﻿@model  LSWebApp.Models.ABCReportDataModel
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Sr No.</th>
+            <th>Particular of allowance/disallowance</th>
+            <th>Total (Rs. in Crores)</th>
+            <th>ABC Analysis</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            var srNo = 1;
+            foreach (var item in Model.ABCReportData)
+            {
+                <tr class="table-active">
+                    <td>@srNo</td>
+                    <td>@item.ITSubHead</td>
+                    <td>@item.Total</td>
+                    <td>@item.SubHeadType</td>
+                </tr>
+                srNo++;
+            }
+        }
+    </tbody>
+    @if (Model.ABCReportData.Any())
+    {
+        <thead>
+            <tr>
+                <th></th>
+                <th>Total</th>
+                <th>@Model.ABCReportData.Sum(r => r.Total)</th>
+                <th></th>
+            </tr>
+        </thead>
+    }
+</table>
+

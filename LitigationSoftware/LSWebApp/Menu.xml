@@ -22,13 +22,13 @@
           ControllerName="TaxReturn"
           ActionName="MATCreditDetails"
           Id="11">
-        </MenuItem>
+      </MenuItem>
       <MenuItem
           DisplayText="Competitor Tax Rates"
           ControllerName="TaxReturn"
           ActionName="CompetitorTaxRates"
           Id="12">
-        </MenuItem>
+      </MenuItem>
     </MenuItem>
     <MenuItem
       DisplayText="Computation Sheet"
@@ -79,10 +79,22 @@
       Id="10">
     </MenuItem>
     <MenuItem
+      DisplayText="Reports"
+      ControllerName="#"
+      ActionName="#"
+      Id="12">
+      <MenuItem
       DisplayText="Summary Report"
       ControllerName="TaxReturn"
       ActionName="SummaryReport"
       Id="11">
+      </MenuItem>
+      <MenuItem
+      DisplayText="ABC Analysis"
+      ControllerName="TaxReturn"
+      ActionName="ABCAnalysis"
+      Id="13">
+      </MenuItem>
     </MenuItem>
   </PageId>
   <PageId Value="1">

@@ -1,0 +1,45 @@
+﻿@model  LSWebApp.Models.ABCReportModel
+@{
+    ViewBag.Title = "ABC analysis";
+    Layout = "~/Views/Shared/_LayoutDynemicMenu.cshtml";
+}
+<style type="text/css">
+    .table-condensed {
+        width: 200px;
+        height: 10px;
+        font-size: 10px;
+    }
+</style>
+
+<h3>ABC analysis for @Model.CompanyObject.CompanyName</h3>
+
+<div class="container">
+    <div class="bs-component" id="sectionDiv">
+
+    </div>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+
+        $(document).ready(function () {            
+            loadABCReportData();
+        });
+        
+        function loadABCReportData() {
+            $.ajax({
+                url: '/TaxReturn/ABCAnalysisData?isAllowance=',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                type: 'GET',
+                error: function (xhr, status, error) {
+                    alert("inside error " + xhr.responseText);
+                },
+                dataType: 'html',
+                success: function (data) {
+                    $("#sectionDiv").html(data);                    
+                }
+            });
+        }
+    </script>
+}
