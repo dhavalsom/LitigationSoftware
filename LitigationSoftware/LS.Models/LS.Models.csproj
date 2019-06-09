@@ -44,6 +44,7 @@
     <Compile Include="BaseEntity.cs" />
     <Compile Include="CompetitorMaster.cs" />
     <Compile Include="CompetitorTaxRate.cs" />
+    <Compile Include="CompetitorTaxRateReport.cs" />
     <Compile Include="DocumentCategoryMaster.cs" />
     <Compile Include="Implementor.cs" />
     <Compile Include="RefundDetails.cs" />

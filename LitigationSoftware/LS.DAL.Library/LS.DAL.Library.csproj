@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompanyDashboardDataAccess.cs" />
     <Compile Include="DataAccessBase.cs" />
     <Compile Include="ITReturnDetailsDataAccess.cs" />
     <Compile Include="MasterDataAccess.cs" />
