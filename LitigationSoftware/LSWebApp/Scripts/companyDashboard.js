@@ -25,7 +25,10 @@ window.chartFunctions.push(function () {
 			line: {
 				visible: false
 			},
-			axisCrossingValue: -10
+			axisCrossingValue: -10,
+			title: {
+				text: "Tax Rates"
+			}
 		},
 		categoryAxis: {
 			categories: [],
@@ -34,6 +37,9 @@ window.chartFunctions.push(function () {
 			},
 			labels: {
 				rotation: "auto"
+			},
+			title: {
+				text: "Financial Years"
 			}
 		},
 		tooltip: {
@@ -66,6 +72,9 @@ window.chartFunctions.push(function () {
 					});
 					kendoChartOption.series = series;
 					kendoChartOption.categoryAxis.categories = finYears;
+					if (finYears.length > 7) {
+						kendoChartOption.categoryAxis.labels.rotation = -90;
+					}
 				}
 				$("#chartCTR").kendoChart(kendoChartOption);
 			},
