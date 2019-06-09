@@ -1,0 +1,36 @@
+﻿@model  LSWebApp.Models.CompanyDashboardModel
+@{
+	ViewBag.Title = "Company Dashboard";
+	Layout = "~/Views/Shared/_LayoutDynemicMenu.cshtml";
+}
+<style>
+	table, th, td {
+		border: 1px solid black;
+	}
+</style>
+<h3>Company Dashboard for @Model.CompanyObject.CompanyName</h3>
+
+<div class="demo-section k-content wide">
+	<div id="chartCTR"></div>
+</div>
+
+@section scripts
+{
+	<link rel="stylesheet" href="@Url.Content("~/Content/KendoUI/kendo.common.min.css")" />
+	<link rel="stylesheet" href="@Url.Content("~/Content/KendoUI/kendo.default.min.css")" />
+	<script src="@Url.Content("~/Content/KendoUI/kendo.all.min.js")" type="text/javascript"></script>
+	<script src="@Url.Content("~/Scripts/companyDashboard.js")" type="text/javascript"></script>
+
+	<script>
+		var companyId = @Model.CompanyObject.Id;
+		$(document).ready(function () {
+			if (window.chartFunctions !== undefined && window.chartFunctions.length > 0) {
+				$.each(window.chartFunctions, (idx, fn) => {
+					if (fn) {
+						fn.apply();
+					}
+				});
+			}
+		});		
+	</script>
+}
