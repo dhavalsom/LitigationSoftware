@@ -2397,6 +2397,59 @@ namespace LSWebApp.Controllers
                 return RedirectToAction("MATCreditDetails");
             }
         }
+
+        [HttpGet]
+        public ActionResult ABCAnalysis()
+        {
+            Company selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+            ABCReportModel model = new ABCReportModel
+            {
+                CompanyObject = selectedCompany,
+                IsAllowance = false
+            };
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ABCAnalysisData(bool? isAllowance)
+        {
+            var selectedCompany = HttpContext.Session["SelectedCompany"] as Company;
+            if (selectedCompany == null)
+            {
+                return RedirectToAction("GetCompanyList");
+            }
+            ABCReportDataModel model = new ABCReportDataModel();
+
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+                    client.DefaultRequestHeaders.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpResponseMessage Res = await client.GetAsync("api/TaxReturnAPI/GetABCReportData?companyId="
+                        + selectedCompany.Id + "&isAllowance=" + (isAllowance.HasValue ? isAllowance.Value.ToString() : ""));
+                    var result = JsonConvert.DeserializeObject<ABCReportResponse>(Res.Content.ReadAsStringAsync().Result);
+                    if (result != null)
+                    {
+                        if (result.ABCReportData != null
+                            && result.ABCReportData.Any())
+                        {
+                            model.ABCReportData = result.ABCReportData;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return PartialView(model);
+        }
         #endregion
     }
 }

@@ -348,6 +348,8 @@
     <Content Include="Views\TaxReturn\CompetitorTaxRates.cshtml" />
     <Content Include="Views\TaxReturn\CompetitorTaxRatesDetailsData.cshtml" />
     <Content Include="Views\CompanyDashboard\Index.cshtml" />
+    <Content Include="Views\TaxReturn\ABCAnalysis.cshtml" />
+    <Content Include="Views\TaxReturn\ABCAnalysisData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
