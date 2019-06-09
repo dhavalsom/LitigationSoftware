@@ -93,7 +93,7 @@
       Id="1">
     </MenuItem>
     <MenuItem
-      DisplayText="List of Companies"
+      DisplayText="List of Entities"
       ControllerName="TaxReturn"
       ActionName="GetCompanyList"
       Id="2">

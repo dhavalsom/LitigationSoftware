@@ -22,7 +22,7 @@
                         <a class="nav-link" href="@Url.Action("Index","TaxReturn")">Register Company</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("GetCompanyList","TaxReturn")">List of Companies</a>
+                        <a class="nav-link" href="@Url.Action("GetCompanyList","TaxReturn")">List of Entities</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="@Url.Action("GetComplianceList","TaxReturn")">Compliances</a>
@@ -44,15 +44,18 @@
             <p>Litigation Tracking Application - Copyright &copy; @DateTime.Now.Year</p>
         </footer>
     </div>
-    
+
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryajax")
+    @Scripts.Render("~/bundles/microsoftajax")
     @Scripts.Render("~/bundles/bootstrap")
     <script src="@Url.Content("~/Scripts/customDD.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/manageSubHead.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/manageSubDocumentCategory.js")" type="text/javascript"></script>
     @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">*@
     @RenderSection("scripts", required: false)
+
 
 </body>
 </html>
