@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ICompanyDashboard.cs" />
     <Compile Include="IITReturnDetailsBL.cs" />
     <Compile Include="IMaster.cs" />
     <Compile Include="ISignIn.cs" />

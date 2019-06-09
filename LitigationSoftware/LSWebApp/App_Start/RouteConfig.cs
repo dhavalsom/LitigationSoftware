@@ -272,6 +272,7 @@ namespace LSWebApp
                 }
             );
 
+			/*
             routes.MapRoute(
                 name: "companydashboard",
                 url: "companydashboard/{companyId}",
@@ -282,6 +283,7 @@ namespace LSWebApp
                     id = UrlParameter.Optional
                 }
             );
+			*/
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

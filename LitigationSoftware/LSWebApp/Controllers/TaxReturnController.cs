@@ -409,8 +409,8 @@ namespace LSWebApp.Controllers
                     }
                 }
             }
-            return View(new CompanyDashboardModel() { CompanyObject = HttpContext.Session["SelectedCompany"]  as Company });
-        }
+			return RedirectToAction("Index", "CompanyDashboard");
+		}
 
         [HttpGet]
         public async Task<ActionResult> BusinessLossAnalysis()
