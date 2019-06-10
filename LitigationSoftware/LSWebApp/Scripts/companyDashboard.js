@@ -4,6 +4,31 @@
 
 var chartContainerDiv = "#divChart";
 
+$(document).ready(function () {
+	displayChart();
+});
+function displayChart() {
+	if (window.chartFunctions !== undefined && window.chartFunctions.length > 0) {
+		var chartItem = null; //window.chartFunctions.find(ch => ch.chartId == chartId);
+		$.each(window.chartFunctions, function(idx, item) {
+			if (item.chartId == chartId) {
+				chartItem = item;
+			}
+		});
+		if (chartItem != null) {
+			if (chartItem.fn) {
+				chartItem.fn.apply();
+			}
+		}
+	}
+}
+$('#btnBack').click(function () {
+	window.location = '/CompanyDashboard/';
+});
+$('#noOfYears').change(function () {
+	displayChart();
+});
+
 window.chartFunctions.push({
 	chartId: 1, fn: function () {
 		var kendoChartOption = {
@@ -59,17 +84,28 @@ window.chartFunctions.push({
 					if (response != null && !!response.IsSuccess) {
 						var series = [];
 						var finYears = [];
-						$.each(response.CompetitorTaxRates, (idx, item) => {
+						$.each(response.CompetitorTaxRates, function (idx, item) {
 							var srItem = null;
-							if (series.length == 0 || series.findIndex(sr => sr.name == item.CompetitorName) == -1) {
+							if (series.length == 0) {
 								srItem = { name: item.CompetitorName, data: [] };
 								series.push(srItem);
 							} else {
-								srItem = series.find(sr => sr.name == item.CompetitorName);
+								$.each(series, function (idx, sr) {
+									if (sr.name == item.CompetitorName) {
+										srItem = sr;
+									}
+								});								
 							}
-							srItem.data.push(item.TaxRate);
-
-							if (finYears.findIndex(fy => fy == item.FinancialYear) == -1) {
+							if (srItem) {
+								srItem.data.push(item.TaxRate);
+							}
+							var isYearFound = false;
+							$.each(finYears, function (idx, fy) {
+								if (fy == item.FinancialYear) {
+									isYearFound = true;
+								}
+							});
+							if (!isYearFound) {
 								finYears.push(item.FinancialYear);
 							}
 						});
@@ -137,12 +173,18 @@ window.chartFunctions.push({
 					if (response != null && !!response.IsSuccess) {
 						var series = [{ type: "column", name: "Tax Provisions", data: [] }, { type: "column", name: "Tax Assets", data: [] }, { type: "line", name: "Contingent Liabilities", data: [] }];
 						var finYears = [];
-						$.each(response.ITReturnProvisions, (idx, item) => {
+						$.each(response.ITReturnProvisions, function (idx, item) {
 							series[0].data.push(item.TaxProvisions);
 							series[1].data.push(item.TaxAssets);
 							series[2].data.push(item.ContingentLiabilities);
 
-							if (finYears.findIndex(fy => fy == item.FinancialYear) == -1) {
+							var isYearFound = false;
+							$.each(finYears, function (idx, fy) {
+								if (fy == item.FinancialYear) {
+									isYearFound = true;
+								}
+							});
+							if (!isYearFound) {
 								finYears.push(item.FinancialYear);
 							}
 						});

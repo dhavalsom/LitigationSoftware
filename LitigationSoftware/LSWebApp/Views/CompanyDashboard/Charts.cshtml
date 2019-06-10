@@ -38,26 +38,6 @@
 
 	<script>
 		var companyId = @Model.CompanyObject.Id;
-		var chartId = @Model.ChartId;
-
-		$(document).ready(function () {			
-			displayChart();
-		});
-		function displayChart() {
-			if (window.chartFunctions !== undefined && window.chartFunctions.length > 0) {
-				var chartItem = window.chartFunctions.find(ch => ch.chartId == chartId);
-				if (chartItem != null) {
-					if (chartItem.fn) {
-						chartItem.fn.apply();
-					}
-				}
-			}
-		}
-		$('#btnBack').click(function () {
-			window.location = '/CompanyDashboard/';
-		});
-		$('#noOfYears').change(function () {
-			displayChart();
-		});
+		var chartId = @Model.ChartId;		
 	</script>
 }
