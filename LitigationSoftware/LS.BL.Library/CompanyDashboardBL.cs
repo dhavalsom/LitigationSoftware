@@ -41,6 +41,22 @@ namespace LS.BL.Library
 			}
 		}
 
+		public ITReturnProvisionReportResponse GetITReturnProvisions(int CompanyId, int NoOfYears)
+		{
+			try
+			{
+				return this._dashboardDA.GetITReturnProvisions(CompanyId, NoOfYears);
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+			finally
+			{
+				//Log
+			}
+		}
+
 		#endregion
 
 		#region IDisposable
@@ -55,7 +71,7 @@ namespace LS.BL.Library
 			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
-
+		
 		#endregion
 
 	}

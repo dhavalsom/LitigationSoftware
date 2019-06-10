@@ -48,6 +48,7 @@
     <Compile Include="CompetitorTaxRateReport.cs" />
     <Compile Include="DocumentCategoryMaster.cs" />
     <Compile Include="Implementor.cs" />
+    <Compile Include="ITReturnProvisionReport.cs" />
     <Compile Include="RefundDetails.cs" />
     <Compile Include="SubDocumentCategoryMaster.cs" />
     <Compile Include="MATCreditDetails.cs" />

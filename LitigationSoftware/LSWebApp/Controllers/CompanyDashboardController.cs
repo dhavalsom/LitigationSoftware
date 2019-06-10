@@ -38,5 +38,36 @@ namespace LSWebApp.Controllers
 			}
 			return Json(resModel,JsonRequestBehavior.AllowGet);
 		}
+
+		[HttpGet]
+		public ActionResult Charts(int chartId)
+		{
+			var model = new ChartModel()
+			{
+				CompanyObject = HttpContext.Session["SelectedCompany"] as Company,
+				ChartId = chartId
+			};
+			return View(model);
+		}
+
+		[HttpGet]
+		public async Task<ActionResult> ITReturnProvisions(int companyId, int noOfYears)
+		{
+			ITReturnProvisionReportResponse resModel = null;
+			using (var client = new HttpClient())
+			{
+				client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+				client.DefaultRequestHeaders.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				HttpResponseMessage Res = await client.GetAsync("api/CompanyDashboardAPI/ITReturnProvisions?companyId=" + companyId.ToString() + "&NoOfYears=" + noOfYears.ToString());
+				if (Res.IsSuccessStatusCode)
+				{
+					resModel = JsonConvert.DeserializeObject<ITReturnProvisionReportResponse>(Res.Content.ReadAsStringAsync().Result);
+				}
+			}
+			return Json(resModel, JsonRequestBehavior.AllowGet);
+		}
+			
+
 	}
 }
