@@ -10,5 +10,7 @@ namespace LS.DAL.Interface
 	public interface ICompanyDashboardDataAccess : IDataAccessBase
 	{
 		CompetitorTaxRateReportResponse GetCompetitorTaxRates(int CompanyId);
+		ITReturnProvisionReportResponse GetITReturnProvisions(int CompanyId, int NoOfYears);
 	}
+
 }

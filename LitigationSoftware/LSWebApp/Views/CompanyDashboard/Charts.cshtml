@@ -1,0 +1,43 @@
+﻿@model  LSWebApp.Models.ChartModel
+@{
+	ViewBag.Title = "Charts";
+	Layout = "~/Views/Shared/_LayoutDynemicMenu.cshtml";
+}
+
+<br />
+@if (Model.ChartId == 2)
+{
+	<div class="text-center">
+		<label>Select No Of Years: </label>
+		<select id="noOfYears">
+			<option value="5" selected>Last 5 Years</option>
+			<option value="10">Last 10 Years</option>
+			<option value="15">Last 15 Years</option>
+			<option value="20">Last 20 Years</option>
+			<option value="100">All Years</option>
+		</select>
+	</div>
+	<br />
+}
+<div class="demo-section k-content wide">
+	<div id="divChart"></div>
+</div>
+
+<div class="text-center" style="margin-top: 20px;">
+	<button type="button" class="btn btn-primary" id="btnBack">
+		Back
+	</button>
+</div>
+
+@section scripts
+{
+	<link rel="stylesheet" href="@Url.Content("~/Content/KendoUI/kendo.common.min.css")" />
+	<link rel="stylesheet" href="@Url.Content("~/Content/KendoUI/kendo.default.min.css")" />
+	<script src="@Url.Content("~/Content/KendoUI/kendo.all.min.js")" type="text/javascript"></script>
+	<script src="@Url.Content("~/Scripts/companyDashboard.js")" type="text/javascript"></script>
+
+	<script>
+		var companyId = @Model.CompanyObject.Id;
+		var chartId = @Model.ChartId;		
+	</script>
+}

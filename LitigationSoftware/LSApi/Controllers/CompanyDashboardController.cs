@@ -36,6 +36,16 @@ namespace LSApi.Controllers
 			return result;
 		}
 
+
+		[HttpGet]
+		[Route("ITReturnProvisions")]
+		public ITReturnProvisionReportResponse GetITReturnProvisions(int CompanyId, int NoOfYears)
+		{
+			var dashboardObj = _Kernel.Get<ICompanyDashboard>();
+			var result = dashboardObj.GetITReturnProvisions(CompanyId, NoOfYears);
+			return result;
+		}
+
 		#endregion
 
 

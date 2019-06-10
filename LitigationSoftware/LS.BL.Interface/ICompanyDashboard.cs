@@ -10,5 +10,6 @@ namespace LS.BL.Interface
 	public interface ICompanyDashboard
 	{
 		CompetitorTaxRateReportResponse GetCompetitorTaxRates(int CompanyId);
+		ITReturnProvisionReportResponse GetITReturnProvisions(int CompanyId, int NoOfYears);
 	}
 }
