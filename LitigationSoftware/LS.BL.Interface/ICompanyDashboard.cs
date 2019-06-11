@@ -11,5 +11,6 @@ namespace LS.BL.Interface
 	{
 		CompetitorTaxRateReportResponse GetCompetitorTaxRates(int CompanyId);
 		ITReturnProvisionReportResponse GetITReturnProvisions(int CompanyId, int NoOfYears);
+		QuarterlyAdvanceTaxReportResponse GetQuarterlyAdvanceTaxes(int CompanyId, int NoOfYears);
 	}
 }

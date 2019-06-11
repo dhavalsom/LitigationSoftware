@@ -29,6 +29,54 @@ $('#noOfYears').change(function () {
 	displayChart();
 });
 
+function getUniqueValArray(data, valProp) {
+	var list = [];
+	if (data != null && data.length > 0) {		
+		$.each(data, function (idx, item) {
+			var isFound = false;
+			$.each(list, function (idx, val) {
+				if (val == item[valProp]) {
+					isFound = true;
+				}
+			});
+			if (!isFound) {
+				list.push(item[valProp]);
+			}
+		});		
+	}
+	return list;
+}
+
+function getSerieArray(data, nameProp, dataProp) {
+	var series = [];
+
+	if (data != null && data.length > 0) {
+		$.each(data, function (idx, item) {
+			var srItem = null;
+			$.each(series, function (idx, sr) {
+				if (sr.name == item[nameProp]) {
+					srItem = sr;
+				}
+			});
+			if (srItem == null) {
+				srItem = { name: item[nameProp], data: [] };
+				series.push(srItem);
+			}
+			if (srItem) {
+				srItem.data.push(item[dataProp]);
+			}
+		});
+	}
+
+	return series;
+}
+
+function setCategoryAxisLabelRotation(catLen, chartOpt) {
+	if (catLen > 7) {
+		chartOpt.categoryAxis.labels.rotation = -90;
+	}
+}
+
 window.chartFunctions.push({
 	chartId: 1, fn: function () {
 		var kendoChartOption = {
@@ -82,38 +130,11 @@ window.chartFunctions.push({
 				url: '/CompanyDashboard/CompetitorTaxRates?companyId=' + companyId,
 				success: function (response) {
 					if (response != null && !!response.IsSuccess) {
-						var series = [];
-						var finYears = [];
-						$.each(response.CompetitorTaxRates, function (idx, item) {
-							var srItem = null;
-							if (series.length == 0) {
-								srItem = { name: item.CompetitorName, data: [] };
-								series.push(srItem);
-							} else {
-								$.each(series, function (idx, sr) {
-									if (sr.name == item.CompetitorName) {
-										srItem = sr;
-									}
-								});								
-							}
-							if (srItem) {
-								srItem.data.push(item.TaxRate);
-							}
-							var isYearFound = false;
-							$.each(finYears, function (idx, fy) {
-								if (fy == item.FinancialYear) {
-									isYearFound = true;
-								}
-							});
-							if (!isYearFound) {
-								finYears.push(item.FinancialYear);
-							}
-						});
+						var series = getSerieArray(response.CompetitorTaxRates, 'CompetitorName', 'TaxRate');
+						var finYears = getUniqueValArray(response.CompetitorTaxRates, 'FinancialYear');
 						kendoChartOption.series = series;
 						kendoChartOption.categoryAxis.categories = finYears;
-						if (finYears.length > 7) {
-							kendoChartOption.categoryAxis.labels.rotation = -90;
-						}
+						setCategoryAxisLabelRotation(finYears.length, kendoChartOption);
 					}
 					$(chartContainerDiv).kendoChart(kendoChartOption);
 				},
@@ -176,23 +197,78 @@ window.chartFunctions.push({
 						$.each(response.ITReturnProvisions, function (idx, item) {
 							series[0].data.push(item.TaxProvisions);
 							series[1].data.push(item.TaxAssets);
-							series[2].data.push(item.ContingentLiabilities);
-
-							var isYearFound = false;
-							$.each(finYears, function (idx, fy) {
-								if (fy == item.FinancialYear) {
-									isYearFound = true;
-								}
-							});
-							if (!isYearFound) {
-								finYears.push(item.FinancialYear);
-							}
+							series[2].data.push(item.ContingentLiabilities);							
 						});
+						finYears = getUniqueValArray(response.ITReturnProvisions, 'FinancialYear');
 						kendoChartOption.series = series;
 						kendoChartOption.categoryAxis.categories = finYears;
-						if (finYears.length > 7) {
-							kendoChartOption.categoryAxis.labels.rotation = -90;
-						}
+						setCategoryAxisLabelRotation(finYears.length, kendoChartOption);
+					}
+					$(chartContainerDiv).kendoChart(kendoChartOption);
+				},
+				contentType: "application/json",
+				dataType: 'json'
+			});
+		})();
+	}
+});
+
+window.chartFunctions.push({
+	chartId: 3, fn: function () {
+		var kendoChartOption = {
+			title: {
+				text: "ADVANCE TAX : Y-o-Y trends in estimating income"
+			},
+			legend: {
+				position: "bottom"
+			},
+			chartArea: {
+				background: ""
+			},
+			seriesDefaults: {
+				type: "column",
+				style: "smooth"
+			},
+			series: [],
+			valueAxis: {
+				labels: {
+					format: "{0}"
+				},
+				line: {
+					visible: false
+				},
+				axisCrossingValue: -10
+			},
+			categoryAxis: {
+				categories: [],
+				majorGridLines: {
+					visible: false
+				},
+				labels: {
+					rotation: "auto"
+				},
+				title: {
+					text: "Financial Years"
+				}
+			},
+			tooltip: {
+				visible: true,
+				format: "{0}%",
+				template: "#= series.name #: #= value #"
+			}
+		};
+		(function () {
+			var noOfYears = $('#noOfYears').val();
+			$.ajax({
+				type: 'GET',
+				url: '/CompanyDashboard/QuarterlyAdvanceTaxes?companyId=' + companyId + '&noOfYears=' + noOfYears,
+				success: function (response) {
+					if (response != null && !!response.IsSuccess) {
+						var series = getSerieArray(response.AdvanceTaxes, 'Quarter', 'AdvanceTax');
+						var finYears = getUniqueValArray(response.AdvanceTaxes, 'FinancialYear');
+						kendoChartOption.series = series;
+						kendoChartOption.categoryAxis.categories = finYears;
+						setCategoryAxisLabelRotation(finYears.length, kendoChartOption);
 					}
 					$(chartContainerDiv).kendoChart(kendoChartOption);
 				},

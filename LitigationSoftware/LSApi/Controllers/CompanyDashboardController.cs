@@ -46,6 +46,15 @@ namespace LSApi.Controllers
 			return result;
 		}
 
+		[HttpGet]
+		[Route("QuarterlyAdvanceTaxes")]
+		public QuarterlyAdvanceTaxReportResponse GetQuarterlyAdvanceTaxes(int CompanyId, int NoOfYears)
+		{
+			var dashboardObj = _Kernel.Get<ICompanyDashboard>();
+			var result = dashboardObj.GetQuarterlyAdvanceTaxes(CompanyId, NoOfYears);
+			return result;
+		}
+
 		#endregion
 
 
