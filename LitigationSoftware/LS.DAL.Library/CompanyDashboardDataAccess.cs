@@ -117,6 +117,57 @@ namespace LS.DAL.Library
 			return _response;
 		}
 
+		public QuarterlyAdvanceTaxReportResponse GetQuarterlyAdvanceTaxes(int CompanyId, int NoOfYears)
+		{
+			QuarterlyAdvanceTaxReportResponse _response = null;
+			try
+			{
+				Log.Info("GetQuarterlyAdvanceTaxes.Start");
+				Log.Info("parameter values" + JsonConvert.SerializeObject(new { companyId = CompanyId, noOfYears = NoOfYears }));
+				Command.CommandText = "SP_GET_ADVANCE_TAX_REPORT";
+				Command.CommandType = CommandType.StoredProcedure;
+				Command.Parameters.Clear();
+
+				Command.Parameters.AddWithValue("@COMPANY_ID", CompanyId);
+				Command.Parameters.AddWithValue("@NO_OF_YEARS", NoOfYears);
+
+				Connection.Open();
+				SqlDataReader reader = Command.ExecuteReader();
+				_response = new QuarterlyAdvanceTaxReportResponse();
+				if (reader.HasRows)
+				{
+					_response.IsSuccess = true;
+					while (reader.Read())
+					{
+						_response.AdvanceTaxes.Add(new QuarterlyAdvanceTaxReport()
+						{
+							FYAYId = int.Parse(reader["FYAYID"].ToString()),
+							FinancialYear = reader["FinancialYear"] != DBNull.Value ? reader["FinancialYear"].ToString() : string.Empty,
+							Quarter = reader["Quarter"] != DBNull.Value ? reader["Quarter"].ToString() : string.Empty,
+							AdvanceTax = decimal.Parse(reader["AdvanceTax"].ToString())
+						});
+					}
+				}
+				else
+				{
+					_response.IsSuccess = false;
+					_response.Message = "No data found";
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Error("GetQuarterlyAdvanceTaxes.Error:" + JsonConvert.SerializeObject(ex));
+				LogError(ex);
+				throw;
+			}
+			finally
+			{
+				Connection.Close();
+				Log.Info("GetQuarterlyAdvanceTaxes.End");
+			}
+			return _response;
+		}
+
 		#endregion
 	}
 }

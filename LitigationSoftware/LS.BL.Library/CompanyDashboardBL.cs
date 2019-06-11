@@ -57,6 +57,22 @@ namespace LS.BL.Library
 			}
 		}
 
+		public QuarterlyAdvanceTaxReportResponse GetQuarterlyAdvanceTaxes(int CompanyId, int NoOfYears)
+		{
+			try
+			{
+				return this._dashboardDA.GetQuarterlyAdvanceTaxes(CompanyId, NoOfYears);
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+			finally
+			{
+				//Log
+			}
+		}
+
 		#endregion
 
 		#region IDisposable
@@ -71,7 +87,7 @@ namespace LS.BL.Library
 			Dispose(true);
 			GC.SuppressFinalize(this);
 		}
-		
+
 		#endregion
 
 	}

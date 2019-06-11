@@ -67,7 +67,25 @@ namespace LSWebApp.Controllers
 			}
 			return Json(resModel, JsonRequestBehavior.AllowGet);
 		}
-			
+
+		[HttpGet]
+		public async Task<ActionResult> QuarterlyAdvanceTaxes(int companyId, int noOfYears)
+		{
+			QuarterlyAdvanceTaxReportResponse resModel = null;
+			using (var client = new HttpClient())
+			{
+				client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
+				client.DefaultRequestHeaders.Clear();
+				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+				HttpResponseMessage Res = await client.GetAsync("api/CompanyDashboardAPI/QuarterlyAdvanceTaxes?companyId=" + companyId.ToString() + "&NoOfYears=" + noOfYears.ToString());
+				if (Res.IsSuccessStatusCode)
+				{
+					resModel = JsonConvert.DeserializeObject<QuarterlyAdvanceTaxReportResponse>(Res.Content.ReadAsStringAsync().Result);
+				}
+			}
+			return Json(resModel, JsonRequestBehavior.AllowGet);
+		}
+
 
 	}
 }
