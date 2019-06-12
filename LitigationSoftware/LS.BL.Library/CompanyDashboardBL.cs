@@ -73,6 +73,22 @@ namespace LS.BL.Library
 			}
 		}
 
+		public TaxLiabilityReportResponse GetTaxLiabilities(int CompanyId, int NoOfYears)
+		{
+			try
+			{
+				return this._dashboardDA.GetTaxLiabilities(CompanyId, NoOfYears);
+			}
+			catch (Exception ex)
+			{
+				throw ex;
+			}
+			finally
+			{
+				//Log
+			}
+		}
+
 		#endregion
 
 		#region IDisposable

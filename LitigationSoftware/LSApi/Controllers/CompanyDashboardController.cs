@@ -55,6 +55,15 @@ namespace LSApi.Controllers
 			return result;
 		}
 
+		[HttpGet]
+		[Route("TaxLiabilities")]
+		public TaxLiabilityReportResponse GetTaxLiabilities(int CompanyId, int NoOfYears)
+		{
+			var dashboardObj = _Kernel.Get<ICompanyDashboard>();
+			var result = dashboardObj.GetTaxLiabilities(CompanyId, NoOfYears);
+			return result;
+		}
+
 		#endregion
 
 

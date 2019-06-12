@@ -3,6 +3,7 @@
 }
 
 var chartContainerDiv = "#divChart";
+var chartSerieColors = ['#b71c1c', '#1a237e', '#004d40', '#03a9f4', '#ff9800', '#fad84a', '#4caf50'];
 
 $(document).ready(function () {
 	displayChart();
@@ -83,6 +84,7 @@ window.chartFunctions.push({
 			title: {
 				text: "Y-o-Y trends in Effective Tax Rates"
 			},
+			seriesColors: chartSerieColors,
 			legend: {
 				position: "bottom"
 			},
@@ -151,6 +153,7 @@ window.chartFunctions.push({
 			title: {
 				text: "Y-o-Y trends in Effective Tax Rates"
 			},
+			seriesColors: chartSerieColors,
 			legend: {
 				position: "bottom"
 			},
@@ -219,6 +222,7 @@ window.chartFunctions.push({
 			title: {
 				text: "ADVANCE TAX : Y-o-Y trends in estimating income"
 			},
+			seriesColors: chartSerieColors,
 			legend: {
 				position: "bottom"
 			},
@@ -266,6 +270,77 @@ window.chartFunctions.push({
 					if (response != null && !!response.IsSuccess) {
 						var series = getSerieArray(response.AdvanceTaxes, 'Quarter', 'AdvanceTax');
 						var finYears = getUniqueValArray(response.AdvanceTaxes, 'FinancialYear');
+						kendoChartOption.series = series;
+						kendoChartOption.categoryAxis.categories = finYears;
+						setCategoryAxisLabelRotation(finYears.length, kendoChartOption);
+					}
+					$(chartContainerDiv).kendoChart(kendoChartOption);
+				},
+				contentType: "application/json",
+				dataType: 'json'
+			});
+		})();
+	}
+});
+
+window.chartFunctions.push({
+	chartId: 4, fn: function () {
+		var kendoChartOption = {
+			title: {
+				text: "How tax liabilities is discharged (amounts are in INR milion)"
+			},
+			seriesColors: chartSerieColors,
+			legend: {
+				position: "bottom"
+			},
+			chartArea: {
+				background: ""
+			},
+			seriesDefaults: {
+				type: "column",
+				style: "smooth",
+				stack: true
+			},
+			series: [],
+			valueAxis: {
+				labels: {
+					format: "{0}"
+				},
+				line: {
+					visible: false
+				},
+				axisCrossingValue: -10,
+				title: {
+					text: "Tax (amount in INR milion)"
+				}
+			},
+			categoryAxis: {
+				categories: [],
+				majorGridLines: {
+					visible: false
+				},
+				labels: {
+					rotation: "auto"
+				},
+				title: {
+					text: "Financial Years"
+				}
+			},
+			tooltip: {
+				visible: true,
+				format: "{0}%",
+				template: "#= series.name #: #= value #"
+			}
+		};
+		(function () {
+			var noOfYears = $('#noOfYears').val();
+			$.ajax({
+				type: 'GET',
+				url: '/CompanyDashboard/TaxLiabilities?companyId=' + companyId + '&noOfYears=' + noOfYears,
+				success: function (response) {
+					if (response != null && !!response.IsSuccess) {
+						var series = getSerieArray(response.Taxes, 'TaxTypeName', 'Tax');
+						var finYears = getUniqueValArray(response.Taxes, 'FinancialYear');
 						kendoChartOption.series = series;
 						kendoChartOption.categoryAxis.categories = finYears;
 						setCategoryAxisLabelRotation(finYears.length, kendoChartOption);

@@ -73,6 +73,7 @@
     <Compile Include="Role.cs" />
     <Compile Include="StandardData.cs" />
     <Compile Include="SurchargeData.cs" />
+    <Compile Include="TaxLiabilityReport.cs" />
     <Compile Include="UserLogin.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

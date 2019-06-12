@@ -12,6 +12,7 @@ namespace LS.DAL.Interface
 		CompetitorTaxRateReportResponse GetCompetitorTaxRates(int CompanyId);
 		ITReturnProvisionReportResponse GetITReturnProvisions(int CompanyId, int NoOfYears);
 		QuarterlyAdvanceTaxReportResponse GetQuarterlyAdvanceTaxes(int CompanyId, int NoOfYears);
+		TaxLiabilityReportResponse GetTaxLiabilities(int CompanyId, int NoOfYears);
 	}
 
 }

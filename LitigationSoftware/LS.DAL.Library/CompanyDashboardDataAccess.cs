@@ -168,6 +168,57 @@ namespace LS.DAL.Library
 			return _response;
 		}
 
+		public TaxLiabilityReportResponse GetTaxLiabilities(int CompanyId, int NoOfYears)
+		{
+			TaxLiabilityReportResponse _response = null;
+			try
+			{
+				Log.Info("GetTaxLiabilities.Start");
+				Log.Info("parameter values" + JsonConvert.SerializeObject(new { companyId = CompanyId, noOfYears = NoOfYears }));
+				Command.CommandText = "SP_GET_TAX_LIABILITY_REPORT";
+				Command.CommandType = CommandType.StoredProcedure;
+				Command.Parameters.Clear();
+
+				Command.Parameters.AddWithValue("@COMPANY_ID", CompanyId);
+				Command.Parameters.AddWithValue("@NO_OF_YEARS", NoOfYears);
+
+				Connection.Open();
+				SqlDataReader reader = Command.ExecuteReader();
+				_response = new TaxLiabilityReportResponse();
+				if (reader.HasRows)
+				{
+					_response.IsSuccess = true;
+					while (reader.Read())
+					{
+						_response.Taxes.Add(new TaxLiabilityReport()
+						{
+							FYAYId = int.Parse(reader["FYAYID"].ToString()),
+							FinancialYear = reader["FinancialYear"] != DBNull.Value ? reader["FinancialYear"].ToString() : string.Empty,
+							TaxTypeName = reader["TaxTypeName"] != DBNull.Value ? reader["TaxTypeName"].ToString() : string.Empty,
+							Tax = decimal.Parse(reader["Tax"].ToString())
+						});
+					}
+				}
+				else
+				{
+					_response.IsSuccess = false;
+					_response.Message = "No data found";
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Error("GetTaxLiabilities.Error:" + JsonConvert.SerializeObject(ex));
+				LogError(ex);
+				throw;
+			}
+			finally
+			{
+				Connection.Close();
+				Log.Info("GetTaxLiabilities.End");
+			}
+			return _response;
+		}
+
 		#endregion
 	}
 }
