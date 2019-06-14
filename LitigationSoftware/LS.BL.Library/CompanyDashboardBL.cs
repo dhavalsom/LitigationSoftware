@@ -25,22 +25,6 @@ namespace LS.BL.Library
 
 		#region ICompanyDashboard Methods
 
-		public CompetitorTaxRateReportResponse GetCompetitorTaxRates(int CompanyId)
-		{
-			try
-			{
-				return this._dashboardDA.GetCompetitorTaxRates(CompanyId);
-			}
-			catch (Exception ex)
-			{
-				throw ex;
-			}
-			finally
-			{
-				//Log
-			}
-		}
-
 		public ITReturnProvisionReportResponse GetITReturnProvisions(int CompanyId, int NoOfYears)
 		{
 			try
@@ -57,11 +41,11 @@ namespace LS.BL.Library
 			}
 		}
 
-		public QuarterlyAdvanceTaxReportResponse GetQuarterlyAdvanceTaxes(int CompanyId, int NoOfYears)
+		public ChartDataResponse GetChartData(ChartDataModel chartDataModel)
 		{
 			try
 			{
-				return this._dashboardDA.GetQuarterlyAdvanceTaxes(CompanyId, NoOfYears);
+				return this._dashboardDA.GetChartData(chartDataModel);
 			}
 			catch (Exception ex)
 			{
@@ -71,22 +55,7 @@ namespace LS.BL.Library
 			{
 				//Log
 			}
-		}
 
-		public TaxLiabilityReportResponse GetTaxLiabilities(int CompanyId, int NoOfYears)
-		{
-			try
-			{
-				return this._dashboardDA.GetTaxLiabilities(CompanyId, NoOfYears);
-			}
-			catch (Exception ex)
-			{
-				throw ex;
-			}
-			finally
-			{
-				//Log
-			}
 		}
 
 		#endregion

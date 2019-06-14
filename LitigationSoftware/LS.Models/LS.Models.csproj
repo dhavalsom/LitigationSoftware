@@ -43,13 +43,12 @@
   <ItemGroup>
     <Compile Include="ABCReport.cs" />
     <Compile Include="BaseEntity.cs" />
+    <Compile Include="ChartData.cs" />
     <Compile Include="CompetitorMaster.cs" />
     <Compile Include="CompetitorTaxRate.cs" />
-    <Compile Include="CompetitorTaxRateReport.cs" />
     <Compile Include="DocumentCategoryMaster.cs" />
     <Compile Include="Implementor.cs" />
     <Compile Include="ITReturnProvisionReport.cs" />
-    <Compile Include="QuarterlyAdvanceTaxReport.cs" />
     <Compile Include="RefundDetails.cs" />
     <Compile Include="SubDocumentCategoryMaster.cs" />
     <Compile Include="MATCreditDetails.cs" />
@@ -73,7 +72,6 @@
     <Compile Include="Role.cs" />
     <Compile Include="StandardData.cs" />
     <Compile Include="SurchargeData.cs" />
-    <Compile Include="TaxLiabilityReport.cs" />
     <Compile Include="UserLogin.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

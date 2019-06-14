@@ -28,16 +28,6 @@ namespace LSApi.Controllers
 		#region Action Methods 
 
 		[HttpGet]
-		[Route("CompetitorTaxRates")]
-		public CompetitorTaxRateReportResponse GetCompetitorTaxRates(int CompanyId)
-		{
-			var dashboardObj = _Kernel.Get<ICompanyDashboard>();
-			var result = dashboardObj.GetCompetitorTaxRates(CompanyId);
-			return result;
-		}
-
-
-		[HttpGet]
 		[Route("ITReturnProvisions")]
 		public ITReturnProvisionReportResponse GetITReturnProvisions(int CompanyId, int NoOfYears)
 		{
@@ -45,22 +35,14 @@ namespace LSApi.Controllers
 			var result = dashboardObj.GetITReturnProvisions(CompanyId, NoOfYears);
 			return result;
 		}
+			
 
-		[HttpGet]
-		[Route("QuarterlyAdvanceTaxes")]
-		public QuarterlyAdvanceTaxReportResponse GetQuarterlyAdvanceTaxes(int CompanyId, int NoOfYears)
+		[HttpPost]
+		[Route("ChartData")]
+		public ChartDataResponse GetChartData(ChartDataModel chartDataModel)
 		{
 			var dashboardObj = _Kernel.Get<ICompanyDashboard>();
-			var result = dashboardObj.GetQuarterlyAdvanceTaxes(CompanyId, NoOfYears);
-			return result;
-		}
-
-		[HttpGet]
-		[Route("TaxLiabilities")]
-		public TaxLiabilityReportResponse GetTaxLiabilities(int CompanyId, int NoOfYears)
-		{
-			var dashboardObj = _Kernel.Get<ICompanyDashboard>();
-			var result = dashboardObj.GetTaxLiabilities(CompanyId, NoOfYears);
+			var result = dashboardObj.GetChartData(chartDataModel);
 			return result;
 		}
 

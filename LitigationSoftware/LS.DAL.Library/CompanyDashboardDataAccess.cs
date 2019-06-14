@@ -15,56 +15,6 @@ namespace LS.DAL.Library
 	{
 		#region ICompanyDashboardDataAccess Methods
 
-		public CompetitorTaxRateReportResponse GetCompetitorTaxRates(int CompanyId)
-		{
-			CompetitorTaxRateReportResponse _response = null;
-			try
-			{
-				Log.Info("GetCompetitorTaxRates.Start");
-				Log.Info("parameter values" + JsonConvert.SerializeObject(new { companyId = CompanyId }));
-				Command.CommandText = "SP_GET_COMPETITOR_TAX_RATE_REPORT";
-				Command.CommandType = CommandType.StoredProcedure;
-				Command.Parameters.Clear();
-
-				Command.Parameters.AddWithValue("@COMPANY_ID", CompanyId);
-
-				Connection.Open();
-				SqlDataReader reader = Command.ExecuteReader();
-				_response = new CompetitorTaxRateReportResponse();
-				if (reader.HasRows)
-				{
-					_response.IsSuccess = true;
-					while (reader.Read())
-					{
-						_response.CompetitorTaxRates.Add(new CompetitorTaxRateReport()
-						{
-							CompetitorId = int.Parse(reader["CompetitorId"].ToString()),
-							CompetitorName = reader["CompetitorName"] != DBNull.Value ? reader["CompetitorName"].ToString() : string.Empty,
-							FinancialYear = reader["FinancialYear"] != DBNull.Value ? reader["FinancialYear"].ToString() : string.Empty,
-							TaxRate = decimal.Parse(reader["TaxRate"].ToString())
-						});
-					}
-				}
-				else
-				{
-					_response.IsSuccess = false;
-					_response.Message = "No data found";
-				}
-			}
-			catch (Exception ex)
-			{
-				Log.Error("GetCompetitorTaxRates.Error:" + JsonConvert.SerializeObject(ex));
-				LogError(ex);
-				throw;
-			}
-			finally
-			{
-				Connection.Close();
-				Log.Info("GetCompetitorTaxRates.End");
-			}
-			return _response;
-		}
-
 		public ITReturnProvisionReportResponse GetITReturnProvisions(int CompanyId, int NoOfYears)
 		{
 			ITReturnProvisionReportResponse _response = null;
@@ -117,85 +67,71 @@ namespace LS.DAL.Library
 			return _response;
 		}
 
-		public QuarterlyAdvanceTaxReportResponse GetQuarterlyAdvanceTaxes(int CompanyId, int NoOfYears)
+		public ChartDataResponse GetChartData(ChartDataModel chartDataModel)
 		{
-			QuarterlyAdvanceTaxReportResponse _response = null;
-			try
-			{
-				Log.Info("GetQuarterlyAdvanceTaxes.Start");
-				Log.Info("parameter values" + JsonConvert.SerializeObject(new { companyId = CompanyId, noOfYears = NoOfYears }));
-				Command.CommandText = "SP_GET_ADVANCE_TAX_REPORT";
-				Command.CommandType = CommandType.StoredProcedure;
-				Command.Parameters.Clear();
-
-				Command.Parameters.AddWithValue("@COMPANY_ID", CompanyId);
-				Command.Parameters.AddWithValue("@NO_OF_YEARS", NoOfYears);
-
-				Connection.Open();
-				SqlDataReader reader = Command.ExecuteReader();
-				_response = new QuarterlyAdvanceTaxReportResponse();
-				if (reader.HasRows)
-				{
-					_response.IsSuccess = true;
-					while (reader.Read())
-					{
-						_response.AdvanceTaxes.Add(new QuarterlyAdvanceTaxReport()
-						{
-							FYAYId = int.Parse(reader["FYAYID"].ToString()),
-							FinancialYear = reader["FinancialYear"] != DBNull.Value ? reader["FinancialYear"].ToString() : string.Empty,
-							Quarter = reader["Quarter"] != DBNull.Value ? reader["Quarter"].ToString() : string.Empty,
-							AdvanceTax = decimal.Parse(reader["AdvanceTax"].ToString())
-						});
-					}
-				}
-				else
-				{
-					_response.IsSuccess = false;
-					_response.Message = "No data found";
-				}
-			}
-			catch (Exception ex)
-			{
-				Log.Error("GetQuarterlyAdvanceTaxes.Error:" + JsonConvert.SerializeObject(ex));
-				LogError(ex);
-				throw;
-			}
-			finally
-			{
-				Connection.Close();
-				Log.Info("GetQuarterlyAdvanceTaxes.End");
-			}
-			return _response;
+			string procName = this.getChartProcName(chartDataModel);
+			return this.GetChartDataInternal(procName, chartDataModel.ChartParams);
 		}
 
-		public TaxLiabilityReportResponse GetTaxLiabilities(int CompanyId, int NoOfYears)
+		#endregion
+
+		#region Private methods 
+
+		private IDictionary<int, string> chartProcNames = new Dictionary<int, string>()
 		{
-			TaxLiabilityReportResponse _response = null;
+			{1, "SP_GET_COMPETITOR_TAX_RATE_REPORT" },
+			{2, "SP_GET_ITR_TAX_PROVISION_REPORT" },
+			{3, "SP_GET_ADVANCE_TAX_REPORT" },
+			{4, "SP_GET_TAX_LIABILITY_REPORT" },
+			{5, "SP_GET_TDS_CREDIT_REPORT" },
+			{6, "SP_GET_AUDIT_REPORT" },
+			{7, "SP_GET_TOP_LITIGIOUS_TAX_REPORT" }
+		};
+
+		private string getChartProcName(ChartDataModel chartDataModel)
+		{
+			string procName = string.Empty;
+			if (chartProcNames.ContainsKey(chartDataModel.ChartId))
+			{
+				procName = chartProcNames[chartDataModel.ChartId];
+			}
+			return procName;
+		}
+
+		private ChartDataResponse GetChartDataInternal(string procName, IDictionary<string, object> procParams)
+		{
+			ChartDataResponse _response = null;
 			try
 			{
-				Log.Info("GetTaxLiabilities.Start");
-				Log.Info("parameter values" + JsonConvert.SerializeObject(new { companyId = CompanyId, noOfYears = NoOfYears }));
-				Command.CommandText = "SP_GET_TAX_LIABILITY_REPORT";
+				Log.Info("GetChartData.Start");
+				Log.Info("parameter values" + JsonConvert.SerializeObject(new { procParams = procParams }));
+				Command.CommandText = procName;
 				Command.CommandType = CommandType.StoredProcedure;
 				Command.Parameters.Clear();
 
-				Command.Parameters.AddWithValue("@COMPANY_ID", CompanyId);
-				Command.Parameters.AddWithValue("@NO_OF_YEARS", NoOfYears);
-
+				if (procParams != null)
+				{
+					procParams.All(param =>
+					{
+						Command.Parameters.AddWithValue("@" + param.Key, param.Value);
+						return true;
+					});
+				}
+				
 				Connection.Open();
 				SqlDataReader reader = Command.ExecuteReader();
-				_response = new TaxLiabilityReportResponse();
+				_response = new ChartDataResponse();
 				if (reader.HasRows)
 				{
 					_response.IsSuccess = true;
 					while (reader.Read())
 					{
-						_response.Taxes.Add(new TaxLiabilityReport()
+						_response.Data.Add(new ChartData()
 						{
-							FYAYId = int.Parse(reader["FYAYID"].ToString()),
-							FinancialYear = reader["FinancialYear"] != DBNull.Value ? reader["FinancialYear"].ToString() : string.Empty,
-							TaxTypeName = reader["TaxTypeName"] != DBNull.Value ? reader["TaxTypeName"].ToString() : string.Empty,
-							Tax = decimal.Parse(reader["Tax"].ToString())
+							Id = int.Parse(reader["Id"].ToString()),
+							CategoryName = reader["CategoryName"] != DBNull.Value ? reader["CategoryName"].ToString() : string.Empty,
+							SeriesName = reader["SeriesName"] != DBNull.Value ? reader["SeriesName"].ToString() : string.Empty,
+							Value = decimal.Parse(reader["Value"].ToString())
 						});
 					}
 				}
@@ -207,18 +143,19 @@ namespace LS.DAL.Library
 			}
 			catch (Exception ex)
 			{
-				Log.Error("GetTaxLiabilities.Error:" + JsonConvert.SerializeObject(ex));
+				Log.Error("GetChartData.Error:" + JsonConvert.SerializeObject(ex));
 				LogError(ex);
 				throw;
 			}
 			finally
 			{
 				Connection.Close();
-				Log.Info("GetTaxLiabilities.End");
+				Log.Info("GetChartData.End");
 			}
 			return _response;
 		}
 
 		#endregion
+
 	}
 }

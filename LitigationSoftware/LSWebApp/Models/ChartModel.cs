@@ -1,5 +1,6 @@
 ﻿using LS.Models;
 using LSWebApp.Infrastructure;
+using System.Collections.Generic;
 
 namespace LSWebApp.Models
 {
@@ -11,4 +12,11 @@ namespace LSWebApp.Models
         {
 		}
 	}
+
+	public class ChartDataViewModel
+	{
+		public int ChartId { get; set; }
+		public IDictionary<string, object> ChartParams { get; set; }
+	}
+
 }
