@@ -9,9 +9,8 @@ namespace LS.DAL.Interface
 {
 	public interface ICompanyDashboardDataAccess : IDataAccessBase
 	{
-		CompetitorTaxRateReportResponse GetCompetitorTaxRates(int CompanyId);
-		ITReturnProvisionReportResponse GetITReturnProvisions(int CompanyId, int NoOfYears);
-		QuarterlyAdvanceTaxReportResponse GetQuarterlyAdvanceTaxes(int CompanyId, int NoOfYears);
+		ITReturnProvisionReportResponse GetITReturnProvisions(int CompanyId, int NoOfYears);		
+		ChartDataResponse GetChartData(ChartDataModel chartDataModel);
 	}
 
 }

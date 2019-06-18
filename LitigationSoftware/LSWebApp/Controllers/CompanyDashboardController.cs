@@ -7,6 +7,7 @@ using System.Configuration;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -20,24 +21,6 @@ namespace LSWebApp.Controllers
         {
             return View(new CompanyDashboardModel() { CompanyObject = HttpContext.Session["SelectedCompany"]  as Company });
         }
-
-		[HttpGet]
-		public async Task<ActionResult> CompetitorTaxRates(int companyId)
-		{
-			CompetitorTaxRateReportResponse resModel = null;
-			using (var client = new HttpClient())
-			{
-				client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
-				client.DefaultRequestHeaders.Clear();
-				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-				HttpResponseMessage Res = await client.GetAsync("api/CompanyDashboardAPI/CompetitorTaxRates?companyId=" + companyId.ToString());
-				if (Res.IsSuccessStatusCode)
-				{
-					resModel = JsonConvert.DeserializeObject<CompetitorTaxRateReportResponse>(Res.Content.ReadAsStringAsync().Result);					
-				}
-			}
-			return Json(resModel,JsonRequestBehavior.AllowGet);
-		}
 
 		[HttpGet]
 		public ActionResult Charts(int chartId)
@@ -67,20 +50,22 @@ namespace LSWebApp.Controllers
 			}
 			return Json(resModel, JsonRequestBehavior.AllowGet);
 		}
-
-		[HttpGet]
-		public async Task<ActionResult> QuarterlyAdvanceTaxes(int companyId, int noOfYears)
+		
+		[HttpPost]
+		public async Task<ActionResult> ChartData(ChartDataViewModel model)
 		{
-			QuarterlyAdvanceTaxReportResponse resModel = null;
+			ChartDataResponse resModel = null;
 			using (var client = new HttpClient())
 			{
 				client.BaseAddress = new Uri(ConfigurationManager.AppSettings["BaseUrl"]);
 				client.DefaultRequestHeaders.Clear();
 				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-				HttpResponseMessage Res = await client.GetAsync("api/CompanyDashboardAPI/QuarterlyAdvanceTaxes?companyId=" + companyId.ToString() + "&NoOfYears=" + noOfYears.ToString());
+				var json = JsonConvert.SerializeObject(model);
+				var content = new StringContent(json, Encoding.UTF8, "application/json");
+				HttpResponseMessage Res = await client.PostAsync("api/CompanyDashboardAPI/ChartData", content);
 				if (Res.IsSuccessStatusCode)
 				{
-					resModel = JsonConvert.DeserializeObject<QuarterlyAdvanceTaxReportResponse>(Res.Content.ReadAsStringAsync().Result);
+					resModel = JsonConvert.DeserializeObject<ChartDataResponse>(Res.Content.ReadAsStringAsync().Result);
 				}
 			}
 			return Json(resModel, JsonRequestBehavior.AllowGet);

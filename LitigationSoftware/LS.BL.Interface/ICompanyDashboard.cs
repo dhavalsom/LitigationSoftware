@@ -9,8 +9,7 @@ namespace LS.BL.Interface
 {
 	public interface ICompanyDashboard
 	{
-		CompetitorTaxRateReportResponse GetCompetitorTaxRates(int CompanyId);
-		ITReturnProvisionReportResponse GetITReturnProvisions(int CompanyId, int NoOfYears);
-		QuarterlyAdvanceTaxReportResponse GetQuarterlyAdvanceTaxes(int CompanyId, int NoOfYears);
+		ITReturnProvisionReportResponse GetITReturnProvisions(int CompanyId, int NoOfYears);		
+		ChartDataResponse GetChartData(ChartDataModel chartDataModel);
 	}
 }
