@@ -113,6 +113,7 @@
         $(document).ready(function () {            
             $("#FYAYId").change(function () {
                 loadAssessmentYear();
+                loadITReturnDetailsData();
             });                  
             $("#FYAYId").val('@(Model.FYAYId.HasValue ? Model.FYAYId.Value.ToString() :"1")');
             loadAssessmentYear();
