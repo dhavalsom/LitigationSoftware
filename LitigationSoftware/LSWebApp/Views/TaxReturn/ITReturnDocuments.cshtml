@@ -75,6 +75,10 @@
                     @class = "ddSubDocumentCategory",
                     @style = "width:200px"
                 })
+                <img src="~/images/plus.png"
+                     class="imgSubDocCategory"
+                     style="width:20px;height:20px;"
+                     title="Click to add sub head" />
             </td>   
             <td colspan="2" style="text-align:right;">
                 <button type="button"
@@ -82,6 +86,20 @@
                     Search
                 </button>
             </td>   
+        </tr>
+        <tr>
+            <td colspan="3"></td>
+            <td>
+                <input type="text"
+                       style="width:150px;"
+                       class="txtSubDocCategory" />
+                <img src="~/images/save.png"
+                     class="imgSubDocCategorySave"
+                     style="width:20px;height:20px;" />
+                <img src="~/images/close.png"
+                     class="imgSubDocCategoryClose"
+                     style="width:20px;height:20px;" />
+            </td>
         </tr>
         <tr style="height:5px;"></tr>
     </table>
@@ -144,7 +162,55 @@
                     },
                     type: 'GET'
                 });
-            });            
+            });     
+
+            $(".imgSubDocCategory").click(function (e) {
+                showHideSubDocCategoryControls($(this));
+            });
+
+            $(".imgSubDocCategoryClose").click(function (e) {
+                showHideSubDocCategoryControls($(this));
+            });
+
+            $(".imgSubDocCategorySave").click(function (e) {
+                var txtControl = null;
+                var saveButton = $(this);
+                var documentCategoryId = 0;
+                $(e.target).closest(".custom-sub-doc-category").find('.txtSubDocCategory').each(function () {
+                    txtControl = $(this);
+                });
+                $(e.target).closest(".custom-sub-doc-category").find('.ddDocumentCategory').each(function () {
+                    documentCategoryId = $(this).val();
+                });
+                if (txtControl.val() == "") {
+                    txtControl.addClass("validationError");
+                    return;
+                }
+                else {
+                    txtControl.removeClass("validationError");
+                }
+
+                var item = {};
+                item.Description = txtControl.val();
+                item.Active = true;
+                item.DocumentCategoryId = documentCategoryId;
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/manageSubDocumentCategory/',
+                    data: JSON.stringify(item),
+                    success: function (data) {
+                        saveButton.parents('.modal-content')
+                            .find(".ddSubDocumentCategory")
+                            .each(function () {
+                                $(this).append($('<option></option>').val(data.Id).html(item.Description));
+                            });
+                        showHideSubDocCategoryControls(saveButton);
+                    },
+                    contentType: "application/json",
+                    dataType: 'json'
+                });
+            });
         }); 
 
         function deleteITReturnDetailsDocument(itReturnDocumentId, filePath) {
